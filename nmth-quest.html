@@ -1282,6 +1282,7 @@ function classJoin(q){scr(`<h2>正在找這個任務</h2><p class="hw">等一下
  CL.load().then(db=>(q.sid?db.collection('nmth_rooms').doc(q.sid).get().then(d=>d.exists?[d]:[]):db.collection('nmth_rooms').where('code','==',q.code).get().then(r=>r.docs)).then(docs=>{
    const live=docs.map(d=>Object.assign({sid:d.id},d.data())).filter(r=>r.ph!=='closed').sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0))[0];
    if(!live){classAsk(docs.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
+   if(live.game&&live.game!=='nmth'){scr(`<h2>這個代碼是另一個遊戲的</h2><p class="hw">老師發的任務是「史前生存大冒險」。</p><div class="gm-row"><a class="gm-go" style="text-decoration:none" href="prehistory.html?k=${live.sid}">去那個遊戲</a><button class="gm-btn alt" id="gmCodeBack">重新輸入</button></div>`);$('#gmCodeBack').onclick=()=>classAsk();return;}
    if(!S.sess||S.sess.sid!==live.sid){S={name:'',mode:'class',st:{},notes:{},seen:{},log:{},snd:S.snd,sess:{sid:live.sid,label:live.label||'',seat:0,on:0}};try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}pass();}
    S.sess.seat?classWait():classSeat();}))
   .catch(()=>classAsk('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}

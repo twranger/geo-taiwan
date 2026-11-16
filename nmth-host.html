@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant">
 <meta charset="utf-8">
-<title>臺史博：閉館之後・任務控制台｜海佃地圖</title>
+<title>任務控制台｜海佃地圖</title>
 <meta name="description" content="老師用的頁面：發任務、看全班進度、下載成績。"><meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -455,6 +455,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .nh-rules{white-space:pre;overflow:auto;max-height:300px;padding:12px;background:#10181b;color:#e6eceb;border-radius:10px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
 .nh-steps{line-height:1.9;padding-left:1.3em}
 .nh-big{font-size:20px;font-weight:700}
+.nh-tb th small{display:block;font-weight:500;font-size:12.5px}
+select.nh-in{min-width:0}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -463,8 +465,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <header class="top">
   <div class="wrap">
     <div>
-      <h1>臺史博：閉館之後　<span class="accent">任務控制台</span></h1>
-      <p class="lede">發一個任務，學生用平板輸入任務代碼、選座號進大廳。你按開始，全班一起玩，每個座號的進度和成績會即時回到這一頁，也會存起來，之後可以下載 CSV。</p>
+      <h1>全班一起玩　<span class="accent">任務控制台</span></h1>
+      <p class="lede">選一個遊戲、發一個任務。學生用平板輸入任務代碼、選座號進大廳。你按開始後，每個座號的進度和成績會即時回到這一頁，也會存起來，之後可以下載 CSV。</p>
     </div>
   </div>
 </header>
@@ -481,16 +483,42 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
-/* 臺史博：閉館之後 — teacher's room. Firestore: nmth_rooms/{sid} (teacher writes), nmth_live/{sid_seat} (tablets write). */
+/* 任務控制台 — the teacher's page for class play. Firestore: nmth_rooms/{sid} (teacher writes), nmth_live/{sid_seat} (tablets write).
+   One page serves every game on the site; each game has its own table layout below. */
 (()=>{
 const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
-const BASE='https://geo.twranger.com/nmth-quest.html';
-const NUM=['一','二','三','四','五','六','七'],RN=['舊石器','新石器','鐵器','航線','各國人士','原住民','鄭氏與清'];
+const SITE='https://geo.twranger.com/';
 const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mmss=t=>`${Math.floor(t/60)} 分 ${String(Math.round(t%60)).padStart(2,'0')} 秒`;
+const NUM=['一','二','三','四','五','六','七'];
+const st3=n=>'★'.repeat(n)+'☆'.repeat(Math.max(0,3-n));
+/* ---- per-game layouts ---- */
+const GAMES={
+ nmth:{n:'臺史博：閉館之後',page:'nmth-quest.html',total:7,
+  parse(v){let rm=[];try{rm=JSON.parse(v.d||'[]');}catch(e){}const rooms=[0,1,2,3,4,5,6].map(i=>{const r=rm[i]||[];return {stars:+r[0]||0,miss:r[1]==null?-1:+r[1],t:+r[2]||0,seen:+r[3]||0,tries:+r[4]||0};});
+   const o={rooms,done:rooms.filter(x=>x.stars).length,stars:rooms.reduce((a,x)=>a+x.stars,0),t:rooms.reduce((a,x)=>a+x.t,0),miss:rooms.reduce((a,x)=>a+Math.max(0,x.miss),0)};
+   const f=[];if(rooms.some(x=>x.stars&&x.t<45))f.push('有展間不到 45 秒');if(o.done===7&&o.t<300)f.push('全部不到 5 分鐘');if(rooms.some(x=>x.tries>1))f.push('有重玩');o.flag=f.join('、');return o;},
+  where:c=>c==='lobby'?'大廳':c==='plan'?'平面圖':c==='done'?'全部完成':/^s[1-7]w$/.test(c)?`第${NUM[+c[1]-1]}展間・寫說明卡`:/^s[1-7]$/.test(c)?`第${NUM[+c[1]-1]}展間・看展品`:'',
+  note:'每格是「星星／寫錯次數／停留時間」，黃色是學生現在所在的展間。',
+  head:()=>`<th>修好</th><th>星星</th><th>寫錯</th><th>總時間</th>${NUM.map((x,i)=>`<th>${x}<small>${['舊石器','新石器','鐵器','航線','各國人士','原住民','鄭氏與清'][i]}</small></th>`).join('')}`,
+  row:r=>`<td>${r.done}/7</td><td>${r.stars}</td><td>${r.miss}</td><td>${mmss(r.t)}</td>${r.rooms.map((x,i)=>`<td class="${x.stars?'':'no'}${r.cur.slice(0,2)==='s'+(i+1)?' now':''}">${x.stars?`${'★'.repeat(x.stars)}<small>錯 ${Math.max(0,x.miss)}・${mmss(x.t)}</small>`:(x.seen?`<small>看了 ${x.seen} 件</small>`:'—')}</td>`).join('')}`,
+  csvHead:()=>['修好展間','星星','寫錯次數','總秒數',...NUM.flatMap(n=>[`第${n}展間星星`,`第${n}展間寫錯`,`第${n}展間秒數`,`第${n}展間看了幾件`])],
+  csvRow:r=>[r.done,r.stars,r.miss,r.t,...r.rooms.flatMap(x=>[x.stars,Math.max(0,x.miss),x.t,x.seen])]},
+ prehistory:{n:'史前生存大冒險',page:'prehistory.html',total:10,
+  T:['找食物','敲打石器','生火','種小米','磨製石器','做陶罐','和外地人交易','煉鐵','試試鐵斧'],E:['舊石器時代','新石器時代','金屬器時代'],EK:['old','neo','iron'],
+  parse(v){let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const s=(j.s||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),y=(j.y||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),tm=(j.tm||[]).concat([0,0,0,0,0]).slice(0,5).map(x=>+x||0);
+   const o={s,y,tm,dig:j.dig?1:0,sk:+j.sk||0,qw:+j.qw||0,cf:+j.cf||0,done:s.filter(Boolean).length+(j.dig?1:0),stars:s.reduce((a,b)=>a+b,0),t:tm.reduce((a,b)=>a+b,0),miss:(+j.qw||0)+(+j.cf||0)};
+   const f=[];[0,1,2].forEach(e=>{if(s.slice(e*3,e*3+3).every(Boolean)&&tm[e]<120)f.push(this.E[e]+'不到 2 分鐘');});if(o.done===10&&o.t<480)f.push('全部不到 8 分鐘');if(o.qw>=6)f.push('題目答錯 '+o.qw+' 次');o.flag=f.join('、');return o;},
+  where(c){const [a,b]=String(c).split(':'),e=this.EK.indexOf(a);if(c==='lobby')return '大廳';if(a==='hub')return '時光隧道';if(a==='dig')return '考古挖掘';if(a==='cert')return '領證書';if(a==='museum')return '博物館';if(e<0)return '';const ids=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],k=ids.indexOf(b);return this.E[e]+(k>=0?'・'+this.T[k]:'');},
+  note:'每個時代有三個任務，格子裡是三個任務各拿幾顆星和在這個時代停留的時間。黃色是學生現在所在的時代。「答錯」是任務後的題目答錯次數，「試錯」是動手組合材料失敗的次數（多不代表不好，是在嘗試）。',
+  head(){return `<th>完成</th><th>星星<small>滿分 27</small></th><th>總時間</th>${this.E.map(x=>`<th>${x}</th>`).join('')}<th>考古挖掘</th><th>學會本領</th><th>答錯</th><th>試錯</th>`;},
+  row(r){return `<td>${r.done}/10</td><td>${r.stars}</td><td>${mmss(r.t)}</td>${[0,1,2].map(e=>{const a=r.s.slice(e*3,e*3+3),on=String(r.cur).split(':')[0]===this.EK[e];return `<td class="${a.some(Boolean)?'':'no'}${on?' now':''}">${a.some(Boolean)||r.tm[e]?`${a.map(n=>n?'★'.repeat(n):'・').join(' ')}<small>${mmss(r.tm[e])}</small>`:'—'}</td>`;}).join('')}<td class="${r.dig?'':'no'}${r.cur==='dig'?' now':''}">${r.dig?'完成':(r.tm[3]?'進行中':'—')}</td><td>${r.sk}</td><td>${r.qw}</td><td>${r.cf}</td>`;},
+  csvHead(){return ['完成數(滿分10)','星星(滿分27)','總秒數',...this.T.flatMap(t=>[t+'星星',t+'玩幾次']),...this.E.map(e=>e+'秒數'),'考古挖掘秒數','考古挖掘完成','學會本領數','題目答錯次數','組合試錯次數'];},
+  csvRow(r){return [r.done,r.stars,r.t,...r.s.flatMap((n,i)=>[n,r.y[i]]),r.tm[0],r.tm[1],r.tm[2],r.tm[3],r.dig,r.sk,r.qw,r.cf];}}};
 const auth$=$('#nhAuth'),room$=$('#nhRoom'),list$=$('#nhList');
 if(!window.firebase){auth$.innerHTML='<p class="nh-msg err">連不上 Firebase。請確認網路，再重新整理。</p>';return;}
 firebase.initializeApp(FB);const auth=firebase.auth(),db=firebase.firestore(),TS=()=>firebase.firestore.FieldValue.serverTimestamp();
+const G0=(()=>{try{const g=new URLSearchParams(location.search).get('g');return GAMES[g]?g:'';}catch(e){return '';}})();
 const RULES=`    // ── 臺史博：閉館之後（geo.twranger.com）──
     match /nmth_rooms/{doc} {
       allow read: if true;
@@ -507,48 +535,47 @@ const RULES=`    // ── 臺史博：閉館之後（geo.twranger.com）──
 `;
 let user=null,cur=null,unsub=[],rows=[],sessions=[];
 const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
+const GM=()=>GAMES[cur&&cur.game]||GAMES.nmth;
 auth.onAuthStateChanged(u=>{user=u;off();cur=null;room$.hidden=list$.hidden=true;
  if(!u){auth$.innerHTML=`<p class="nh-big">先用老師的 Google 帳號登入</p><p>和「時空偵探定向賽」後台用同一個帳號。</p><div class="nh-row"><button class="nh-btn" id="nhIn">用 Google 登入</button></div><p class="nh-msg err" id="nhErr"></p>`;
   $('#nhIn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$('#nhErr').textContent=e.code==='auth/unauthorized-domain'?'這個網域還沒加進 Firebase 的登入網域。請到 Firebase 主控台 → Authentication → Settings → Authorized domains，加入 geo.twranger.com。':'登入失敗：'+e.message;});return;}
  auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
  $('#nhOut').onclick=()=>auth.signOut();
  db.collection('nmth_rooms').doc('_probe').set({ph:'closed',code:'',label:'',at:TS()}).then(()=>{$('#nhSetup').innerHTML='';loadList();})
-  .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">還差一步：資料庫的權限規則還沒加上這個遊戲（${esc(e.code||'')}）。</p>
-   <ol class="nh-steps"><li>打開 <a href="https://console.firebase.google.com/project/${FB.projectId}/firestore/rules" target="_blank" rel="noopener">Firestore 規則頁</a>。</li>
-   <li>找到最下面「其他路徑一律關閉」那一段（<code>match /{document=**}</code>），把下面這一段貼在它的<b>前面</b>。原本的內容都不要刪。</li><li>按「發布」，回來這一頁重新整理。</li></ol>
-   <div class="nh-rules" id="nhRules"></div><div class="nh-row"><button class="nh-btn alt" id="nhCopy">複製這一段</button></div>
-   <p>如果你登入的不是定向賽後台用的那個帳號，規則裡的管理者名單也要加上你的 UID：<code>${esc(u.uid)}</code></p>`;
+  .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">這個帳號沒有管理權限（${esc(e.code||'')}）。</p>
+   <p>如果你是用定向賽後台的那個帳號登入，請確認 Firestore 規則裡有下面這一段（貼在「其他路徑一律關閉」的前面）。如果是別的帳號，要把它的 UID 加進規則的管理者名單：<code>${esc(u.uid)}</code></p>
+   <div class="nh-rules" id="nhRules"></div><div class="nh-row"><button class="nh-btn alt" id="nhCopy">複製這一段</button><a class="nh-btn alt" style="text-decoration:none" href="https://console.firebase.google.com/project/${FB.projectId}/firestore/rules" target="_blank" rel="noopener">打開 Firestore 規則頁</a></div>`;
    $('#nhRules').textContent=RULES;$('#nhCopy').onclick=()=>navigator.clipboard.writeText(RULES).then(()=>{$('#nhCopy').textContent='已複製';});});});
 function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
  db.collection('nmth_rooms').get().then(q=>{sessions=q.docs.filter(d=>d.id!=='_probe').map(d=>Object.assign({sid:d.id},d.data())).sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0));
   const day=s=>s.at?new Date(s.at.seconds*1000).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-  list$.innerHTML=`<p class="nh-big">發新任務</p><div class="nh-row"><input class="nh-in" id="nhLabel" maxlength="20" placeholder="班級，例如：五年三班" aria-label="班級名稱"><button class="nh-btn" id="nhNew">發任務</button></div>
-   <p class="nh-big" style="margin-top:26px">存起來的場次</p>${sessions.length?`<ul class="nh-list">${sessions.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}`;
+  list$.innerHTML=`<p class="nh-big">發新任務</p><div class="nh-row"><select class="nh-in" id="nhGame" aria-label="哪一個遊戲">${Object.keys(GAMES).map(k=>`<option value="${k}" ${k===(G0||'prehistory')?'selected':''}>${GAMES[k].n}</option>`).join('')}</select>
+    <input class="nh-in" id="nhLabel" maxlength="20" placeholder="班級，例如：五年三班" aria-label="班級名稱"><button class="nh-btn" id="nhNew">發任務</button></div>
+   <p class="nh-big" style="margin-top:26px">存起來的場次</p>${sessions.length?`<ul class="nh-list">${sessions.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${esc((GAMES[s.game]||GAMES.nmth).n)}　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}`;
   $('#nhNew').onclick=()=>{const label=$('#nhLabel').value.trim();if(!label){$('#nhLabel').focus();return;}
    const live=sessions.filter(s=>s.ph!=='closed').map(s=>s.code);let code;do{code=String(1000+Math.floor(Math.random()*9000));}while(live.includes(code));
    const sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4);
-   db.collection('nmth_rooms').doc(sid).set({code,label,ph:'lobby',at:TS()}).then(()=>open(sid));};
+   db.collection('nmth_rooms').doc(sid).set({code,label,game:$('#nhGame').value,ph:'lobby',at:TS()}).then(()=>open(sid));};
+  $('#nhLabel').onkeydown=e=>{if(e.key==='Enter')$('#nhNew').click();};
   list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
-function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];cur={sid,ph:'lobby',code:'',label:''};
- unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!d.exists){back();return;}Object.assign(cur,d.data());draw();}));
- unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{rows=[];q.forEach(d=>{const v=d.data();if(!v.cid)return;let rm=[];try{rm=JSON.parse(v.d||'[]');}catch(e){}
-   rows.push({seat:v.seat,cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',rooms:[0,1,2,3,4,5,6].map(i=>{const r=rm[i]||[];return {stars:+r[0]||0,miss:r[1]==null?-1:+r[1],t:+r[2]||0,seen:+r[3]||0,tries:+r[4]||0};}),notes:v.notes||0,at:v.at?v.at.seconds*1000:0});});
-  rows.sort((a,b)=>a.seat-b.seat);rows.forEach(r=>{r.done=r.rooms.filter(x=>x.stars).length;r.stars=r.rooms.reduce((a,x)=>a+x.stars,0);r.t=r.rooms.reduce((a,x)=>a+x.t,0);r.miss=r.rooms.reduce((a,x)=>a+Math.max(0,x.miss),0);
-   const f=[];if(r.rooms.some(x=>x.stars&&x.t<45))f.push('有展間不到 45 秒');if(r.done===7&&r.t<300)f.push('全部不到 5 分鐘');if(r.rooms.some(x=>x.tries>1))f.push('有重玩');r.flag=f.join('、');});draw();}));
+let raw=[];
+function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur={sid,ph:'lobby',code:'',label:'',game:'nmth'};
+ unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!d.exists){back();return;}Object.assign(cur,{game:'nmth'},d.data());calc();draw();}));
+ unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{raw=[];q.forEach(d=>{const v=d.data();if(v.cid)raw.push(v);});calc();draw();}));
  window.scrollTo(0,0);}
+function calc(){const g=GM();rows=raw.map(v=>Object.assign({seat:v.seat,cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
-const where=c=>c==='lobby'?'大廳':c==='plan'?'平面圖':c==='done'?'全部完成':/^s[1-7]w$/.test(c)?`第${NUM[+c[1]-1]}展間・寫說明卡`:/^s[1-7]$/.test(c)?`第${NUM[+c[1]-1]}展間・看展品`:'';
-function draw(){if(!cur)return;const url=BASE+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.length,fin=rows.filter(r=>r.done===7).length;let qr='';
+function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const q=qrcode(0,'M');q.addData(url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
- let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
-   ${cur.ph==='closed'?'':`<p>學生打開 <b>geo.twranger.com/nmth-quest.html</b>，按「輸入任務代碼」，輸入：</p><p class="nh-code">${esc(cur.code)}</p><p>或是直接給這個連結（不用輸入代碼）：</p><p class="nh-url">${esc(url)}</p>`}</div>
+ let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
+   ${cur.ph==='closed'?'':`<p>學生打開 <b>geo.twranger.com/${g.page}</b>，按「輸入任務代碼」，輸入：</p><p class="nh-code">${esc(cur.code)}</p><p>或是直接給這個連結（不用輸入代碼）：</p><p class="nh-url">${esc(url)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
    <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
  if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能把座號空出來。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>`;
- else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。每格是「星星／寫錯次數／停留時間」，黃色是學生現在所在的展間。</p>
-  <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th><th>修好</th><th>星星</th><th>寫錯</th><th>總時間</th>${NUM.map((x,i)=>`<th>${x}<small style="display:block;font-weight:500">${RN[i]}</small></th>`).join('')}<th>留意</th></tr></thead><tbody>
-  ${rows.map(r=>`<tr><th>${r.seat}</th><td>${where(r.cur)}</td><td>${r.done}/7</td><td>${r.stars}</td><td>${r.miss}</td><td>${mmss(r.t)}</td>${r.rooms.map((x,i)=>`<td class="${x.stars?'':'no'}${r.cur.slice(0,2)==='s'+(i+1)?' now':''}">${x.stars?`${'★'.repeat(x.stars)}<small>錯 ${Math.max(0,x.miss)}・${mmss(x.t)}</small>`:(x.seen?`<small>看了 ${x.seen} 件</small>`:'—')}</td>`).join('')}<td>${r.flag||''}</td></tr>`).join('')}</tbody></table></div>`;
+ else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
+  <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><th>${r.seat}</th><td>${esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
  room$.innerHTML=h;
  const B=(id,fn)=>{const b=$(id);if(b)b.onclick=fn;};
  B('#nhStart',()=>db.collection('nmth_rooms').doc(cur.sid).update({ph:'play',startedAt:TS()}));
@@ -556,9 +583,9 @@ function draw(){if(!cur)return;const url=BASE+'?k='+cur.sid,lob=cur.ph==='lobby'
  B('#nhBack',back);B('#nhCsv',csv);
  B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete()))).then(()=>db.collection('nmth_rooms').doc(sid).delete());});
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>{if(confirm('把 '+b.dataset.rel+' 號空出來，讓別台平板重新選？'))db.collection('nmth_live').doc(cur.sid+'_'+b.dataset.rel).delete();});}
-function csv(){const q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','座號','模式','修好展間','星星','寫錯次數','總秒數',...NUM.flatMap(n=>[`第${n}展間星星`,`第${n}展間寫錯`,`第${n}展間秒數`,`第${n}展間看了幾件`]),'現場筆記數','最後回傳','留意'];
- const t='﻿'+[head,...rows.map(r=>[cur.label,r.seat,r.mode,r.done,r.stars,r.miss,r.t,...r.rooms.flatMap(x=>[x.stars,Math.max(0,x.miss),x.t,x.seen]),r.notes,r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=`臺史博夜間志工_${cur.label}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+function csv(){const g=GM(),q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
+ const t='﻿'+[head,...rows.map(r=>[cur.label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=`${g.n}_${cur.label}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
 })();
 </script>
 
