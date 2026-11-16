@@ -465,6 +465,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .tk b{font-size:17px}.tk span{font-size:18px;white-space:nowrap}
 .modal{position:fixed;inset:0;background:rgba(10,25,30,.62);z-index:80;display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto}
 .mbox{background:var(--paper);color:var(--ink);border-radius:20px;padding:16px 18px;width:min(780px,100%);max-height:calc(100vh - 24px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+#gm .mbox{width:min(780px,100%,calc((100vh - 210px)*720/440));max-height:calc(100dvh - 24px)}
+@media (max-height:520px){#gm .mbox{width:min(780px,100%)}}
 #tb{z-index:90}
 .mbox.wide{width:min(980px,100%)}
 .mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
@@ -521,8 +523,12 @@ body.playing .top{padding-block:14px}
 body.playing .top .links{flex-direction:row;flex-wrap:wrap}
 #vHub .unit-head{display:block}
 @media (max-width:520px){.shelf button{font-size:14.5px;padding:10px 2px}.spot{font-size:15px;padding:6px 12px}.mhead h3{font-size:20px}}
-.w3d{position:relative;height:min(76vh,720px);min-height:380px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#cfe6f2}
+.w3d{position:relative;height:var(--wh,min(76vh,720px));min-height:300px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#cfe6f2}
 .w3d:fullscreen{height:100vh;border-radius:0}
+body.inworld .top{display:none}
+body.inworld #vScene{padding-top:10px}body.inworld #vScene .scene-top{margin-bottom:8px}
+body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}body.inworld #vScene .scene-top .sub{font-size:14px;margin:0}
+.wfull.wsnd{right:96px}
 #wcv{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 #wcv:active{cursor:grabbing}
 #wLabels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -639,14 +645,14 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
     <p>三個時代，每個時代三個任務。沒有說明書：在世界裡撿材料，按「動手試試」把東西組合看看。前一個時代學會的本領，下一個時代還用得到。</p>
     <label for="nm">你的名字（會印在證書上）</label>
     <div class="row"><input id="nm" maxlength="10" autocomplete="off" placeholder="輸入名字"><button class="bigbtn" id="go">出發</button></div>
-    <p style="margin-top:18px"><button class="bigbtn alt" id="clAsk">全班一起玩：輸入任務代碼</button></p>
+    <p id="nmErr" hidden style="color:#ffd27a;font-weight:700;margin:8px 0 0">先寫上名字，證書上要印。</p>
     <button class="linkbtn" id="reset" hidden>清除紀錄，重新開始</button>
     </div>
   </div>
 </div></section>
 
 <section class="unit" id="vHub" hidden><div class="wrap">
-  <div class="unit-head"><h2 id="hubHi"></h2><p class="sub">照順序闖過三個時代，再到「現在」當考古學家。</p></div>
+  <div class="unit-head"><h2 id="hubHi"></h2><p class="sub">照順序闖過三個時代，再到「現在」當考古學家。　<button class="linkbtn" id="clAsk2" hidden>老師有給任務代碼？</button></p></div>
   <div class="hub" id="hub"></div>
 </div></section>
 
@@ -654,7 +660,7 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
   <div class="scene-top"><button class="bigbtn alt" id="toHub">← 時光隧道</button><div><h2 id="scTitle"></h2><p class="sub" id="scSub"></p></div><button class="bigbtn" id="guide">帶我去下一個任務</button></div>
   <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div class="wvig" aria-hidden="true"></div><div id="wLabels"></div><div class="wchap" id="wChap" hidden aria-hidden="true"></div>
     <div class="whelp">拖曳畫面：轉頭看四周　點地面或光柱：走過去　鍵盤 W A S D 或方向鍵也可以走</div>
-    <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button>
+    <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button><button class="wfull wsnd" id="wSnd">音效：開</button>
     <div class="whud" id="wHud" hidden><div class="wgoal" id="wGoal" aria-live="polite"></div><div class="wtools"><button class="wt main" id="btnWb">動手試試</button><button class="wt" id="btnBag">背包</button><button class="wt" id="btnSk">技能圖</button></div></div><div class="wtoast" id="wToast" role="status" hidden></div><button class="wprompt" id="wPrompt" hidden></button></div>
   <div class="scene" id="scene" tabindex="0" aria-label="史前場景，可以左右拖曳"><div class="scene-in" id="sceneIn"></div></div>
   <p class="note" id="scNote">走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。</p>
@@ -705,7 +711,7 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
 <div class="modal" id="nt" hidden role="dialog" aria-modal="true"><div class="mbox" id="ntBox"></div></div>
 <footer><div class="wrap"><p>內容依康軒版五上社會第三單元〈尋根探源話臺灣〉第 1 課編寫。場景與小遊戲是依課本想像圖設計的示意，不是真實比例，也不是遺址現場的實景。</p><p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026</p></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/class-live.js?v=1"></script>
+<script src="assets/class-live.js?v=3"></script>
 <script>
 /* 3D immersive worlds for the three eras (three.js r128) */
 window.World=(function(){
@@ -969,13 +975,13 @@ G.food=(A,fin)=>{const {scene,cam,hud,sfx}=A;cam.position.set(0,7.5,11);cam.look
   const me=person('#7a4a22');me.position.set(5.5,0,5);me.rotation.y=-2.6;scene.add(me);const GOAL=8;let time=30,score=0,end=0,fish=[],sh=[],sp=[];
   const nf=()=>{const d=Math.random()<.5?1:-1,g=new T.Group();g.add(P('sph',mat('#2f5d7c'),.7,.28,.22),P('cone',mat('#2f5d7c'),.3,.5,.1,-.85,0,0));g.children[1].rotation.z=-Math.PI/2;g.scale.x=d;g.position.set(-d*13,.2,rnd(-9,-.5));scene.add(g);fish.push({g,v:d*rnd(2.2,4.6)});};
   const ns=()=>{const s=P('cone',mat('#fff8ec'),.34,.2,.34,rnd(-7,7),.14,rnd(3,7.5));scene.add(s);sh.push({s,l:rnd(4,7)});};for(let i=0;i<4;i++)nf();for(let i=0;i<3;i++)ns();
-  A.tap=()=>{if(end)return;const h=A.hit(sh.map(o=>o.s));if(h){const i=sh.findIndex(o=>o.s===h.object);scene.remove(sh[i].s);sh.splice(i,1);score++;sfx.good&&sfx.good();return;}const p=A.plane(.3);if(p&&p.z<1.5&&p.z>-11){const m=P('cyl',mat('#5a3d22'),.05,2.4,.05);scene.add(m);const mk=new T.Mesh(new T.RingGeometry(.5,.62,20),bas('#10313b',{side:T.DoubleSide}));mk.rotation.x=-Math.PI/2;mk.position.set(p.x,.42,p.z);scene.add(mk);sp.push({m,mk,p,l:.4});sfx.tick&&sfx.tick();}};
+  A.tap=()=>{if(end)return;const h=A.hit(sh.map(o=>o.s));if(h){const i=sh.findIndex(o=>o.s===h.object);scene.remove(sh[i].s);sh.splice(i,1);score++;sfx.good&&sfx.good();return;}const p=A.plane(.3);if(p&&p.z<1.5&&p.z>-11){const m=new T.Group();m.add(P('cyl',mat('#6b4a2e'),.075,3,.075),P('cone',mat('#9a948a'),.17,.62,.17,0,1.78,0),P('cyl',mat('#2e2118'),.1,.2,.1,0,1.42,0));{const d=new T.Vector3(p.x-5,.3-3.6,p.z-5).normalize();m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d);m.userData.d=d;}scene.add(m);const mk=new T.Mesh(new T.RingGeometry(.5,.62,20),bas('#10313b',{side:T.DoubleSide}));mk.rotation.x=-Math.PI/2;mk.position.set(p.x,.42,p.z);scene.add(mk);sp.push({m,mk,p,l:.4});sfx.tick&&sfx.tick();}};
   hud.msg('點水裡的魚丟長矛（要瞄準牠前面一點），點沙灘上的貝殼撿起來');
   A.upd.push((dt,ts)=>{if(!end){time-=dt;if(Math.random()<dt*.9&&fish.length<6)nf();if(Math.random()<dt*.7&&sh.length<4)ns();if(time<=0||score>=GOAL){end=1;score>=GOAL?(sfx.win&&sfx.win()):(sfx.bad&&sfx.bad());hud.msg(score>=GOAL?'今天吃得飽了！':'時間到，只找到一點點',score>=GOAL?'#00684B':'#7a2d00');setTimeout(()=>fin(score>=GOAL?3:score>=5?2:1),1100);}}
     const wp=water.geometry.attributes.position.array;for(let i=0;i<wp.length;i+=3)wp[i+2]=Math.sin(wb[i]*.6+ts*1.6)*.06+Math.cos(wb[i+1]*.5+ts*1.2)*.05;water.geometry.attributes.position.needsUpdate=true;
     fish=fish.filter(f=>{f.g.position.x+=f.v*dt;f.g.rotation.y=Math.sin(ts*8+f.v)*.25;if(Math.abs(f.g.position.x)>14){scene.remove(f.g);return false;}return true;});
     sh=sh.filter(o=>{o.l-=dt;if(o.l<=0){scene.remove(o.s);return false;}return true;});
-    sp=sp.filter(s=>{s.l-=dt;const k=cl(s.l/.4,0,1);s.m.position.set(s.p.x+(5-s.p.x)*k,.6+k*3,s.p.z+(5-s.p.z)*k);s.m.rotation.set(.9,0,.3);if(s.l<=0){scene.remove(s.m,s.mk);const i=fish.findIndex(f=>Math.hypot(f.g.position.x-s.p.x,f.g.position.z-s.p.z)<1.25);if(i>=0){scene.remove(fish[i].g);fish.splice(i,1);score+=2;sfx.good&&sfx.good();bits(A,s.p.x,.3,s.p.z,'#ffffff',6);}return false;}return true;});
+    sp=sp.filter(s=>{if(s.done){s.st-=dt;if(s.st<=0){scene.remove(s.m);return false;}return true;}s.l-=dt;const k=cl(s.l/.4,0,1),d=s.m.userData.d;s.m.position.set(s.p.x+(5-s.p.x)*k-d.x*1.5,.3+k*3.3-d.y*1.5,s.p.z+(5-s.p.z)*k-d.z*1.5);if(s.l<=0){s.done=1;s.st=.5;scene.remove(s.mk);const i=fish.findIndex(f=>Math.hypot(f.g.position.x-s.p.x,f.g.position.z-s.p.z)<1.25);if(i>=0){scene.remove(fish[i].g);fish.splice(i,1);score+=2;sfx.good&&sfx.good();bits(A,s.p.x,.3,s.p.z,'#ffffff',6);}return true;}return true;});
     hud.bar(score/GOAL,`食物 ${score} / ${GOAL}`,'#00795A');hud.info(`剩 ${Math.max(0,Math.ceil(time))} 秒`);});};
 /* 4 grind */
 G.grind=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b7c59f');cam.position.set(0,5.2,6.2);cam.lookAt(0,.4,0);const slab=P('ico1',mat('#a9a39a'),3.2,.35,2,0,.3,0);scene.add(slab);const sheen=new T.Mesh(new T.CircleGeometry(1,24),mat('#5aa0c8',{transparent:true,opacity:.5,roughness:.1}));sheen.rotation.x=-Math.PI/2;sheen.scale.set(2.5,1.5,1);sheen.position.y=.67;scene.add(sheen);
@@ -1153,7 +1159,7 @@ const Amb=(()=>{let stop=null,kind=null;
 function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/<[^>]+>/g,''));u.lang='zh-TW';u.rate=0.95;speechSynthesis.speak(u);}catch(e){}}
 document.addEventListener('click',e=>{const b=e.target.closest('.say');if(b)say(b.dataset.t||b.parentNode.textContent);});
 window.__sfx=sfx;
-function soundUI(){const b=$('#btnSound');b.textContent='音效：'+(S.sound?'開':'關');b.setAttribute('aria-pressed',!!S.sound);}
+function soundUI(){const b=$('#btnSound');b.textContent='音效：'+(S.sound?'開':'關');b.setAttribute('aria-pressed',!!S.sound);const w=$('#wSnd');if(w){w.textContent=b.textContent;w.setAttribute('aria-pressed',!!S.sound);}}
 $('#btnSound').onclick=()=>{S.sound=S.sound?0:1;save();soundUI();if(!S.sound)try{speechSynthesis.cancel();}catch(e){}Amb.again();};soundUI();
 
 /* ---------- canvas helpers ---------- */
@@ -1358,8 +1364,10 @@ function exhibit(id){const t=MUSEUM.tasks.find(t=>t.id===id);task=null;W3.pause(
   $('#gmT').textContent=`展品：${t.n}`;$('#gmPlay').hidden=false;$('#gmHow').textContent='按住展品左右拖曳，可以轉著看。';$('#gcv').hidden=true;$('#gcv3').hidden=false;$('#ghud').hidden=true;$('#ghMsg').hidden=true;$('#ghTray').hidden=true;stopGame&&stopGame();stopGame=G3.view(()=>{const m=W3.art(id);m.scale.setScalar(1.5);return m;});
   d.innerHTML=`<div class="done"><p style="font-size:18px"><b>${t.era.n}・${t.era.site}</b><br>製作的人：<b>${esc(S.name)}</b>　<span class="stars" style="font-size:24px">${stars(S.st[id])}</span></p><div class="fact" style="--c:${t.era.c}">${t.src.fact}<br><button class="say" data-t="${esc(t.src.fact)}">唸給我聽</button></div><p class="note" style="margin-top:8px">${REAL[t.era.k]}</p></div>`;}
 const W3=window.World||null;
-function show(id){if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
-function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;
+let fitBusy=0;function fitW(){const el=$('#w3d');if(!el||el.hidden||document.fullscreenElement||fitBusy)return;const top=el.getBoundingClientRect().top+scrollY,h=Math.max(300,innerHeight-top-10)+'px';if(el.style.getPropertyValue('--wh')===h)return;el.style.setProperty('--wh',h);fitBusy=1;try{dispatchEvent(new Event('resize'));}finally{fitBusy=0;}}
+addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTimeout(fitW,300));$('#wSnd').onclick=()=>$('#btnSound').click();
+function show(id){if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
+function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;{const b=$('#clAsk2');if(b)b.hidden=!window.ClassLive||!!ClassLive.sess();}
   const h=ERAS.map((e,i)=>{const open=i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
   const dOpen=allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
 $('#hub').addEventListener('click',e=>{const b=e.target.closest('.node');if(!b||b.disabled)return;if(b.dataset.e==='museum')museum();else if(b.dataset.e==='dig'){S.dig?cert():dig();}else scene(b.dataset.e);});
@@ -1510,14 +1518,14 @@ let wbSel=[],wbAct='';
 function wbOpen(){W3&&W3.pause(true);$('#wb').hidden=false;wbSel=[];wbAct='';wbDraw();$('#wbRes').innerHTML=`<p>選 1～2 樣東西，再選一種做法，按「試試看」。</p>`;setTimeout(()=>$('#wb .x').focus(),30);}
 function wbDraw(){const ids=Object.keys(S.bag).filter(k=>S.bag[k]>0&&IT[k]);
   $('#wbBag').innerHTML=ids.length?ids.map(k=>{const n=S.bag[k],used=wbSel.filter(x=>x===k).length;return `<button class="itm${used?' on':''}" data-k="${k}" aria-pressed="${!!used}" style="--c:${IT[k].c}"><i aria-hidden="true">${IT[k].n[0]}</i><span>${IT[k].n}</span><em>${n}${used?`（選了 ${used}）`:''}</em></button>`;}).join(''):'<p class="note">背包是空的。在世界裡走到東西旁邊就會撿起來。</p>';
-  $('#wbActs').innerHTML=ACTS.map(([k,n])=>`<button class="act${wbAct===k?' on':''}" data-a="${k}" aria-pressed="${wbAct===k}">${n}</button>`).join('');
+  $('#wbActs').innerHTML=ACTS.filter(([k])=>!cur||cur.k!=='old'||['knock','drill','tie'].includes(k)).map(([k,n])=>`<button class="act${wbAct===k?' on':''}" data-a="${k}" aria-pressed="${wbAct===k}">${n}</button>`).join('');
   $('#wbPick').textContent=wbSel.length?wbSel.map(k=>IT[k].n).join(' ＋ ')+(wbAct?`　→　${ACTN[wbAct]}`:''):'還沒選';$('#wbGo').disabled=!wbSel.length||!wbAct;}
 $('#wbBag')&&$('#wbBag').addEventListener('click',e=>{const b=e.target.closest('.itm');if(!b)return;const k=b.dataset.k,used=wbSel.filter(x=>x===k).length;
   if(used&&(used>=S.bag[k]||wbSel.length>=2)){wbSel=wbSel.filter(x=>x!==k);}else if(wbSel.length<2)wbSel.push(k);else{wbSel=[wbSel[1],k];}wbDraw();});
 $('#wbActs')&&$('#wbActs').addEventListener('click',e=>{const b=e.target.closest('.act');if(!b)return;wbAct=b.dataset.a;wbDraw();});
 const same=(a,b)=>a.length===b.length&&a.slice().sort().join()===b.slice().sort().join();
 function wbTry(){const sel=wbSel.slice(),act=wbAct,r=RCP.find(r=>same(r.a,sel)&&r.act===act),out=$('#wbRes');let ok=false,msg='';
-  if(!r){const n=NOPE.find(n=>same(n[0],sel)&&n[1]===act);msg=n?n[2]:'好像沒有什麼變化。換個組合或做法試試看。';if(act==='burn'&&!S.st.fire&&!S.known.fire)msg='你還沒有火。先想辦法生火吧。';}
+  if(!r){const n=NOPE.find(n=>same(n[0],sel)&&n[1]===act);msg=n?n[2]:`${sel.map(k=>IT[k]?IT[k].n:k).join('和')}用「${ACTN[act]}」的，沒有變出新東西。換一種做法，或換別的材料。`;if(act==='burn'&&!S.st.fire&&!S.known.fire)msg='你還沒有火。先想辦法生火吧。';}
   else if(r.need&&!(r.need==='trade'?S.st.trade:S.st[r.need])&&!(r.need==='fire'&&S.st.fire)){msg=`你好像想到什麼了，可是還不會「${NEED_N[r.need]}」。技術要一步一步學：先把「${NEED_N[r.need]}」學會吧。`;if(r.id==='smelt')msg='鐵砂和木炭放在一起燒，什麼都沒發生。你不知道該怎麼做……也許從海外來的人會知道。';}
   else if(r.needItem&&!S.bag[r.needItem])msg='你不知道該怎麼做……也許從海外來的人會知道。';
   else if(!has(r.use))msg=`材料不夠：需要 ${itn(r.use)}。`;
@@ -1609,7 +1617,7 @@ $('#pr').onclick=()=>window.print();
 
 /* ---------- start ---------- */
 $('#nm').value=S.name||'';$('#reset').hidden=!Object.keys(S.st).length;
-$('#go').onclick=()=>{S.name=($('#nm').value||'').trim().slice(0,10)||'探險家';save();hub();};
+$('#go').onclick=()=>{S.name=($('#nm').value||'').trim().slice(0,10);if(!S.name){$('#nm').focus();$('#nmErr').hidden=false;return;}save();if(window.ClassLive&&!(ClassLive.sess()&&ClassLive.sess().on))ClassLive.begin();else hub();};
 $('#nm').addEventListener('keydown',e=>{if(e.key==='Enter')$('#go').click();});
 let rs=0;$('#reset').onclick=function(){if(!rs){rs=1;this.textContent='真的要清除嗎？再點一次確定';return;}if(window.ClassLive)ClassLive.leave();S={name:'',st:{},dig:0,sound:S.sound};try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}location.reload();};
 /* ---------- playing as a class: seat number in the lobby, progress sent to the teacher ---------- */
@@ -1621,10 +1629,10 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
   snapshot:()=>{const st=TID.map(id=>S.st[id]||0),tm=['old','neo','iron','dig','museum'].map(k=>S.tm[k]||0);
    return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
     done:st.filter(Boolean).length+(S.dig?1:0),stars:st.reduce((a,b)=>a+b,0),miss:(S.qw||0)+(S.cf||0),t:tm.reduce((a,b)=>a+b,0),notes:0};},
-  onJoin:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
-  onStart:se=>{S.name=se.seat+' 號';save();sfx.win();hub();}});
- $('#clAsk').onclick=()=>ClassLive.ask();}
-else $('#clAsk').hidden=true;
+  onJoin:()=>{const nm=S.name||($('#nm').value||'').trim().slice(0,10);for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:nm,st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
+  onStart:se=>{if(!S.name)S.name=se.seat+' 號';save();sfx.win();hub();},
+  onSolo:()=>{if(!S.name)S.name=($('#nm').value||'').trim().slice(0,10)||'探險家';save();hub();}});}
+if($('#clAsk2'))$('#clAsk2').onclick=()=>ClassLive.ask();
 if(S.name&&(Object.keys(S.st).length||clState==='playing'))hub();
 window.__tm={cr:{jadeTrip,pick,wbOpen,skOpen,canDo},museum,exhibit,S,G,finish:n=>finishTask(n),openTask,play,scene,hub,dig,cert};
 document.body.dataset.ready='1';

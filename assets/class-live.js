@@ -30,23 +30,26 @@ const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.
 .cl-box h2{margin:0 0 4px;font-size:26px;line-height:1.3}.cl-box .cl-sub{margin:0 0 6px;color:#4a5558;font-size:16px}.cl-box p{font-size:17px;line-height:1.7;margin:10px 0}
 .cl-code{display:block;width:100%;box-sizing:border-box;margin:16px 0 6px;font:900 44px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.35em;text-align:center;padding:10px 6px;border:2px solid #182226;border-radius:10px;background:#fff;color:#182226}
 .cl-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.cl-row.c{justify-content:center}
-.cl-btn{min-height:48px;padding:10px 22px;border-radius:999px;border:2px solid #182226;background:#182226;color:#fff;font:700 17px/1.2 inherit;cursor:pointer}
+.cl-btn{min-height:48px;padding:10px 22px;border-radius:999px;border:2px solid #182226;background:#182226;color:#fff;font-family:inherit;font-weight:700;font-size:17px;line-height:1.2;cursor:pointer}
 .cl-btn.alt{background:transparent;color:#182226}
+.cl-btn.cl-wide{flex:1;font-size:19px;min-height:54px}
+.cl-solo{margin:18px 0 0;font-size:15px;color:#5a6467;text-align:center}.cl-solo button{background:none;border:0;padding:6px 4px;font:inherit;color:#33464d;text-decoration:underline;cursor:pointer}
 .cl-err{color:#a8371f;font-weight:700}
 .cl-seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;margin-top:14px}
-.cl-seats button{min-height:54px;font:900 22px/1 inherit;border:2px solid #182226;background:#fff;color:#182226;border-radius:10px;cursor:pointer}
+.cl-seats button{min-height:54px;font-family:inherit;font-weight:900;font-size:22px;line-height:1;border:2px solid #182226;background:#fff;color:#182226;border-radius:10px;cursor:pointer}
 .cl-seats button:disabled{border-color:#b9b3a4;color:#a09a8c;background:#e2dccd;cursor:default}
 .cl-btn:focus-visible,.cl-code:focus-visible,.cl-seats button:focus-visible{outline:3px solid #f2a33a;outline-offset:2px}
-.cl-big{width:124px;height:124px;margin:4px auto 12px;border-radius:50%;border:5px solid #a8371f;color:#a8371f;display:grid;place-items:center;font:900 56px/1 inherit}
+.cl-big{width:124px;height:124px;margin:4px auto 12px;border-radius:50%;border:5px solid #a8371f;color:#a8371f;display:grid;place-items:center;font-family:inherit;font-weight:900;font-size:56px;line-height:1}
 .cl-c{text-align:center}`;
 function ui(h){if(!box){const st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);box=document.createElement('div');box.className='cl-ov';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','全班一起玩');document.body.appendChild(box);}
   box.hidden=false;box.innerHTML=`<div class="cl-box">${h}</div>`;return box;}
 const hide=()=>{if(box)box.hidden=true;};
-function ask(msg){off();ui(`<h2>全班一起玩</h2><p class="cl-sub">輸入大螢幕上的任務代碼（4 個數字）</p>${msg?`<p class="cl-err" role="alert">${msg}</p>`:''}
+function ask(msg){off();ui(`<h2>輸入任務代碼</h2><p class="cl-sub">看老師的大螢幕，輸入上面的 4 個數字</p>${msg?`<p class="cl-err" role="alert">${msg}</p>`:''}
   <input class="cl-code" id="clCode" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="任務代碼">
-  <div class="cl-row"><button class="cl-btn" id="clGo">進大廳</button><button class="cl-btn alt" id="clNo">自己玩</button></div>`);
+  <div class="cl-row"><button class="cl-btn cl-wide" id="clGo">進大廳</button></div>
+  <p class="cl-solo">老師沒有給任務代碼？<button id="clNo">自己玩</button></p>`);
   const go=()=>{const v=box.querySelector('#clCode').value.replace(/\D/g,'');if(v.length!==4){ask('任務代碼是 4 個數字。');return;}join({code:v});};
-  box.querySelector('#clGo').onclick=go;box.querySelector('#clCode').onkeydown=e=>{if(e.key==='Enter')go();};box.querySelector('#clNo').onclick=hide;box.querySelector('#clCode').focus();}
+  box.querySelector('#clGo').onclick=go;box.querySelector('#clCode').onkeydown=e=>{if(e.key==='Enter')go();};box.querySelector('#clNo').onclick=()=>{hide();try{O.onSolo&&O.onSolo();}catch(e){}};box.querySelector('#clCode').focus();}
 function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`);
   load().then(db=>(q.sid?db.collection('nmth_rooms').doc(q.sid).get().then(d=>d.exists?[d]:[]):db.collection('nmth_rooms').where('code','==',q.code).get().then(r=>r.docs)).then(docs=>{
     const live=docs.map(d=>Object.assign({sid:d.id},d.data())).filter(r=>r.ph!=='closed').sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0))[0];
@@ -70,9 +73,10 @@ function wait(quiet){const sid=sess.sid;off();
 return {
   /* o: {game, store, snapshot(), onJoin(sess), onStart(sess), onClosed(wasPlaying)} */
   init(o){O=o;try{sess=JSON.parse(localStorage.getItem(o.store)||'null');}catch(e){sess=null;}
-   if(KQ&&(!sess||sess.sid!==KQ)){join({sid:KQ});return 'join';}
+   if(KQ&&sess&&sess.sid!==KQ){sess=null;keep();}
    if(sess&&sess.on){load().then(()=>wait(true)).catch(()=>{});return 'playing';}
-   if(sess){join({sid:sess.sid});return 'join';}
-   return '';},
+   return sess||KQ?'join':'';},
+  /* call after the player has typed a name: join by link, rejoin, or ask for the code */
+  begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ});else if(sess)join({sid:sess.sid});else ask();},
   ask,touch,push,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
 })();
