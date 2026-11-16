@@ -490,7 +490,38 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .gm-world{position:relative;height:100%;aspect-ratio:1200/700;min-width:100%}
 .gm-scene{position:absolute;inset:0;width:100%;height:100%}
 .gm-dark{position:absolute;inset:0;pointer-events:none;z-index:5;transition:opacity 1.6s ease-out;
- background:radial-gradient(circle at var(--x,50%) var(--y,55%),rgba(255,233,184,.10) 0,rgba(255,233,184,.04) 90px,rgba(8,11,13,.0) 120px,rgba(8,11,13,.86) 210px,rgba(8,11,13,.96) 340px)}
+ background:radial-gradient(circle at var(--x,50%) var(--y,55%),rgba(255,236,190,.16) 0,rgba(255,233,184,.07) calc(70px*var(--k,1)),rgba(255,226,170,.02) calc(118px*var(--k,1)),rgba(8,11,13,.55) calc(168px*var(--k,1)),rgba(8,11,13,.9) calc(230px*var(--k,1)),rgba(6,8,10,.975) calc(360px*var(--k,1)))}
+.gm-motes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+.gm-exit{position:absolute;right:2.2%;top:17%;z-index:7;font:900 13px var(--serif);letter-spacing:.2em;color:#9df0b4;background:#0f3a22;padding:4px 8px 4px 10px;border-radius:2px;box-shadow:0 0 18px 4px rgba(70,220,130,.28);opacity:.8;pointer-events:none}
+.gm-lit .gm-exit{opacity:.35;box-shadow:none}
+.gm-chapter{position:absolute;inset:0;z-index:40;background:#07090b;display:grid;place-content:center;justify-items:center;gap:10px;text-align:center;padding:24px;pointer-events:none;animation:chap 2.4s ease-in forwards;color:#efe6d2}
+.gm-chapter small{font:700 15px var(--serif);letter-spacing:.5em;color:#b9a888}
+.gm-chapter b{font:900 clamp(26px,4.6vw,46px)/1.3 var(--serif);letter-spacing:.06em}
+.gm-chapter i{font:400 15px var(--serif);font-style:normal;letter-spacing:.4em;color:#8f8672}
+.gm-chapter small,.gm-chapter b,.gm-chapter i{animation:chapT 2.4s ease-out both}
+@keyframes chap{0%,62%{opacity:1}100%{opacity:0}}
+@keyframes chapT{0%{opacity:0;transform:translateY(8px)}22%{opacity:1;transform:none}70%{opacity:1}100%{opacity:0}}
+.gm-title{position:absolute;inset:0;overflow:hidden;background:#0b1016}
+.gm-title svg{position:absolute;inset:0;width:100%;height:100%}
+.gm-title .rain path{animation:rain .8s linear infinite}
+@keyframes rain{from{transform:translate(12px,-40px)}to{transform:translate(-12px,60px)}}
+.gm-title-txt{position:absolute;inset:0;display:grid;grid-template-rows:auto auto auto 1fr;justify-items:center;align-content:start;padding:7% 20px 7%;text-align:center;color:#efe6d2}
+.gm-title-txt .gm-go{align-self:end}
+.gm-title-txt small{font:700 14px var(--serif);letter-spacing:.45em;color:#a99c80}
+.gm-title-txt h2{font:900 clamp(44px,9vw,92px)/1.15 var(--serif);letter-spacing:.14em;margin:10px 0 6px;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.gm-title-txt p{font:400 20px var(--hand);color:#cfc3a6;margin:0}
+.gm-pump{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:2}
+.gm-spark{animation:spark .9s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--dx,0),-60px);opacity:0}}
+.qs-h3{font-size:19px;margin:22px 0 6px}
+.qs-hand{margin-top:14px;padding:14px;border:1px solid #cfc6b4;background:#faf7f0}
+.qs-hand textarea,.qs-tcin{width:100%;box-sizing:border-box;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;padding:10px;border:1px solid #9a9486;background:#fff;color:#1d2226;word-break:break-all}
+.qs-qr{margin-top:10px}.qs-qr svg{width:200px;height:200px;display:block;background:#fff}.qs-qr small{display:block;margin-top:4px;color:#555}
+.qs-tw{overflow-x:auto;margin-top:8px}
+.qs-tb{border-collapse:collapse;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.qs-tb th,.qs-tb td{border:1px solid #cfc6b4;padding:6px 9px;text-align:center;vertical-align:top}
+.qs-tb thead th{background:#ece5d6;position:sticky;top:0}.qs-tb tbody th{text-align:left;background:#faf7f0;position:sticky;left:0}
+.qs-tb td small{display:block;color:#555;font-size:12.5px}.qs-tb td.no{color:#8a8578}.qs-tb td:last-child{text-align:left;color:#a03a22;white-space:normal;min-width:120px}
 .gm-lit .gm-dark{opacity:0}
 .gm-obj{cursor:zoom-in;outline:none}
 .gm-obj .glint{fill:var(--warm);opacity:.85;animation:glint 2.4s ease-in-out infinite}
@@ -611,7 +642,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .gm-stars{font:700 20px var(--serif);color:var(--red);letter-spacing:4px}
 /* dawn ending */
 .gm-dawn{position:absolute;inset:0;background:linear-gradient(#f4d9a8,#e9b98a 40%,#8e6a5a);display:grid;place-items:center;padding:62px 20px 20px;overflow:auto}
-@media (prefers-reduced-motion:reduce){.gm-scr.on,.gm-seal.thud{animation:none}.gm-obj .glint{animation:none;opacity:.7}.gm-dark{transition:none}.gm-slip{transition:none}}
+@media (prefers-reduced-motion:reduce){.gm-title .rain path,.gm-spark,.gm-chapter,.gm-chapter small,.gm-chapter b,.gm-chapter i{animation:none}.gm-scr.on,.gm-seal.thud{animation:none}.gm-obj .glint{animation:none;opacity:.7}.gm-dark{transition:none}.gm-slip{transition:none}}
 /* passport (outside the game) + printable certificate */
 .qs-pass{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin:12px 0}
 @media (max-width:700px){.qs-pass{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -628,6 +659,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 @media print{body *{visibility:hidden}.qs-cert,.qs-cert *{visibility:visible}
  .qs-cert{display:block!important;position:absolute;inset:0;padding:24mm 18mm;font-size:14pt;color:#000;font-family:"Noto Serif TC",serif}
  .qs-cert h2{font-size:26pt;margin:0 0 6mm;text-align:center}.qs-cert .cn{margin:3mm 0;padding:3mm;border:1px solid #999}}
+.qs-hand{color:#1d2226}.qs-tb{color:#1d2226;background:#fff}
+@media (max-width:640px){.gm-title-txt{padding-top:68px}}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -853,42 +886,58 @@ const G={
 const ROOMS={
  s1:{wall:'#5a4a3a',floor:'#3a3029',items:[
   {k:'chopper',n:'石器',x:300,y:400,act:'brush',clue:'邊緣有一片一片敲下來的痕跡。這是用石頭互相敲打做成的工具，叫做<b>打製石器</b>。'},
-  {k:'bone',n:'骨角器',x:560,y:420,act:'look',clue:'用動物的骨頭或角磨尖做成的工具，可以拿來刺、挖東西，也可能用來捕魚。'},
+  {k:'bone',n:'骨角器',x:560,y:420,act:'turn',clue:'用動物的骨頭或角磨尖做成的工具，可以拿來刺、挖東西，也可能用來捕魚。'},
   {k:'ash',n:'洞穴地面',x:820,y:430,act:'brush',clue:'地上有一層黑黑的炭屑和灰燼。住在洞裡的人<b>會用火</b>。'},
-  {k:'empty',n:'空的展臺',x:1020,y:390,act:'look',clue:'研究員的便條：「這一區<b>沒有找到陶器</b>，也<b>沒有種田的工具</b>。」'}]},
+  {k:'empty',n:'空的展臺',x:1020,y:390,act:'magnify',clue:'研究員的便條：「這一區<b>沒有找到陶器</b>，也<b>沒有種田的工具</b>。」'}]},
  s2:{wall:'#3f5446',floor:'#2c372f',items:[
   {k:'shards',n:'陶器碎片',x:300,y:410,act:'shards',clue:'碎片拼回去，是一個罐子，外面有繩子壓出來的紋路。陶罐可以<b>煮東西、裝糧食</b>。'},
-  {k:'adze',n:'石斧',x:540,y:400,act:'look',clue:'表面磨得又光又滑，刀口很鋒利。這是<b>磨製石器</b>，比打製石器好用。'},
-  {k:'knife',n:'石刀',x:780,y:420,act:'look',clue:'石刀上有兩個小洞，可以穿繩子套在手上，用來<b>割小米的穗</b>。'},
-  {k:'jade',n:'玉耳飾',x:1010,y:400,act:'look',clue:'綠色的玉做成的耳飾。玉的原料來自<b>花蓮豐田</b>一帶，東南亞的遺址也找到過臺灣的玉。'}]},
+  {k:'adze',n:'石斧',x:540,y:400,act:'turn',clue:'表面磨得又光又滑，刀口很鋒利。這是<b>磨製石器</b>，比打製石器好用。'},
+  {k:'knife',n:'石刀',x:780,y:420,act:'turn',clue:'石刀上有兩個小洞，可以穿繩子套在手上，用來<b>割小米的穗</b>。'},
+  {k:'jade',n:'玉耳飾',x:1010,y:400,act:'turn',clue:'綠色的玉做成的耳飾。玉的原料來自<b>花蓮豐田</b>一帶，東南亞的遺址也找到過臺灣的玉。'}]},
  s3:{wall:'#3b4656',floor:'#2a3039',items:[
   {k:'slag',n:'黑色硬塊',x:290,y:420,act:'brush',clue:'這是<b>鐵渣</b>，煉鐵時剩下來的渣。有鐵渣，表示這裡的人自己煉鐵。'},
-  {k:'furnace',n:'煉鐵爐模型',x:520,y:390,act:'look',clue:'考古學家在十三行找到<b>煉鐵爐</b>的遺跡。旁邊的管子是用來送風、讓火更熱的。'},
-  {k:'beads',n:'珠子',x:770,y:420,act:'look',clue:'玻璃珠、瑪瑙珠，臺灣本地做不出來。它們是<b>和島外的人交換</b>來的。'},
+  {k:'furnace',n:'煉鐵爐模型',x:520,y:390,act:'bellows',clue:'考古學家在十三行找到<b>煉鐵爐</b>的遺跡。旁邊的管子是用來送風、讓火更熱的。'},
+  {k:'beads',n:'珠子',x:770,y:420,act:'turn',clue:'玻璃珠、瑪瑙珠，臺灣本地做不出來。它們是<b>和島外的人交換</b>來的。'},
   {k:'coins',n:'銅錢',x:1010,y:420,act:'brush',clue:'中國古代的銅錢，也是從島外來的。十三行的人和外地有往來。'}]},
  s4:{wall:'#2f4458',floor:'#232f3b',items:[
-  {k:'ship',n:'帆船模型',x:300,y:400,act:'look',clue:'大航海時代的帆船。航海技術進步以後，歐洲人可以走<b>海路</b>直接到亞洲。'},
-  {k:'crates',n:'貨箱',x:580,y:420,act:'look',clue:'瓷器、絲綢、香料：歐洲人很喜歡亞洲的這些商品，可是走陸路運送很難，價格很貴。'},
-  {k:'oldmap',n:'古地圖',x:880,y:400,act:'look',clue:'地圖上寫著「I. Formosa」。Formosa 是「美麗的」。臺灣位在日本和東南亞之間，是很好的轉運站。'}]},
+  {k:'ship',n:'帆船模型',x:300,y:400,act:'turn',clue:'大航海時代的帆船。航海技術進步以後，歐洲人可以走<b>海路</b>直接到亞洲。'},
+  {k:'crates',n:'貨箱',x:580,y:420,act:'turn',clue:'瓷器、絲綢、香料：歐洲人很喜歡亞洲的這些商品，可是走陸路運送很難，價格很貴。'},
+  {k:'oldmap',n:'古地圖',x:880,y:400,act:'magnify',clue:'地圖上寫著「I. Formosa」。Formosa 是「美麗的」。臺灣位在日本和東南亞之間，是很好的轉運站。'}]},
  s5:{wall:'#4e3b33',floor:'#33271f',items:[
-  {k:'fort',n:'城堡模型',x:320,y:400,act:'look',clue:'荷蘭人 1624 年在今臺南安平一帶登陸，蓋了<b>熱蘭遮城</b>。'},
-  {k:'people',n:'四個人的畫像',x:640,y:410,act:'look',clue:'荷蘭人、西班牙人、漢人、日本人，都在這個時期來到臺灣。他們來臺灣做的事不一樣。'},
-  {k:'oldmap',n:'北部的地圖',x:930,y:400,act:'look',clue:'西班牙人 1626 年到北部雞籠（基隆），蓋了聖薩爾瓦多城，又在淡水蓋了聖多明哥城。'}]},
+  {k:'fort',n:'城堡模型',x:320,y:400,act:'turn',clue:'荷蘭人 1624 年在今臺南安平一帶登陸，蓋了<b>熱蘭遮城</b>。'},
+  {k:'people',n:'四個人的畫像',x:640,y:410,act:'magnify',clue:'荷蘭人、西班牙人、漢人、日本人，都在這個時期來到臺灣。他們來臺灣做的事不一樣。'},
+  {k:'oldmap',n:'北部的地圖',x:930,y:400,act:'magnify',clue:'西班牙人 1626 年到北部雞籠（基隆），蓋了聖薩爾瓦多城，又在淡水蓋了聖多明哥城。'}]},
  s6:{wall:'#4a3f2e',floor:'#302920',items:[
-  {k:'deer',n:'梅花鹿',x:300,y:410,act:'look',clue:'以前臺灣西部平原上，有成千上萬隻梅花鹿。'},
-  {k:'hide',n:'鹿皮',x:580,y:420,act:'look',clue:'鹿皮在日本很搶手，可以做盔甲的內襯。荷蘭人向原住民收購鹿皮，再賣到日本。'},
+  {k:'deer',n:'梅花鹿',x:300,y:410,act:'turn',clue:'以前臺灣西部平原上，有成千上萬隻梅花鹿。'},
+  {k:'hide',n:'鹿皮',x:580,y:420,act:'turn',clue:'鹿皮在日本很搶手，可以做盔甲的內襯。荷蘭人向原住民收購鹿皮，再賣到日本。'},
   {k:'contract',n:'一張舊文件',x:880,y:400,act:'magnify',clue:'用<b>羅馬字母</b>拼寫的原住民語言，旁邊是漢字。這是原住民和漢人簽的土地契約。'}]},
  s7:{wall:'#3a3a3a',floor:'#272727',items:[
-  {k:'years',n:'年代牆',x:340,y:390,act:'look',clue:'1624、1626、1642、1652、1662、1683。每個年份都有一件大事。'},
-  {k:'trademap',n:'貿易地圖',x:660,y:400,act:'look',clue:'鄭氏政權把臺灣當成轉運站，和日本、中國、東南亞做生意。'},
-  {k:'ship',n:'鄭氏的船',x:950,y:410,act:'look',clue:'1662 年，鄭氏取代荷蘭政權，仍然靠海上貿易生存。後來清朝取代鄭氏。'}]}};
+  {k:'years',n:'年代牆',x:340,y:390,act:'magnify',clue:'1624、1626、1642、1652、1662、1683。每個年份都有一件大事。'},
+  {k:'trademap',n:'貿易地圖',x:660,y:400,act:'magnify',clue:'鄭氏政權把臺灣當成轉運站，和日本、中國、東南亞做生意。'},
+  {k:'ship',n:'鄭氏的船',x:950,y:410,act:'turn',clue:'1662 年，鄭氏取代荷蘭政權，仍然靠海上貿易生存。後來清朝取代鄭氏。'}]}};
+
+/* wall drawings, one per gallery; they only show where the flashlight falls */
+const MURAL={
+ s1:`<path d="M40 520 C70 250 250 80 540 72 C830 64 1060 210 1160 520"/><path d="M290 520 C310 350 430 250 570 246 C720 242 830 340 870 520"/><circle cx="590" cy="340" r="30"/><path d="M330 430 q35 -14 70 0 t70 0 t70 0 t70 0 t70 0 t70 0 t70 0 M350 470 q35 -12 70 0 t70 0 t70 0 t70 0 t70 0 t70 0"/><path d="M180 190 l12 62 l14 -52 M300 130 l10 48 l12 -44 M820 120 l12 54 l12 -48 M960 200 l10 50 l14 -46"/>`,
+ s2:`<path d="M0 330 C140 250 260 300 380 270 C520 230 640 300 760 260 C900 220 1040 290 1200 250"/><path d="M700 300 h200 l-100 -80 Z M730 300 v90 M870 300 v90 M715 390 h170 M730 390 v60 M870 390 v60 M790 390 v-50 h30 v50"/><path d="M90 500 v-120 M90 380 q-22 -30 -8 -64 M90 380 q22 -30 8 -64 M90 400 q-26 -16 -34 -44 M90 400 q26 -16 34 -44 M170 500 v-100 M170 400 q-20 -28 -8 -58 M170 400 q20 -28 8 -58 M250 500 v-130 M250 370 q-22 -30 -8 -64 M250 370 q22 -30 8 -64 M330 500 v-104 M330 396 q-20 -28 -8 -58 M330 396 q20 -28 8 -58 M410 500 v-120 M410 380 q-22 -30 -8 -64 M410 380 q22 -30 8 -64"/><circle cx="1040" cy="130" r="36"/>`,
+ s3:`<path d="M0 360 C160 330 220 210 330 200 C420 194 470 300 560 330 C700 370 900 350 1200 372"/><path d="M0 430 q60 -16 120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M820 330 q-30 -90 30 -130 q60 40 30 130 Z M850 200 q-40 -40 0 -80 q40 -40 0 -80 M880 190 q30 -34 0 -68"/><path d="M930 330 l90 -18 l8 30 l-90 18 Z"/>`,
+ s4:`<circle cx="600" cy="270" r="150"/><circle cx="600" cy="270" r="110"/><path d="M600 90 L630 240 L780 270 L630 300 L600 450 L570 300 L420 270 L570 240 Z M494 164 L600 270 L706 164 M494 376 L600 270 L706 376"/><path d="M0 120 H1200 M0 270 H420 M780 270 H1200 M0 420 H1200" stroke-dasharray="4 14"/><path d="M60 470 q40 -18 80 0 t80 0 t80 0 M900 470 q40 -18 80 0 t80 0 t80 0"/><path d="M90 200 C200 120 300 320 420 230 M790 300 C900 200 1000 380 1130 240" stroke-dasharray="14 10"/>`,
+ s5:`<path d="M240 420 V250 h60 v-40 h40 v40 h60 v-40 h40 v40 h60 v-40 h40 v40 h60 V420 Z M440 420 v-70 q40 -40 80 0 v70 M480 210 V110 M480 110 l70 22 l-70 22"/><path d="M160 420 l80 -60 M700 420 l-60 -50"/><path d="M0 450 q60 -16 120 0 t120 0 M720 450 q60 -16 120 0 t120 0 t120 0 t120 0"/><path d="M860 400 q70 34 150 0 M935 400 V230 M935 240 q70 30 0 130 M935 250 q-50 30 0 110"/>`,
+ s6:`<path d="M0 300 C180 180 300 300 440 220 C600 130 760 300 900 210 C1010 150 1120 230 1200 200"/><path d="M0 470 q30 -40 50 0 M70 470 q24 -50 46 0 M150 470 q30 -40 52 0 M980 470 q26 -46 50 0 M1060 470 q30 -40 54 0 M1130 470 q22 -44 46 0"/><path d="M360 400 q40 -30 110 -14 l16 -50 l10 10 l-4 44 q4 20 -8 30 v50 M370 404 v62 M400 410 v56 M462 414 v52 M486 336 l-12 -28 M496 340 l8 -30 M474 308 l-10 -8 M504 310 l12 -10"/><path d="M640 420 q34 -26 94 -12 l14 -44 l8 8 l-2 38 q2 18 -8 26 v44 M650 424 v52 M676 428 v48 M728 430 v46 M748 364 l-10 -24 M756 366 l6 -26"/>`,
+ s7:`<path d="M60 250 H1140 M150 230 v40 M330 230 v40 M510 230 v40 M690 230 v40 M870 230 v40 M1050 230 v40"/><path d="M0 450 q60 -16 120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0 t120 0"/><path d="M200 420 q90 40 190 0 M295 420 V150 M295 160 l80 30 l-80 30 M295 230 l92 34 l-92 34 M295 300 l100 36 l-100 36"/><path d="M820 430 q80 34 170 0 M905 430 V190 M905 200 l70 26 l-70 26 M905 262 l82 30 l-82 30"/>`};
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let S={name:'',mode:'class',st:{},notes:{},seen:{},snd:1};
+let S={name:'',mode:'class',st:{},notes:{},seen:{},log:{},snd:1};
 try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+/* time spent in each gallery, for the report the pupil hands in */
+let clk=null;
+const clkStop=()=>{if(!clk)return;const g=S.log[clk.id]=S.log[clk.id]||{t:0};g.t=Math.round((g.t||0)+Math.min(600,(Date.now()-clk.t0)/1000));clk=null;save();};
+const clkStart=id=>{clkStop();clk={id,t0:Date.now()};};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){const id=clk&&clk.id;clkStop();clk=id?{id,t0:0,paused:1}:null;}else if(clk&&clk.paused)clk={id:clk.id,t0:Date.now()};});
+addEventListener('pagehide',()=>{if(clk&&!clk.paused)clkStop();});
 const NUM=['一','二','三','四','五','六','七'];
 /* ---------- sound: room tone, footsteps, paper, brush, stamp, and a quiet generative score ---------- */
 const A=(()=>{let ac=null,master=null,musicG=null,rev=null,on=false,mt=0,brushN=null;
@@ -915,9 +964,23 @@ const A=(()=>{let ac=null,master=null,musicG=null,rev=null,on=false,mt=0,brushN=
   bad:()=>{const t=ac.currentTime;pluck(196,t,.1);},
   lights:()=>{const t=ac.currentTime;[293.66,369.99,440,587.33,739.99].forEach((f,i)=>pluck(f,t+i*.12,.08,rev));const s=noise(.05),hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=1800;s.connect(hp);env(hp,t,.001,.3,.04).connect(master);s.start(t);},
   reveal:()=>{const t=ac.currentTime;pluck(440,t,.07,rev);pluck(659.25,t+.09,.06,rev);}};
+ fx.whoosh=()=>{const t=ac.currentTime,s=noise(.4),f=ac.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(300,t);f.frequency.linearRampToValueAtTime(900,t+.3);f.Q.value=.8;s.connect(f);env(f,t,.12,.3,.25).connect(master);s.start(t);};
+ fx.door=()=>{const t=ac.currentTime,s=noise(.3),f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=180;s.connect(f);const e=env(f,t,.005,.8,.3);e.connect(master);e.connect(rev);s.start(t);};
+ fx.tick=()=>{const t=ac.currentTime,o=ac.createOscillator();o.frequency.value=1900;env(o,t,.001,.04,.03).connect(master);o.start(t);o.stop(t+.06);};
+ let ambStop=null,ambKind=null;
+ const amb=k=>{if(ambStop){ambStop();ambStop=null;}ambKind=k;if(!on||!ac||!k)return;const g=ac.createGain();g.gain.value=0;g.gain.linearRampToValueAtTime(1,ac.currentTime+1.5);g.connect(master);let tm=0,alive=true;const nodes=[];
+  const bed=(type,freq,vol,q)=>{const s=noise(3),f=ac.createBiquadFilter();f.type=type;f.frequency.value=freq;if(q)f.Q.value=q;const v=ac.createGain();v.gain.value=vol;s.loop=true;s.connect(f);f.connect(v);v.connect(g);s.start();nodes.push(s);return v;};
+  const every=(lo,hi,fn)=>{const go=()=>{if(!alive)return;try{fn();}catch(e){}tm=setTimeout(go,lo+Math.random()*(hi-lo));};tm=setTimeout(go,lo);};
+  if(k==='rain'){bed('highpass',2600,.05);bed('bandpass',900,.03,.6);}
+  if(k==='cave'){bed('lowpass',160,.12);every(1400,5200,()=>{const t=ac.currentTime,o=ac.createOscillator();o.frequency.setValueAtTime(1500+Math.random()*900,t);o.frequency.exponentialRampToValueAtTime(700,t+.09);const e=env(o,t,.002,.07,.25);e.connect(rev);e.connect(g);o.start(t);o.stop(t+.4);});}
+  if(k==='night'){bed('lowpass',220,.05);every(900,2600,()=>{const t=ac.currentTime;for(let i=0;i<3;i++){const o=ac.createOscillator();o.frequency.value=4300+Math.random()*200;env(o,t+i*.07,.005,.012,.04).connect(g);o.start(t+i*.07);o.stop(t+i*.07+.08);}});}
+  if(k==='fire'){bed('lowpass',300,.1);every(120,600,()=>{const t=ac.currentTime,s=noise(.03),f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1500+Math.random()*2500;s.connect(f);env(f,t,.001,.05+Math.random()*.08,.03).connect(g);s.start(t);});}
+  if(k==='sea'){const v=bed('lowpass',520,.07),l=ac.createOscillator(),lg=ac.createGain();l.frequency.value=.11;lg.gain.value=.055;l.connect(lg);lg.connect(v.gain);l.start();nodes.push(l);}
+  ambStop=()=>{alive=false;clearTimeout(tm);const t=ac.currentTime;g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0,t+.8);nodes.forEach(n=>{try{n.stop(t+.9);}catch(e){}});};};
  return {
+  amb,
   on:()=>on,
-  set(v){on=v;if(v){init();ac.resume();startMusic();}else if(ac){stopMusic();}},
+  set(v){on=v;if(v){init();ac.resume();startMusic();amb(ambKind);}else if(ac){stopMusic();if(ambStop){ambStop();ambStop=null;}}},
   play(k){if(!on||!ac)return;try{fx[k]&&fx[k]();}catch(e){}},
   brush(v){if(!on||!ac)return;if(v&&!brushN){const s=noise(2),f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=1800;f.Q.value=.5;const g=ac.createGain();g.gain.value=.08;s.loop=true;s.connect(f);f.connect(g);g.connect(master);s.start();brushN=[s,g];}
    else if(!v&&brushN){const [s,g]=brushN;g.gain.setTargetAtTime(0,ac.currentTime,.05);s.stop(ac.currentTime+.2);brushN=null;}}};})();
@@ -928,6 +991,22 @@ document.addEventListener('fullscreenchange',()=>{$('#gmFs').textContent=documen
 const show=id=>{$$('.gm-scr').forEach(s=>s.classList.toggle('on',s.id===id));};
 /* ---------- intro: a letter left on the volunteer desk ---------- */
 function intro(){const el=$('#scIntro');
+ el.innerHTML=`<div class="gm-title"><svg viewBox="${$('#gm').clientWidth<640?'170 0 420 700':'0 0 1200 700'}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${wob}
+   <linearGradient id="tsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1016"/><stop offset=".7" stop-color="#1a2530"/><stop offset="1" stop-color="#26323a"/></linearGradient>
+   <radialGradient id="twin" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="700" fill="url(#tsky)"/>
+  <path d="M0 470 C200 430 330 450 520 440 C760 426 960 452 1200 430 V700 H0 Z" fill="#10171c"/>
+  <g filter="url(#wob)"><path d="M250 520 V330 L420 290 H900 L960 330 V520 Z" fill="#0c1115" stroke="#33414a" stroke-width="2"/>
+   <path d="M420 290 V520 M900 290 V520" stroke="#232e35" stroke-width="2"/>${[...Array(15)].map((_,i)=>`<path d="M${450+i*30} 300 V520" stroke="#1b252b" stroke-width="6"/>`).join('')}
+   <rect x="296" y="400" width="74" height="54" fill="#f2c669"/><path d="M333 400 v54 M296 427 h74" stroke="#0c1115" stroke-width="3"/>
+   <rect x="640" y="440" width="70" height="80" fill="#11181d" stroke="#33414a" stroke-width="2"/></g>
+  <circle cx="333" cy="427" r="150" fill="url(#twin)"/>
+  <path d="M0 520 H1200 V700 H0 Z" fill="#0a0f13"/><path d="M296 540 h74 l20 120 h-114 Z" fill="#f2c669" opacity=".12"/>
+  <g class="rain" stroke="#9fb4c4" stroke-width="1.2" opacity=".35">${[...Array(70)].map((_,i)=>{const x=(i*173)%1260-30,y=(i*97)%700,l=18+(i%5)*5;return `<path d="M${x} ${y} l-6 ${l}" style="animation-delay:-${(i%17)/10}s;animation-duration:${.7+(i%6)*.08}s"/>`;}).join('')}</g></svg>
+  <div class="gm-title-txt"><small>國立臺灣歷史博物館・常設展</small><h2>閉館之後</h2><p>晚上九點，雨還在下。</p><button class="gm-go" id="gmBegin">進去</button></div></div>`;
+ $('#gmBegin').onclick=()=>{if(S.snd&&!A.on()){A.set(true);sndUI();}A.amb('rain');A.play('door');letter();};
+ show('scIntro');$('#gmBegin').focus({preventScroll:true});}
+function letter(){const el=$('#scIntro');
  el.innerHTML=`<div class="gm-desk"><div class="gm-letter gm-paper">
   <h2>給今晚值班的志工</h2><div class="sub">國立臺灣歷史博物館・常設展「斯土斯民」</div>
   <p class="hw">下午屋頂漏水，常設展七個展區的說明卡都濕了，字看不清楚。</p>
@@ -950,7 +1029,7 @@ const LAY={wide:{vb:'0 0 980 600',w:200,h:[160,190],pos:[[60,70],[290,70],[520,7
  tall:{vb:'0 0 440 800',w:185,h:[140,140],pos:[[25,60],[230,60],[25,215],[25,440],[230,440],[25,595],[230,595]],
   walls:'M12 45 H428 V370 H12 Z M12 425 H428 V750 H12 Z',l1:[14,34,'start'],l2:[14,414,'start'],door:[220,785],
   hall:'M117 200 V215 M322 200 V230 M117 355 V395 H322 V230 M220 370 V425 M117 425 V440 M322 425 V440'}};
-function plan(){const n=ST.filter(s=>S.st[s.id]).length,el=$('#scPlan'),K=LAY[$('#gm').clientWidth<640?'tall':'wide'];
+function plan(){clkStop();A.amb(null);stopLight();const n=ST.filter(s=>S.st[s.id]).length,el=$('#scPlan'),K=LAY[$('#gm').clientWidth<640?'tall':'wide'];
  const lab=(t,[x,y,a])=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" font-family="Noto Serif TC,serif" font-size="15" fill="#9c917a" letter-spacing="4">${t}</text>`;
  el.innerHTML=`<div class="gm-plan"><div><h3>常設展 平面圖</h3><p class="hint">${n===7?'七張說明卡都寫好了，可以下班了。':`七張說明卡，寫好 ${n} 張了。點一個展間進去。`}</p></div>
  <svg viewBox="${K.vb}" role="group" aria-label="常設展平面圖">
@@ -968,6 +1047,21 @@ function plan(){const n=ST.filter(s=>S.st[s.id]).length,el=$('#scPlan'),K=LAY[$(
  const d=$('#gmDawn');if(d)d.onclick=dawn;show('scPlan');pass();}
 /* ---------- a dark gallery ---------- */
 let R=null,darkT=0;
+const AMB={s1:'cave',s2:'night',s3:'fire',s4:'sea',s5:'sea',s6:'night',s7:'sea'};
+/* the flashlight: eases toward the pointer, flickers a little, and shows dust in its beam */
+let lightTok=0;const stopLight=()=>{lightTok++;};
+function startLight(scr,dk){const tok=++lightTok,pan=$('#gmPan'),cv=$('#gmMotes'),box=cv.parentNode;let t={x:0,y:0},c=null;
+ const set=(x,y)=>{dk.style.setProperty('--x',x+'px');dk.style.setProperty('--y',y+'px');};
+ const aim=(x,y,snap)=>{t={x,y};if(snap||RM||!c){c={x,y};set(x,y);}};
+ if(RM){cv.remove();return aim;}
+ const W=cv.width=box.clientWidth,H=cv.height=box.clientHeight,g=cv.getContext('2d');
+ const M=[...Array(54)].map(()=>({x:Math.random()*W,y:Math.random()*H,r:.6+Math.random()*1.5,vx:(Math.random()-.5)*.14,vy:-.04-Math.random()*.1,p:Math.random()*6.3}));
+ let n=0;const loop=()=>{if(tok!==lightTok||!cv.isConnected)return;requestAnimationFrame(loop);if(!c)return;n++;
+  c.x+=(t.x-c.x)*.2;c.y+=(t.y-c.y)*.2;set(c.x,c.y);if(n%5===0)dk.style.setProperty('--k',(1+(Math.random()-.5)*.035).toFixed(3));
+  const lit=$('#scRoom').classList.contains('gm-lit'),lx=c.x-pan.scrollLeft,ly=c.y;g.clearRect(0,0,W,H);
+  for(const m of M){m.x+=m.vx+Math.sin(n*.01+m.p)*.05;m.y+=m.vy;if(m.y<-4){m.y=H+4;m.x=Math.random()*W;}if(m.x<-4)m.x=W+4;if(m.x>W+4)m.x=-4;
+   const d=Math.hypot(m.x-lx,m.y-ly),a=lit?.1:d<200?(1-d/200)*.55:0;if(a<=.01)continue;g.fillStyle=`rgba(255,236,196,${a.toFixed(3)})`;g.beginPath();g.arc(m.x,m.y,m.r,0,6.3);g.fill();}};
+ requestAnimationFrame(loop);return aim;}
 const wob=`<filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".5" stop-color="#fff" stop-opacity=".04"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>
  <radialGradient id="spot" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff2cc" stop-opacity=".35"/><stop offset="1" stop-color="#fff2cc" stop-opacity="0"/></radialGradient>`;
@@ -976,7 +1070,9 @@ function sceneSVG(s,rm){const seen=S.seen[s.id]||[];
  <rect width="1200" height="700" fill="${rm.wall}"/>${[...Array(24)].map((_,i)=>`<path d="M${i*52+10} 0 V520" stroke="rgba(0,0,0,.08)" stroke-width="${1+i%3}"/>`).join('')}
  <path d="M0 520 H1200 V700 H0 Z" fill="${rm.floor}"/><path d="M0 520 H1200" stroke="rgba(0,0,0,.35)" stroke-width="6"/>
  ${[...Array(9)].map((_,i)=>`<path d="M${-200+i*190} 700 L${300+i*80} 520" stroke="rgba(255,255,255,.04)" stroke-width="2"/>`).join('')}
- <text x="1170" y="120" text-anchor="end" font-family="Noto Serif TC,serif" font-weight="900" font-size="64" fill="rgba(255,240,210,.07)" letter-spacing="10">${s.zone}</text>
+ <g filter="url(#wob)" fill="none" stroke="rgba(255,236,200,.17)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${MURAL[s.id]}</g>
+ <path d="M0 500 H1200" stroke="rgba(0,0,0,.25)" stroke-width="22"/><path d="M0 489 H1200" stroke="rgba(255,255,255,.05)" stroke-width="2"/>
+ <text x="1170" y="112" text-anchor="end" font-family="Noto Serif TC,serif" font-weight="900" font-size="30" fill="rgba(255,240,210,.10)" letter-spacing="8">${s.zone}</text>
  ${rm.items.map((it,i)=>{const x=it.x,y=it.y,sn=seen.includes(i);return `<g class="gm-obj${sn?' seen':''}" data-i="${i}" tabindex="0" role="button" aria-label="${sn?it.n:'看不清楚的展品'}：靠近看">
    <path d="M${x-80} ${y-150} L${x+80} ${y-150} L${x+110} ${y+70} L${x-110} ${y+70} Z" fill="url(#spot)" opacity=".7"/>
    <rect x="${x-95}" y="${y+62}" width="190" height="${600-y}" fill="#2a2420" stroke="rgba(0,0,0,.4)"/><rect x="${x-95}" y="${y+62}" width="190" height="10" fill="rgba(255,255,255,.08)"/>
@@ -985,19 +1081,21 @@ function sceneSVG(s,rm){const seen=S.seen[s.id]||[];
    <g transform="translate(${x} ${y+112}) rotate(${(i%2?1.5:-1.5)})"><rect x="-62" y="-16" width="124" height="34" fill="${sn?'#efe6d2':'#cfc3a6'}"/><text class="gm-tag" text-anchor="middle" y="7">${sn?it.n:'？'}</text></g>
    <path class="glint" d="M${x+64} ${y-86} l4 -12 l4 12 l12 4 l-12 4 l-4 12 l-4 -12 l-12 -4 Z"/></g>`;}).join('')}
  </svg>`;}
-function room(id){const s=ST.find(x=>x.id===id),rm=ROOMS[id];R={s,rm};A.play('step');
+function room(id,opt){const s=ST.find(x=>x.id===id),rm=ROOMS[id];R={s,rm};A.play(opt&&opt.quiet?'step':'door');clkStart(id);A.amb(AMB[id]);
  const el=$('#scRoom');el.classList.remove('gm-lit');
- el.innerHTML=`<div class="gm-room-scr"><div class="gm-pan" id="gmPan"><div class="gm-world" id="gmRoomScr">${sceneSVG(s,rm)}<div class="gm-dark" id="gmDark"></div></div></div>
+ el.innerHTML=`<div class="gm-room-scr"><div class="gm-pan" id="gmPan"><div class="gm-world" id="gmRoomScr">${sceneSVG(s,rm)}<div class="gm-dark" id="gmDark"></div><div class="gm-exit" aria-hidden="true">出口</div></div></div><canvas class="gm-motes" id="gmMotes" aria-hidden="true"></canvas>
+  ${opt&&opt.quiet||RM?'':`<div class="gm-chapter" aria-hidden="true"><small>第${NUM[ST.indexOf(s)]}展間</small><b>${s.sub}</b><i>${s.zone}</i></div>`}
   <div class="gm-title-wall"><small>第${NUM[ST.indexOf(s)]}展間・${s.zone}</small><b>${s.sub}</b></div>
   <button class="gm-btn alt gm-back" id="gmBack" style="background:rgba(13,18,21,.7);color:#efe6d2;border-color:rgba(239,230,210,.4)">← 平面圖</button>
   <div class="gm-hud"><div class="gm-note gm-paper" id="gmNote"></div><div id="gmHudBtn"></div></div></div>`;
  const scr=$('#gmRoomScr'),dk=$('#gmDark');
- const mv=e=>{const r=scr.getBoundingClientRect();dk.style.setProperty('--x',(e.clientX-r.left)+'px');dk.style.setProperty('--y',(e.clientY-r.top)+'px');};
+ show('scRoom');const aim=startLight(scr,dk);
+ const mv=e=>{const r=scr.getBoundingClientRect();aim(e.clientX-r.left,e.clientY-r.top,e.type==='pointerdown'&&e.pointerType!=='mouse');};
  scr.addEventListener('pointermove',mv);scr.addEventListener('pointerdown',mv);
  $$('.gm-obj').forEach(g=>{const go=()=>closeup(+g.dataset.i);g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};
-  g.onfocus=()=>{const pn=$('#gmPan'),fb=g.getBoundingClientRect(),pr=pn.getBoundingClientRect();if(fb.left<pr.left||fb.right>pr.right)pn.scrollLeft+=fb.left+fb.width/2-(pr.left+pr.width/2);const b=g.getBoundingClientRect(),r=scr.getBoundingClientRect();dk.style.setProperty('--x',(b.left+b.width/2-r.left)+'px');dk.style.setProperty('--y',(b.top+b.height/2-r.top)+'px');};});
+  g.onfocus=()=>{const pn=$('#gmPan'),fb=g.getBoundingClientRect(),pr=pn.getBoundingClientRect();if(fb.left<pr.left||fb.right>pr.right)pn.scrollLeft+=fb.left+fb.width/2-(pr.left+pr.width/2);const b=g.getBoundingClientRect(),r=scr.getBoundingClientRect();aim(b.left+b.width/2-r.left,b.top+b.height/2-r.top);};});
  $('#gmBack').onclick=()=>{A.play('step');plan();};
- {const f=$('.gm-obj .frame').getBoundingClientRect(),r=scr.getBoundingClientRect();dk.style.setProperty('--x',(f.left+f.width/2-r.left)+'px');dk.style.setProperty('--y',(f.top+f.height/2-r.top)+'px');}
+ show('scRoom');{const f=$('.gm-obj .frame').getBoundingClientRect(),r=scr.getBoundingClientRect();aim(f.left+f.width/2-r.left,f.top+f.height/2-r.top,true);}
  if(S.st[id])el.classList.add('gm-lit');
  clearTimeout(darkT);darkT=setTimeout(()=>{if(R&&R.s===s&&(S.seen[id]||[]).length<rm.items.length)hud(true);},40000);
  hud(false);show('scRoom');}
@@ -1008,9 +1106,9 @@ function hud(help){const s=R.s,rm=R.rm,n=(S.seen[s.id]||[]).length,N=rm.items.le
 /* ---------- close-up on the worktable ---------- */
 function closeup(i){const it=R.rm.items[i],s=R.s;A.play('click');
  const wrap=document.createElement('div');wrap.className='gm-close';wrap.setAttribute('role','dialog');wrap.setAttribute('aria-modal','true');wrap.setAttribute('aria-label',it.n);
- const actTxt={brush:'用刷子輕輕把沙土刷掉。',shards:'把碎片拖回原本的位置，拼成一個罐子。',magnify:'用放大鏡看看上面寫了什麼。',look:'仔細看看。'}[it.act];
+ const actTxt={brush:'用刷子輕輕把沙土刷掉。',shards:'把碎片拖回原本的位置，拼成一個罐子。',magnify:'拿放大鏡在上面慢慢移動。',turn:'按住，左右拖，把它轉一圈看看。',bellows:'一直壓風箱，把爐子裡的火吹旺。',look:'仔細看看。'}[it.act];
  wrap.innerHTML=`<div class="gm-card gm-paper"><button class="gm-x" aria-label="放回去">×</button>
-  <div><div class="gm-tray" id="gmTray"></div>${it.act==='brush'?'<div class="gm-meter"><i id="gmMeter"></i></div>':''}</div>
+  <div><div class="gm-tray" id="gmTray"></div>${it.act==='brush'||it.act==='bellows'||it.act==='turn'?'<div class="gm-meter"><i id="gmMeter"></i></div>':''}</div>
   <div><h4>${it.n}</h4><p class="act">${actTxt}</p><div class="clue" id="gmClue" aria-live="polite"></div><div class="gm-row" id="gmClueBtn"></div></div></div>`;
  $('#scRoom').appendChild(wrap);
  const close=()=>{wrap.remove();A.play('paper');const g=$(`.gm-obj[data-i="${i}"]`);g&&g.focus({preventScroll:true});};
@@ -1044,8 +1142,27 @@ function closeup(i){const it=R.rm.items[i],s=R.s;A.play('click');
    let moved=0;const lens=$('#gmLens'),sv=lens.firstChild;
    tray.addEventListener('pointermove',e=>{const b=tray.getBoundingClientRect(),px=e.clientX-b.left,py=e.clientY-b.top;lens.hidden=false;lens.style.left=(px-70)+'px';lens.style.top=(py-70)+'px';sv.style.left=(-px*4.2+70)+'px';sv.style.top=(-py*4.2+70)+'px';if(++moved>40)reveal();});
    tray.tabIndex=0;tray.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal();}});tray.addEventListener('click',()=>{if(moved>8)reveal();});setTimeout(()=>{if(!moved)tray.focus();},50);}
+ else if(it.act==='turn'){tray.innerHTML=`<svg viewBox="-80 -80 160 160" id="gmTurnS"><defs>${wob}</defs><ellipse id="gmSh2" cx="0" cy="58" rx="46" ry="7" fill="rgba(0,0,0,.18)"/><g id="gmTurn"><g filter="url(#wob)" stroke="#22262a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${G[it.k]}</g></g></svg>`;
+   const grp=$('#gmTurn'),sh=$('#gmSh2');let a=0,sum=0,down=false,lx=0,q=0;tray.style.touchAction='none';tray.style.cursor='grab';
+   const put=()=>{const c=Math.cos(a*Math.PI/180),sn=Math.sin(a*Math.PI/180);grp.setAttribute('transform',`skewY(${(sn*7).toFixed(2)}) scale(${(Math.abs(c)<.14?.14*(c<0?-1:1):c).toFixed(3)} 1)`);sh.setAttribute('rx',(14+32*Math.abs(c)).toFixed(1));
+    $('#gmMeter').style.width=Math.min(100,sum/300*100)+'%';const nq=Math.floor(sum/90);if(nq!==q){q=nq;A.play('tick');}if(sum>=300)reveal();};
+   const by=d=>{a+=d;sum+=Math.abs(d);put();};
+   tray.addEventListener('pointerdown',e=>{down=true;lx=e.clientX;tray.setPointerCapture(e.pointerId);tray.style.cursor='grabbing';});
+   tray.addEventListener('pointermove',e=>{if(!down)return;by((e.clientX-lx)*.9);lx=e.clientX;});
+   const up=()=>{down=false;tray.style.cursor='grab';};tray.addEventListener('pointerup',up);tray.addEventListener('pointercancel',up);
+   tray.tabIndex=0;tray.setAttribute('aria-label','展品：按左右方向鍵轉動');tray.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')by(-45);else if(e.key==='ArrowRight')by(45);else if(e.key==='Enter'||e.key===' '){e.preventDefault();sum=300;put();}});setTimeout(()=>tray.focus({preventScroll:true}),50);}
+ else if(it.act==='bellows'){tray.innerHTML=`<svg viewBox="-80 -80 160 160"><defs>${wob}<radialGradient id="heat"><stop offset="0" stop-color="#ffd27a"/><stop offset=".5" stop-color="#ff7a2f" stop-opacity=".8"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient></defs>
+    <circle id="gmHeat" cx="0" cy="6" r="62" fill="url(#heat)" opacity="0"/><g filter="url(#wob)" stroke="#22262a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${G[it.k]}</g><g id="gmSparks" fill="#ffb347"></g></svg>
+    <button class="gm-btn gm-pump" id="gmPump">壓風箱</button>`;
+   let heat=0,done=false;const hz=$('#gmHeat'),sp=$('#gmSparks');
+   const draw=()=>{hz.setAttribute('opacity',(heat/100*.95).toFixed(2));$('#gmMeter').style.width=Math.min(100,heat)+'%';};
+   const cool=setInterval(()=>{if(!tray.isConnected||done){clearInterval(cool);return;}heat=Math.max(0,heat-2.2);draw();},120);
+   $('#gmPump').onclick=()=>{if(done)return;heat=Math.min(100,heat+13);A.play('whoosh');draw();
+    for(let k=0;k<3;k++){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',(Math.random()*30-15).toFixed(1));c.setAttribute('cy','-10');c.setAttribute('r',(1+Math.random()*1.6).toFixed(1));c.setAttribute('class','gm-spark');c.style.setProperty('--dx',(Math.random()*40-20).toFixed(0)+'px');sp.appendChild(c);setTimeout(()=>c.remove(),900);}
+    if(heat>=100){done=true;$('#gmPump').disabled=true;reveal();}};
+   setTimeout(()=>$('#gmPump').focus({preventScroll:true}),50);}
  else{tray.innerHTML=big;setTimeout(reveal,RM?0:700);}
- wrap.querySelector('.gm-x').focus();}
+ if(it.act==='look')wrap.querySelector('.gm-x').focus();}
 /* ---------- rewriting the labels (the questions) ---------- */
 let L=null;
 const UP='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -1058,7 +1175,7 @@ function card(inner,title){const s=R.s,N=L.steps.length,seen=(S.seen[s.id]||[]).
   <div class="gm-prog" aria-label="第 ${Math.min(L.i+1,N)} 張，共 ${N} 張">${L.steps.map((_,k)=>`<i class="${k<L.i?'ok':k===L.i?'on':''}"></i>`).join('')}</div>${inner}
   ${seen.length?`<details style="margin-top:16px"><summary class="hw" style="font-size:18px;cursor:pointer;min-height:36px">翻開我的筆記本（${seen.length} 條線索）</summary><ul class="hw" style="font-size:18px;line-height:1.7">${seen.map(it=>`<li><b>${it.n}</b>：${it.clue}</li>`).join('')}</ul></details>`:''}
   <div class="gm-row"><button class="gm-btn alt" id="gmRet">回到展間</button></div></div></div>`;
- $('#gmRet').onclick=()=>room(s.id);show('scLabel');$('#scLabel').scrollTop=0;}
+ $('#gmRet').onclick=()=>room(s.id,{quiet:1});show('scLabel');$('#scLabel').scrollTop=0;}
 function stepRender(){const st=L.steps[L.i];L.sm=0;if(!st)return finishRoom();({choice,sort,match,map:mapStep,site,note})[st.t](st);}
 function nextStep(){L.i++;A.play('paper');stepRender();}
 const fb=(c,h)=>`<div class="gm-fb ${c}" role="status">${h}</div>`;
@@ -1111,8 +1228,8 @@ function note(){const s=R.s,v=(S.notes[s.id]||{}).text||'';
   <div class="gm-row"><button class="gm-btn" id="gmNext">寫好了</button><button class="gm-btn alt" id="gmSkip">先跳過</button></div>`,'寫一句給明天的小學生');
  const sv=()=>{S.notes[s.id]=Object.assign(S.notes[s.id]||{},{text:$('#gmNoteT').value.trim()});save();};$('#gmNoteT').oninput=sv;$('#gmNext').onclick=()=>{sv();nextStep();};$('#gmSkip').onclick=nextStep;}
 /* ---------- lights on, stamp ---------- */
-function finishRoom(){const s=R.s,n=L.miss===0?3:L.miss<=2?2:1,prev=S.st[s.id];S.st[s.id]={stars:Math.max(n,prev?prev.stars:0),mode:S.mode};save();
- room(s.id);const el=$('#scRoom');setTimeout(()=>{el.classList.add('gm-lit');A.play('lights');},RM?0:250);
+function finishRoom(){const s=R.s,n=L.miss===0?3:L.miss<=2?2:1,prev=S.st[s.id];S.st[s.id]={stars:Math.max(n,prev?prev.stars:0),mode:S.mode};{const g=S.log[s.id]=S.log[s.id]||{t:0};if(g.miss==null){g.miss=L.miss;g.at=Date.now();}g.tries=(g.tries||0)+1;}save();
+ room(s.id,{quiet:1});const el=$('#scRoom');setTimeout(()=>{el.classList.add('gm-lit');A.play('lights');},RM?0:250);
  const nx=ST.slice(ST.indexOf(s)+1).find(x=>!S.st[x.id])||ST.find(x=>!S.st[x.id]);
  setTimeout(()=>{const box=document.createElement('div');box.className='gm-stampbox';box.innerHTML=`<div class="gm-stampcard gm-paper" role="dialog" aria-modal="true" aria-label="說明卡修好了">
   <div class="gm-seal thud">${s.stamp}</div><h4>第${NUM[ST.indexOf(s)]}展間的說明卡修好了</h4><div class="gm-stars" aria-label="${n} 顆星">${'★'.repeat(n)}${'☆'.repeat(3-n)}</div>
@@ -1121,31 +1238,73 @@ function finishRoom(){const s=R.s,n=L.miss===0?3:L.miss<=2?2:1,prev=S.st[s.id];S
   <div class="gm-row" style="justify-content:center">${nx?`<button class="gm-btn" id="gmNx">去第${NUM[ST.indexOf(nx)]}展間</button>`:''}<button class="gm-btn alt" id="gmPl">看平面圖</button></div></div>`;
   $('#scRoom').appendChild(box);A.play('stamp');const g=$('#gmNx');if(g){g.onclick=()=>room(nx.id);g.focus();}$('#gmPl').onclick=plan;if(!g)$('#gmPl').focus();pass();},RM?100:1100);}
 /* ---------- dawn ---------- */
-function dawn(){const tot=ST.reduce((a,s)=>a+(S.st[s.id]?S.st[s.id].stars:0),0);A.play('lights');
+function dawn(){clkStop();A.amb(null);stopLight();const tot=ST.reduce((a,s)=>a+(S.st[s.id]?S.st[s.id].stars:0),0);A.play('lights');
  $('#scDawn').innerHTML=`<div class="gm-dawn"><div class="gm-letter gm-paper" style="transform:rotate(1deg)"><h2>謝謝你</h2><div class="sub">11/14 早上</div>
   <p class="hw">${esc(S.name||'志工')}：</p><p class="hw">七張卡我都看過了，寫得很清楚，謝謝！（${tot} 顆星）</p>
   <p class="hw">昨晚辛苦了，回家睡一下吧。證書在下面，可以印出來。</p><p class="hw sig">林</p>
   <div class="gm-row"><button class="gm-go red" id="gmCert">去印證書</button><button class="gm-btn alt" id="gmAgain">再逛一次</button></div></div></div>`;
  $('#gmCert').onclick=()=>$('#pass').scrollIntoView({behavior:RM?'auto':'smooth'});$('#gmAgain').onclick=plan;show('scDawn');}
+/* ---------- the report a pupil hands in: everything is packed into the link itself, nothing is uploaded ---------- */
+const b64e=u8=>btoa(String.fromCharCode(...u8)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64d=t=>Uint8Array.from(atob(t.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+const chk=t=>{let h=2166136261;for(const c of t+'|hhl-nmth')h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h.toString(36).slice(-4).padStart(4,'0');};
+function packReport(){if(clk&&!clk.paused){const id=clk.id;clkStop();clkStart(id);}
+ const d=ST.map(s=>{const st=S.st[s.id],g=S.log[s.id]||{};return [st?st.stars:0,g.miss==null?-1:g.miss,g.t||0,(S.seen[s.id]||[]).length,g.tries||0];});
+ const nn=ST.filter(s=>S.notes[s.id]&&S.notes[s.id].text).length;
+ const b=b64e(new TextEncoder().encode(JSON.stringify([1,S.name||'',S.mode==='site'?'s':'c',Math.round(Date.now()/60000),d,nn])));return b+'.'+chk(b);}
+function readReport(code){try{const [b,k]=code.split('.');if(!b||chk(b)!==k)return null;const a=JSON.parse(new TextDecoder().decode(b64d(b)));if(a[0]!==1||!Array.isArray(a[4])||a[4].length!==7)return null;
+  return {name:String(a[1]).slice(0,20),mode:a[2]==='s'?'現場':'教室',when:new Date(a[3]*60000),rooms:a[4].map(r=>({stars:+r[0]||0,miss:+r[1],t:+r[2]||0,seen:+r[3]||0,tries:+r[4]||0})),notes:+a[5]||0};}catch(e){return null;}}
+const mmss=t=>`${Math.floor(t/60)} 分 ${String(Math.round(t%60)).padStart(2,'0')} 秒`;
 /* ---------- passport + certificate (outside the game) ---------- */
 function pass(){const n=ST.filter(s=>S.st[s.id]).length,tot=ST.reduce((a,s)=>a+(S.st[s.id]?S.st[s.id].stars:0),0);
  const ring=ST.map((s,i)=>`<div class="${S.st[s.id]?'on':''}" title="${s.sub}">${S.st[s.id]?s.stamp:`第${NUM[i]}展間`}</div>`).join('');
  $('#qsPass').innerHTML=`<div class="qs-pass" aria-label="已蓋 ${n} 個印章">${ring}</div><p style="font-size:17px">${S.name?esc(S.name)+'，':''}你已經修好 <b>${n}</b> 張說明卡，共 <b>${tot}</b> 顆星。</p>
-  <div class="qs-row"><button class="qs-btn" id="qsPrint" ${n<7?'disabled':''}>${n<7?`修好 7 張才能印證書（還差 ${7-n} 張）`:'印出證書'}</button><button class="qs-btn alt" id="qsReset">重新開始</button></div>`;
+  <div class="qs-row"><button class="qs-btn" id="qsPrint" ${n<7?'disabled':''}>${n<7?`修好 7 張才能印證書（還差 ${7-n} 張）`:'印出證書'}</button><button class="qs-btn alt" id="qsHand" ${n<1?'disabled':''}>交給老師</button><button class="qs-btn alt" id="qsReset">重新開始</button></div><div id="qsHandBox"></div>`;
+ $('#qsHand').onclick=()=>{const url=BASE+'nmth-quest.html#r='+packReport(),box=$('#qsHandBox');
+  box.innerHTML=`<div class="qs-hand"><p><b>把下面這串連結交給老師</b>（貼到老師指定的地方）。裡面記著：你的名字、每個展間的星星、寫錯幾次、花了多久。</p>
+   <textarea id="qsLink" readonly rows="3" aria-label="成績連結">${url}</textarea><div class="qs-row"><button class="qs-btn" id="qsCopy">複製連結</button><span id="qsCopied" role="status"></span></div><div id="qsQR" class="qs-qr"></div></div>`;
+  $('#qsCopy').onclick=()=>{const t=$('#qsLink');t.select();(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).catch(()=>document.execCommand('copy')).finally(()=>{$('#qsCopied').textContent='已複製';});};
+  const qr=()=>{try{const q=qrcode(0,'L');q.addData(url);q.make();$('#qsQR').innerHTML=q.createSvgTag({cellSize:3,margin:4,scalable:true})+'<small>老師也可以直接用手機掃這個 QR 碼</small>';}catch(e){}};
+  if(window.qrcode)qr();else{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';sc.onload=qr;document.head.appendChild(sc);}};
  const notes=ST.filter(s=>S.notes[s.id]&&(S.notes[s.id].text||S.notes[s.id].look));const d=new Date();
  $('#qsCert').innerHTML=`<h2>臺史博夜間志工 證書</h2><p style="text-align:center;font-size:16pt"><b>${esc(S.name||'夜間志工')}</b> 修好了常設展「斯土斯民」七個展區的說明卡，共獲得 ${tot} 顆星。</p><div class="qs-pass">${ring}</div>
   ${notes.length?`<h3>我在現場寫下的話</h3>${notes.map(s=>`<div class="cn"><b>${s.sub.split('：')[0]}</b>：${esc([S.notes[s.id].look&&('看到：'+S.notes[s.id].look),S.notes[s.id].text].filter(Boolean).join('。'))}</div>`).join('')}`:''}
   <p style="text-align:right;margin-top:10mm">${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日・海佃地圖</p>`;
  $('#qsPrint').onclick=()=>window.print();
- $('#qsReset').onclick=()=>{if(!confirm('要清除所有印章、線索和筆記，重新開始嗎？'))return;S={name:S.name,mode:S.mode,st:{},notes:{},seen:{},snd:S.snd};save();intro();pass();};}
+ $('#qsReset').onclick=()=>{if(!confirm('要清除所有印章、線索和筆記，重新開始嗎？'))return;S={name:S.name,mode:S.mode,st:{},notes:{},seen:{},log:{},snd:S.snd};save();intro();pass();};}
 function teacher(){const ans=st=>st.t==='choice'?st.o[st.a]:st.t==='sort'?st.items.map((t,i)=>t+(st.years?`（${st.years[i]}）`:'')).join(' → '):st.t==='match'?st.L.map((l,i)=>`${l}－${st.R[st.a[i]]}`).join('；'):st.t==='map'?st.pins.map(p=>LOC[p][0]).join('、'):'';
- $('#qsTeacher').innerHTML=`<p><b>玩法</b>：學生扮演臺史博的夜間志工。每個展區先用手電筒找展品、靠近觀察（刷沙土、拼陶片、用放大鏡），把線索記進筆記本，再用線索「重寫被淋濕的說明卡」（3～4 題）。答錯可以重寫，依答錯次數給 1～3 顆星。進度只存在學生自己的瀏覽器裡。</p>
+ $('#qsTeacher').innerHTML=`<p><b>玩法</b>：學生扮演臺史博的夜間志工。每個展區先用手電筒找展品、靠近觀察（刷沙土、拼陶片、轉動展品、壓風箱、用放大鏡），把線索記進筆記本，再用線索「重寫被淋濕的說明卡」（3～4 題）。答錯可以重寫，依答錯次數給 1～3 顆星。進度只存在學生自己的瀏覽器裡。</p>
  <p><b>博物館現場模式</b>：每個展區多兩張卡：找到展區、觀察實物並勾選看到的東西，最後寫一句給明天小學生的話，會印在證書上。觀察題多半沒有標準答案，不依賴特定展板的文字。</p>
  <p><b>聲音</b>：有背景音樂和音效，右上角可以關掉。音樂是程式即時產生的。</p>
+ <h3 class="qs-h3">收學生的成績</h3>
+ <p>學生玩完後，在上面「志工印章」按<b>交給老師</b>，會拿到一串連結（和一個 QR 碼）。請學生把連結貼到你指定的地方，例如 Google Classroom 作業、Google 表單的簡答題或班級群組。你再把全班的連結一次貼進下面的框（整欄複製貼上就可以），就會整理成表格。資料只在你的瀏覽器裡處理，不會上傳。</p>
+ <textarea id="tcIn" class="qs-tcin" rows="4" aria-label="貼上學生交來的連結" placeholder="把學生交來的連結貼在這裡，一行一個"></textarea>
+ <div class="qs-row"><button class="qs-btn" id="tcGo">整理成表格</button><button class="qs-btn alt" id="tcCsv" disabled>下載 CSV</button><button class="qs-btn alt" id="tcClr">清空</button></div>
+ <div id="tcOut" aria-live="polite"></div>
  <details class="qs-teacher"><summary>題目與答案</summary><ol>${ST.map(s=>`<li><b>${s.sub}</b>（${s.unit}）<ol>${s.steps.map(st=>`<li>${st.q.replace(/<[^>]+>/g,'')}<br><span class="ans">答案：${ans(st)}</span></li>`).join('')}</ol></li>`).join('')}</ol></details>`;}
 sndUI();teacher();pass();
+/* teacher's table */
+{const TK='hhl-nmth-teacher',inp=$('#tcIn'),out=$('#tcOut');let rows=[];
+ try{inp.value=localStorage.getItem(TK)||'';}catch(e){}
+ const run=()=>{try{localStorage.setItem(TK,inp.value);}catch(e){}
+  const codes=[...new Set((inp.value.match(/[A-Za-z0-9_-]{40,}\.[a-z0-9]{4}/g)||[]))],bad=[];rows=[];
+  codes.forEach(c=>{const r=readReport(c);r?rows.push(r):bad.push(c);});
+  const last={};rows.forEach(r=>{const k=r.name||'（沒寫名字）';if(!last[k]||last[k].when<r.when)last[k]=r;});const dup=rows.length-Object.keys(last).length;rows=Object.values(last).sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant',{numeric:true}));
+  if(!rows.length){out.innerHTML=inp.value.trim()?'<p>沒有找到看得懂的成績連結。請確認貼上的是學生按「交給老師」後拿到的那一串。</p>':'';$('#tcCsv').disabled=true;return;}
+  rows.forEach(r=>{r.done=r.rooms.filter(x=>x.stars).length;r.stars=r.rooms.reduce((a,x)=>a+x.stars,0);r.t=r.rooms.reduce((a,x)=>a+x.t,0);r.miss=r.rooms.reduce((a,x)=>a+Math.max(0,x.miss),0);
+   const f=[];if(r.rooms.some(x=>x.stars&&x.t<45))f.push('有展間不到 45 秒');if(r.done===7&&r.t<300)f.push('全部不到 5 分鐘');if(r.rooms.some(x=>x.tries>1))f.push('有重玩');if(!r.name)f.push('沒寫名字');r.flag=f.join('、');});
+  out.innerHTML=`<p>共 <b>${rows.length}</b> 位學生${dup?`（同名的 ${dup} 筆只留最新的）`:''}${bad.length?`，另有 ${bad.length} 筆連結不完整或被改過，沒有列入`:''}。每格是「星星／寫錯次數／時間」。</p>
+   <div class="qs-tw"><table class="qs-tb"><thead><tr><th>名字</th><th>模式</th><th>修好</th><th>星星</th><th>寫錯</th><th>總時間</th>${NUM.map(n=>`<th>${n}</th>`).join('')}<th>現場筆記</th><th>交出時間</th><th>留意</th></tr></thead><tbody>
+   ${rows.map(r=>`<tr><th>${esc(r.name||'（沒寫名字）')}</th><td>${r.mode}</td><td>${r.done}/7</td><td>${r.stars}</td><td>${r.miss}</td><td>${mmss(r.t)}</td>${r.rooms.map(x=>`<td class="${x.stars?'':'no'}">${x.stars?`${'★'.repeat(x.stars)}<small>錯 ${Math.max(0,x.miss)}・${mmss(x.t)}</small>`:(x.seen?`<small>看了 ${x.seen} 件</small>`:'—')}</td>`).join('')}<td>${r.notes||'—'}</td><td>${r.when.getMonth()+1}/${r.when.getDate()} ${String(r.when.getHours()).padStart(2,'0')}:${String(r.when.getMinutes()).padStart(2,'0')}</td><td>${r.flag||''}</td></tr>`).join('')}</tbody></table></div>`;
+  $('#tcCsv').disabled=false;};
+ $('#tcGo').onclick=run;$('#tcClr').onclick=()=>{if(inp.value&&!confirm('要清空貼上的連結嗎？'))return;inp.value='';run();};
+ $('#tcCsv').onclick=()=>{const q=v=>`"${String(v).replace(/"/g,'""')}"`;const head=['名字','模式','修好展間','星星','寫錯次數','總秒數',...NUM.flatMap(n=>[`第${n}展間星星`,`第${n}展間寫錯`,`第${n}展間秒數`]),'現場筆記數','交出時間','留意'];
+  const csv='﻿'+[head,...rows.map(r=>[r.name,r.mode,r.done,r.stars,r.miss,r.t,...r.rooms.flatMap(x=>[x.stars,Math.max(0,x.miss),x.t]),r.notes,r.when.toLocaleString('zh-TW'),r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='臺史博夜間志工成績.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);};
+ const hm=location.hash.match(/r=([A-Za-z0-9_-]+\.[a-z0-9]{4})/);if(hm){if(!inp.value.includes(hm[1]))inp.value=(inp.value.trim()?inp.value.trim()+'\n':'')+hm[1];history.replaceState(null,'',location.pathname);run();setTimeout(()=>$('#teacher').scrollIntoView(),300);}
+ else if(inp.value.trim())run();}
 let rzT=0,rzW=0;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{const w=$('#gm').clientWidth<640;if(w!==rzW&&$('#scPlan').classList.contains('on'))plan();rzW=w;},200);});
 if(S.name&&Object.keys(S.st).length)plan();else intro();
-window.__qs={ST,P,LOC,cur:()=>L,room,plan,intro,labels:()=>labels(),closeup:i=>closeup(i),S:()=>S,A};
+window.__qs={packReport,readReport,ST,P,LOC,cur:()=>L,room,plan,intro,labels:()=>labels(),closeup:i=>closeup(i),S:()=>S,A};
 })();
 </script>
