@@ -571,7 +571,7 @@
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/nmth-quest.html",
     "line": 0,
-    "snippet": "Colored box-shadow glow (#10313b) on dark page"
+    "snippet": "Zero-offset box-shadow glow (#46dc82)"
   },
   {
     "antipattern": "repeating-stripes-gradient",
