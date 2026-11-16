@@ -1013,7 +1013,7 @@ function intro(){const el=$('#scIntro');
   <circle cx="333" cy="427" r="150" fill="url(#twin)"/>
   <path d="M0 520 H1200 V700 H0 Z" fill="#0a0f13"/><path d="M296 540 h74 l20 120 h-114 Z" fill="#f2c669" opacity=".12"/>
   <g class="rain" stroke="#9fb4c4" stroke-width="1.2" opacity=".35">${[...Array(70)].map((_,i)=>{const x=(i*173)%1260-30,y=(i*97)%700,l=18+(i%5)*5;return `<path d="M${x} ${y} l-6 ${l}" style="animation-delay:-${(i%17)/10}s;animation-duration:${.7+(i%6)*.08}s"/>`;}).join('')}</g></svg>
-  <div class="gm-title-txt"><small>國立臺灣歷史博物館・常設展</small><h2>閉館之後</h2><p>晚上九點，雨還在下。</p><div class="gm-title-btns"><button class="gm-go" id="gmBegin">進去</button>${KQ?'':'<button class="gm-btn gm-ghost" id="gmClass">老師有給房號</button>'}</div></div></div>`;
+  <div class="gm-title-txt"><small>國立臺灣歷史博物館・常設展</small><h2>閉館之後</h2><p>晚上九點，雨還在下。</p><div class="gm-title-btns"><button class="gm-go" id="gmBegin">進去</button>${KQ?'':'<button class="gm-btn gm-ghost" id="gmClass">輸入任務代碼</button>'}</div></div></div>`;
  const snd=()=>{if(S.snd&&!A.on()){A.set(true);sndUI();}A.amb('rain');A.play('door');};
  $('#gmBegin').onclick=()=>{snd();if(KQ)classJoin({sid:KQ});else if(S.sess)classJoin({sid:S.sess.sid});else letter();};
  if($('#gmClass'))$('#gmClass').onclick=()=>{snd();classAsk();};
@@ -1273,18 +1273,18 @@ const CL=(()=>{let db=null,loading=null,tm=0,where='lobby',unsub=[],cid='';
  return {load,off,cid:()=>cid,soon(){clearTimeout(tm);tm=setTimeout(push,1800);},at(w){where=w;if(S.sess&&S.sess.seat)this.soon();},now:push,
   watch(fn){unsub.push(fn);},db:()=>db};})();
 const scr=h=>{$('#scIntro').innerHTML=`<div class="gm-desk"><div class="gm-letter gm-paper gm-lobby">${h}</div></div>`;show('scIntro');};
-function classAsk(msg){scr(`<h2>全班一起玩</h2><div class="sub">輸入老師大螢幕上的 4 個數字</div>${msg?`<p class="gm-fb no" role="alert">${msg}</p>`:''}
-  <input class="gm-code" id="gmCode" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="房號">
+function classAsk(msg){scr(`<h2>全班一起玩</h2><div class="sub">輸入大螢幕上的任務代碼（4 個數字）</div>${msg?`<p class="gm-fb no" role="alert">${msg}</p>`:''}
+  <input class="gm-code" id="gmCode" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="任務代碼">
   <div class="gm-row"><button class="gm-go" id="gmCodeGo">進大廳</button><button class="gm-btn alt" id="gmCodeNo">自己玩</button></div>`);
- const go=()=>{const v=$('#gmCode').value.replace(/\D/g,'');if(v.length!==4){classAsk('房號是 4 個數字。');return;}classJoin({code:v});};
+ const go=()=>{const v=$('#gmCode').value.replace(/\D/g,'');if(v.length!==4){classAsk('任務代碼是 4 個數字。');return;}classJoin({code:v});};
  $('#gmCodeGo').onclick=go;$('#gmCode').onkeydown=e=>{if(e.key==='Enter')go();};$('#gmCodeNo').onclick=()=>letter();$('#gmCode').focus({preventScroll:true});}
-function classJoin(q){scr(`<h2>正在找老師的房間</h2><p class="hw">等一下下。</p>`);CL.off();
+function classJoin(q){scr(`<h2>正在找這個任務</h2><p class="hw">等一下下。</p>`);CL.off();
  CL.load().then(db=>(q.sid?db.collection('nmth_rooms').doc(q.sid).get().then(d=>d.exists?[d]:[]):db.collection('nmth_rooms').where('code','==',q.code).get().then(r=>r.docs)).then(docs=>{
    const live=docs.map(d=>Object.assign({sid:d.id},d.data())).filter(r=>r.ph!=='closed').sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0))[0];
-   if(!live){classAsk(docs.length?'這個房間已經結束了。請看老師大螢幕上新的房號。':'找不到這個房間。再看一次大螢幕上的數字。');return;}
+   if(!live){classAsk(docs.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
    if(!S.sess||S.sess.sid!==live.sid){S={name:'',mode:'class',st:{},notes:{},seen:{},log:{},snd:S.snd,sess:{sid:live.sid,label:live.label||'',seat:0,on:0}};try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}pass();}
    S.sess.seat?classWait():classSeat();}))
-  .catch(()=>classAsk('連不上網路，沒辦法進老師的房間。可以先按「自己玩」。'));}
+  .catch(()=>classAsk('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
 function classSeat(){const sid=S.sess.sid;let taken={};
  const draw=()=>{scr(`<h2>按下你的座號</h2><div class="sub">${esc(S.sess.label)}　灰色的已經有人選了，按錯請舉手</div>
   <div class="gm-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n]!==CL.cid();return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
@@ -1296,7 +1296,7 @@ function classWait(quiet){const sid=S.sess.sid;CL.off();
  if(S.sess.on){S.sess.on=0;}
  $('#gmReSeat').onclick=()=>{const old=S.sess.seat;S.sess.seat=0;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}CL.db().collection('nmth_live').doc(sid+'_'+old).set({sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});classSeat();};}
  CL.watch(CL.db().collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!S.sess)return;const r=d.exists?d.data():{ph:'closed'};
-  if(r.ph==='closed'){const was=S.sess.on;if(was)CL.now();CL.off();S.sess=null;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(!was)classAsk('這個房間已經結束了。');return;}
+  if(r.ph==='closed'){const was=S.sess.on;if(was)CL.now();CL.off();S.sess=null;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(!was)classAsk('這個任務已經結束了。');return;}
   if(r.ph==='play'&&!S.sess.on){S.sess.on=1;save();A.play('lights');if($('#scIntro').classList.contains('on'))(Object.keys(S.st).length||Object.keys(S.seen).length)?plan():letter();}},()=>{}));
  CL.watch(CL.db().collection('nmth_live').doc(sid+'_'+S.sess.seat).onSnapshot(d=>{if(d.exists&&d.data().cid!==CL.cid()&&S.sess&&S.sess.seat&&!S.sess.on){S.sess.seat=0;save();classSeat();}},()=>{}));}
 /* ---------- the report a pupil hands in: everything is packed into the link itself, nothing is uploaded ---------- */
@@ -1332,7 +1332,7 @@ function teacher(){const ans=st=>st.t==='choice'?st.o[st.a]:st.t==='sort'?st.ite
  <p><b>博物館現場模式</b>：每個展區多兩張卡：找到展區、觀察實物並勾選看到的東西，最後寫一句給明天小學生的話，會印在證書上。觀察題多半沒有標準答案，不依賴特定展板的文字。</p>
  <p><b>聲音</b>：有背景音樂和音效，右上角可以關掉。音樂是程式即時產生的。</p>
  <h3 class="qs-h3">全班一起玩（自動收成績）</h3>
- <p>打開 <a href="${BASE}nmth-host.html"><b>老師的房間</b></a>，用 Google 帳號登入、開一個房間。學生在片頭按「老師有給房號」，輸入大螢幕上的 4 個數字，選自己的座號進大廳。你按開始後，每個座號的進度會即時出現在你的畫面上，紀錄會存起來，可以下載 CSV。學生端只送出座號，不含姓名。</p>
+ <p>打開 <a href="${BASE}nmth-host.html"><b>任務控制台</b></a>，用 Google 帳號登入、發一個新任務。學生在片頭按「輸入任務代碼」，輸入大螢幕上的 4 個數字，選自己的座號進大廳。你按開始後，每個座號的進度會即時出現在你的畫面上，紀錄會存起來，可以下載 CSV。學生端只送出座號，不含姓名。</p>
  <h3 class="qs-h3">學生自己玩的時候：收成績連結</h3>
  <p>學生玩完後，在上面「志工印章」按<b>交給老師</b>，會拿到一串連結（和一個 QR 碼）。請學生把連結貼到你指定的地方，例如 Google Classroom 作業、Google 表單的簡答題或班級群組。你再把全班的連結一次貼進下面的框（整欄複製貼上就可以），就會整理成表格。資料只在你的瀏覽器裡處理，不會上傳。</p>
  <textarea id="tcIn" class="qs-tcin" rows="4" aria-label="貼上學生交來的連結" placeholder="把學生交來的連結貼在這裡，一行一個"></textarea>
