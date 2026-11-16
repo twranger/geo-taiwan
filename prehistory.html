@@ -487,7 +487,27 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .cmp td.lock{color:var(--muted);font-style:italic;background:repeating-linear-gradient(45deg,transparent 0 8px,var(--surface-2) 8px 16px)}
 .cmp tbody th{background:var(--surface);white-space:nowrap}
 .night{text-align:center}
-.night .moon{font-size:54px}
+.night .moon{width:64px;height:64px;margin:0 auto 10px;border-radius:50%;background:#f4ecd2;box-shadow:inset -14px -6px 0 #d9cfae,0 0 40px rgba(244,236,210,.45)}
+#nt .mbox{background:#14202e;color:#eef2f4}#nt .night h3,#nt .night p,#nt .night li{color:#eef2f4}#nt .night ul{text-align:left;display:inline-block}
+.wvig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,16,26,.42) 100%),linear-gradient(180deg,rgba(255,236,200,.06),rgba(20,30,50,.08))}
+.wchap{position:absolute;inset:0;z-index:40;background:#080c10;color:#f1ead8;display:grid;place-content:center;justify-items:center;gap:10px;text-align:center;padding:24px;pointer-events:none;animation:wchap 3s ease-in forwards}
+.wchap small{font-size:17px;letter-spacing:.4em;color:#b9ad92}
+.wchap b{font:900 clamp(34px,6vw,64px)/1.2 "Noto Serif TC","Noto Sans TC",serif;letter-spacing:.1em}
+.wchap i{font-style:normal;font-size:18px;letter-spacing:.25em;color:#d8cdb2}
+.wchap small,.wchap b,.wchap i{animation:wchapT 3s ease-out both}
+@keyframes wchap{0%,66%{opacity:1}100%{opacity:0}}
+@keyframes wchapT{0%{opacity:0;transform:translateY(10px)}20%{opacity:1;transform:none}72%{opacity:1}100%{opacity:0}}
+.start.hero{padding:0;overflow:hidden;max-width:720px;background:#101820;color:#eef2f4;border-color:#22313c}
+.start.hero .hero-art{height:230px}.start.hero .hero-art svg{display:block;width:100%;height:100%}
+.start.hero .hero-body{padding:22px 24px 24px}
+@media (max-width:640px){.start.hero .hero-art{height:150px}.start.hero .hero-body{padding:18px 16px 20px}}
+.start.hero h2{color:#fff;font-size:clamp(24px,3.4vw,32px)}.start.hero p,.start.hero label{color:#dfe6ea}
+.start.hero input{background:#fff;color:#182226;border-color:#fff}
+.start.hero .bigbtn{background:#e8a33d;border-color:#e8a33d;color:#1a1408}.start.hero .bigbtn.alt{background:transparent;border-color:#9fb0ba;color:#eef2f4}
+.start.hero .linkbtn{color:#c8d3d9}
+.hero-fire{animation:hfire 2.4s ease-in-out infinite;transform-origin:498px 226px}
+@keyframes hfire{0%,100%{opacity:.85;transform:scale(1)}40%{opacity:1;transform:scale(1.06)}70%{opacity:.75;transform:scale(.96)}}
+@media (prefers-reduced-motion:reduce){.hero-fire{animation:none}.wchap,.wchap small,.wchap b,.wchap i{animation-duration:1.2s}}
 .night ul{text-align:left;margin:10px auto 0;max-width:30em}
 .bdgbig{display:inline-block;border:4px solid var(--c);border-radius:999px;padding:6px 20px;font-size:22px;font-weight:700;margin-top:10px}
 #digCard h3{font-size:22px}
@@ -501,7 +521,7 @@ body.playing .top{padding-block:14px}
 body.playing .top .links{flex-direction:row;flex-wrap:wrap}
 #vHub .unit-head{display:block}
 @media (max-width:520px){.shelf button{font-size:14.5px;padding:10px 2px}.spot{font-size:15px;padding:6px 12px}.mhead h3{font-size:20px}}
-.w3d{position:relative;height:min(70vh,660px);min-height:380px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#cfe6f2}
+.w3d{position:relative;height:min(76vh,720px);min-height:380px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#cfe6f2}
 .w3d:fullscreen{height:100vh;border-radius:0}
 #wcv{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 #wcv:active{cursor:grabbing}
@@ -590,7 +610,7 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
   <div class="wrap">
     <div>
       <h1>史前生存<span class="accent">大冒險</span></h1>
-      <p class="lede">不只是看，要自己動手、自己想辦法！撿石頭、黏土和鐵砂，試出敲石器、生火、做陶罐、種小米、煉鐵的方法，在三個史前時代活下去。最後換你當考古學家，把自己留下的東西挖出來。</p>
+      <p class="lede">撿石頭、黏土和鐵砂，試出敲石器、生火、做陶罐、種小米、煉鐵的方法，在三個史前時代活下去。最後換你當考古學家，把自己留下的東西挖出來。</p>
     </div>
     <div class="links">
       <button class="unit-link" id="btnSk2">技能圖</button><button class="unit-link" id="btnTable">時代比較表</button>
@@ -600,13 +620,28 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
 </header>
 <main>
 <section class="unit" id="vStart"><div class="wrap">
-  <div class="panel pad start">
-    <h2>準備出發，探險家！</h2>
-    <p>你會回到五萬年前，一路活到兩千年前。每個時代有三個任務，每個任務都要<b>親手完成</b>，做得越好星星越多。<br>這次<b>沒有人會告訴你怎麼做</b>：在世界裡撿材料，按「動手試試」把東西組合看看，自己想出方法。前一個時代學會的本領，下一個時代還用得到。</p>
+  <div class="panel start hero">
+    <div class="hero-art" aria-hidden="true"><svg viewBox="0 0 640 260" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1b2a"/><stop offset=".7" stop-color="#27425a"/><stop offset="1" stop-color="#6b5a4a"/></linearGradient>
+      <radialGradient id="hfire" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset=".4" stop-color="#ff8a3a" stop-opacity=".45"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient></defs>
+      <rect width="640" height="260" fill="url(#hsky)"/>
+      <g fill="#fff"><circle cx="0" cy="0" r="0.6" opacity="0.4"/><circle cx="97" cy="53" r="1.1" opacity="0.55"/><circle cx="194" cy="106" r="1.6" opacity="0.7"/><circle cx="291" cy="39" r="0.6" opacity="0.85"/><circle cx="388" cy="92" r="1.1" opacity="0.4"/><circle cx="485" cy="25" r="1.6" opacity="0.55"/><circle cx="582" cy="78" r="0.6" opacity="0.7"/><circle cx="39" cy="11" r="1.1" opacity="0.85"/><circle cx="136" cy="64" r="1.6" opacity="0.4"/><circle cx="233" cy="117" r="0.6" opacity="0.55"/><circle cx="330" cy="50" r="1.1" opacity="0.7"/><circle cx="427" cy="103" r="1.6" opacity="0.85"/><circle cx="524" cy="36" r="0.6" opacity="0.4"/><circle cx="621" cy="89" r="1.1" opacity="0.55"/><circle cx="78" cy="22" r="1.6" opacity="0.7"/><circle cx="175" cy="75" r="0.6" opacity="0.85"/><circle cx="272" cy="8" r="1.1" opacity="0.4"/><circle cx="369" cy="61" r="1.6" opacity="0.55"/><circle cx="466" cy="114" r="0.6" opacity="0.7"/><circle cx="563" cy="47" r="1.1" opacity="0.85"/><circle cx="20" cy="100" r="1.6" opacity="0.4"/><circle cx="117" cy="33" r="0.6" opacity="0.55"/><circle cx="214" cy="86" r="1.1" opacity="0.7"/><circle cx="311" cy="19" r="1.6" opacity="0.85"/><circle cx="408" cy="72" r="0.6" opacity="0.4"/><circle cx="505" cy="5" r="1.1" opacity="0.55"/><circle cx="602" cy="58" r="1.6" opacity="0.7"/><circle cx="59" cy="111" r="0.6" opacity="0.85"/><circle cx="156" cy="44" r="1.1" opacity="0.4"/><circle cx="253" cy="97" r="1.6" opacity="0.55"/><circle cx="350" cy="30" r="0.6" opacity="0.7"/><circle cx="447" cy="83" r="1.1" opacity="0.85"/><circle cx="544" cy="16" r="1.6" opacity="0.4"/><circle cx="1" cy="69" r="0.6" opacity="0.55"/></g>
+      <path d="M0 190 q60 -10 120 0 t120 0 t120 0 t120 0 t160 0 V260 H0 Z" fill="#16283a"/>
+      <path d="M330 260 C340 150 420 70 520 64 C590 60 640 100 640 100 V260 Z" fill="#0b1118"/>
+      <path d="M410 260 C418 190 460 150 505 148 C548 147 578 186 584 260 Z" fill="#1b130e"/>
+      <circle cx="498" cy="226" r="78" fill="url(#hfire)" class="hero-fire"/>
+      <path d="M486 240 q12 -34 12 -46 q14 22 12 46 Z" fill="#ffb347"/><path d="M492 240 q6 -18 6 -26 q8 12 6 26 Z" fill="#fff0b0"/>
+      <path d="M452 242 q-4 -30 10 -34 q12 2 10 34 Z M462 204 a7 7 0 1 0 .1 0" fill="#0b0d10"/>
+      <path d="M528 242 q-2 -24 9 -28 q11 2 9 28 Z M537 211 a6 6 0 1 0 .1 0" fill="#0b0d10"/>
+      <path d="M0 236 H640 V260 H0 Z" fill="#0b1118"/></svg></div>
+    <div class="hero-body">
+    <h2>從五萬年前，活到兩千年前</h2>
+    <p>三個時代，每個時代三個任務。沒有說明書：在世界裡撿材料，按「動手試試」把東西組合看看。前一個時代學會的本領，下一個時代還用得到。</p>
     <label for="nm">你的名字（會印在證書上）</label>
-    <div class="row"><input id="nm" maxlength="10" autocomplete="off" placeholder="輸入名字"><button class="bigbtn" id="go">出發！</button></div>
+    <div class="row"><input id="nm" maxlength="10" autocomplete="off" placeholder="輸入名字"><button class="bigbtn" id="go">出發</button></div>
     <p style="margin-top:18px"><button class="bigbtn alt" id="clAsk">全班一起玩：輸入任務代碼</button></p>
     <button class="linkbtn" id="reset" hidden>清除紀錄，重新開始</button>
+    </div>
   </div>
 </div></section>
 
@@ -617,7 +652,7 @@ body.playing .top .links{flex-direction:row;flex-wrap:wrap}
 
 <section class="unit" id="vScene" hidden><div class="wrap">
   <div class="scene-top"><button class="bigbtn alt" id="toHub">← 時光隧道</button><div><h2 id="scTitle"></h2><p class="sub" id="scSub"></p></div><button class="bigbtn" id="guide">帶我去下一個任務</button></div>
-  <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div id="wLabels"></div>
+  <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div class="wvig" aria-hidden="true"></div><div id="wLabels"></div><div class="wchap" id="wChap" hidden aria-hidden="true"></div>
     <div class="whelp">拖曳畫面：轉頭看四周　點地面或光柱：走過去　鍵盤 W A S D 或方向鍵也可以走</div>
     <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button>
     <div class="whud" id="wHud" hidden><div class="wgoal" id="wGoal" aria-live="polite"></div><div class="wtools"><button class="wt main" id="btnWb">動手試試</button><button class="wt" id="btnBag">背包</button><button class="wt" id="btnSk">技能圖</button></div></div><div class="wtoast" id="wToast" role="status" hidden></div><button class="wprompt" id="wPrompt" hidden></button></div>
@@ -713,7 +748,7 @@ function fire(x,z,s=1){const g=new T.Group(),cs=[];[['#D55E00',.6,1.5],['#E69F00
   const sm=[];for(let i=0;i<6;i++){const p=mesh(GEO.sph,new T.MeshBasicMaterial({color:'#d9d9d9',transparent:true,opacity:.3,depthWrite:false}),0,0,0);p.castShadow=false;g.add(p);sm.push([p,i/6]);}
   upd.push((dt,t)=>{cs.forEach((f,i)=>{const k=1+Math.sin(t*(9+i*3)+i)*.18;f.scale.y=[1.5,1.1,.7][i]*k;f.position.y=f.scale.y/2+.1;});L.userData.f=.85+Math.sin(t*13)*.1+Math.sin(t*7.3)*.08;
     sm.forEach(([p,o])=>{const k=(t*.22+o)%1;p.position.set(Math.sin(k*5+o*9)*.5,1.6+k*6,Math.cos(k*4+o*7)*.4);p.scale.setScalar(.3+k*1.1);p.material.opacity=.32*(1-k);});});return g;}
-function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)){put(fn(),x,z);k++;}}}
+function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)&&!(START[era]&&Math.hypot(x-START[era][0],z-START[era][1])<9)){put(fn(),x,z);k++;}}}
 const far=(x,z,d)=>spots.every(s=>Math.hypot(s.x-x,s.z-z)>d);
 /* ---- the three worlds ---- */
 const BUILD={
@@ -1100,11 +1135,26 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 let AC=null;
 function beep(f=440,d=0.08,type='sine',v=0.08){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
 const sfx={hit:()=>beep(180,0.07,'square',0.1),good:()=>{beep(660,0.09);setTimeout(()=>beep(880,0.12),90);},bad:()=>beep(120,0.15,'sawtooth',0.06),win:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.16),i*110)),tick:()=>beep(900,0.03,'sine',0.04)};
+const Amb=(()=>{let stop=null,kind=null;
+ const noise=d=>{const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const n=AC.createBufferSource();n.buffer=b;return n;};
+ const start=k=>{if(stop){stop();stop=null;}kind=k;if(!k||!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){return;}
+  const out=AC.createGain();out.gain.value=0;out.gain.linearRampToValueAtTime(1,AC.currentTime+2);out.connect(AC.destination);const nodes=[];let alive=true,tm=0;
+  const bed=(type,f,vol,lfo,depth)=>{const n=noise(3),fl=AC.createBiquadFilter(),g=AC.createGain();fl.type=type;fl.frequency.value=f;fl.Q.value=.6;g.gain.value=vol;n.loop=true;n.connect(fl);fl.connect(g);g.connect(out);n.start();nodes.push(n);
+   if(lfo){const o=AC.createOscillator(),og=AC.createGain();o.frequency.value=lfo;og.gain.value=depth;o.connect(og);og.connect(g.gain);o.start();nodes.push(o);}};
+  const tone=(f0,f1,t,d,v,type)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(out);o.start(t);o.stop(t+d+.02);};
+  const every=(lo,hi,fn)=>{const go=()=>{if(!alive)return;if(!document.hidden)try{fn(AC.currentTime);}catch(e){}tm=setTimeout(go,lo+Math.random()*(hi-lo));};tm=setTimeout(go,lo);};
+  const birds=()=>every(2500,7000,t=>{const n=2+Math.floor(Math.random()*3),f=2400+Math.random()*1400;for(let i=0;i<n;i++)tone(f,f*1.25,t+i*.13,.09,.025);});
+  if(k==='sea'){bed('lowpass',480,.075,.09,.06);bed('bandpass',300,.03,.05,.02);every(6000,14000,t=>{tone(1500,1100,t,.35,.02);tone(1400,1000,t+.45,.3,.016);});}
+  else if(k==='field'){bed('bandpass',420,.035,.07,.025);birds();}
+  else if(k==='river'){bed('bandpass',1100,.03,.6,.008);bed('lowpass',380,.05,.08,.03);birds();every(3500,9000,t=>{for(let i=0;i<3;i++){tone(1900,1700,t+i*.42,.12,.03,'triangle');tone(2850,2600,t+i*.42,.08,.012,'triangle');}});}
+  else if(k==='night'){bed('lowpass',240,.04);every(700,1900,t=>{for(let i=0;i<3;i++)tone(4300,4350,t+i*.07,.04,.012);});}
+  stop=()=>{alive=false;clearTimeout(tm);const t=AC.currentTime;out.gain.cancelScheduledValues(t);out.gain.setValueAtTime(out.gain.value,t);out.gain.linearRampToValueAtTime(0,t+.8);nodes.forEach(n=>{try{n.stop(t+.9);}catch(e){}});};};
+ return {set:start,again:()=>start(kind),kind:()=>kind};})();
 function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/<[^>]+>/g,''));u.lang='zh-TW';u.rate=0.95;speechSynthesis.speak(u);}catch(e){}}
 document.addEventListener('click',e=>{const b=e.target.closest('.say');if(b)say(b.dataset.t||b.parentNode.textContent);});
 window.__sfx=sfx;
 function soundUI(){const b=$('#btnSound');b.textContent='音效：'+(S.sound?'開':'關');b.setAttribute('aria-pressed',!!S.sound);}
-$('#btnSound').onclick=()=>{S.sound=S.sound?0:1;save();soundUI();if(!S.sound)try{speechSynthesis.cancel();}catch(e){}};soundUI();
+$('#btnSound').onclick=()=>{S.sound=S.sound?0:1;save();soundUI();if(!S.sound)try{speechSynthesis.cancel();}catch(e){}Amb.again();};soundUI();
 
 /* ---------- canvas helpers ---------- */
 let FS=1;
@@ -1308,12 +1358,12 @@ function exhibit(id){const t=MUSEUM.tasks.find(t=>t.id===id);task=null;W3.pause(
   $('#gmT').textContent=`展品：${t.n}`;$('#gmPlay').hidden=false;$('#gmHow').textContent='按住展品左右拖曳，可以轉著看。';$('#gcv').hidden=true;$('#gcv3').hidden=false;$('#ghud').hidden=true;$('#ghMsg').hidden=true;$('#ghTray').hidden=true;stopGame&&stopGame();stopGame=G3.view(()=>{const m=W3.art(id);m.scale.setScalar(1.5);return m;});
   d.innerHTML=`<div class="done"><p style="font-size:18px"><b>${t.era.n}・${t.era.site}</b><br>製作的人：<b>${esc(S.name)}</b>　<span class="stars" style="font-size:24px">${stars(S.st[id])}</span></p><div class="fact" style="--c:${t.era.c}">${t.src.fact}<br><button class="say" data-t="${esc(t.src.fact)}">唸給我聽</button></div><p class="note" style="margin-top:8px">${REAL[t.era.k]}</p></div>`;}
 const W3=window.World||null;
-function show(id){if(W3&&id!=='vScene')W3.stop();document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
-function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，時光隧道準備好了！`;
+function show(id){if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
+function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;
   const h=ERAS.map((e,i)=>{const open=i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
   const dOpen=allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
 $('#hub').addEventListener('click',e=>{const b=e.target.closest('.node');if(!b||b.disabled)return;if(b.dataset.e==='museum')museum();else if(b.dataset.e==='dig'){S.dig?cert():dig();}else scene(b.dataset.e);});
-function scene(k){cur=ERAS.find(e=>e.k===k);$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}　（按 E）`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
+function scene(k){cur=ERAS.find(e=>e.k===k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}　（按 E）`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
 function paint(){if(cur===MUSEUM)return;const n=cur.tasks.filter(t=>S.st[t.id]).length;
   $('#sceneIn').innerHTML=`<svg viewBox="0 0 1560 440" preserveAspectRatio="none" aria-hidden="true">${SC[cur.k]}<rect width="1560" height="440" fill="#1b2a4a" opacity="${[0,0.14,0.3,0.5][n]}"/>${n===3?'<g fill="#fff"><circle cx="200" cy="50" r="2"/><circle cx="500" cy="30" r="2"/><circle cx="900" cy="44" r="2"/><circle cx="1100" cy="24" r="2"/><circle cx="1450" cy="40" r="2"/></g>':''}</svg>`+cur.tasks.map(t=>`<button class="spot ${S.st[t.id]?'done':''}" style="left:${t.x}%;top:${t.y}%" data-t="${t.id}">${t.n}<small>${S.st[t.id]?stars(S.st[t.id]):'點我開始'}</small></button>`).join('');
   $('#taskList').innerHTML=cur.tasks.map(t=>`<button class="tk" data-t="${t.id}"><b>${t.n}</b><span>${S.st[t.id]?stars(S.st[t.id]):'還沒做'}</span></button>`).join('');
@@ -1337,7 +1387,7 @@ function openTask(id){if(document.fullscreenElement)try{document.exitFullscreen(
 function play(){S.tries[task.id]=(S.tries[task.id]||0)+1;try{speechSynthesis.cancel();}catch(e){}$('#gmIntro').hidden=true;$('#gmDone').hidden=true;$('#gmPlay').hidden=false;$('#gmHow').textContent=task.how;stopGame&&stopGame();const my=++runId,finish=n=>{if(my===runId)finishTask(n);};const use3=window.G3&&G3.has(task.id);$('#gcv').hidden=!!use3;$('#gcv3').hidden=!use3;$('#ghud').hidden=!use3;if(use3){$('#gmHow').textContent='';stopGame=G3.run(task.id,finish);}else{$('#ghMsg').hidden=true;$('#ghTray').hidden=true;runGame(a=>G[task.id](a,finish));}}
 let runId=0;
 function finishTask(n){runId++;stopGame&&stopGame();stopGame=null;const best=Math.max(S.st[task.id]||0,n),first=!S.st[task.id];S.st[task.id]=best;S.known[task.id]=1;save();if(first)grant(task.id);$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
-  d.innerHTML=`<div class="done"><div class="stars" aria-label="${n} 顆星">${stars(n)}</div><p style="font-size:19px;font-weight:700">${['','完成了！再練習一次會更熟練。','做得不錯！','太厲害了，你是高手！'][n]}</p>
+  d.innerHTML=`<div class="done"><div class="stars" aria-label="${n} 顆星">${stars(n)}</div><p style="font-size:19px;font-weight:700">${['','完成了。再玩一次可以拿更多星星。','做得不錯。','三顆星，全部做對。'][n]}</p>
    <div class="fact" style="--c:${cur.c}"><b>你剛剛學到的事</b><br>${task.fact}<br><button class="say" data-t="${esc(task.fact)}">唸給我聽</button></div>
    <div class="qq"><b>${task.q.t}</b>${shuffle(task.q.o.map((o,i)=>[o,i])).map(([o,i])=>`<button class="qo" data-i="${i}">${o}</button>`).join('')}<p class="qfb" id="qfb"></p></div>
    <div class="row"><button class="bigbtn alt" id="again">再玩一次</button><button class="bigbtn" id="back" hidden>${first&&eraDone(cur)?'天黑了，看看今晚過得怎樣 →':'回到部落'}</button></div></div>`;
@@ -1513,7 +1563,7 @@ function grant(id){add(GRANT[id]||{});if(id==='trade'){let need=2;for(const k of
 $('#btnBag')&&($('#btnBag').onclick=bagOpen);$('#btnWb')&&($('#btnWb').onclick=wbOpen);$('#btnSk')&&($('#btnSk').onclick=skOpen);$('#btnSk2')&&($('#btnSk2').onclick=skOpen);
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#wb').hidden)wbClose();else if(!$('#bg').hidden){$('#bg').hidden=true;W3&&W3.pause(false);}else if(!$('#sk').hidden){$('#sk').hidden=true;W3&&W3.pause(false);}else if(!$('#jt').hidden)jtClose();});
 
-function night(){sfx.win();const s=eraStars(cur),i=ERAS.indexOf(cur);$('#nt').hidden=false;$('#ntBox').innerHTML=`<div class="night" style="--c:${cur.c}"><div class="moon" aria-hidden="true">🌙</div><h3 style="font-size:26px">${cur.n}的一天結束了</h3><p style="font-size:18px">${cur.night}</p>
+function night(){sfx.win();const s=eraStars(cur),i=ERAS.indexOf(cur);$('#nt').hidden=false;$('#ntBox').innerHTML=`<div class="night" style="--c:${cur.c}"><div class="moon" aria-hidden="true"></div><h3 style="font-size:26px">${cur.n}的一天結束了</h3><p style="font-size:18px">${cur.night}</p>
   <div class="bdgbig">徽章：${cur.badge}</div><p class="stars" style="margin-top:8px">${s} / 9 ★</p><ul>${cur.tasks.map(t=>`<li>${t.row[1]}</li>`).join('')}</ul>
   <div class="row" style="justify-content:center;margin-top:14px"><button class="bigbtn alt" id="ntTb">看比較表</button><button class="bigbtn" id="ntGo">${i<2?`前往${ERAS[i+1].n} →`:'回到現在，當考古學家 →'}</button></div></div>`;
   $('#ntTb').onclick=table;$('#ntGo').onclick=()=>{$('#nt').hidden=true;i<2?scene(ERAS[i+1].k):dig();};}
