@@ -463,6 +463,7 @@ select.nh-in{min-width:0}
 .nh-teach summary{list-style:revert}
 .nh-fix{min-width:44px;min-height:40px;border:2px dashed #7d8a8c;border-radius:8px;background:#fff;font:inherit;font-weight:900;font-size:18px;color:#14323a;cursor:pointer}
 .nh-fix:hover{border-style:solid;border-color:#14323a}
+.nh-btn.nh-del{border-color:#a8371f;color:#a8371f}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -489,6 +490,7 @@ select.nh-in{min-width:0}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* 任務控制台 — the teacher's page for class play. Firestore: nmth_rooms/{sid} (teacher writes), nmth_live/{sid_seat} (tablets write).
    One page serves every game on the site; each game has its own table layout below. */
@@ -609,19 +611,25 @@ function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
  Promise.all([A,Bq]).then(([a,b])=>{if(!a&&!b)throw new Error('兩個資料庫都讀不到');const m={};(a||[]).concat(b||[]).forEach(r=>{m[r.sid]=newerR(m[r.sid],r);});
   sessions=Object.values(m).sort((x,y)=>msv(y)-msv(x));
   const mine=isAdmin?sessions:sessions.filter(s=>s.owner===user.uid);
-  const day=s=>s.at?new Date(s.at.seconds*1000).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  const day=s=>msv(s)?new Date(msv(s)).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   list$.innerHTML=`<p class="nh-big">發新任務</p><div class="nh-row"><select class="nh-in" id="nhGame" aria-label="哪一個遊戲">${Object.keys(GAMES).map(k=>`<option value="${k}" ${k===(G0||'prehistory')?'selected':''}>${GAMES[k].n}</option>`).join('')}</select>
     <input class="nh-in" id="nhLabel" maxlength="20" placeholder="班級，例如：五年三班" aria-label="班級名稱"><button class="nh-btn" id="nhNew">發任務</button></div>
    <p class="nh-big" style="margin-top:26px">${isAdmin?'所有場次':'我的場次'}</p>
+   ${mine.length?`<div class="nh-row"><button class="nh-btn" id="nhZip">一鍵下載全部成就（ZIP）</button><span class="nh-msg" id="nhZipMsg"></span></div>`:''}
    <p>上次沒玩完的班級：打開那一場，按「再開一次，接續進度」。學生選回同一個座號，星星和進度就會回來。</p>
-   ${mine.length?`<ul class="nh-list">${mine.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${esc((GAMES[s.game]||GAMES.nmth).n)}　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}${isAdmin&&s.ownerEmail&&s.ownerEmail!==mail()?`　<small>${esc(s.ownerEmail)}</small>`:''}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}
+   ${mine.length?`<ul class="nh-list">${mine.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${esc((GAMES[s.game]||GAMES.nmth).n)}　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}${isAdmin&&s.ownerEmail&&s.ownerEmail!==mail()?`　<small>${esc(s.ownerEmail)}</small>`:''}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button><button class="nh-btn alt nh-del" data-del="${s.sid}">刪除</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}
    ${teacherPanel()}`;
   $('#nhNew').onclick=()=>{const label=$('#nhLabel').value.trim();if(!label){$('#nhLabel').focus();return;}
    const code=newCode(),sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4),game=$('#nhGame').value;
    Promise.all([rtOk(db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',owner:user.uid,ownerEmail:mail(),at:TS(),up:TS()})),roomMirror(sid,{code,label,game,ph:'lobby',owner:user.uid})]).then(([a,b])=>{if(!a&&!b)throw {code:'兩個資料庫都寫不進去'};open(sid);makeShort(sid,GAMES[game],code);})
     .catch(e=>alert('發不出任務：'+e.code));};
   $('#nhLabel').onkeydown=e=>{if(e.key==='Enter')$('#nhNew').click();};
-  list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));teacherBind();}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
+  list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));
+  list$.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const x=mine.find(m=>m.sid===b.dataset.del);if(!x)return;
+   if(!confirm(`刪除「${x.label||'（沒寫班級）'}」這一場任務和所有學生紀錄？${x.ph!=='closed'?'\n這一場還沒結束，學生的平板會停下來。':''}\n刪掉就救不回來，建議先下載 ZIP 備份。`))return;
+   b.disabled=true;b.textContent='刪除中……';delSession(x.sid).then(loadList).catch(e=>{alert('刪不掉：'+(e.code||e.message));loadList();});});
+  const z=$('#nhZip');if(z)z.onclick=()=>zipAll(mine,z);
+  teacherBind();}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
 /* reopen an ended task: same code if nobody else is using it, seats released ('~') so pupils can pick them again on any tablet and get their progress back */
 function reopen(){const sid=cur.sid,g=GM();
  db.collection('nmth_rooms').get().then(q=>q.docs,()=>[]).then(docs=>{const clash=docs.some(d=>d.id!==sid&&d.data().ph!=='closed'&&d.data().code===cur.code);if(docs.length)sessions=docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data()));
@@ -643,7 +651,7 @@ function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur
  window.scrollTo(0,0);}
 function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
-function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,back=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
+function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,awayN=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
  let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
    ${cur.ph==='closed'?'':`<p>學生在網址列輸入下面任何一個網址，或掃 QR 碼：</p>
@@ -651,9 +659,9 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
     <p>已經在遊戲裡的學生，輸入任務代碼：</p><p class="nh-code">${esc(cur.code)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
-   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button><button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
+   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button><button class="nh-btn alt nh-del" id="nhDel">刪除這一場</button></div>`;
  if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能改成正確的座號。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
-  ${back?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
+  ${awayN?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
   <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
   ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
@@ -663,7 +671,8 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
  B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))roomUpd(cur.sid,{ph:'closed',endedAt:TS()}).catch(e=>alert(e.message));});
  B('#nhBack',back);B('#nhCsv',csv);B('#nhReopen',()=>{const b=$('#nhReopen');b.disabled=true;b.textContent='開啟中……';reopen();});
  B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
- B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete())),()=>0).then(()=>rt&&rt.ref('cl_live/'+sid).remove().catch(()=>{})).then(()=>rt&&rt.ref('cl_rooms/'+sid).remove().catch(()=>{})).then(()=>db.collection('nmth_rooms').doc(sid).delete()).catch(e=>alert('刪不掉：'+(e.code||e.message)));});
+ B('#nhDel',()=>{if(!confirm(`刪除「${cur.label}」這一場任務和所有學生紀錄？${cur.ph!=='closed'?'\n這一場還沒結束，學生的平板會停下來。':''}\n刪掉就救不回來，建議先下載 ZIP 備份。`))return;const sid=cur.sid;off();cur=null;delSession(sid).then(back).catch(e=>{alert('刪不掉：'+(e.code||e.message));back();});});
+ B('#nhZip1',()=>zipAll([Object.assign({},cur)],$('#nhZip1')));
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>fixSeat(+b.dataset.rel));}
 /* move a pupil to the right seat: the tablet follows the change (rooms.moves[cid]) and keeps sending to the new seat; progress moves with it */
 function fixSeat(from){const g=GM(),r=rows.find(x=>x.seat===from);if(!r)return;
@@ -674,9 +683,42 @@ function fixSeat(from){const g=GM(),r=rows.find(x=>x.seat===from);if(!r)return;
  if(other&&!(msv(other)&&Date.now()-msv(other)>1200000)){alert(`${to} 號現在有別台平板在用。請先把那一位改到正確的座號，或輸入 0 把 ${to} 號空出來。`);return;}
  const v=raw.find(x=>x.seat===from);if(!v)return;const up={};up['moves.'+v.cid]=to;
  liveSet(cur.sid,to,stripAt(v)).then(()=>roomUpd(cur.sid,up)).then(()=>liveDel(cur.sid,from)).catch(e=>alert('改不了：'+(e.code||e.message)));}
-function csv(){const g=GM(),q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
- const t='﻿'+[head,...rows.map(r=>[cur.label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=`${g.n}_${cur.label}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+const q=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
+function csvText(g,label,rs){const head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
+ return '﻿'+[head,...rs.map(r=>[label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');}
+function saveBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
+function csv(){saveBlob(new Blob([csvText(GM(),cur.label,rows)],{type:'text/csv'}),`${GM().n}_${cur.label}.csv`);}
+function delSession(sid){return db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete())),()=>0)
+ .then(()=>rt?rt.ref('cl_live/'+sid).remove().catch(()=>{}):0).then(()=>rt?rt.ref('cl_rooms/'+sid).remove().catch(()=>{}):0)
+ .then(()=>db.collection('nmth_rooms').doc(sid).delete().catch(e=>{if(!rt)throw e;}));}
+/* the pupils of one session, from both stores (newest copy of each seat), as table rows */
+function rowsOf(se){const g=GAMES[se.game]||GAMES.nmth,mv=se.moves||{};
+ const A=db.collection('nmth_live').where('sid','==',se.sid).get().then(q=>q.docs.map(d=>d.data()),()=>[]);
+ const B=rt?rt.ref('cl_live/'+se.sid).once('value').then(s=>{const v=s.val()||{};return Object.keys(v).map(k=>v[k]).filter(Boolean);},()=>[]):Promise.resolve([]);
+ return Promise.all([A,B]).then(([a,b])=>{const m={};a.concat(b).forEach(v=>{if(v&&v.cid)m[v.seat]=newer(m[v.seat],v);});
+  return Object.values(m).filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((x,y)=>x.seat-y.seat);});}
+function cardsHtml(g,se,rs){const day=se.at?new Date(msv(se)).toLocaleDateString('zh-TW'):'';
+ const body=rs.map(r=>{let rows='';
+  if(g===GAMES.prehistory){rows=g.E.map((e,i)=>`<tr><th>${e}</th><td>${r.s.slice(i*3,i*3+3).map((n,k)=>`${g.T[i*3+k]} ${'★'.repeat(n)||'—'}`).join('<br>')}</td><td>${mmss(r.tm[i])}</td></tr>`).join('')
+    +`<tr><th>考古挖掘</th><td colspan="2">${r.dig?'完成':'—'}</td></tr><tr><th>和同學一起</th><td colspan="2">圍獵 ${r.h} 次・穀倉放了 ${r.gr} 束${r.bf?'（穀倉滿了）':''}・交換 ${r.tr+r.nt} 次</td></tr>`;}
+  else rows=r.rooms.map((x,i)=>`<tr><th>第${NUM[i]}展間</th><td>${x.stars?'★'.repeat(x.stars):'—'}</td><td>${mmss(x.t)}</td></tr>`).join('');
+  return `<section class="card"><h2>${esc(se.label)}　${r.seat} 號</h2><p class="sum">完成 <b>${r.done}/${g.total}</b>　星星 <b>${r.stars}</b>　總時間 ${mmss(r.t)}</p><table>${rows}</table>${r.flag?`<p class="flag">老師留意：${esc(r.flag)}</p>`:''}</section>`;}).join('');
+ return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>${esc(g.n)}・${esc(se.label)}・成就單</title><style>
+body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;margin:0;padding:16px;color:#182226;background:#fff}h1{font-size:20px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{border:2px solid #182226;border-radius:10px;padding:12px 14px;break-inside:avoid;page-break-inside:avoid}
+.card h2{font-size:18px;margin:0 0 4px}.sum{margin:0 0 8px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #c9c2b2;padding:4px 6px;text-align:left;vertical-align:top}th{white-space:nowrap;background:#f3efe4}
+.flag{color:#a8371f;font-size:13px;margin:6px 0 0}@media print{body{padding:0}.grid{gap:8px}}</style></head><body><h1>${esc(g.n)}　${esc(se.label)}　${day}　共 ${rs.length} 人</h1><div class="grid">${body||'<p>這一場沒有學生紀錄。</p>'}</div></body></html>`;}
+function zipAll(list,btn){if(!window.JSZip){alert('打包工具還沒載入，請稍等幾秒再按一次。');return;}const msg=$('#nhZipMsg'),old=btn.textContent;btn.disabled=true;
+ const safe=t=>String(t||'未命名').replace(/[\\/:*?"<>|]/g,'_').slice(0,40),zip=new JSZip(),d=new Date(),stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+ const allRows={},used={};let k=0;
+ const one=se=>rowsOf(se).then(rs=>{k++;btn.textContent=`打包中…… ${k}/${list.length}`;const g=GAMES[se.game]||GAMES.nmth;let base=safe(se.label);used[base]=(used[base]||0)+1;if(used[base]>1)base+=`_${used[base]}`;
+  zip.file(`各班/${base}_${safe(g.n)}.csv`,csvText(g,se.label,rs));zip.file(`成就單/${base}_${safe(g.n)}.html`,cardsHtml(g,se,rs));(allRows[se.game||'nmth']=allRows[se.game||'nmth']||[]).push(...rs.map(r=>Object.assign({_label:se.label},r)));});
+ list.reduce((p,se)=>p.then(()=>one(se)),Promise.resolve()).then(()=>{
+  Object.keys(allRows).forEach(gk=>{const g=GAMES[gk]||GAMES.nmth,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
+   zip.file(`全部班級_${safe(g.n)}.csv`,'﻿'+[head,...allRows[gk].map(r=>[r._label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n'));});
+  zip.file('說明.txt',`下載時間：${d.toLocaleString('zh-TW')}\r\n\r\n全部班級_*.csv：所有場次合在一張表，用 Excel 打開。\r\n各班/：每一場一個 CSV。\r\n成就單/：每一場一個網頁，用瀏覽器打開後按「列印」，一張 A4 印 4～6 位學生。\r\n\r\n紀錄只有座號，沒有學生姓名。`);
+  return zip.generateAsync({type:'blob'});}).then(b=>{saveBlob(b,`學生成就_${stamp}.zip`);if(msg){msg.className='nh-msg ok';msg.textContent=`已下載 ${list.length} 場。`;}})
+ .catch(e=>{if(msg){msg.className='nh-msg err';msg.textContent='打包失敗：'+(e.message||e);}else alert('打包失敗：'+(e.message||e));}).finally(()=>{btn.disabled=false;btn.textContent=old;});}
 })();
 </script>
 

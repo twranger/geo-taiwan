@@ -586,6 +586,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 .tb-item small,.tb-deal small{display:block;font-weight:500;font-size:13px;color:#4a5558;margin-top:2px}
 .tb-deal{display:block;width:100%;margin-bottom:8px}.tb-deal:disabled,.tb-item:disabled{opacity:.5;cursor:default}
 .tb-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}.tb-btn{min-height:44px;padding:8px 18px;border-radius:999px;border:2px solid #182226;background:#182226;color:#fff;font:inherit;font-weight:700;cursor:pointer}.tb-btn.alt{background:transparent;color:#182226}
+.demo-bar{position:sticky;top:0;z-index:50;background:#ffd23f;color:#2b2200;padding:8px 16px;font-size:15px;line-height:1.5;text-align:center}.demo-bar .linkbtn{color:#2b2200;font-weight:800}
 .wpals{position:absolute;right:12px;top:58px;z-index:6;background:#10313bd9;color:#fff;border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;pointer-events:none}
 .tb-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
 .tb-tag{position:absolute;left:0;top:0;white-space:nowrap;font-weight:800;font-size:14px;line-height:1;padding:4px 9px;border-radius:999px;background:#ffffffe6;color:#14323a;border:2px solid #14323a;display:none}
@@ -1156,7 +1157,9 @@ function lineChart(svgSel,series,opt){const svg=d3.select(svgSel);const W=opt.w|
 
 (function(){
 'use strict';
-const KEY='hhl-prehistory-v1';
+/* 試玩 (?demo): every era open, a full bag, two pretend classmates; kept apart from real progress and never sent to the teacher */
+const DEMO=(()=>{try{return new URLSearchParams(location.search).has('demo');}catch(e){return false;}})();
+const KEY=DEMO?'hhl-prehistory-demo':'hhl-prehistory-v1';
 let S={name:'',st:{},dig:0,sound:1};
 try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&typeof j==='object')S=Object.assign(S,j);}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(window.ClassLive)ClassLive.touch();};
@@ -1395,8 +1398,8 @@ addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTime
 function svUI(){const on=!!(window.ClassLive&&ClassLive.sess()&&ClassLive.sess().on);document.querySelectorAll('[data-save]').forEach(b=>b.hidden=!on);}
 function show(id){setTimeout(svUI,0);if(id!=='vScene'&&window.Tribe)Tribe.leave();if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
 function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;{const b=$('#clAsk2');if(b)b.hidden=!window.ClassLive||!!ClassLive.sess();}
-  const h=ERAS.map((e,i)=>{const open=i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
-  const dOpen=allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
+  const h=ERAS.map((e,i)=>{const open=DEMO||i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
+  const dOpen=DEMO||allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
 $('#hub').addEventListener('click',e=>{const b=e.target.closest('.node');if(!b||b.disabled)return;if(b.dataset.e==='museum')museum();else if(b.dataset.e==='dig'){S.dig?cert():dig();}else scene(b.dataset.e);});
 function scene(k){cur=ERAS.find(e=>e.k===k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}　（按 E）`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();tribeEnter(k);}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
 function paint(){if(cur===MUSEUM)return;const n=cur.tasks.filter(t=>S.st[t.id]).length;
@@ -1533,7 +1536,7 @@ const curGoal=()=>{const L=GOALS[cur&&cur.k]||[];return L.find(g=>!g.ok()&&!g.si
 /* 部落：classmates in the same world, and the shared hunt (assets/tribe.js) */
 function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassLive.sess(),on=!!(se&&se.on);let cid='';try{cid=localStorage.getItem('hhl-nmth-cid')||'';}catch(e){}
  const st=$('#wTribe'),pl=$('#wPals');st.hidden=true;pl.hidden=true;
- Tribe.enter(k,{sid:on?se.sid:null,seat:on?se.seat:0,cid:cid||'solo',
+ Tribe.enter(k,{demo:DEMO,sid:on?se.sid:null,seat:on?se.seat:0,cid:cid||'solo',
   status:t=>{if(!t){st.hidden=true;return;}if(st.textContent!==t)st.textContent=t;st.hidden=false;},
   count:n=>{pl.hidden=!n;pl.textContent=`這個時代還有 ${n} 位同學`;},
   bag:()=>S.bag,add:(o,sign)=>{add(o,sign);save();},name:k=>IT[k]?IT[k].n:'',toast:m=>toast(m),
@@ -1665,6 +1668,10 @@ const TID=ERAS.flatMap(e=>e.tasks.map(t=>t.id));
 const whereNow=()=>!$('#vHub').hidden?'hub':!$('#vDig').hidden?'dig':!$('#vCert').hidden?'cert':!$('#vScene').hidden&&cur?(cur.k+(!$('#gm').hidden&&task?':'+task.id:'')):'start';
 setInterval(()=>{if(document.hidden)return;const w=whereNow().split(':')[0];if(w==='start'||w==='hub'||w==='cert')return;S.tm[w]=(S.tm[w]||0)+5;if((S.tm[w]%30)===0)save();},5000);
 let clState='';
+if(DEMO){window.ClassLive=null;document.body.classList.add('demo');
+ if(!S.name){Object.assign(S,{name:'試玩',bag:{stone:4,branch:4,grass:2,millet:3,wmillet:2,iron:2,hide:2,pot:1,fish:2,clay:2},sound:S.sound==null?1:S.sound});save();}
+ const bn=document.createElement('div');bn.className='demo-bar';bn.innerHTML='<b>試玩模式</b>　每個時代都打開了，背包裡先放了材料，還有兩位假同學（12 號、7 號）陪你圍獵、存糧、交換。進度不會傳給老師。　<button class="linkbtn" id="demoReset">重新試玩</button>';document.body.prepend(bn);
+ $('#demoReset').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();};}
 if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehistory-class',
   snapshot:()=>{const st=TID.map(id=>S.st[id]||0),tm=['old','neo','iron','dig','museum'].map(k=>S.tm[k]||0);
    return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,h:S.hunt||0,gr:S.gr||0,b:S.barn?1:0,tr:S.tr||0,nt:S.nt||0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
@@ -1682,10 +1689,11 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
 if($('#clAsk2'))$('#clAsk2').onclick=()=>ClassLive.ask();
 document.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{if(!$('#gm').hidden)closeGm();ClassLive.saveAndLeave();});
 if(clState==='join'&&!ClassLive.sess())$('#nm').value='';
-if(clState!=='confirm'&&clState!=='join'&&S.name&&Object.keys(S.st).length)hub();
+if(DEMO)hub();
+else if(clState!=='confirm'&&clState!=='join'&&S.name&&Object.keys(S.st).length)hub();
 window.__tm={cr:{jadeTrip,pick,wbOpen,skOpen,canDo},museum,exhibit,S,G,finish:n=>finishTask(n),openTask,play,scene,hub,dig,cert};
 document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=2"></script>
+<script src="assets/tribe.js?v=3"></script>

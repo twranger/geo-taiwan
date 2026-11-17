@@ -95,7 +95,7 @@ function barnBuild(at){const {T,scene,Hf,M,part}=X,[x,z]=at,y=Hf(x,z),g=new T.Gr
   g.add(part('box',M('#8a6a44'),3.4,.18,2.8,0,1.75,0),part('box',M('#b89464'),3,1.5,2.4,0,2.6,0));const roof=part('pyr',M('#c9a24e'),2.9,1.8,2.9,0,4.2,0);roof.rotation.y=Math.PI/4;roof.scale.set(3.2,1.8,2.7);g.add(roof);
   const pile=new T.Group();for(let i=0;i<10;i++)pile.add(part('cyl',M(i%2?'#e0b43a':'#c9a640'),.16,.9,.16,rnd2(-1.2,1.2),.45,rnd2(1.6,2.4)));g.add(pile);pile.scale.y=.05;
   g.position.set(x,y,z);scene.add(g);
-  return {at,g,pile,mine:0,firstAt:0,all:{},full:false,paid:false,sign:tag('穀倉','tb-sign'),local:!NET.ref};}
+  return {at,g,pile,mine:0,firstAt:0,all:{},full:false,paid:false,sign:tag('穀倉','tb-sign'),local:!NET.ref&&!hooks.demo};}
 const rnd2=(a,b)=>a+Math.random()*(b-a);
 function barnTotal(B){const now=Date.now();let n=0,first=0;Object.keys(B.all).forEach(c=>{const v=B.all[c];if(!v||typeof v.n!=='number')return;n+=Math.max(0,Math.min(40,v.n));if(typeof v.t==='number'&&(!first||v.t<first))first=v.t;});
   if(B.local){n=B.mine;first=B.firstAt;}const goal=B.local?BGOAL_SOLO:BGOAL_CLASS,npc=first?Math.max(0,Math.min(goal-1,Math.floor((now-first)/NPC_EVERY))):0;return {n,npc,goal,total:Math.min(goal,n+npc)};}
@@ -109,6 +109,7 @@ function barnTick(dt,ts){const B=barn,{S,Hf}=X;if(!B)return;const T=barnTotal(B)
   else if(B.near){hooks.status&&hooks.status(null);action(null);}B.near=near;}
 function barnPut(){const B=barn;if(!B||B.full)return;const bag=hooks.bag(),k=(bag.millet||0)>0?'millet':(bag.wmillet||0)>0?'wmillet':null;if(!k)return;
   hooks.add({[k]:1},-1);B.mine++;if(!B.firstAt)B.firstAt=Date.now();hooks.saved&&hooks.saved('gr',1);
+  if(hooks.demo)B.all[me.cid]={n:B.mine,s:0,t:B.firstAt};
   if(NET.ref)NET.put('cl_coop/'+NET.sid+'/neo/'+me.cid,{n:B.mine,s:me.seat||0,t:B.firstAt});hooks.toast&&hooks.toast(`放進 1 束${k==='millet'?'小米':'野生小米'}。`);}
 /* ---------- 金屬器時代：face-to-face trading ---------- */
 const NPCDEALS=[{give:'iron',get:'pot',why:'他們的陶罐做得好，可是不會煉鐵。'},{give:'hide',get:'beads',why:'外地來的玻璃珠，要用獸皮換。'},{give:'fish',get:'millet',why:'山邊的部落種小米，換你們海邊的魚。'},{give:'pot',get:'hide',why:'他們打獵，獸皮多。'}];
@@ -118,7 +119,7 @@ function martBuild(at){const {Hf}=X,[x,z]=at,g=person('npc',3);g.position.set(x,
 function nearestPal(){const {S}=X;let best=null,bd=4.5;Object.keys(others).forEach(c=>{const o=others[c],d=Math.hypot(o.x-S.x,o.z-S.z);if(d<bd){bd=d;best=c;}});return best;}
 function martTick(dt,ts){const M=mart,{S,Hf}=X;if(!M)return;place(M.el,M.at[0],Hf(M.at[0],M.at[1])+2.4,M.at[1],40);M.g.rotation.y=Math.atan2(S.x-M.at[0],S.z-M.at[1]);
   if(modal)return;const nearNpc=Math.hypot(S.x-M.at[0],S.z-M.at[1])<4,pal=nearestPal();
-  if(M.wait){hooks.status&&hooks.status(`等 ${M.wait.s?M.wait.s+' 號':'同學'}回應……`);action('不換了',()=>{M.wait=null;NET.put(tradePath(M.waitCid,me.cid),null);});return;}
+  if(M.wait){hooks.status&&hooks.status(`等 ${M.wait.s?M.wait.s+' 號':'同學'}回應……`);action('不換了',()=>{M.wait=null;if(!(others[M.waitCid]&&others[M.waitCid].bot))NET.put(tradePath(M.waitCid,me.cid),null);});return;}
   if(pal){const o=others[pal];hooks.status&&hooks.status(`${o.el.textContent}就在旁邊。金屬器時代的人會拿自己有的東西，和別人交換需要的東西。`);action(`和 ${o.el.textContent} 交換東西`,()=>offerTo(pal));}
   else if(nearNpc){hooks.status&&hooks.status('鄰村的巴奈帶了東西來交換。');action('看巴奈想換什麼',npcDeal);}
   else if(M.was){hooks.status&&hooks.status(null);action(null);}M.was=!!(pal||nearNpc);}
@@ -126,16 +127,17 @@ const tradePath=(to,from)=>'cl_trade/'+NET.sid+'/'+to+'/'+from;
 const itemsOf=()=>{const b=hooks.bag?hooks.bag():{};return Object.keys(b).filter(k=>b[k]>0&&k!=='method'&&hooks.name&&hooks.name(k));};
 function offerTo(c){const o=others[c],list=itemsOf();if(!list.length){hooks.toast&&hooks.toast('背包是空的，先去撿一些東西再來交換。');return;}
   pick(`要拿什麼給 ${o.el.textContent}？`,'他會再選一樣東西給你。',list,k=>{if(!k)return;mart.wait={g:k,s:+String(o.el.textContent).replace(/\D/g,'')||0,t:Date.now()};mart.waitCid=c;
-   NET.put(tradePath(c,me.cid),{k:'offer',g:k,s:me.seat||0,t:TSV()});});}
+   if(others[c]&&others[c].bot){botReply(c,k);return;}NET.put(tradePath(c,me.cid),{k:'offer',g:k,s:me.seat||0,t:TSV()});});}
 function onInbox(all){const M=mart;if(!M)return;const now=Date.now();Object.keys(all||{}).forEach(from=>{const v=all[from];if(!v||M.seen[from+':'+v.t])return;if(typeof v.t==='number'&&now-v.t>90000)return;M.seen[from+':'+v.t]=1;
   const who=v.s?v.s+' 號':'同學';
-  if(v.k==='offer'){const list=itemsOf();pick(`${who}想給你「${hooks.name(v.g)}」`,'你要拿什麼跟他換？',list,k=>{NET.put(tradePath(me.cid,from),null);
-     if(!k){NET.put(tradePath(from,me.cid),{k:'no',s:me.seat||0,t:TSV()});return;}
-     hooks.add({[k]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);NET.put(tradePath(from,me.cid),{k:'reply',g:k,f:v.g,s:me.seat||0,t:TSV()});
+  const bot=others[from]&&others[from].bot,put=(p,x)=>{if(!bot)NET.put(p,x);};
+  if(v.k==='offer'){const list=itemsOf();pick(`${who}想給你「${hooks.name(v.g)}」`,'你要拿什麼跟他換？',list,k=>{put(tradePath(me.cid,from),null);
+     if(!k){put(tradePath(from,me.cid),{k:'no',s:me.seat||0,t:TSV()});return;}
+     hooks.add({[k]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);put(tradePath(from,me.cid),{k:'reply',g:k,f:v.g,s:me.seat||0,t:TSV()});
      hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(k)}」，拿到「${hooks.name(v.g)}」。`);},'這次不換');}
-  else if(v.k==='reply'&&M.wait&&M.wait.g===v.f){hooks.add({[v.f]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);M.wait=null;NET.put(tradePath(me.cid,from),null);
+  else if(v.k==='reply'&&M.wait&&M.wait.g===v.f){hooks.add({[v.f]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);M.wait=null;put(tradePath(me.cid,from),null);
      hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(v.f)}」，拿到「${hooks.name(v.g)}」。`);}
-  else if(v.k==='no'&&M.wait){M.wait=null;NET.put(tradePath(me.cid,from),null);hooks.toast&&hooks.toast(`${who}這次不想換。換別的東西試試看。`);}});}
+  else if(v.k==='no'&&M.wait){M.wait=null;put(tradePath(me.cid,from),null);hooks.toast&&hooks.toast(`${who}這次不想換。換別的東西試試看。`);}});}
 function npcDeal(){const b=hooks.bag(),rows=NPCDEALS.map(d=>({d,ok:(b[d.give]||0)>0}));
   modalOpen(`<h3>鄰村的巴奈</h3><p>「我帶了東西來，你有什麼可以換？」</p>${rows.map((r,i)=>`<button class="tb-deal" data-i="${i}" ${r.ok?'':'disabled'}><b>給 1 ${hooks.name(r.d.give)} → 換 1 ${hooks.name(r.d.get)}</b><small>${r.ok?r.d.why:'你沒有'+hooks.name(r.d.give)}</small></button>`).join('')}<div class="tb-row"><button class="tb-btn alt" data-x>先不要</button></div>`,
    el=>{el.querySelectorAll('.tb-deal').forEach(btn=>btn.onclick=()=>{const d=NPCDEALS[+btn.dataset.i];hooks.add({[d.give]:1},-1);hooks.add({[d.get]:1},1);hooks.saved&&hooks.saved('nt',1);modalClose();hooks.toast&&hooks.toast(`和巴奈換好了：拿到「${hooks.name(d.get)}」。`);});});}
@@ -147,6 +149,22 @@ function modalOpen(html,bind){modalClose();modal=document.createElement('div');m
 function modalClose(){if(modal){modal.remove();modal=null;}}
 function pick(title,sub,list,done,noLabel){modalOpen(`<h3>${title}</h3><p>${sub}</p><div class="tb-items">${list.map(k=>`<button class="tb-item" data-k="${k}">${hooks.name(k)}<small>有 ${hooks.bag()[k]}</small></button>`).join('')||'<p>背包是空的。</p>'}</div><div class="tb-row"><button class="tb-btn alt" data-no>${noLabel||'不要了'}</button></div>`,
   el=>{el.querySelectorAll('.tb-item').forEach(b=>b.onclick=()=>{modalClose();done(b.dataset.k);});el.querySelector('[data-no]').onclick=()=>{modalClose();done(null);};});}
+/* ---------- 試玩: two pretend classmates (12 號, 7 號) so a teacher can try every shared activity alone ---------- */
+const BOTS=[{cid:'bot12',s:12,bag:['beads','pot','fish','hide']},{cid:'bot7',s:7,bag:['millet','beads','clay','hide']}];
+function botsAdd(){const {S}=X;BOTS.forEach((b,i)=>{const g=person('pal',i+1),x=S.x+(i?-3:3),z=S.z+2;X.scene.add(g);
+  others[b.cid]={g,x,z,tx:x,tz:z,tr:0,el:tag(b.s+' 號','tb-pal'),bot:b,goal:null,nt:0,gave:0,offered:0};});hooks.count&&hooks.count(BOTS.length);}
+function botsTick(dt,ts){const {S}=X,now=Date.now();BOTS.forEach((b,i)=>{const o=others[b.cid];if(!o)return;let gx=null,gz=null;
+  if(hunt&&i===0&&hunt.state!=='caught'&&hunt.myK>=0){const taken=new Set([hunt.myK]);BOTS.slice(0,i).forEach(p=>{const r=hunt.ring[p.cid];if(r)taken.add(r.k);});
+    const m=hunt.marks.find(m=>!taken.has(m.k));if(m){gx=m.x;gz=m.z;if(Math.hypot(o.x-m.x,o.z-m.z)<.6)hunt.ring[b.cid]={k:m.k,s:b.s,t:now};}}
+  else if(hunt)delete hunt.ring[b.cid];
+  if(barn&&!barn.full&&barn.firstAt){gx=barn.at[0]+(i?-2:2);gz=barn.at[1]+3;if(Math.hypot(o.x-gx,o.z-gz)<1&&now-o.nt>9000){o.nt=now;const v=barn.all[b.cid]||{n:0,s:b.s,t:now};barn.all[b.cid]={n:v.n+1,s:b.s,t:v.t};}}
+  if(gx==null){const a=ts*.25+i*3.1,r=i?3.2:2.4;gx=S.x+Math.cos(a)*r;gz=S.z+Math.sin(a)*r;}
+  o.tx=o.x+Math.max(-1,Math.min(1,gx-o.x))*dt*5*(Math.hypot(gx-o.x,gz-o.z)>.3?1:0);o.tz=o.z+Math.max(-1,Math.min(1,gz-o.z))*dt*5*(Math.hypot(gx-o.x,gz-o.z)>.3?1:0);
+  /* in 金屬器 the first classmate who reaches you offers a trade once */
+  if(mart&&!o.offered&&!modal&&!mart.wait&&i===0&&Math.hypot(o.x-S.x,o.z-S.z)<4&&now-(mart.since||now)>15000){o.offered=1;onInbox({[b.cid]:{k:'offer',g:b.bag[0],s:b.s,t:now}});}});
+  if(mart&&!mart.since)mart.since=now;}
+function botReply(c,k){const o=others[c],b=o.bot;mart.wait={g:k,s:b.s,t:Date.now()};mart.waitCid=c;
+  setTimeout(()=>{if(!mart||!mart.wait)return;const give=b.bag[(o.gave++)%b.bag.length];onInbox({[c]:{k:'reply',g:give,f:k,s:b.s,t:Date.now()+o.gave}});},1800);}
 /* ---------- life cycle ---------- */
 function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt.cid,seat:opt.seat||0};hooks=opt||{};alive=true;
   labels=document.createElement('div');labels.className='tb-labels';X.host.appendChild(labels);
@@ -154,7 +172,8 @@ function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt
   if(e==='old'&&X.HUNTAT.old)hunt=huntBuild(X.HUNTAT.old);
   if(e==='neo'&&X.HUNTAT.neo){barn=barnBuild(X.HUNTAT.neo);barn.mine=hooks.given?hooks.given('gr'):0;if(live)NET.watch('cl_coop/'+opt.sid+'/neo',v=>{if(barn){barn.all=v||{};const m=barn.all[me.cid];if(m&&m.n>barn.mine)barn.mine=m.n;if(m&&m.t)barn.firstAt=m.t;}});}
   if(e==='iron'&&X.HUNTAT.iron){mart=martBuild(X.HUNTAT.iron);if(live)NET.watch('cl_trade/'+opt.sid+'/'+opt.cid,onInbox);}
-  let prev=0;X.upd.push((dt0,ts)=>{if(!alive)return;const pn=performance.now(),dt=prev?Math.min(.25,(pn-prev)/1000):dt0;prev=pn;sendTick();palTick(dt,ts);if(hunt){huntTick(dt,ts);npcTick(dt,ts);}if(barn)barnTick(dt,ts);if(mart)martTick(dt,ts);});
+  if(opt.demo)botsAdd();
+  let prev=0;X.upd.push((dt0,ts)=>{if(!alive)return;const pn=performance.now(),dt=prev?Math.min(.25,(pn-prev)/1000):dt0;prev=pn;sendTick();if(opt.demo)botsTick(dt,ts);palTick(dt,ts);if(hunt){huntTick(dt,ts);npcTick(dt,ts);}if(barn)barnTick(dt,ts);if(mart)martTick(dt,ts);});
   return {live};}
 function leave(){alive=false;NET.off();modalClose();action(null);Object.keys(others).forEach(drop);others={};npcs.forEach(n=>{try{X.scene&&X.scene.remove(n.g);}catch(e){}n.el.remove();});npcs=[];
   if(hunt){hunt.marks.forEach(m=>m.el.remove());hunt.sign.remove();}hunt=null;if(barn)barn.sign.remove();barn=null;if(mart)mart.el.remove();mart=null;
