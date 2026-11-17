@@ -7,8 +7,8 @@
     "category": "slop",
     "file": "https://geo.twranger.com/energy.html",
     "line": 0,
-    "snippet": "div.gseg.g-s — 12px stripe child (right)",
-    "selector": "div.gseg.g-s"
+    "snippet": "div.gseg.g-r — 10px stripe child (right)",
+    "selector": "div.gseg.g-r"
   },
   {
     "antipattern": "shape-assembled-illustration",
@@ -18,7 +18,7 @@
     "category": "slop",
     "file": "https://geo.twranger.com/energy.html",
     "line": 0,
-    "snippet": "inline <svg> scene: 28 primitive shapes, ~300x300px, 4 fill colors",
+    "snippet": "inline <svg> scene: 32 primitive shapes, ~300x300px, 4 fill colors",
     "advisory": true,
     "selector": "body"
   }
