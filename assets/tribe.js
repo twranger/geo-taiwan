@@ -123,7 +123,7 @@ function barnTick(dt,ts){const B=barn,{S,Hf}=X;if(!B)return;const T=barnTotal(B)
 function barnPut(){const B=barn;if(!B||B.full)return;const bag=hooks.bag(),k=(bag.millet||0)>0?'millet':null;if(!k)return;
   hooks.add({[k]:1},-1);B.mine++;if(!B.firstAt)B.firstAt=Date.now();hooks.saved&&hooks.saved('gr',1);
   if(hooks.demo)B.all[me.cid]={n:B.mine,s:0,t:B.firstAt};
-  if(NET.ref)NET.put('cl_coop/'+NET.sid+'/neo/'+me.cid,{n:B.mine,s:me.seat||0,t:B.firstAt});hooks.toast&&hooks.toast('放進 1 束小米。');}
+  if(NET.ref)NET.put('cl_coop/'+NET.sid+'/neo/'+me.cid,{n:B.mine,s:me.seat||0,t:B.firstAt});hooks.toast&&hooks.toast('放進 1 束小米。');hooks.sfx&&hooks.sfx('rustle');}
 /* ---------- 金屬器時代：face-to-face trading ---------- */
 /* what things are worth: 0 = lying around, nobody trades for it; trades only go through at the same worth */
 const VAL={stone:0,branch:0,grass:0,shell:0,clay:0,ironsand:0,whet:0,greenware:0,
@@ -161,14 +161,14 @@ function onInbox(all){const M=mart;if(!M)return;const now=Date.now();Object.keys
   if(v.k==='offer'){const list=goodsOf(),w=val(v.g);pick(`${who}拿 <b>${hooks.name(v.g)}</b> 想跟你換`,'你要給他什麼？只能選差不多值錢、又不一樣的東西。',list,k=>{put(tradePath(me.cid,from),null);
      if(!k){put(tradePath(from,me.cid),{k:'no',s:me.seat||0,t:TSV()});return;}
      hooks.add({[k]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);put(tradePath(from,me.cid),{k:'reply',g:k,f:v.g,s:me.seat||0,t:TSV()});
-     hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(k)}」，拿到「${hooks.name(v.g)}」。`);},'這次不換',k=>k===v.g?'一樣的東西，不用換':val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
+     hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(k)}」，拿到「${hooks.name(v.g)}」。`);hooks.sfx&&hooks.sfx('clink');},'這次不換',k=>k===v.g?'一樣的東西，不用換':val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
   else if(v.k==='reply'&&M.wait&&M.wait.g===v.f&&!((hooks.bag()[v.f]||0)>0)){M.wait=null;put(tradePath(me.cid,from),null);hooks.toast&&hooks.toast(`你身上已經沒有「${hooks.name(v.f)}」了，這次沒換成。`);}
   else if(v.k==='reply'&&M.wait&&M.wait.g===v.f){hooks.add({[v.f]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);M.wait=null;put(tradePath(me.cid,from),null);
      hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(v.f)}」，拿到「${hooks.name(v.g)}」。`);}
   else if(v.k==='no'&&M.wait){M.wait=null;put(tradePath(me.cid,from),null);hooks.toast&&hooks.toast(`${who}這次不想換。換別的東西試試看。`);}});}
 function npcDeal(){const b=hooks.bag(),rows=NPCDEALS.map(d=>({d,ok:(b[d.give]||0)>0}));
   modalOpen(`<h3>坐船來的外地人</h3><p>她從海的另一邊划船過來，船上有玻璃珠和瑪瑙珠。她想要這些東西：</p>${rows.map((r,i)=>`<button class="tb-deal" data-i="${i}" ${r.ok?'':'disabled'}><b>給 1 ${hooks.name(r.d.give)} → 換 1 ${hooks.name(r.d.get)}</b><small>${r.ok?r.d.why:'你沒有'+hooks.name(r.d.give)}</small></button>`).join('')}<div class="tb-row"><button class="tb-btn alt" data-x>先不要</button></div>`,
-   el=>{el.querySelectorAll('.tb-deal').forEach(btn=>btn.onclick=()=>{const d=NPCDEALS[+btn.dataset.i];hooks.add({[d.give]:1},-1);hooks.add({[d.get]:1},1);hooks.saved&&hooks.saved('nt',1);modalClose();hooks.toast&&hooks.toast(`換好了：你給她「${hooks.name(d.give)}」，拿到「${hooks.name(d.get)}」。`);});});}
+   el=>{el.querySelectorAll('.tb-deal').forEach(btn=>btn.onclick=()=>{const d=NPCDEALS[+btn.dataset.i];hooks.add({[d.give]:1},-1);hooks.add({[d.get]:1},1);hooks.saved&&hooks.saved('nt',1);modalClose();hooks.toast&&hooks.toast(`換好了：你給她「${hooks.name(d.give)}」，拿到「${hooks.name(d.get)}」。`);hooks.sfx&&hooks.sfx('clink');});});}
 /* ---------- small in-world dialogs and the action button ---------- */
 let modal=null,act=null;
 function action(label,fn){if(!hooks.action)return;if(!label){if(act){act=null;hooks.action(null);}return;}if(!act||act.label!==label){act={label,fn};hooks.action(label,()=>act&&act.fn());}else act.fn=fn;}

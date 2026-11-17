@@ -648,7 +648,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
     </div>
     <div class="links">
       <button class="unit-link" id="btnSk2">技能圖</button><button class="unit-link" id="btnTable">時代比較表</button>
-      <button class="unit-link" id="btnSound" aria-pressed="true">音效：開</button>
+      <button class="unit-link" id="btnMusic" aria-pressed="false">音樂：關</button><button class="unit-link" id="btnSound" aria-pressed="false">音效：關</button>
     </div>
   </div>
 </header>
@@ -688,7 +688,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
   <div class="scene-top"><div class="st-left"><button class="bigbtn alt" id="toHub">← 回去選時代</button><button class="bigbtn alt svl" data-save hidden>存檔下課</button></div><div><h2 id="scTitle"></h2><p class="sub" id="scSub"></p></div><button class="bigbtn" id="guide">帶我去下一個任務</button></div>
   <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div class="wvig" aria-hidden="true"></div><div id="wLabels"></div><div class="wchap" id="wChap" hidden aria-hidden="true"></div>
     <div class="whelp">拖曳畫面：轉頭看四周　點地面或光柱：走過去　鍵盤 W A S D 或方向鍵也可以走</div>
-    <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button><button class="wfull wsnd" id="wSnd">音效：開</button>
+    <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button><button class="wfull wsnd" id="wMus">音樂：關</button><button class="wfull wsnd" id="wSnd">音效：關</button>
     <div class="wtribe" id="wTribe" hidden aria-live="polite"></div><button class="wcoop" id="wCoop" hidden></button><div class="wpals" id="wPals" hidden></div>
     <div class="whud" id="wHud" hidden><div class="wgoal" id="wGoal" aria-live="polite"></div><div class="wtools"><button class="wt main" id="btnWb">動手試試</button><button class="wt" id="btnBag">背包</button><button class="wt" id="btnSk">技能圖</button></div></div><div class="wtoast" id="wToast" role="status" hidden></div><button class="wprompt" id="wPrompt" hidden></button></div>
   <div class="scene" id="scene" tabindex="0" aria-label="史前場景，可以左右拖曳"><div class="scene-in" id="sceneIn"></div></div>
@@ -1064,7 +1064,7 @@ G.trade=(A,fin)=>{const {scene,cam,hud,sfx}=A;cam.position.set(0,5,11);cam.lookA
   const done=why=>{end=1;want=null;hud.tray('');if(why)hud.html(why);setTimeout(()=>{sfx.win&&sfx.win();fin(!okc?0:miss===0?3:miss===1?2:1);},1400);};
   const next=()=>{const pool=KEYS.filter(k=>have(k)>0);if(n>=SHIPS)return done();if(!pool.length)return done('你帶來的東西都換完了。');want=pool[Math.floor(Math.random()*pool.length)];give=n%2?'瑪瑙珠':'玻璃珠';full=left=Math.max(3.4,6.5-n*.45);here=0;boat.position.x=-22;tray();};
   const pick=i=>{const k=KEYS[i];if(end||!want||!here||!have(k))return;
-   if(k===want){okc++;BG&&BG.add({[k]:1},-1);BG&&BG.add({beads:1},1);sfx.good&&sfx.good();hud.html(`你給他 <b>${NM[k]}</b><span class="arw">→</span>換到 <b class="gg">${give}</b>`,'#00684B');scene.add(P('sph',mat(GC[okc%2],{roughness:.3}),.22,.22,.22,3.6+okc*.5,.3,4.6));}
+   if(k===want){okc++;BG&&BG.add({[k]:1},-1);BG&&BG.add({beads:1},1);sfx.good&&sfx.good();sfx.clink&&sfx.clink();hud.html(`你給他 <b>${NM[k]}</b><span class="arw">→</span>換到 <b class="gg">${give}</b>`,'#00684B');scene.add(P('sph',mat(GC[okc%2],{roughness:.3}),.22,.22,.22,3.6+okc*.5,.3,4.6));}
    else{miss++;sfx.bad&&sfx.bad();hud.html(`他要的是 <b>${NM[want]}</b>，不是${NM[k]}。船開走了。`,'#7a2d00');}
    want=null;n++;tray();setTimeout(()=>{if(!end)next();},1200);};
   next();A.key=(k,d,rep)=>{if(d&&!rep&&'1234'.includes(k))pick(+k-1);};
@@ -1178,11 +1178,19 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 
 /* ---------- sound and speech ---------- */
 let AC=null;
-function beep(f=440,d=0.08,type='sine',v=0.08){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
-const sfx={hit:()=>beep(180,0.07,'square',0.1),good:()=>{beep(660,0.09);setTimeout(()=>beep(880,0.12),90);},bad:()=>beep(120,0.15,'sawtooth',0.06),win:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.16),i*110)),tick:()=>beep(900,0.03,'sine',0.04)};
+const AUD=(()=>{const a={music:0,sfx:0};try{Object.assign(a,JSON.parse(localStorage.getItem('hhl-ph-audio'))||{});}catch(e){}return a;})();
+const audSave=()=>{try{localStorage.setItem('hhl-ph-audio',JSON.stringify(AUD));}catch(e){}};
+function beep(f=440,d=0.08,type='sine',v=0.08){if(!AUD.sfx)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
+function nz(d,type,f0,f1,v,q){if(!AUD.sfx)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,b=AC.createBuffer(1,Math.ceil(AC.sampleRate*d),AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;
+  const n=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();n.buffer=b;fl.type=type;fl.Q.value=q||1;fl.frequency.setValueAtTime(f0,t);fl.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+d*.25);g.gain.exponentialRampToValueAtTime(.0001,t+d);n.connect(fl);fl.connect(g);g.connect(AC.destination);n.start(t);}catch(e){}}
+function sweep(f0,f1,d,type,v){if(!AUD.sfx)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02);}catch(e){}}
+const sfx={pop:()=>sweep(420,980,.09,'triangle',.07),whoosh:()=>nz(.38,'bandpass',500,2600,.16,1.4),thud:()=>{sweep(140,55,.22,'sine',.22);nz(.12,'lowpass',900,200,.08);},
+ rustle:()=>{nz(.22,'highpass',2500,5200,.05,.7);setTimeout(()=>nz(.16,'highpass',3000,4800,.04,.7),90);},clink:()=>{beep(1760,.18,'triangle',.05);setTimeout(()=>beep(2349,.22,'triangle',.045),70);},
+ splash:()=>nz(.6,'lowpass',2400,300,.1,.5),
+ hit:()=>beep(180,0.07,'square',0.1),good:()=>{beep(660,0.09);setTimeout(()=>beep(880,0.12),90);},bad:()=>beep(120,0.15,'sawtooth',0.06),win:()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.16),i*110)),tick:()=>beep(900,0.03,'sine',0.04)};
 const Amb=(()=>{let stop=null,kind=null;
  const noise=d=>{const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const n=AC.createBufferSource();n.buffer=b;return n;};
- const start=k=>{if(stop){stop();stop=null;}kind=k;if(!k||!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){return;}
+ const start=k=>{if(stop){stop();stop=null;}kind=k;if(!k||!AUD.sfx)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){return;}
   const out=AC.createGain();out.gain.value=0;out.gain.linearRampToValueAtTime(1,AC.currentTime+2);out.connect(AC.destination);const nodes=[];let alive=true,tm=0;
   const bed=(type,f,vol,lfo,depth)=>{const n=noise(3),fl=AC.createBiquadFilter(),g=AC.createGain();fl.type=type;fl.frequency.value=f;fl.Q.value=.6;g.gain.value=vol;n.loop=true;n.connect(fl);fl.connect(g);g.connect(out);n.start();nodes.push(n);
    if(lfo){const o=AC.createOscillator(),og=AC.createGain();o.frequency.value=lfo;og.gain.value=depth;o.connect(og);og.connect(g.gain);o.start();nodes.push(o);}};
@@ -1198,8 +1206,19 @@ const Amb=(()=>{let stop=null,kind=null;
 function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/<[^>]+>/g,''));u.lang='zh-TW';u.rate=0.95;speechSynthesis.speak(u);}catch(e){}}
 document.addEventListener('click',e=>{const b=e.target.closest('.say');if(b)say(b.dataset.t||b.parentNode.textContent);});
 window.__sfx=sfx;
-function soundUI(){const b=$('#btnSound');b.textContent='音效：'+(S.sound?'開':'關');b.setAttribute('aria-pressed',!!S.sound);const w=$('#wSnd');if(w){w.textContent=b.textContent;w.setAttribute('aria-pressed',!!S.sound);}}
-$('#btnSound').onclick=()=>{S.sound=S.sound?0:1;save();soundUI();if(!S.sound)try{speechSynthesis.cancel();}catch(e){}Amb.again();};soundUI();
+/* music: one looping track per place, cross-faded; a missing file just stays quiet */
+const Mus=(()=>{const VOL=.36,FALL={hub:'neo',cert:'hub'};let want=null,back=null,curK=null,el=null;const bad={};
+ const fade=(a,to,ms,done)=>{const from=a.volume,t0=performance.now();const st=()=>{const k=Math.min(1,(performance.now()-t0)/ms);try{a.volume=Math.max(0,Math.min(1,from+(to-from)*k));}catch(e){}if(k<1)setTimeout(st,40);else done&&done();};st();};
+ const res=k=>{let n=0;while(k&&bad[k]&&n++<3)k=FALL[k]||null;return k&&!bad[k]?k:null;};
+ const go=()=>{let k=AUD.music?res(want):null;if(want==='game'&&!k)k=AUD.music?res(back):null;if(k===curK&&el)return;const old=el;curK=k;el=null;if(old)fade(old,0,700,()=>old.pause());if(!k)return;
+  const a=new Audio(`assets/music/${k}.mp3`);a.loop=true;a.volume=0;a.preload='auto';a.onerror=()=>{bad[k]=1;if(el===a){el=null;curK=null;go();}};el=a;
+  const p=a.play();if(p&&p.catch)p.catch(()=>{if(el===a){el=null;curK=null;}});fade(a,VOL,1200);};
+ addEventListener('pointerdown',()=>{if(AUD.music&&!el&&want)go();},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(!el)return;if(document.hidden)el.pause();else el.play().catch(()=>{});});
+ return {set:k=>{if(k!=='game')back=k;want=k;go();},again:go,stop:()=>{want=null;go();}};})();
+function soundUI(){[['#btnSound','#wSnd','音效',AUD.sfx],['#btnMusic','#wMus','音樂',AUD.music]].forEach(([a,b,n,on])=>[a,b].forEach(id=>{const e=$(id);if(e){e.textContent=n+'：'+(on?'開':'關');e.setAttribute('aria-pressed',!!on);}}));}
+$('#btnSound').onclick=()=>{AUD.sfx=AUD.sfx?0:1;audSave();soundUI();if(!AUD.sfx)try{speechSynthesis.cancel();}catch(e){}else sfx.pop();Amb.again();};
+$('#btnMusic').onclick=()=>{AUD.music=AUD.music?0:1;audSave();soundUI();Mus.again();};soundUI();
 
 /* ---------- canvas helpers ---------- */
 let FS=1;
@@ -1406,14 +1425,14 @@ function exhibit(id){const t=MUSEUM.tasks.find(t=>t.id===id);task=null;W3.pause(
   d.innerHTML=`<div class="done"><p style="font-size:18px"><b>${t.era.n}・${t.era.site}</b><br>製作的人：<b>${esc(S.name)}</b>　<span class="stars" style="font-size:24px">${stars(S.st[id])}</span></p><div class="fact" style="--c:${t.era.c}">${t.src.fact}<br><button class="say" data-t="${esc(t.src.fact)}">唸給我聽</button></div><p class="note" style="margin-top:8px">${REAL[t.era.k]}</p></div>`;}
 const W3=window.World||null;
 let fitBusy=0;function fitW(){const el=$('#w3d');if(!el||el.hidden||document.fullscreenElement||fitBusy)return;const top=el.getBoundingClientRect().top+scrollY,h=Math.max(300,innerHeight-top-10)+'px';if(el.style.getPropertyValue('--wh')===h)return;el.style.setProperty('--wh',h);fitBusy=1;try{dispatchEvent(new Event('resize'));}finally{fitBusy=0;}}
-addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTimeout(fitW,300));$('#wSnd').onclick=()=>$('#btnSound').click();
+addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTimeout(fitW,300));$('#wSnd').onclick=()=>$('#btnSound').click();$('#wMus').onclick=()=>$('#btnMusic').click();
 function svUI(){const on=!!(window.ClassLive&&ClassLive.sess()&&ClassLive.sess().on);document.querySelectorAll('[data-save]').forEach(b=>b.hidden=!on);}
-function show(id){setTimeout(svUI,0);if(id!=='vScene'&&window.Tribe)Tribe.leave();if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
+function show(id){Mus.set(id==='vScene'?(cur&&cur.k)||'hub':id==='vDig'?'dig':id==='vCert'?'cert':'hub');setTimeout(svUI,0);if(id!=='vScene'&&window.Tribe)Tribe.leave();if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
 function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;{const b=$('#clAsk2');if(b)b.hidden=!window.ClassLive||!!ClassLive.sess();}
   const h=ERAS.map((e,i)=>{const open=DEMO||i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
   const dOpen=DEMO||allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
 $('#hub').addEventListener('click',e=>{const b=e.target.closest('.node');if(!b||b.disabled)return;if(b.dataset.e==='museum')museum();else if(b.dataset.e==='dig'){S.dig?cert():dig();}else scene(b.dataset.e);});
-function scene(k){cur=ERAS.find(e=>e.k===k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}${matchMedia('(pointer:coarse)').matches?'':'　（按 E）'}`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();tribeEnter(k);}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
+function scene(k){cur=ERAS.find(e=>e.k===k);Mus.set(k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}${matchMedia('(pointer:coarse)').matches?'':'　（按 E）'}`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();tribeEnter(k);}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
 function paint(){if(cur===MUSEUM)return;const n=cur.tasks.filter(t=>S.st[t.id]).length;
   $('#sceneIn').innerHTML=`<svg viewBox="0 0 1560 440" preserveAspectRatio="none" aria-hidden="true">${SC[cur.k]}<rect width="1560" height="440" fill="#1b2a4a" opacity="${[0,0.14,0.3,0.5][n]}"/>${n===3?'<g fill="#fff"><circle cx="200" cy="50" r="2"/><circle cx="500" cy="30" r="2"/><circle cx="900" cy="44" r="2"/><circle cx="1100" cy="24" r="2"/><circle cx="1450" cy="40" r="2"/></g>':''}</svg>`+cur.tasks.map(t=>`<button class="spot ${S.st[t.id]?'done':''}" style="left:${t.x}%;top:${t.y}%" data-t="${t.id}">${t.n}<small>${S.st[t.id]?stars(S.st[t.id]):'點我開始'}</small></button>`).join('');
   $('#taskList').innerHTML=cur.tasks.map(t=>`<button class="tk" data-t="${t.id}"><b>${t.n}</b><span>${S.st[t.id]?stars(S.st[t.id]):'還沒做'}</span></button>`).join('');
@@ -1434,7 +1453,7 @@ $('#wPrompt').onclick=function(){cur===MUSEUM?exhibit(this.dataset.t):openTask(t
 function openTask(id){if(document.fullscreenElement)try{document.exitFullscreen();}catch(e){}W3&&W3.pause(true);task=cur.tasks.find(t=>t.id===id);$('#gm').hidden=false;$('#gmT').textContent=`${cur.n}：${task.n}`;$('#gmPlay').hidden=true;$('#gmDone').hidden=true;$('#gmIntro').hidden=false;
   $('#gmIntro').innerHTML=`<div class="intro"><p>${task.intro}</p><div class="fact" style="--c:${cur.c}"><b>怎麼玩</b><br>${task.how}</div><button class="say" data-t="${esc(task.intro+task.how)}">唸給我聽</button><br><button class="bigbtn" id="gmGo">開始！</button></div>`;
   $('#gmGo').onclick=play;$('#gmGo').focus();}
-function play(){S.tries[task.id]=(S.tries[task.id]||0)+1;try{speechSynthesis.cancel();}catch(e){}$('#gmIntro').hidden=true;$('#gmDone').hidden=true;$('#gmPlay').hidden=false;$('#gmHow').textContent=task.how;stopGame&&stopGame();const my=++runId,finish=n=>{if(my===runId)finishTask(n);};const use3=window.G3&&G3.has(task.id);$('#gcv').hidden=!!use3;$('#gcv3').hidden=!use3;$('#ghud').hidden=!use3;if(use3){$('#gmHow').textContent='';stopGame=G3.run(task.id,finish);}else{$('#ghMsg').hidden=true;$('#ghTray').hidden=true;runGame(a=>G[task.id](a,finish));}}
+function play(){Mus.set('game');S.tries[task.id]=(S.tries[task.id]||0)+1;try{speechSynthesis.cancel();}catch(e){}$('#gmIntro').hidden=true;$('#gmDone').hidden=true;$('#gmPlay').hidden=false;$('#gmHow').textContent=task.how;stopGame&&stopGame();const my=++runId,finish=n=>{if(my===runId)finishTask(n);};const use3=window.G3&&G3.has(task.id);$('#gcv').hidden=!!use3;$('#gcv3').hidden=!use3;$('#ghud').hidden=!use3;if(use3){$('#gmHow').textContent='';stopGame=G3.run(task.id,finish);}else{$('#ghMsg').hidden=true;$('#ghTray').hidden=true;runGame(a=>G[task.id](a,finish));}}
 let runId=0;
 const FAILTXT={food:'只找到一點點，不夠大家吃。再試一次！',trade:'一樣都沒換到，船都開走了。看清楚船上的人要什麼，再試一次。'};
 function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
@@ -1447,7 +1466,7 @@ function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmP
   d.querySelector('.qq').addEventListener('click',e=>{const b=e.target.closest('.qo');if(!b||b.disabled)return;const ok=+b.dataset.i===task.q.a;b.classList.add(ok?'right':'wrong');if(ok){sfx.good();d.querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#qfb').textContent='答對了！比較表多了一格。';$('#back').hidden=false;$('#back').focus();}else{sfx.bad();b.disabled=true;S.qw=(S.qw||0)+1;save();$('#qfb').textContent='再想想看，上面「你剛剛學到的事」裡有答案。';}});
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();}
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-function closeGm(){runId++;stopGame&&stopGame();stopGame=null;try{speechSynthesis.cancel();}catch(e){}$('#gm').hidden=true;if(cur&&!$('#vScene').hidden)paint();W3&&W3.pause(false);if(cur&&cur!==MUSEUM&&ERAS.includes(cur)&&eraDone(cur)&&!(S.ns&&S.ns[cur.k]))night();}
+function closeGm(){if(cur)Mus.set($('#vScene')&&!$('#vScene').hidden?cur.k:'hub');runId++;stopGame&&stopGame();stopGame=null;try{speechSynthesis.cancel();}catch(e){}$('#gm').hidden=true;if(cur&&!$('#vScene').hidden)paint();W3&&W3.pause(false);if(cur&&cur!==MUSEUM&&ERAS.includes(cur)&&eraDone(cur)&&!(S.ns&&S.ns[cur.k]))night();}
 $('#gmX').onclick=closeGm;
 
 /* ---------- discovery layer: gather, try things out, unlock skills (技術會延續) ---------- */
@@ -1558,7 +1577,7 @@ function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassL
   given:k=>S[k]||0,saved:(k,n)=>{S[k]=(S[k]||0)+n;save();if(window.ClassLive)ClassLive.now();},
   action:(label,fn)=>{const b=$('#wCoop');if(!label){b.hidden=true;b.onclick=null;return;}b.textContent=label;b.hidden=false;b.onclick=fn;},
   barnFull:t=>{S.barn=1;save();sfx.win();toast(`<b>穀倉滿了！</b>大家一起存了 ${t.goal} 束小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`);},
-  armed:()=>!!(S.st&&S.st.food),hit:()=>{sfx.hit&&sfx.hit();},
+  armed:()=>!!(S.st&&S.st.food),hit:()=>sfx.thud(),throw:()=>sfx.whoosh(),sfx:k=>sfx[k]&&sfx[k](),
   caught:team=>{S.hunt=(S.hunt||0)+1;add({meat:1,hide:1});save();sfx.win();
    toast(`<b>圍獵成功！</b>${team.length?'和 '+team.join('、')+' 一起':''}丟長矛打中一頭水鹿，分到一塊鹿肉和一張獸皮。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`);}});}
 let toastT=0;function toast(m){const t=$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,Math.max(4000,String(m).replace(/<[^>]*>/g,'').length*230));}
@@ -1567,7 +1586,7 @@ function hudGoal(){const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])return;const
   el.innerHTML=g?`<span class="wg-k">筆記 ${n}/${L.length}</span><b>${g.t}</b>${h.map(x=>`<span>${x}</span>`).join('')}`:`<span class="wg-k">筆記 ${n}/${L.length}</span><b>這個時代的事都完成了！</b>`;
   $('#btnBag').textContent=`背包 ${Object.values(S.bag).reduce((a,b)=>a+b,0)}`;}
 function craftEnter(){if(!W3||!RESDEF[cur.k])return;const defs=RESDEF[cur.k].map(d=>Object.assign({},d,{n:d.once?Math.max(0,d.n-(S.took[cur.k+d.it]||0)):d.n})).filter(d=>d.n>0&&!(d.it==='canoe'&&S.sk.jade));W3.spawnRes(defs);$('#wHud').hidden=false;hudGoal();}
-function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
+function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});sfx.pop();const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
   if((q.it==='shell'||q.it==='fruit')&&!S.sk.gather&&((S.bag.shell||0)+(S.bag.fruit||0)>=3)){S.sk.gather=1;toast('你學會了<b>採集</b>：在海邊撿貝殼、在林子裡摘野果。');}
   else toast(`撿到 <b>${IT[q.it].n}</b>。${IT[q.it].d}`);
   if(cur.k==='old'&&d&&d.once&&(S.took.oldshell||0)>=8&&(S.took.oldfruit||0)>=6&&!S.sk.moved){S.sk.moved=1;setTimeout(()=>toast('這附近的貝殼和野果都撿光了。舊石器時代的人就是這樣：<b>食物吃完了，就要搬到別的地方</b>。'),3800);}
@@ -1714,4 +1733,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=5"></script>
+<script src="assets/tribe.js?v=6"></script>
