@@ -461,6 +461,8 @@ select.nh-in{min-width:0}
 .nh-code{font-size:clamp(44px,7vw,84px)}
 .nh-away{display:grid;place-items:center;border-style:dashed;background:#f3f1ea;color:#6b6656;border-color:#b3ab95;cursor:default}
 .nh-teach summary{list-style:revert}
+.nh-fix{min-width:44px;min-height:40px;border:2px dashed #7d8a8c;border-radius:8px;background:#fff;font:inherit;font-weight:900;font-size:18px;color:#14323a;cursor:pointer}
+.nh-fix:hover{border-style:solid;border-color:#14323a}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -508,7 +510,7 @@ const GAMES={
   row:r=>`<td>${r.done}/7</td><td>${r.stars}</td><td>${r.miss}</td><td>${mmss(r.t)}</td>${r.rooms.map((x,i)=>`<td class="${x.stars?'':'no'}${r.cur.slice(0,2)==='s'+(i+1)?' now':''}">${x.stars?`${'★'.repeat(x.stars)}<small>錯 ${Math.max(0,x.miss)}・${mmss(x.t)}</small>`:(x.seen?`<small>看了 ${x.seen} 件</small>`:'—')}</td>`).join('')}`,
   csvHead:()=>['修好展間','星星','寫錯次數','總秒數',...NUM.flatMap(n=>[`第${n}展間星星`,`第${n}展間寫錯`,`第${n}展間秒數`,`第${n}展間看了幾件`])],
   csvRow:r=>[r.done,r.stars,r.miss,r.t,...r.rooms.flatMap(x=>[x.stars,Math.max(0,x.miss),x.t,x.seen])]},
- prehistory:{n:'史前生存大冒險',page:'prehistory.html',total:10,
+ prehistory:{n:'史前生存大冒險',page:'prehistory.html',total:10,follow:1,
   T:['找食物','敲打石器','生火','種小米','磨製石器','做陶罐','和外地人交易','煉鐵','試試鐵斧'],E:['舊石器時代','新石器時代','金屬器時代'],EK:['old','neo','iron'],
   parse(v){let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const s=(j.s||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),y=(j.y||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),tm=(j.tm||[]).concat([0,0,0,0,0]).slice(0,5).map(x=>+x||0);
    const o={s,y,tm,dig:j.dig?1:0,sk:+j.sk||0,qw:+j.qw||0,cf:+j.cf||0,done:s.filter(Boolean).length+(j.dig?1:0),stars:s.reduce((a,b)=>a+b,0),t:tm.reduce((a,b)=>a+b,0),miss:(+j.qw||0)+(+j.cf||0)};
@@ -612,7 +614,7 @@ function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur
  unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!d.exists){back();return;}Object.assign(cur,{game:'nmth'},d.data());calc();draw();}));
  unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{raw=[];q.forEach(d=>{const v=d.data();if(v.cid)raw.push(v);});calc();draw();}));
  window.scrollTo(0,0);}
-function calc(){const g=GM();rows=raw.map(v=>Object.assign({seat:v.seat,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
+function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
 function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,back=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
@@ -623,11 +625,11 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
    <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button><button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
- if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能把座號空出來。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
+ if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能改成正確的座號。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
   ${back?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
   <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
-  ${rows.map(r=>`<tr><th>${r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
+  ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
  room$.innerHTML=h;
  const B=(id,fn)=>{const b=$(id);if(b)b.onclick=fn;};
  B('#nhStart',()=>db.collection('nmth_rooms').doc(cur.sid).update({ph:'play',startedAt:TS()}));
@@ -635,7 +637,18 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
  B('#nhBack',back);B('#nhCsv',csv);B('#nhReopen',()=>{const b=$('#nhReopen');b.disabled=true;b.textContent='開啟中……';reopen();});
  B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
  B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete()))).then(()=>db.collection('nmth_rooms').doc(sid).delete());});
- room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>{if(confirm('把 '+b.dataset.rel+' 號空出來，讓別台平板重新選？'))db.collection('nmth_live').doc(cur.sid+'_'+b.dataset.rel).delete();});}
+ room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>fixSeat(+b.dataset.rel));}
+/* move a pupil to the right seat: the tablet follows the change (rooms.moves[cid]) and keeps sending to the new seat; progress moves with it */
+function fixSeat(from){const g=GM(),r=rows.find(x=>x.seat===from);if(!r)return;
+ const ans=prompt(g.follow?`${from} 號要改成幾號？\n（輸入 0 是把這個座號空出來，讓那台平板重新選）`:`把 ${from} 號空出來，讓那台平板重新選？輸入 0 確定。`,'');if(ans==null)return;const to=parseInt(ans,10);
+ if(to===0){db.collection('nmth_live').doc(cur.sid+'_'+from).delete();return;}
+ if(!g.follow||!(to>=1&&to<=40)||to===from){if(ans.trim())alert('座號要是 1 到 40 的數字。');return;}
+ const other=raw.find(v=>v.seat===to&&String(v.cid)[0]!=='~'&&!(cur.moves&&cur.moves[v.cid]&&+cur.moves[v.cid]!==to));
+ if(other&&!(other.at&&other.at.seconds&&Date.now()/1000-other.at.seconds>1200)){alert(`${to} 號現在有別台平板在用。請先把那一位改到正確的座號，或輸入 0 把 ${to} 號空出來。`);return;}
+ const ref=db.collection('nmth_live').doc(cur.sid+'_'+from);
+ ref.get().then(d=>{if(!d.exists)return;const v=d.data();const up={};up['moves.'+v.cid]=to;
+  return db.collection('nmth_live').doc(cur.sid+'_'+to).set(Object.assign({},v,{seat:to,at:TS()}))
+   .then(()=>db.collection('nmth_rooms').doc(cur.sid).update(up)).then(()=>ref.delete());}).catch(e=>alert('改不了：'+(e.code||e.message)));}
 function csv(){const g=GM(),q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
  const t='﻿'+[head,...rows.map(r=>[cur.label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=`${g.n}_${cur.label}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}

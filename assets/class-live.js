@@ -18,12 +18,14 @@ const load=()=>loading||(loading=new Promise((ok,no)=>{const need=['app','firest
   if(window.firebase&&firebase.firestore)need.length=0;
   const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();ok(db);}catch(e){loading=null;no(e);}return;}
    const sc=document.createElement('script');sc.src=u;sc.onload=next;sc.onerror=()=>{loading=null;no(new Error('net'));};document.head.appendChild(sc);};next();}));
-function push(){clearTimeout(tm);if(!db||!sess||!sess.seat)return;let v;try{v=O.snapshot()||{};}catch(e){return;}
+let last=0;
+function push(){clearTimeout(tm);if(!db||!sess||!sess.seat)return;last=Date.now();let v;try{v=O.snapshot()||{};}catch(e){return;}
   const d=typeof v.d==='string'?v.d:JSON.stringify(v.d||[]);
   db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set({sid:sess.sid,seat:sess.seat,cid,mode:String(v.mode||'c').slice(0,4),cur:String(sess.on?(v.cur||''):'lobby').slice(0,30),d:d.slice(0,1900),
    done:v.done|0,stars:v.stars|0,miss:v.miss|0,t:v.t|0,notes:v.notes|0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});}
-const touch=()=>{if(!sess||!sess.seat)return;clearTimeout(tm);tm=setTimeout(push,1800);};
-setInterval(()=>{if(sess&&sess.seat&&sess.on&&!document.hidden&&db)push();},45000);
+/* at most one write every 15 s per tablet, so a whole class stays well inside the free Firestore quota */
+const touch=()=>{if(!sess||!sess.seat)return;clearTimeout(tm);tm=setTimeout(push,Math.max(1800,15000-(Date.now()-last)));};
+setInterval(()=>{if(sess&&sess.seat&&sess.on&&!document.hidden&&db&&Date.now()-last>40000)push();},45000);
 addEventListener('pagehide',()=>{if(sess&&sess.seat&&sess.on&&db)push();});
 /* ---- overlay ---- */
 const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.92);display:grid;place-items:center;padding:18px;overflow:auto;font-family:"Noto Sans TC",system-ui,sans-serif}
@@ -61,10 +63,11 @@ function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`
     sess.seat?wait():seat();}))
    .catch(()=>ask('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
 /* a seat whose cid starts with '~' was released by the teacher when a task was reopened: free to pick, and its progress comes back */
+const idle=v=>!v.at||!v.at.seconds||Date.now()/1000-v.at.seconds>1200;
 function seat(){const sid=sess.sid;let taken={},rec={};
-  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n][0]!=='~'&&taken[n]!==cid;return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
+  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n][0]!=='~'&&taken[n]!==cid&&!idle(rec[n]);return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
    box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,v=rec[n];sess.seat=n;sess.on=0;keep();
-    if(v&&v.d&&v.d!=='[]'&&v.d!=='{}'&&(v.cid===cid||String(v.cid)[0]==='~')){try{O.onRestore&&O.onRestore(v);}catch(e){}}
+    if(v&&v.d&&v.d!=='[]'&&v.d!=='{}'&&(v.cid===cid||String(v.cid)[0]==='~'||idle(v))){try{O.onRestore&&O.onRestore(v);}catch(e){}}
     push();wait();});};
   draw();off();unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{taken={};rec={};q.forEach(d=>{const v=d.data();taken[v.seat]=v.cid;rec[v.seat]=v;});if(sess&&!sess.seat)draw();},()=>{}));}
 function wait(quiet){const sid=sess.sid;off();
@@ -72,14 +75,20 @@ function wait(quiet){const sid=sess.sid;off();
    box.querySelector('#clRe').onclick=()=>{const old=sess.seat;sess.seat=0;keep();db.collection('nmth_live').doc(sid+'_'+old).set({sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});seat();};}
   unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!sess)return;const r=d.exists?d.data():{ph:'closed'};
    if(r.ph==='closed'){const was=sess.on;if(was)push();off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
+   if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();push();if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
    if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();try{O.onStart&&O.onStart(sess);}catch(e){}touch();}},()=>{}));
   unsub.push(db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid&&d.data().cid[0]!=='~'&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
+function isItYou(){let nm='';try{nm=O.who&&O.who()||'';}catch(e){}
+  ui(`<h2>是你嗎？</h2><p>這台平板上次是<br><b style="font-size:24px">${esc(sess.label)}　${sess.seat} 號　${esc(nm)}</b><br>在玩。</p>
+   <div class="cl-row"><button class="cl-btn cl-wide" id="clMe">是我，繼續玩</button></div><div class="cl-row"><button class="cl-btn alt cl-wide" id="clNotMe">不是我</button></div>`);
+  box.querySelector('#clMe').onclick=()=>{ui(`<h2>正在連線</h2><p>等一下下。</p>`);load().then(()=>join({sid:sess.sid})).catch(()=>ask('連不上網路，沒辦法接老師的任務。'));};
+  box.querySelector('#clNotMe').onclick=()=>{sess=null;keep();hide();try{O.onNotMe&&O.onNotMe();}catch(e){}};}
 return {
-  /* o: {game, store, snapshot(), onJoin(sess), onRestore(liveDoc), onStart(sess), onClosed(wasPlaying)} */
+  /* o: {game, store, snapshot(), who(), onJoin(sess), onRestore(liveDoc), onStart(sess), onSeat(sess), onNotMe(), onClosed(wasPlaying)} */
   init(o){O=o;try{sess=JSON.parse(localStorage.getItem(o.store)||'null');}catch(e){sess=null;}
    if(KQ&&sess&&sess.sid!==KQ){sess=null;keep();}
    if(!KQ&&KC&&sess&&sess.code!==KC){sess=null;keep();}
-   if(sess&&sess.on){load().then(()=>wait(true)).catch(()=>{});return 'playing';}
+   if(sess&&sess.seat){setTimeout(isItYou,0);return 'confirm';}
    return sess||KQ||KC?'join':'';},
   /* call after the player has typed a name: join by link, rejoin, or ask for the code */
   begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ,link:1});else if(sess)join({sid:sess.sid});else if(KC)join({code:KC,link:1});else ask();},
