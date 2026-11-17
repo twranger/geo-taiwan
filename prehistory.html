@@ -711,7 +711,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 <div class="modal" id="nt" hidden role="dialog" aria-modal="true"><div class="mbox" id="ntBox"></div></div>
 <footer><div class="wrap"><p>內容依康軒版五上社會第三單元〈尋根探源話臺灣〉第 1 課編寫。場景與小遊戲是依課本想像圖設計的示意，不是真實比例，也不是遺址現場的實景。</p><p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026 ｜ <a href="nmth-host.html?g=prehistory" style="color:inherit">老師入口</a></p></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/class-live.js?v=4"></script>
+<script src="assets/class-live.js?v=5"></script>
 <script>
 /* 3D immersive worlds for the three eras (three.js r128) */
 window.World=(function(){
@@ -1630,6 +1630,10 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
    return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
     done:st.filter(Boolean).length+(S.dig?1:0),stars:st.reduce((a,b)=>a+b,0),miss:(S.qw||0)+(S.cf||0),t:tm.reduce((a,b)=>a+b,0),notes:0};},
   onJoin:()=>{const nm=S.name||($('#nm').value||'').trim().slice(0,10);for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:nm,st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
+  onRestore:v=>{let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const st=j.s||[],y=j.y||[],tm=j.tm||[];
+   TID.forEach((id,i)=>{const n=+st[i]||0;if(n>(S.st[id]||0))S.st[id]=n;if(n)S.known[id]=1;if((+y[i]||0)>(S.tries[id]||0))S.tries[id]=+y[i];});
+   ['old','neo','iron','dig','museum'].forEach((k,i)=>{if((+tm[i]||0)>(S.tm[k]||0))S.tm[k]=+tm[i];});
+   if(j.dig)S.dig=1;S.qw=Math.max(S.qw||0,+j.qw||0);S.cf=Math.max(S.cf||0,+j.cf||0);try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
   onStart:se=>{if(!S.name)S.name=se.seat+' 號';save();sfx.win();hub();},
   onSolo:()=>{if(!S.name)S.name=($('#nm').value||'').trim().slice(0,10)||'探險家';save();hub();}});}
 if($('#clAsk2'))$('#clAsk2').onclick=()=>ClassLive.ask();

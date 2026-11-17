@@ -60,19 +60,22 @@ function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`
     if(!sess||sess.sid!==live.sid){sess={sid:live.sid,code:live.code||'',label:live.label||'',seat:0,on:0};keep();try{O.onJoin&&O.onJoin(sess);}catch(e){}}
     sess.seat?wait():seat();}))
    .catch(()=>ask('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
-function seat(){const sid=sess.sid;let taken={};
-  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n]!==cid;return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
-   box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{sess.seat=+b.dataset.n;sess.on=0;keep();push();wait();});};
-  draw();off();unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{taken={};q.forEach(d=>{const v=d.data();taken[v.seat]=v.cid;});if(sess&&!sess.seat)draw();},()=>{}));}
+/* a seat whose cid starts with '~' was released by the teacher when a task was reopened: free to pick, and its progress comes back */
+function seat(){const sid=sess.sid;let taken={},rec={};
+  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n][0]!=='~'&&taken[n]!==cid;return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
+   box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,v=rec[n];sess.seat=n;sess.on=0;keep();
+    if(v&&v.d&&v.d!=='[]'&&v.d!=='{}'&&(v.cid===cid||String(v.cid)[0]==='~')){try{O.onRestore&&O.onRestore(v);}catch(e){}}
+    push();wait();});};
+  draw();off();unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{taken={};rec={};q.forEach(d=>{const v=d.data();taken[v.seat]=v.cid;rec[v.seat]=v;});if(sess&&!sess.seat)draw();},()=>{}));}
 function wait(quiet){const sid=sess.sid;off();
   if(!quiet){sess.on=0;keep();ui(`<div class="cl-big">${sess.seat}</div><h2 class="cl-c">${sess.seat} 號，你進大廳了</h2><p class="cl-c">看看大螢幕上有沒有你的座號。等老師按開始。</p><div class="cl-row c"><button class="cl-btn alt" id="clRe">選錯座號了</button></div>`);
    box.querySelector('#clRe').onclick=()=>{const old=sess.seat;sess.seat=0;keep();db.collection('nmth_live').doc(sid+'_'+old).set({sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});seat();};}
   unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!sess)return;const r=d.exists?d.data():{ph:'closed'};
    if(r.ph==='closed'){const was=sess.on;if(was)push();off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
    if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();try{O.onStart&&O.onStart(sess);}catch(e){}touch();}},()=>{}));
-  unsub.push(db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
+  unsub.push(db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid&&d.data().cid[0]!=='~'&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
 return {
-  /* o: {game, store, snapshot(), onJoin(sess), onStart(sess), onClosed(wasPlaying)} */
+  /* o: {game, store, snapshot(), onJoin(sess), onRestore(liveDoc), onStart(sess), onClosed(wasPlaying)} */
   init(o){O=o;try{sess=JSON.parse(localStorage.getItem(o.store)||'null');}catch(e){sess=null;}
    if(KQ&&sess&&sess.sid!==KQ){sess=null;keep();}
    if(!KQ&&KC&&sess&&sess.code!==KC){sess=null;keep();}

@@ -459,6 +459,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 select.nh-in{min-width:0}
 .nh-short{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin:4px 0 14px}.nh-short b{font:900 clamp(26px,3.6vw,44px)/1.2 ui-monospace,Menlo,Consolas,monospace;color:#14323a;word-break:break-all}.nh-short span{color:#4c5759}
 .nh-code{font-size:clamp(44px,7vw,84px)}
+.nh-away{display:grid;place-items:center;border-style:dashed;background:#f3f1ea;color:#6b6656;border-color:#b3ab95;cursor:default}
+.nh-teach summary{list-style:revert}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -521,10 +523,20 @@ const auth$=$('#nhAuth'),room$=$('#nhRoom'),list$=$('#nhList');
 if(!window.firebase){auth$.innerHTML='<p class="nh-msg err">連不上 Firebase。請確認網路，再重新整理。</p>';return;}
 firebase.initializeApp(FB);const auth=firebase.auth(),db=firebase.firestore(),TS=()=>firebase.firestore.FieldValue.serverTimestamp();
 const G0=(()=>{try{const g=new URLSearchParams(location.search).get('g');return GAMES[g]?g:'';}catch(e){return '';}})();
-const RULES=`    // ── 臺史博：閉館之後（geo.twranger.com）──
+const RULES=`    // ── 全班一起玩（geo.twranger.com）──
+    function isClassTeacher() {
+      return request.auth != null && request.auth.token.email != null
+             && exists(/databases/$(database)/documents/nmth_teachers/$(request.auth.token.email.lower()));
+    }
+    match /nmth_teachers/{email} {
+      allow read: if request.auth != null;
+      allow write: if isOrienteeringAdmin();
+    }
     match /nmth_rooms/{doc} {
       allow read: if true;
-      allow write: if isOrienteeringAdmin();
+      allow create: if isOrienteeringAdmin() || (isClassTeacher() && request.resource.data.owner == request.auth.uid);
+      allow update: if isOrienteeringAdmin() || (isClassTeacher() && resource.data.owner == request.auth.uid && request.resource.data.owner == request.auth.uid);
+      allow delete: if isOrienteeringAdmin() || (isClassTeacher() && resource.data.owner == request.auth.uid);
     }
     match /nmth_live/{doc} {
       allow read: if true;
@@ -532,49 +544,77 @@ const RULES=`    // ── 臺史博：閉館之後（geo.twranger.com）──
                     && request.resource.data.seat is int && request.resource.data.seat >= 1 && request.resource.data.seat <= 40
                     && request.resource.data.sid is string && request.resource.data.sid.size() < 30
                     && request.resource.data.d is string && request.resource.data.d.size() < 2000;
-      allow delete: if isOrienteeringAdmin();
+      allow delete: if isOrienteeringAdmin() || (isClassTeacher() && get(/databases/$(database)/documents/nmth_rooms/$(resource.data.sid)).data.owner == request.auth.uid);
     }
 `;
-/* short link through is.gd (no account needed). Tries a readable name first, then lets is.gd pick one. */
-function shorten(url,want){return new Promise(done=>{let tries=[want,''].filter((v,i)=>i||v),n=0;
+/* short link through is.gd (no account needed): hd + the 4-digit code, then a letter after it, then whatever is.gd picks */
+function shorten(url,names){return new Promise(done=>{let tries=names.concat(['']),n=0;
   const go=()=>{if(n>=tries.length){done('');return;}const name=tries[n++],cb='__isgd'+Date.now()+n,sc=document.createElement('script');let fin=false;
    const end=v=>{if(fin)return;fin=true;try{delete window[cb];}catch(e){}sc.remove();v?done(v):go();};
    window[cb]=r=>end(r&&r.shorturl?String(r.shorturl).replace(/^https?:\/\//,''):'');sc.onerror=()=>end('');setTimeout(()=>end(''),6000);
    sc.src='https://is.gd/create.php?format=json&callback='+cb+'&url='+encodeURIComponent(url)+(name?'&shorturl='+encodeURIComponent(name):'');document.head.appendChild(sc);};go();});}
-function makeShort(sid,g,code){const d=new Date();return shorten(SITE+g.page+'?k='+sid,'hd'+code+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')).then(v=>{if(v)db.collection('nmth_rooms').doc(sid).update({short:v}).catch(()=>{});return v;});}
-let user=null,cur=null,unsub=[],rows=[],sessions=[];
+function makeShort(sid,g,code){const L='abcdefghjkmnpqrstuvwxyz',r=()=>L[Math.floor(Math.random()*L.length)];
+ return shorten(SITE+g.page+'?k='+sid,['hd'+code,'hd'+code+r(),'hd'+code+r()]).then(v=>{if(v)db.collection('nmth_rooms').doc(sid).update({short:v}).catch(()=>{});return v;});}
+let user=null,cur=null,unsub=[],rows=[],sessions=[],isAdmin=false,teachers=[];
 const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
 const GM=()=>GAMES[cur&&cur.game]||GAMES.nmth;
-auth.onAuthStateChanged(u=>{user=u;off();cur=null;room$.hidden=list$.hidden=true;
- if(!u){auth$.innerHTML=`<p class="nh-big">先用老師的 Google 帳號登入</p><p>和「時空偵探定向賽」後台用同一個帳號。</p><div class="nh-row"><button class="nh-btn" id="nhIn">用 Google 登入</button></div><p class="nh-msg err" id="nhErr"></p>`;
+const mail=()=>String(user&&user.email||'').toLowerCase();
+auth.onAuthStateChanged(u=>{user=u;off();cur=null;isAdmin=false;room$.hidden=list$.hidden=true;
+ if(!u){auth$.innerHTML=`<p class="nh-big">用老師的 Google 帳號登入</p><p>第一次使用的老師，請先請管理者把你的 Google 帳號（email）加進老師名單。</p><div class="nh-row"><button class="nh-btn" id="nhIn">用 Google 登入</button></div><p class="nh-msg err" id="nhErr"></p>`;
   $('#nhIn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$('#nhErr').textContent=e.code==='auth/unauthorized-domain'?'這個網域還沒加進 Firebase 的登入網域。請到 Firebase 主控台 → Authentication → Settings → Authorized domains，加入 geo.twranger.com。':'登入失敗：'+e.message;});return;}
- auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
+ auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b><span id="nhRole"></span></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
  $('#nhOut').onclick=()=>auth.signOut();
- db.collection('nmth_rooms').doc('_probe').set({ph:'closed',code:'',label:'',at:TS()}).then(()=>{$('#nhSetup').innerHTML='';loadList();})
-  .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">這個帳號沒有管理權限（${esc(e.code||'')}）。</p>
-   <p>如果你是用定向賽後台的那個帳號登入，請確認 Firestore 規則裡有下面這一段（貼在「其他路徑一律關閉」的前面）。如果是別的帳號，要把它的 UID 加進規則的管理者名單：<code>${esc(u.uid)}</code></p>
-   <div class="nh-rules" id="nhRules"></div><div class="nh-row"><button class="nh-btn alt" id="nhCopy">複製這一段</button><a class="nh-btn alt" style="text-decoration:none" href="https://console.firebase.google.com/project/${FB.projectId}/firestore/rules" target="_blank" rel="noopener">打開 Firestore 規則頁</a></div>`;
-   $('#nhRules').textContent=RULES;$('#nhCopy').onclick=()=>navigator.clipboard.writeText(RULES).then(()=>{$('#nhCopy').textContent='已複製';});});});
+ db.collection('nmth_teachers').doc('_admin').set({at:TS()}).then(()=>{isAdmin=true;$('#nhRole').textContent='（管理者）';loadList();})
+  .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists){loadList();return;}throw new Error('no');})
+  .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">這個帳號還不在老師名單裡。</p><p>請把你的 email <b>${esc(u.email||'')}</b> 告訴管理者，加進名單後重新整理這一頁就能用。換了帳號的話，先按右上角「登出」。</p>`;}));});
+function teacherPanel(){if(!isAdmin)return '';
+ return `<details class="nh-teach" style="margin-top:26px"><summary class="nh-big" style="cursor:pointer">老師名單（只有管理者看得到）</summary>
+  <p>名單上的老師用自己的 Google 帳號登入這一頁，就能發任務給自己的班級。每位老師只看得到、只管得到自己發的任務，你看得到全部。</p>
+  <div class="nh-row"><input class="nh-in" id="nhTMail" type="email" placeholder="老師的 Google 帳號 email" aria-label="老師的 email" style="flex:1;min-width:240px"><input class="nh-in" id="nhTName" placeholder="稱呼（可以不填）" aria-label="老師的稱呼" style="min-width:160px"><button class="nh-btn" id="nhTAdd">加進名單</button></div>
+  <p class="nh-msg" id="nhTMsg"></p><ul class="nh-list" id="nhTList"><li>讀取中……</li></ul>
+  <p>給老師的使用說明：打開 <b>geo.twranger.com/nmth-host.html</b>（遊戲頁最下面也有「老師入口」），用這個 email 的 Google 帳號登入。</p></details>`;}
+function teacherBind(){if(!isAdmin)return;
+ const draw=()=>db.collection('nmth_teachers').get().then(q=>{teachers=q.docs.filter(d=>d.id!=='_admin').map(d=>Object.assign({email:d.id},d.data()));
+  $('#nhTList').innerHTML=teachers.length?teachers.map(t=>`<li><span><b>${esc(t.name||'')}</b>　${esc(t.email)}</span><button class="nh-btn alt" data-rm="${esc(t.email)}">移除</button></li>`).join(''):'<li>還沒有其他老師。</li>';
+  $$('#nhTList [data-rm]').forEach(b=>b.onclick=()=>{if(!confirm('把 '+b.dataset.rm+' 從老師名單移除？他發過的任務和紀錄會留著。'))return;db.collection('nmth_teachers').doc(b.dataset.rm).delete().then(draw);});});
+ draw();
+ $('#nhTAdd').onclick=()=>{const m=$('#nhTMail').value.trim().toLowerCase(),nm=$('#nhTName').value.trim().slice(0,20);
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='email 的格式不對。';return;}
+  db.collection('nmth_teachers').doc(m).set({name:nm,at:TS()}).then(()=>{$('#nhTMsg').className='nh-msg ok';$('#nhTMsg').textContent='已加入：'+m;$('#nhTMail').value='';$('#nhTName').value='';draw();})
+   .catch(e=>{$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='加不進去：'+e.code;});};}
+const $$=s=>[...document.querySelectorAll(s)];
+function newCode(){const used=new Set(sessions.map(s=>s.code)),live=new Set(sessions.filter(s=>s.ph!=='closed').map(s=>s.code));let code,k=0;
+ do{code=String(1000+Math.floor(Math.random()*9000));k++;}while((k<300?used.has(code):live.has(code)));return code;}
 function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
- db.collection('nmth_rooms').get().then(q=>{sessions=q.docs.filter(d=>d.id!=='_probe').map(d=>Object.assign({sid:d.id},d.data())).sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0));
+ db.collection('nmth_rooms').get().then(q=>{sessions=q.docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data())).sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0));
+  const mine=isAdmin?sessions:sessions.filter(s=>s.owner===user.uid);
   const day=s=>s.at?new Date(s.at.seconds*1000).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   list$.innerHTML=`<p class="nh-big">發新任務</p><div class="nh-row"><select class="nh-in" id="nhGame" aria-label="哪一個遊戲">${Object.keys(GAMES).map(k=>`<option value="${k}" ${k===(G0||'prehistory')?'selected':''}>${GAMES[k].n}</option>`).join('')}</select>
     <input class="nh-in" id="nhLabel" maxlength="20" placeholder="班級，例如：五年三班" aria-label="班級名稱"><button class="nh-btn" id="nhNew">發任務</button></div>
-   <p class="nh-big" style="margin-top:26px">存起來的場次</p>${sessions.length?`<ul class="nh-list">${sessions.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${esc((GAMES[s.game]||GAMES.nmth).n)}　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}`;
+   <p class="nh-big" style="margin-top:26px">${isAdmin?'所有場次':'我的場次'}</p>
+   <p>上次沒玩完的班級：打開那一場，按「再開一次，接續進度」。學生選回同一個座號，星星和進度就會回來。</p>
+   ${mine.length?`<ul class="nh-list">${mine.map(s=>`<li><span><b>${esc(s.label||'（沒寫班級）')}</b>　${esc((GAMES[s.game]||GAMES.nmth).n)}　${day(s)}　${s.ph==='closed'?'已結束':s.ph==='play'?'進行中':'大廳'}${isAdmin&&s.ownerEmail&&s.ownerEmail!==mail()?`　<small>${esc(s.ownerEmail)}</small>`:''}</span><span class="nh-row" style="margin:0"><button class="nh-btn alt" data-open="${s.sid}">打開</button></span></li>`).join('')}</ul>`:'<p>還沒有場次。</p>'}
+   ${teacherPanel()}`;
   $('#nhNew').onclick=()=>{const label=$('#nhLabel').value.trim();if(!label){$('#nhLabel').focus();return;}
-   const live=sessions.filter(s=>s.ph!=='closed').map(s=>s.code);let code;do{code=String(1000+Math.floor(Math.random()*9000));}while(live.includes(code));
-   const sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4);
-   const game=$('#nhGame').value;db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',at:TS()}).then(()=>{open(sid);makeShort(sid,GAMES[game],code);});};
+   const code=newCode(),sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4),game=$('#nhGame').value;
+   db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',owner:user.uid,ownerEmail:mail(),at:TS()}).then(()=>{open(sid);makeShort(sid,GAMES[game],code);})
+    .catch(e=>alert('發不出任務：'+e.code));};
   $('#nhLabel').onkeydown=e=>{if(e.key==='Enter')$('#nhNew').click();};
-  list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
+  list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));teacherBind();}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
+/* reopen an ended task: same code if nobody else is using it, seats released ('~') so pupils can pick them again on any tablet and get their progress back */
+function reopen(){const sid=cur.sid,g=GM();
+ db.collection('nmth_rooms').get().then(q=>{const clash=q.docs.some(d=>d.id!==sid&&d.data().ph!=='closed'&&d.data().code===cur.code);sessions=q.docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data()));
+  const code=clash?newCode():cur.code,upd={ph:'lobby',code,reopenedAt:TS()};if(clash)upd.short=firebase.firestore.FieldValue.delete();if(!cur.owner&&!isAdmin)upd.owner=user.uid;
+  return db.collection('nmth_rooms').doc(sid).update(upd).then(()=>db.collection('nmth_live').where('sid','==',sid).get()).then(lq=>Promise.all(lq.docs.filter(d=>d.data().cid).map(d=>d.ref.update({cid:'~'+String(d.data().cid).replace(/^~/,'').slice(0,12)}))))
+   .then(()=>{if(clash||!cur.short)makeShort(sid,g,code);});}).catch(e=>alert('開不起來：'+(e.code||e.message)));}
 let raw=[];
 function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur={sid,ph:'lobby',code:'',label:'',game:'nmth'};
  unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!d.exists){back();return;}Object.assign(cur,{game:'nmth'},d.data());calc();draw();}));
  unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{raw=[];q.forEach(d=>{const v=d.data();if(v.cid)raw.push(v);});calc();draw();}));
  window.scrollTo(0,0);}
-function calc(){const g=GM();rows=raw.map(v=>Object.assign({seat:v.seat,cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
+function calc(){const g=GM();rows=raw.map(v=>Object.assign({seat:v.seat,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
-function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
+function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,back=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
  let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
    ${cur.ph==='closed'?'':`<p>學生在網址列輸入下面任何一個網址，或掃 QR 碼：</p>
@@ -582,16 +622,17 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
     <p>已經在遊戲裡的學生，輸入任務代碼：</p><p class="nh-code">${esc(cur.code)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
-   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
- if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能把座號空出來。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>`;
+   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button><button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
+ if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能把座號空出來。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
+  ${back?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
   <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
-  ${rows.map(r=>`<tr><th>${r.seat}</th><td>${esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
+  ${rows.map(r=>`<tr><th>${r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
  room$.innerHTML=h;
  const B=(id,fn)=>{const b=$(id);if(b)b.onclick=fn;};
  B('#nhStart',()=>db.collection('nmth_rooms').doc(cur.sid).update({ph:'play',startedAt:TS()}));
  B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))db.collection('nmth_rooms').doc(cur.sid).update({ph:'closed',endedAt:TS()});});
- B('#nhBack',back);B('#nhCsv',csv);
+ B('#nhBack',back);B('#nhCsv',csv);B('#nhReopen',()=>{const b=$('#nhReopen');b.disabled=true;b.textContent='開啟中……';reopen();});
  B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
  B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete()))).then(()=>db.collection('nmth_rooms').doc(sid).delete());});
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>{if(confirm('把 '+b.dataset.rel+' 號空出來，讓別台平板重新選？'))db.collection('nmth_live').doc(cur.sid+'_'+b.dataset.rel).delete();});}
