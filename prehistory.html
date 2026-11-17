@@ -1211,8 +1211,13 @@ const Mus=(()=>{const VOL=.36,FALL={hub:'neo',cert:'hub'};let want=null,back=nul
  const fade=(a,to,ms,done)=>{const from=a.volume,t0=performance.now();const st=()=>{const k=Math.min(1,(performance.now()-t0)/ms);try{a.volume=Math.max(0,Math.min(1,from+(to-from)*k));}catch(e){}if(k<1)setTimeout(st,40);else done&&done();};st();};
  const res=k=>{let n=0;while(k&&bad[k]&&n++<3)k=FALL[k]||null;return k&&!bad[k]?k:null;};
  const go=()=>{let k=AUD.music?res(want):null;if(want==='game'&&!k)k=AUD.music?res(back):null;if(k===curK&&el)return;const old=el;curK=k;el=null;if(old)fade(old,0,700,()=>old.pause());if(!k)return;
-  const a=new Audio(`assets/music/${k}.mp3`);a.loop=true;a.volume=0;a.preload='auto';a.onerror=()=>{bad[k]=1;if(el===a){el=null;curK=null;go();}};el=a;
-  const p=a.play();if(p&&p.catch)p.catch(()=>{if(el===a){el=null;curK=null;}});fade(a,VOL,1200);};
+  start(k,1200);};
+ /* each track ends by cross-fading into a fresh copy of itself, so the loop point is never a hard cut or a gap */
+ const start=(k,ms)=>{const a=new Audio(`assets/music/${k}.mp3`);a.volume=0;a.preload='auto';
+  a.onerror=()=>{bad[k]=1;if(el===a){el=null;curK=null;go();}};
+  a.ontimeupdate=()=>{if(a._x||el!==a||!a.duration||a.currentTime<a.duration-2.5)return;a._x=1;start(k,2400);fade(a,0,2400,()=>a.pause());};
+  a.onended=()=>{if(el===a){el=null;curK=null;go();}};el=a;
+  const p=a.play();if(p&&p.catch)p.catch(()=>{if(el===a){el=null;curK=null;}});fade(a,VOL,ms);};
  addEventListener('pointerdown',()=>{if(AUD.music&&!el&&want)go();},{passive:true});
  document.addEventListener('visibilitychange',()=>{if(!el)return;if(document.hidden)el.pause();else el.play().catch(()=>{});});
  return {set:k=>{if(k!=='game')back=k;want=k;go();},again:go,stop:()=>{want=null;go();}};})();
