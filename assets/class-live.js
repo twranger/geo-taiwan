@@ -9,7 +9,7 @@ const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteer
 const GAMES={nmth:{n:'臺史博：閉館之後',page:'nmth-quest.html'},prehistory:{n:'史前生存大冒險',page:'prehistory.html'}};
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KC=(()=>{try{const c=new URLSearchParams(location.search).get('c');return c&&/^\d{4}$/.test(c)?c:'';}catch(e){return '';}})();
-let O=null,sess=null,db=null,loading=null,unsub=[],tm=0,box=null,cid='';
+let seatUn=null,O=null,sess=null,db=null,loading=null,unsub=[],tm=0,box=null,cid='';
 try{cid=localStorage.getItem('hhl-nmth-cid')||'';if(!cid){cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);localStorage.setItem('hhl-nmth-cid',cid);}}catch(e){cid='x'+Math.random().toString(36).slice(2,10);}
 const KQ=(()=>{try{const k=new URLSearchParams(location.search).get('k');return k&&/^[a-z0-9]{4,20}$/.test(k)?k:'';}catch(e){return '';}})();
 const keep=()=>{try{sess?localStorage.setItem(O.store,JSON.stringify(sess)):localStorage.removeItem(O.store);}catch(e){}};
@@ -18,14 +18,17 @@ const load=()=>loading||(loading=new Promise((ok,no)=>{const need=['app','firest
   if(window.firebase&&firebase.firestore)need.length=0;
   const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();ok(db);}catch(e){loading=null;no(e);}return;}
    const sc=document.createElement('script');sc.src=u;sc.onload=next;sc.onerror=()=>{loading=null;no(new Error('net'));};document.head.appendChild(sc);};next();}));
-let last=0;
+let last=0,pend=false,fails=0;
 function push(){clearTimeout(tm);if(!db||!sess||!sess.seat)return;last=Date.now();let v;try{v=O.snapshot()||{};}catch(e){return;}
   const d=typeof v.d==='string'?v.d:JSON.stringify(v.d||[]);
   db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set({sid:sess.sid,seat:sess.seat,cid,mode:String(v.mode||'c').slice(0,4),cur:String(sess.on?(v.cur||''):'lobby').slice(0,30),d:d.slice(0,1900),
-   done:v.done|0,stars:v.stars|0,miss:v.miss|0,t:v.t|0,notes:v.notes|0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});}
+   done:v.done|0,stars:v.stars|0,miss:v.miss|0,t:v.t|0,notes:v.notes|0,at:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{pend=false;fails=0;}).catch(()=>{pend=true;fails++;});}
+/* a task finished: send now, whatever the 15-second limit says */
+const now=()=>{if(sess&&sess.seat&&db)push();};
 /* at most one write every 15 s per tablet, so a whole class stays well inside the free Firestore quota */
 const touch=()=>{if(!sess||!sess.seat)return;clearTimeout(tm);tm=setTimeout(push,Math.max(1800,15000-(Date.now()-last)));};
-setInterval(()=>{if(sess&&sess.seat&&sess.on&&!document.hidden&&db&&Date.now()-last>40000)push();},45000);
+setInterval(()=>{if(sess&&sess.seat&&sess.on&&!document.hidden&&db&&(Date.now()-last>40000||(pend&&Date.now()-last>Math.min(600000,30000*fails))))push();},15000);
+addEventListener('online',()=>{if(pend)push();});
 addEventListener('pagehide',()=>{if(sess&&sess.seat&&sess.on&&db)push();});
 /* ---- overlay ---- */
 const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.92);display:grid;place-items:center;padding:18px;overflow:auto;font-family:"Noto Sans TC",system-ui,sans-serif}
@@ -76,8 +79,8 @@ function wait(quiet){const sid=sess.sid;off();
   unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!sess)return;const r=d.exists?d.data():{ph:'closed'};
    if(r.ph==='closed'){const was=sess.on;if(was)push();off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
    if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();push();if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
-   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();try{O.onStart&&O.onStart(sess);}catch(e){}touch();}},()=>{}));
-  unsub.push(db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid&&d.data().cid[0]!=='~'&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
+   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();if(seatUn){try{seatUn();}catch(e){}seatUn=null;}try{O.onStart&&O.onStart(sess);}catch(e){}touch();}},()=>{}));
+  if(!sess.on)unsub.push(seatUn=db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid&&d.data().cid[0]!=='~'&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
 function isItYou(){let nm='';try{nm=O.who&&O.who()||'';}catch(e){}
   ui(`<h2>是你嗎？</h2><p>這台平板上次是<br><b style="font-size:24px">${esc(sess.label)}　${sess.seat} 號　${esc(nm)}</b><br>在玩。</p>
    <div class="cl-row"><button class="cl-btn cl-wide" id="clMe">是我，繼續玩</button></div><div class="cl-row"><button class="cl-btn alt cl-wide" id="clNotMe">不是我</button></div>`);
@@ -92,5 +95,5 @@ return {
    return sess||KQ||KC?'join':'';},
   /* call after the player has typed a name: join by link, rejoin, or ask for the code */
   begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ,link:1});else if(sess)join({sid:sess.sid});else if(KC)join({code:KC,link:1});else ask();},
-  ask,touch,push,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
+  ask,touch,push,now,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
 })();
