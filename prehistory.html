@@ -575,6 +575,13 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 .wt:focus-visible,.itm:focus-visible,.act:focus-visible{outline:3px solid #0072B2;outline-offset:2px}
 .wtoast{position:absolute;left:50%;top:56px;transform:translateX(-50%);max-width:min(520px,calc(100% - 24px));background:#10313bf2;color:#fff;border-radius:12px;padding:10px 16px;font-size:16px;line-height:1.6;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:3}
 .wtoast b{color:#F2C14E}
+.wtribe{position:absolute;left:50%;bottom:118px;transform:translateX(-50%);z-index:6;max-width:min(560px,calc(100% - 24px));background:#3a2a16ee;color:#fff3d6;border:2px solid #c9a26b;border-radius:12px;padding:10px 16px;font-size:17px;font-weight:700;line-height:1.5;text-align:center;pointer-events:none}
+.wpals{position:absolute;right:12px;top:58px;z-index:6;background:#10313bd9;color:#fff;border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;pointer-events:none}
+.tb-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
+.tb-tag{position:absolute;left:0;top:0;white-space:nowrap;font-weight:800;font-size:14px;line-height:1;padding:4px 9px;border-radius:999px;background:#ffffffe6;color:#14323a;border:2px solid #14323a;display:none}
+.tb-pal{background:#e7f3ec;border-color:#1f6b4c;color:#12412e}.tb-npc{background:#f3e6cf;border-color:#8a6a3a;color:#4a3518}
+.tb-mark{background:#ffd23f;border-color:#6b5300;color:#2b2200}.tb-sign{background:#3a2a16;color:#fff3d6;border-color:#c9a26b;font-size:15px}
+@media (max-width:640px){.wtribe{bottom:132px;font-size:15px}}
 .wl.res{background:#fffbea;color:#6b4a00;border:2px solid #E69F00;font-size:13px;padding:3px 10px}
 .wl.lock{background:#5d6b72}
 @media (max-width:640px){.w3d .whelp{display:none}.whud{top:56px;max-width:calc(100% - 20px)}.wgoal b{font-size:15px}.wt{font-size:15px;padding:0 12px}.wtoast{top:auto;bottom:84px}}
@@ -667,6 +674,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
   <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div class="wvig" aria-hidden="true"></div><div id="wLabels"></div><div class="wchap" id="wChap" hidden aria-hidden="true"></div>
     <div class="whelp">拖曳畫面：轉頭看四周　點地面或光柱：走過去　鍵盤 W A S D 或方向鍵也可以走</div>
     <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button><button class="wfull wsnd" id="wSnd">音效：開</button>
+    <div class="wtribe" id="wTribe" hidden aria-live="polite"></div><div class="wpals" id="wPals" hidden></div>
     <div class="whud" id="wHud" hidden><div class="wgoal" id="wGoal" aria-live="polite"></div><div class="wtools"><button class="wt main" id="btnWb">動手試試</button><button class="wt" id="btnBag">背包</button><button class="wt" id="btnSk">技能圖</button></div></div><div class="wtoast" id="wToast" role="status" hidden></div><button class="wprompt" id="wPrompt" hidden></button></div>
   <div class="scene" id="scene" tabindex="0" aria-label="史前場景，可以左右拖曳"><div class="scene-in" id="sceneIn"></div></div>
   <p class="note" id="scNote">走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。</p>
@@ -760,7 +768,7 @@ function fire(x,z,s=1){const g=new T.Group(),cs=[];[['#D55E00',.6,1.5],['#E69F00
   const sm=[];for(let i=0;i<6;i++){const p=mesh(GEO.sph,new T.MeshBasicMaterial({color:'#d9d9d9',transparent:true,opacity:.3,depthWrite:false}),0,0,0);p.castShadow=false;g.add(p);sm.push([p,i/6]);}
   upd.push((dt,t)=>{cs.forEach((f,i)=>{const k=1+Math.sin(t*(9+i*3)+i)*.18;f.scale.y=[1.5,1.1,.7][i]*k;f.position.y=f.scale.y/2+.1;});L.userData.f=.85+Math.sin(t*13)*.1+Math.sin(t*7.3)*.08;
     sm.forEach(([p,o])=>{const k=(t*.22+o)%1;p.position.set(Math.sin(k*5+o*9)*.5,1.6+k*6,Math.cos(k*4+o*7)*.4);p.scale.setScalar(.3+k*1.1);p.material.opacity=.32*(1-k);});});return g;}
-function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)&&!(START[era]&&Math.hypot(x-START[era][0],z-START[era][1])<9)){put(fn(),x,z);k++;}}}
+function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)&&!(START[era]&&Math.hypot(x-START[era][0],z-START[era][1])<9)&&!(HUNTAT[era]&&Math.hypot(x-HUNTAT[era][0],z-HUNTAT[era][1])<12)){put(fn(),x,z);k++;}}}
 const far=(x,z,d)=>spots.every(s=>Math.hypot(s.x-x,s.z-z)>d);
 /* ---- the three worlds ---- */
 const BUILD={
@@ -825,6 +833,8 @@ const ART={
  smelt(){const g=new T.Group();g.add(part('box',M('#5d6166',{roughness:.4,metalness:.7}),.9,.04,.16,.2,.2,0),part('box',M('#7a4a22'),.36,.07,.11,-.42,.2,0));const s=part('ico',M('#2e2a28',{roughness:.6,metalness:.3}),.2,.14,.18,.5,.12,.4);g.add(s);g.rotation.z=.0;return g;},
  chop(){const g=new T.Group();const h=part('box',M('#7a4a22'),.07,1.2,.07,0,.62,0);h.rotation.z=.25;g.add(h,part('box',M('#5d6166',{roughness:.4,metalness:.7}),.5,.3,.09,-.38,1.02,0));return g;}};
 const MORD=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],MERA=i=>['old','neo','iron'][Math.floor(i/3)];
+/* where the shared hunt happens (assets/tribe.js); kept clear of trees */
+const HUNTAT={old:[-14,20]};
 const START={museum:[0,27,0],old:[6,10,1.9],neo:[6,-22,-.2],iron:[2,6,-1.6]},SPOT={museum:Object.fromEntries(MORD.map((id,i)=>[id,[(Math.floor(i/3)-1)*19+[-4.5,0,4.5][i%3],[-3,-7,-3][i%3]]])),old:{food:[17,13],knap:[0,-16],fire:[-30,0]},neo:{farm:[24,0],grind:[-3,-10],pot:[-20,11]},iron:{trade:[13,0],smelt:[-5,-11],chop:[-21,12]}};
 /* day cycle key frames: 0 morning, 1 noon, 2 golden hour, 3 night */
 const TOD=[{top:'#4f9fe0',bot:'#d2ecf8',sun:'#fff1cf',si:.8,am:.42,el:.6,st:0},{top:'#3a8ad6',bot:'#d8f0fa',sun:'#ffffff',si:.9,am:.46,el:1.05,st:0},{top:'#5a67ad',bot:'#ffb170',sun:'#ff9a4d',si:.8,am:.34,el:.2,st:.15},{top:'#070d24',bot:'#1c2a52',sun:'#8ea6ff',si:.28,am:.2,el:.8,st:1}];
@@ -920,7 +930,7 @@ function frame(t){raf=requestAnimationFrame(frame);if(paused||!scene)return;cons
     v.set(q.x,q.y+1.6,q.z).project(cam);if(dd<18&&v.z<1&&v.z>-1){q.el.style.display='';q.el.style.transform=`translate(-50%,-50%) translate(${((v.x+1)/2*w).toFixed(1)}px,${((1-v.y)/2*h).toFixed(1)}px)`;}else q.el.style.display='none';}
   if(near!==S.near){S.near=near;cb.onNear&&cb.onNear(near);}
   R.render(scene,cam);}
-return {start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
+return {ext:()=>({T,scene,Hf,S,cam,host,upd,M,part,era,HUNTAT,lowQ}),start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
 })();
 
 /* the nine hands-on games, in 3D (three.js r128).  Falls back to the 2D versions when WebGL is missing. */
@@ -1373,12 +1383,12 @@ const W3=window.World||null;
 let fitBusy=0;function fitW(){const el=$('#w3d');if(!el||el.hidden||document.fullscreenElement||fitBusy)return;const top=el.getBoundingClientRect().top+scrollY,h=Math.max(300,innerHeight-top-10)+'px';if(el.style.getPropertyValue('--wh')===h)return;el.style.setProperty('--wh',h);fitBusy=1;try{dispatchEvent(new Event('resize'));}finally{fitBusy=0;}}
 addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTimeout(fitW,300));$('#wSnd').onclick=()=>$('#btnSound').click();
 function svUI(){const on=!!(window.ClassLive&&ClassLive.sess()&&ClassLive.sess().on);document.querySelectorAll('[data-save]').forEach(b=>b.hidden=!on);}
-function show(id){setTimeout(svUI,0);if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
+function show(id){setTimeout(svUI,0);if(id!=='vScene'&&window.Tribe)Tribe.leave();if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
 function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;{const b=$('#clAsk2');if(b)b.hidden=!window.ClassLive||!!ClassLive.sess();}
   const h=ERAS.map((e,i)=>{const open=i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
   const dOpen=allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
 $('#hub').addEventListener('click',e=>{const b=e.target.closest('.node');if(!b||b.disabled)return;if(b.dataset.e==='museum')museum();else if(b.dataset.e==='dig'){S.dig?cert():dig();}else scene(b.dataset.e);});
-function scene(k){cur=ERAS.find(e=>e.k===k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}　（按 E）`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
+function scene(k){cur=ERAS.find(e=>e.k===k);{const c=$('#wChap');if(c&&W3){c.innerHTML=`<small>${cur.ago}</small><b>${cur.n}</b><i>${cur.site}</i>`;c.hidden=true;void c.offsetWidth;c.hidden=false;clearTimeout(scene.t);scene.t=setTimeout(()=>{c.hidden=true;},RM?1300:3100);}Amb.set(eraDone(cur)?'night':({old:'sea',neo:'field',iron:'river'})[k]);}$('#scNote').textContent='走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。';show('vScene');$('#scTitle').textContent=`${cur.n}・${cur.site}`;$('#scTitle').style.color=cur.c;$('#scSub').textContent=`${cur.ago}。撿材料、動手試試，自己想出方法，再完成三個任務。`;if(W3){$('#scene').hidden=true;W3.start(k,cur.tasks.map(t=>({id:t.id,n:t.n,stars:S.st[t.id]||0})),cur.tasks.filter(t=>S.st[t.id]).length,{onTask:openTask,onPick:q=>pick(q),onNear:s=>{const b=$('#wPrompt');b.hidden=!s;if(s){b.dataset.t=s.id;b.textContent=canDo(s.id)?`開始任務：${s.n}　（按 E）`:`還不會「${s.n}」：看提示（按 E）`;}}});craftEnter();tribeEnter(k);}else{$('#scNote').textContent='用手指或滑鼠左右拖曳看看四周，點有名字的圓圈開始任務。';}paint();$('#scene').scrollLeft=0;}
 function paint(){if(cur===MUSEUM)return;const n=cur.tasks.filter(t=>S.st[t.id]).length;
   $('#sceneIn').innerHTML=`<svg viewBox="0 0 1560 440" preserveAspectRatio="none" aria-hidden="true">${SC[cur.k]}<rect width="1560" height="440" fill="#1b2a4a" opacity="${[0,0.14,0.3,0.5][n]}"/>${n===3?'<g fill="#fff"><circle cx="200" cy="50" r="2"/><circle cx="500" cy="30" r="2"/><circle cx="900" cy="44" r="2"/><circle cx="1100" cy="24" r="2"/><circle cx="1450" cy="40" r="2"/></g>':''}</svg>`+cur.tasks.map(t=>`<button class="spot ${S.st[t.id]?'done':''}" style="left:${t.x}%;top:${t.y}%" data-t="${t.id}">${t.n}<small>${S.st[t.id]?stars(S.st[t.id]):'點我開始'}</small></button>`).join('');
   $('#taskList').innerHTML=cur.tasks.map(t=>`<button class="tk" data-t="${t.id}"><b>${t.n}</b><span>${S.st[t.id]?stars(S.st[t.id]):'還沒做'}</span></button>`).join('');
@@ -1424,6 +1434,7 @@ const IT={
  shell:{n:'貝殼',c:'#c99c8a',d:'海邊撿的貝類，裡面的肉可以吃。'},
  fruit:{n:'野果',c:'#c8433a',d:'林子裡的野果，可以直接吃。'},
  fish:{n:'魚',c:'#3f7fa6',d:'用長矛抓到的魚。'},
+ meat:{n:'鹿肉',c:'#9b3f2e',d:'大家一起圍獵抓到的水鹿，分給部落每一個人。'},
  chopper:{n:'打製石器',c:'#8a6a44',d:'用石頭敲出銳利邊緣的工具。'},
  whet:{n:'磨石',c:'#a8895a',d:'扁平的砂岩，加水就能把石頭磨光。'},
  adze:{n:'磨製石器',c:'#5f6f62',d:'磨得光滑又鋒利的石斧、石鋤。'},
@@ -1509,6 +1520,14 @@ const GOALS={
   {t:'把鐵塊打成鐵斧',ok:()=>S.known.chop,h:['鐵塊和一根當柄的樹枝。','燒紅的鐵要用力……']},
   {t:'到「試試鐵斧」比比看',ok:()=>S.st.chop,go:'chop'}]};
 const curGoal=()=>{const L=GOALS[cur&&cur.k]||[];return L.find(g=>!g.ok()&&!g.side)||L.find(g=>!g.ok())||null;};
+/* 部落：classmates in the same world, and the shared hunt (assets/tribe.js) */
+function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassLive.sess(),on=!!(se&&se.on);let cid='';try{cid=localStorage.getItem('hhl-nmth-cid')||'';}catch(e){}
+ const st=$('#wTribe'),pl=$('#wPals');st.hidden=true;pl.hidden=true;
+ Tribe.enter(k,{sid:on?se.sid:null,seat:on?se.seat:0,cid:cid||'solo',
+  status:t=>{if(!t){st.hidden=true;return;}if(st.textContent!==t)st.textContent=t;st.hidden=false;},
+  count:n=>{pl.hidden=!n;pl.textContent=`這個時代還有 ${n} 位同學`;},
+  caught:team=>{S.hunt=(S.hunt||0)+1;add({meat:1});save();sfx.win();
+   toast(`<b>圍獵成功！</b>${team.length?'和 '+team.join('、')+' 一起':''}抓到一頭水鹿，分到一塊鹿肉。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`);}});}
 let toastT=0;function toast(m){const t=$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3600);}
 function hudGoal(){const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])return;const g=curGoal(),L=GOALS[cur.k],n=L.filter(x=>x.ok()).length;
   const f=S.fails[cur.k]||0,h=g&&g.h?g.h.slice(0,Math.min(g.h.length,f>=2?2:1)):[];
@@ -1634,7 +1653,7 @@ setInterval(()=>{if(document.hidden)return;const w=whereNow().split(':')[0];if(w
 let clState='';
 if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehistory-class',
   snapshot:()=>{const st=TID.map(id=>S.st[id]||0),tm=['old','neo','iron','dig','museum'].map(k=>S.tm[k]||0);
-   return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
+   return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,h:S.hunt||0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
     done:st.filter(Boolean).length+(S.dig?1:0),stars:st.reduce((a,b)=>a+b,0),miss:(S.qw||0)+(S.cf||0),t:tm.reduce((a,b)=>a+b,0),notes:0};},
   onJoin:()=>{const nm=($('#nm').value||'').trim().slice(0,10)||S.name;for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:nm,st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
   onRestore:v=>{let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const st=j.s||[],y=j.y||[],tm=j.tm||[];
@@ -1654,3 +1673,5 @@ window.__tm={cr:{jadeTrip,pick,wbOpen,skOpen,canDo},museum,exhibit,S,G,finish:n=
 document.body.dataset.ready='1';
 })();
 </script>
+
+<script src="assets/tribe.js?v=1"></script>
