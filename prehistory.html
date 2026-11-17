@@ -557,6 +557,8 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 .gtray button{border:3px solid #10313b;border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;font-size:19px;padding:10px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .gtray i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 2px #10313b}
 .gtray small{font-size:12px;color:var(--muted);font-weight:500}
+.gtray button:disabled{opacity:.38;cursor:default;border-style:dashed}
+.gmsg b{display:inline-block;font-size:24px;padding:2px 12px;margin:0 4px;border-radius:10px;border:2px solid #10313b;background:#fff3c4;color:#10313b}.gmsg b.gg{background:#d8eefb}.gmsg .arw{font-size:24px;margin:0 2px}
 .ggauge{position:absolute;right:14px;top:56px;bottom:16px;width:30px;border:3px solid #10313b;border-radius:12px;background:#fff}
 .ggauge .band{position:absolute;left:0;right:0;bottom:60%;height:22%;background:#009E7366;border-block:2px dashed #00684B}
 .ggauge .needle{position:absolute;left:-12px;right:-4px;height:5px;background:#10313b;border-radius:3px;transform:translateY(50%)}
@@ -591,7 +593,9 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 .tb-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
 .tb-tag{position:absolute;left:0;top:0;white-space:nowrap;font-weight:800;font-size:14px;line-height:1;padding:4px 9px;border-radius:999px;background:#ffffffe6;color:#14323a;border:2px solid #14323a;display:none}
 .tb-pal{background:#e7f3ec;border-color:#1f6b4c;color:#12412e}.tb-npc{background:#f3e6cf;border-color:#8a6a3a;color:#4a3518}
-.tb-mark{background:#ffd23f;border-color:#6b5300;color:#2b2200}.tb-sign{background:#3a2a16;color:#fff3d6;border-color:#c9a26b;font-size:15px}
+.tb-mark{background:#ffd23f;border-color:#6b5300;color:#2b2200}
+.tb-mark{pointer-events:auto;cursor:pointer}
+.tb-box h3 b{display:inline-block;padding:1px 10px;margin:0 3px;border-radius:9px;border:2px solid #10313b;background:#fff3c4}.tb-sign{background:#3a2a16;color:#fff3d6;border-color:#c9a26b;font-size:15px}
 @media (max-width:640px){.wtribe{bottom:132px;font-size:15px}.wcoop{bottom:78px;font-size:15px}}
 .wl.res{background:#fffbea;color:#6b4a00;border:2px solid #E69F00;font-size:13px;padding:3px 10px}
 .wl.lock{background:#5d6b72}
@@ -955,7 +959,7 @@ const GEO={box:new T.BoxGeometry(1,1,1),cyl:new T.CylinderGeometry(1,1,1,10),con
 const P=(g,m,sx,sy,sz,x=0,y=0,z=0)=>{const o=new T.Mesh(GEO[g],m);o.scale.set(sx,sy,sz);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;return o;};
 function person(cloth='#a8662f',skin='#c98d5a'){const g=new T.Group();const aR=P('box',mat(skin),.16,.7,.16,.42,1.2,0),aL=P('box',mat(skin),.16,.7,.16,-.42,1.2,0);g.add(P('box',mat('#5a3d22'),.22,.8,.22,-.16,.4,0),P('box',mat('#5a3d22'),.22,.8,.22,.16,.4,0),aL,aR,P('box',mat(cloth),.62,.8,.36,0,1.2,0),P('sph',mat(skin),.26,.28,.26,0,1.86,0),P('sph',mat('#2a1d14'),.27,.2,.27,0,1.98,-.03));g.userData={aR,aL};return g;}
 function flames(n=3,s=1){const g=new T.Group();[['#D55E00',.6,1.5],['#E69F00',.42,1.1],['#F0E442',.24,.7]].slice(0,n).forEach(([c,r,h])=>{const f=P('cone',bas(c),r*s,h*s,r*s,0,h*s/2,0);f.castShadow=false;f.userData.h=h*s;g.add(f);});g.userData.tick=t=>g.children.forEach((f,i)=>{f.scale.y=f.userData.h*(1+Math.sin(t*(9+i*3)+i)*.18);f.position.y=f.scale.y/2;});return g;}
-const hud={bar(v,label,col){const b=document.getElementById('ghBar');b.hidden=false;b.firstElementChild.style.width=cl(v,0,1)*100+'%';if(col)b.firstElementChild.style.background=col;b.lastElementChild.textContent=label||'';},info(t){document.getElementById('ghInfo').textContent=t||'';},msg(t,col){const m=document.getElementById('ghMsg');if(m.textContent!==t)m.textContent=t||'';m.style.color=col||'';m.hidden=!t;},
+const hud={bar(v,label,col){const b=document.getElementById('ghBar');b.hidden=false;b.firstElementChild.style.width=cl(v,0,1)*100+'%';if(col)b.firstElementChild.style.background=col;b.lastElementChild.textContent=label||'';},info(t){document.getElementById('ghInfo').textContent=t||'';},msg(t,col){const m=document.getElementById('ghMsg');if(m.textContent!==t)m.textContent=t||'';m.style.color=col||'';m.hidden=!t;},html(h,col){const m=document.getElementById('ghMsg');if(m.innerHTML!==h)m.innerHTML=h||'';m.style.color=col||'';m.hidden=!h;},
   tray(html,fn){const el=document.getElementById('ghTray');el.innerHTML=html||'';el.hidden=!html;el.onclick=fn?e=>{const b=e.target.closest('[data-k]');if(b)fn(+b.dataset.k);}:null;},gauge(v){const g=document.getElementById('ghGauge');g.hidden=v==null;if(v!=null)g.querySelector('.needle').style.bottom=cl(v,0,100)+'%';},
   reset(){document.getElementById('ghBar').hidden=true;this.info('');this.msg('');this.tray('');this.gauge(null);}};
 function stage(setup,opt={}){cv=document.getElementById('gcv3');if(!R){R=new T.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1));R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;}
@@ -1052,15 +1056,21 @@ G.smelt=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9a98c');cam.position.s
 /* 8 trade */
 G.trade=(A,fin)=>{const {scene,cam,hud,sfx}=A;cam.position.set(0,5,11);cam.lookAt(0,1,-2);ground(A,'#ead9a6',.02);const water=new T.Mesh(new T.PlaneGeometry(70,30),mat('#3d9fc4',{roughness:.25}));water.rotation.x=-Math.PI/2;water.position.set(0,.1,-13);scene.add(water);
   const boat=new T.Group();boat.add(P('box',mat('#7a4a22'),7,1,2.2,0,.4,0),P('box',mat('#5d3819'),1.4,.9,1.6,3.9,.5,0),P('box',mat('#5d3819'),1.4,.9,1.6,-3.9,.5,0),P('cyl',mat('#4a2c14'),.1,6,.1,0,3.4,0));const sail=new T.Mesh(new T.PlaneGeometry(3.6,4.4),mat('#f4ead2',{side:T.DoubleSide}));sail.position.set(.1,4,0);boat.add(sail);const tr=person('#3a4a6a');tr.position.set(-1.6,.9,0);boat.add(tr);boat.position.set(-22,0,-4);scene.add(boat);
-  const me=person('#b5562b');me.position.set(3,0,3.4);me.rotation.y=3.6;scene.add(me);scene.add(P('box',mat('#c9a66b'),6,.08,2.4,-1.5,.06,4.2));
-  const MINE=[['陶罐','#b5562b'],['小米','#E69F00'],['獸皮','#a8662f'],['玉耳飾','#2f7a55']],GIVE=['玻璃珠','瑪瑙珠','玻璃珠','瑪瑙珠','玻璃手環','瑪瑙珠'],GC=['#56B4E9','#D55E00','#8a6a2b','#F0E442','#009E73','#D55E00'];
-  MINE.forEach(([n,c],k)=>scene.add(P(k===3?'sph':'box',mat(c),.5,k===0?.12:.5,k===0?1.2:.5,-3.6+k*1.4,.4,4.2)));
-  let n=0,okc=0,want=0,left=0,end=0,full=5.5;const next=()=>{want=Math.floor(Math.random()*4);full=left=Math.max(2.8,5.5-n*.45);boat.position.x=-22;};next();
-  const done=()=>{end=1;hud.tray('');setTimeout(()=>{sfx.win&&sfx.win();fin(okc>=5?3:okc>=3?2:okc?1:0);},1100);};
-  const pick=k=>{if(end||boat.position.x<-1.2)return;if(k===want){okc++;sfx.good&&sfx.good();hud.msg(`換到了「${GIVE[n]}」！`,'#00684B');const b=P('sph',mat(GC[n],{roughness:.3}),.22,.22,.22,3.6+okc*.5,.3,4.6);scene.add(b);}else{sfx.bad&&sfx.bad();hud.msg('他要的不是這個，船開走了','#7a2d00');}n++;n>=6?done():next();};
-  hud.tray(MINE.map(([nm,c],k)=>`<button data-k="${k}"><i style="background:${c}"></i>${nm}<small>按 ${k+1}</small></button>`).join(''),pick);A.key=(k,d,rep)=>{if(d&&!rep&&'1234'.includes(k))pick(+k-1);};
-  A.upd.push((dt,ts)=>{boat.position.y=Math.sin(ts*2)*.12;if(!end){boat.position.x=Math.min(-1,boat.position.x+dt*26);if(boat.position.x>=-1.2){left-=dt;hud.msg(`船上的人說：「我想要 ${MINE[want][0]}，用 ${GIVE[n]} 跟你換！」`);if(left<=0){sfx.bad&&sfx.bad();hud.msg('太慢了，船開走了','#7a2d00');n++;n>=6?done():next();}}}
-    hud.bar(left/full,`第 ${Math.min(n+1,6)} / 6 艘船`,'#0072B2');hud.info(`換成功 ${okc} 次`);});};
+  const me=person('#b5562b');me.position.set(3,0,3.4);me.rotation.y=3.6;scene.add(me);
+  const BG=window.PHBAG,KEYS=['pot','millet','hide','jade'],NM={pot:'陶罐',millet:'小米',hide:'獸皮',jade:'玉耳飾'},COL={pot:'#b5562b',millet:'#E69F00',hide:'#a8662f',jade:'#2f7a55'},GC=['#56B4E9','#D55E00'];
+  const have=k=>BG?(BG.get()[k]||0):2,SHIPS=Math.max(1,Math.min(6,KEYS.reduce((a,k)=>a+have(k),0)));
+  let n=0,okc=0,miss=0,want=null,give='',left=0,end=0,full=6,here=0;
+  const tray=()=>hud.tray(KEYS.map((k,i)=>`<button data-k="${i}" ${have(k)?'':'disabled'}><i style="background:${COL[k]}"></i>${NM[k]}<small>${have(k)?'你有 '+have(k)+' 個':'你沒有'}</small></button>`).join(''),pick);
+  const done=why=>{end=1;want=null;hud.tray('');if(why)hud.html(why);setTimeout(()=>{sfx.win&&sfx.win();fin(!okc?0:miss===0?3:miss===1?2:1);},1400);};
+  const next=()=>{const pool=KEYS.filter(k=>have(k)>0);if(n>=SHIPS)return done();if(!pool.length)return done('你帶來的東西都換完了。');want=pool[Math.floor(Math.random()*pool.length)];give=n%2?'瑪瑙珠':'玻璃珠';full=left=Math.max(3.4,6.5-n*.45);here=0;boat.position.x=-22;tray();};
+  const pick=i=>{const k=KEYS[i];if(end||!want||!here||!have(k))return;
+   if(k===want){okc++;BG&&BG.add({[k]:1},-1);BG&&BG.add({beads:1},1);sfx.good&&sfx.good();hud.html(`你給他 <b>${NM[k]}</b><span class="arw">→</span>換到 <b class="gg">${give}</b>`,'#00684B');scene.add(P('sph',mat(GC[okc%2],{roughness:.3}),.22,.22,.22,3.6+okc*.5,.3,4.6));}
+   else{miss++;sfx.bad&&sfx.bad();hud.html(`他要的是 <b>${NM[want]}</b>，不是${NM[k]}。船開走了。`,'#7a2d00');}
+   want=null;n++;tray();setTimeout(()=>{if(!end)next();},1200);};
+  next();A.key=(k,d,rep)=>{if(d&&!rep&&'1234'.includes(k))pick(+k-1);};
+  A.upd.push((dt,ts)=>{boat.position.y=Math.sin(ts*2)*.12;if(!end&&want){boat.position.x=Math.min(-1,boat.position.x+dt*26);if(boat.position.x>=-1.2){if(!here){here=1;hud.html(`他要 <b>${NM[want]}</b><span class="arw">→</span>給你 <b class="gg">${give}</b>`);}left-=dt;
+     if(left<=0){miss++;sfx.bad&&sfx.bad();hud.html('太慢了，船開走了。','#7a2d00');want=null;n++;setTimeout(()=>{if(!end)next();},1100);}}}
+    hud.bar(want&&here?left/full:0,`第 ${Math.min(n+1,SHIPS)} / ${SHIPS} 艘船`,'#0072B2');hud.info(`換到 ${okc} 個珠子`);});};
 /* 9 chop */
 G.chop=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9d39a');cam.position.set(0,4.2,11);cam.lookAt(0,2.6,0);const mk=(x,need,nm,col)=>{const g=new T.Group();g.add(P('cyl',mat('#8a5a33'),.42,4.6,.42,0,2.3,0));[[0,5.6,0,1.9],[1,5,.4,1.3],[-1,5.2,-.3,1.4]].forEach(([a,b,c,r])=>g.add(P('ico1',mat('#3f8f3a'),r,r*.85,r,a,b,c)));g.position.set(x,0,0);scene.add(g);
     const axe=new T.Group();axe.add(P('box',mat('#7a4a22'),.12,2,.12,0,0,0),P('box',mat(col,nm==='鐵斧'?{roughness:.4,metalness:.7}:{}),.9,.5,.16,-.4,.8,0));axe.position.set(x+1.5,1.4,.6);scene.add(axe);const hitB=P('box',bas('#fff',{visible:false}),4,8,3,x,4,0);scene.add(hitB);return {g,axe,hitB,n:0,need,nm,x,sw:0,fall:0};};
@@ -1311,16 +1321,18 @@ G.smelt=(a,fin)=>{let temp=20,ok=0,t=0,hot=0,end=0,pump=false,sp=[];const NEED=7
     bar(c,20,14,320,30,ok/NEED,'#D55E00',`鐵砂變成鐵 ${Math.round(ok/NEED*100)}%`);
     if(!end)T(c,'按住＝送風升溫，放開＝降溫。讓箭頭停在「剛好」',360,405,19);else{c.fillStyle='#5d6166';c.strokeStyle='#2a2d30';c.lineWidth=3;c.beginPath();c.moveTo(250,400);c.lineTo(450,388);c.lineTo(478,400);c.lineTo(450,412);c.closePath();c.fill();c.stroke();c.fillStyle='#7a4a22';c.fillRect(215,392,40,16);T(c,'煉好了！得到一塊鐵，旁邊剩下鐵渣',360,60,24);}};};
 /* 8 trade with visitors from the sea */
-G.trade=(a,fin)=>{const MINE=[['陶罐','#b5562b'],['小米','#E69F00'],['獸皮','#a8662f'],['玉耳飾','#2f7a55']],GIVE=['玻璃珠','瑪瑙珠','玻璃珠','瑪瑙珠','玻璃手環','瑪瑙珠'];
-  let n=0,okc=0,t=0,want=0,left=0,end=0,boat=-200,msg='',mt=0;const next=()=>{want=Math.floor(Math.random()*4);left=Math.max(2.6,5.5-n*0.5);boat=-200;};next();
-  const pick=k=>{if(end||boat<140)return;if(k===want){okc++;sfx.good();msg=`換到了「${GIVE[n]}」！`;}else{sfx.bad();msg='他要的不是這個，船開走了';}mt=1.3;n++;n>=6?(end=1,setTimeout(()=>{sfx.win();fin(okc>=5?3:okc>=3?2:okc?1:0);},1000)):next();};
+G.trade=(a,fin)=>{const MINE=[['陶罐','#b5562b'],['小米','#E69F00'],['獸皮','#a8662f'],['玉耳飾','#2f7a55']],KEYS=['pot','millet','hide','jade'],GIVE=['玻璃珠','瑪瑙珠','玻璃珠','瑪瑙珠','玻璃珠','瑪瑙珠'],BG=window.PHBAG,have=k=>BG?(BG.get()[KEYS[k]]||0):2,SHIPS=Math.max(1,Math.min(6,[0,1,2,3].reduce((x,k)=>x+have(k),0)));
+  let n=0,okc=0,miss=0,t=0,want=0,left=0,end=0,boat=-200,msg='',mt=0;
+  const over=()=>{end=1;setTimeout(()=>{sfx.win();fin(!okc?0:miss===0?3:miss===1?2:1);},1000);};
+  const next=()=>{const pool=[0,1,2,3].filter(k=>have(k)>0);if(n>=SHIPS||!pool.length)return over();want=pool[Math.floor(Math.random()*pool.length)];left=Math.max(3.4,6-n*0.45);boat=-200;};next();
+  const pick=k=>{if(end||boat<140||!have(k))return;if(k===want){okc++;BG&&BG.add({[KEYS[k]]:1},-1);BG&&BG.add({beads:1},1);sfx.good();msg=`你給他「${MINE[k][0]}」，換到「${GIVE[n]}」！`;}else{miss++;sfx.bad();msg=`他要的是「${MINE[want][0]}」，船開走了`;}mt=1.3;n++;next();};
   a.tap=(x,y)=>{if(y>330){const k=Math.floor((x-40)/160);if(k>=0&&k<4)pick(k);}};a.key=(k,d,rep)=>{if(d&&!rep&&'1234'.includes(k))pick(+k-1);};
-  a.draw=dt=>{const c=a.c;t+=dt;mt-=dt;if(!end){boat=Math.min(160,boat+dt*520);if(boat>=160){left-=dt;if(left<=0){sfx.bad();msg='太慢了，船開走了';mt=1.3;n++;n>=6?(end=1,setTimeout(()=>fin(okc>=5?3:okc>=3?2:okc?1:0),900)):next();}}}
+  a.draw=dt=>{const c=a.c;t+=dt;mt-=dt;if(!end){boat=Math.min(160,boat+dt*520);if(boat>=160){left-=dt;if(left<=0){miss++;sfx.bad();msg='太慢了，船開走了';mt=1.3;n++;next();}}}
     c.fillStyle='#bfe3f2';c.fillRect(0,0,W,120);c.fillStyle='#6fb5d3';c.fillRect(0,120,W,150);c.fillStyle='#e8d9a8';c.fillRect(0,270,W,170);
     if(!end){c.save();c.translate(boat,190+Math.sin(t*3)*4);c.fillStyle='#7a4a22';c.beginPath();c.moveTo(0,0);c.lineTo(220,0);c.lineTo(190,40);c.lineTo(30,40);c.fill();c.strokeStyle='#4a2c14';c.lineWidth=4;c.beginPath();c.moveTo(110,0);c.lineTo(110,-110);c.stroke();c.fillStyle='#f4ead2';c.beginPath();c.moveTo(114,-106);c.quadraticCurveTo(190,-60,114,-14);c.fill();person(c,60,-16,1.1,'#3a2c22');c.restore();
-      if(boat>=140){c.fillStyle='#fff';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,400,60,290,96,18);c.fill();c.stroke();T(c,'我想要……',545,84,16,'#3d5560');T(c,MINE[want][0],545,122,34,MINE[want][1]==='#E69F00'?'#8A5A00':MINE[want][1]);bar(c,400,166,290,16,left/5.5,'#0072B2');T(c,`我有「${GIVE[n]}」可以跟你換`,545,200,16);}}
-    MINE.forEach(([nm,col],k)=>{const x=40+k*160;c.fillStyle='#fff';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,x,340,150,84,16);c.fill();c.stroke();c.fillStyle=col;c.beginPath();c.arc(x+30,382,16,0,7);c.fill();c.stroke();T(c,nm,x+92,374,24);T(c,`按 ${k+1}`,x+92,404,13,'#557079',undefined,false);});
-    T(c,'你的東西（點一下拿給他）',170,318,17);T(c,`第 ${Math.min(n+1,6)} / 6 艘船　換成功 ${okc} 次`,520,24,18);if(mt>0)T(c,msg,360,290,22,msg.includes('換到')?'#00684B':'#7a2d00');};};
+      if(boat>=140){c.fillStyle='#fff';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,400,60,290,96,18);c.fill();c.stroke();T(c,'我想要……',545,84,16,'#3d5560');T(c,MINE[want][0],545,122,34,MINE[want][1]==='#E69F00'?'#8A5A00':MINE[want][1]);bar(c,400,166,290,16,left/6,'#0072B2');T(c,`→ 給你「${GIVE[n]}」`,545,200,20);}}
+    MINE.forEach(([nm,col],k)=>{const x=40+k*160;c.fillStyle='#fff';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,x,340,150,84,16);c.fill();c.stroke();c.fillStyle=col;c.beginPath();c.arc(x+30,382,16,0,7);c.fill();c.stroke();c.globalAlpha=have(k)?1:.35;T(c,nm,x+92,374,24);T(c,have(k)?`你有 ${have(k)} 個`:'你沒有',x+92,404,13,'#557079',undefined,false);c.globalAlpha=1;});
+    T(c,'你的東西（點一下拿給他）',170,318,17);T(c,`第 ${Math.min(n+1,SHIPS)} / ${SHIPS} 艘船　換到 ${okc} 個珠子`,520,24,18);if(mt>0)T(c,msg,360,290,22,msg.includes('換到')?'#00684B':'#7a2d00');};};
 /* 9 stone axe vs iron axe */
 G.chop=(a,fin)=>{const tr=[{x:200,n:0,need:14,nm:'石斧',col:'#8d8478'},{x:520,n:0,need:4,nm:'鐵斧',col:'#5d6166'}];let end=0,sw=[0,0],t=0;
   a.tap=(x)=>{if(end)return;const k=x<360?0:1,r=tr[k];if(r.n>=r.need)return;r.n++;sw[k]=0.15;sfx.hit();if(tr.every(r=>r.n>=r.need)){end=1;sfx.win();setTimeout(()=>fin(3),1400);}};
@@ -1351,7 +1363,7 @@ const ERAS=[
  {k:'iron',n:'金屬器時代',site:'新北 十三行考古遺址',ago:'約 2000 年前開始',c:'#0072B2',badge:'煉鐵交易小達人',free:{live:'架高的房屋，住在靠近河口和海的地方',food:'捕魚、種田'},
   night:'天黑了。架高的屋子裡掛著新打的鐵刀，脖子上戴著換來的玻璃珠。',
   tasks:[
-   {id:'trade',n:'和外地人交易',x:15,y:62,how:'看清楚船上的人想要什麼，在時間內點下面你有的東西（或按 1–4）。一共 6 艘船，越來越快！',intro:'河口來了一艘船！船上的人帶著我們沒看過的漂亮珠子。用我們有的東西跟他們換吧。',fact:'十三行人住在河口，靠著<b>臨近河海</b>的優勢<b>和外地交流、交易</b>，遺址出土了玻璃珠、瑪瑙珠等外來的物品。',row:['trade','和外地交易，換到玻璃珠、瑪瑙珠等'],q:{t:'十三行人為什麼方便和外地交易？',o:['住在靠近河口和海的地方，船容易到','住在很高的山上','他們有飛機'],a:0}},
+   {id:'trade',n:'和外地人交易',x:15,y:62,how:'船上的人會說他要什麼。在時間內，點你背包裡的那樣東西（或按 1–4）。換掉一樣就少一樣，沒有的東西不能換。',intro:'河口來了一艘船！船上的人帶著我們沒看過的漂亮珠子。用我們有的東西跟他們換吧。',fact:'十三行人住在河口，靠著<b>臨近河海</b>的優勢<b>和外地交流、交易</b>，遺址出土了玻璃珠、瑪瑙珠等外來的物品。',row:['trade','和外地交易，換到玻璃珠、瑪瑙珠等'],q:{t:'十三行人為什麼方便和外地交易？',o:['住在靠近河口和海的地方，船容易到','住在很高的山上','他們有飛機'],a:0}},
    {id:'smelt',n:'煉鐵',x:48,y:66,how:'按住畫面（或空白鍵）送風，爐子會變熱；放開會變冷。讓箭頭停在綠色的「剛好」。太熱爐子會裂！',intro:'把鐵砂和木炭放進爐子，用力送風，讓火變得非常熱，鐵砂就會結成一塊燒紅的鐵。可是溫度要控制得剛剛好。',fact:'十三行遺址出土了鐵器和煉鐵留下的<b>鐵渣</b>，推測十三行人有<b>煉鐵、製作鐵器</b>的技術。煉鐵技術可能是從海外傳入的。',row:['tool','鐵器（鐵刀、鐵鋤），石器變少'],q:{t:'考古學家為什麼推測十三行人會煉鐵？',o:['找到了鐵器和煉鐵留下的鐵渣','找到了煉鐵的說明書','因為那裡的石頭是黑色的'],a:0}},
    {id:'chop',n:'試試鐵斧',x:82,y:58,how:'左邊用石斧、右邊用鐵斧。兩棵樹都點到倒下來，數數看各要砍幾下。',intro:'新打好的鐵斧真的比較厲害嗎？找兩棵一樣粗的樹，一棵用石斧砍，一棵用鐵斧砍，比比看。',fact:'鐵器又硬又鋒利，<b>做事更快、更省力</b>。所以金屬器時代的石器種類變少了，人們越來越常用鐵器。',row:['skill','煉鐵、製陶（人面陶罐）；鐵器讓工作更快'],q:{t:'金屬器時代的石器為什麼變少了？',o:['鐵器更好用，大家改用鐵器','石頭被用光了','規定不能用石頭'],a:0}}]}];
 const ROWS=[['live','住在哪裡'],['food','食物怎麼來'],['tool','主要的工具'],['skill','新學會的本領'],['trade','和外地的交流']];
@@ -1614,8 +1626,9 @@ openTask=function(id){const t=cur&&cur.tasks&&cur.tasks.find(t=>t.id===id);if(cu
    $('#gmIntro').innerHTML=`<div class="intro"><p>${t.intro}</p><div class="fact" style="--c:${cur.c}"><b>還不會做</b><br>${LOCKTXT[id]}</div><div class="row"><button class="bigbtn" id="lkWb">打開「動手試試」</button><button class="bigbtn alt" id="lkBack">先去找材料</button></div></div>`;
    $('#lkWb').onclick=()=>{$('#gm').hidden=true;wbOpen();};$('#lkBack').onclick=closeGm;$('#lkWb').focus();return;}
   _openTask(id);};
-function grant(id){add(GRANT[id]||{});if(id==='trade'){let need=2;for(const k of ['hide','pot','jade']){while(need&&(S.bag[k]||0)>0){add({[k]:1},-1);need--;}}add({beads:2,method:1});}save();
-  const g=GRANT[id]||(id==='trade'?{beads:2,method:1}:null);if(g)setTimeout(()=>toast(`放進背包：<b>${itn(g)}</b>${id==='trade'?'。外地人還教了你<b>煉鐵的方法</b>！':''}`),400);}
+window.PHBAG={get:()=>S.bag,add:(o,sg)=>{add(o,sg);save();}};
+function grant(id){add(GRANT[id]||{});if(id==='trade')add({method:1});save();
+  const g=GRANT[id];if(g)setTimeout(()=>toast(`放進背包：<b>${itn(g)}</b>`),400);if(id==='trade')setTimeout(()=>toast('外地人還教了你<b>煉鐵的方法</b>！'),400);}
 $('#btnBag')&&($('#btnBag').onclick=bagOpen);$('#btnWb')&&($('#btnWb').onclick=wbOpen);$('#btnSk')&&($('#btnSk').onclick=skOpen);$('#btnSk2')&&($('#btnSk2').onclick=skOpen);
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#wb').hidden)wbClose();else if(!$('#bg').hidden){$('#bg').hidden=true;W3&&W3.pause(false);}else if(!$('#sk').hidden){$('#sk').hidden=true;W3&&W3.pause(false);}else if(!$('#jt').hidden)jtClose();});
 
@@ -1701,4 +1714,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=4"></script>
+<script src="assets/tribe.js?v=5"></script>

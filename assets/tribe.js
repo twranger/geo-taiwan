@@ -48,7 +48,7 @@ function huntBuild(at){const {T,scene,Hf,M,part}=X,g=new T.Group(),[hx,hz]=at;
   const marks=[0,1,2].map(k=>{const a=k*2.094+.5,x=hx+Math.cos(a)*R0,z=hz+Math.sin(a)*R0,y=Hf(x,z);
     const st=part('ico',M('#9c968a'),.55,.35,.5,x,y+.18,z);scene.add(st);
     const ring=new T.Mesh(new T.RingGeometry(1.1,1.45,28),new T.MeshBasicMaterial({color:'#ffd23f',transparent:true,opacity:.75,side:T.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(x,y+.08,z);scene.add(ring);
-    return {k,x,z,y,st,ring,el:tag('','tb-mark')};});
+    const el=tag('','tb-mark');el.onclick=e=>{e.stopPropagation();if(X&&X.S)X.S.auto={x,z,stop:.6};};return {k,x,z,y,st,ring,el};});
   const sign=tag('圍獵：水鹿','tb-sign');
   return {at,dr,marks,sign,hold:0,state:'idle',myK:-1,joinedAt:0,ring:{},caughtAt:0,dx:0};}
 function huntTick(dt,ts){const H=hunt,{S,Hf}=X;if(!H)return;
@@ -153,15 +153,15 @@ const tradePath=(to,from)=>'cl_trade/'+NET.sid+'/'+to+'/'+from;
 const itemsOf=()=>{const b=hooks.bag?hooks.bag():{};return Object.keys(b).filter(k=>b[k]>0&&k!=='method'&&k!=='slag'&&hooks.name&&hooks.name(k));};
 const goodsOf=()=>itemsOf().filter(k=>val(k)>0);
 function offerTo(c){const o=others[c],list=goodsOf();if(!list.length){hooks.toast&&hooks.toast('你只有路邊就撿得到的東西，沒有人會想換。先做出陶罐、抓到魚，或找到獸皮再來。');return;}
-  pick(`要拿什麼給 ${o.el.textContent}？`,'他會拿一樣差不多值錢的東西跟你換。石頭、樹枝這種到處都撿得到的，沒人要換。',list,k=>{if(!k)return;mart.wait={g:k,s:+String(o.el.textContent).replace(/\D/g,'')||0,t:Date.now()};mart.waitCid=c;
+  pick(`你要拿什麼給 <b>${o.el.textContent}</b>？`,'他會挑一樣差不多值錢、你沒有的東西給你。',list,k=>{if(!k)return;mart.wait={g:k,s:+String(o.el.textContent).replace(/\D/g,'')||0,t:Date.now()};mart.waitCid=c;
    if(others[c]&&others[c].bot){botReply(c,k);return;}NET.put(tradePath(c,me.cid),{k:'offer',g:k,s:me.seat||0,t:TSV()});});}
 function onInbox(all){const M=mart;if(!M)return;const now=Date.now();Object.keys(all||{}).forEach(from=>{const v=all[from];if(!v||M.seen[from+':'+v.t])return;if(typeof v.t==='number'&&now-v.t>90000)return;M.seen[from+':'+v.t]=1;
   const who=v.s?v.s+' 號':'同學';
   const bot=others[from]&&others[from].bot,put=(p,x)=>{if(!bot)NET.put(p,x);};
-  if(v.k==='offer'){const list=goodsOf(),w=val(v.g);pick(`${who}想給你「${hooks.name(v.g)}」`,`這是「${WORTH[w]}」的東西。要拿一樣差不多值錢的跟他換，太便宜的他不會要。`,list,k=>{put(tradePath(me.cid,from),null);
+  if(v.k==='offer'){const list=goodsOf(),w=val(v.g);pick(`${who}拿 <b>${hooks.name(v.g)}</b> 想跟你換`,'你要給他什麼？只能選差不多值錢、又不一樣的東西。',list,k=>{put(tradePath(me.cid,from),null);
      if(!k){put(tradePath(from,me.cid),{k:'no',s:me.seat||0,t:TSV()});return;}
      hooks.add({[k]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);put(tradePath(from,me.cid),{k:'reply',g:k,f:v.g,s:me.seat||0,t:TSV()});
-     hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(k)}」，拿到「${hooks.name(v.g)}」。`);},'這次不換',k=>val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
+     hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(k)}」，拿到「${hooks.name(v.g)}」。`);},'這次不換',k=>k===v.g?'一樣的東西，不用換':val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
   else if(v.k==='reply'&&M.wait&&M.wait.g===v.f&&!((hooks.bag()[v.f]||0)>0)){M.wait=null;put(tradePath(me.cid,from),null);hooks.toast&&hooks.toast(`你身上已經沒有「${hooks.name(v.f)}」了，這次沒換成。`);}
   else if(v.k==='reply'&&M.wait&&M.wait.g===v.f){hooks.add({[v.f]:1},-1);hooks.add({[v.g]:1},1);hooks.saved&&hooks.saved('tr',1);M.wait=null;put(tradePath(me.cid,from),null);
      hooks.toast&&hooks.toast(`換好了：你給 ${who}「${hooks.name(v.f)}」，拿到「${hooks.name(v.g)}」。`);}
@@ -192,7 +192,7 @@ function botsTick(dt,ts){const {S}=X,now=Date.now();BOTS.forEach((b,i)=>{const o
   if(mart&&!o.offered&&!modal&&!mart.wait&&i===0&&Math.hypot(o.x-S.x,o.z-S.z)<4&&now-(mart.since||now)>15000){o.offered=1;onInbox({[b.cid]:{k:'offer',g:b.bag[0],s:b.s,t:now}});}});
   if(mart&&!mart.since)mart.since=now;}
 function botReply(c,k){const o=others[c],b=o.bot;mart.wait={g:k,s:b.s,t:Date.now()};mart.waitCid=c;
-  setTimeout(()=>{if(!mart||!mart.wait)return;const ok=b.bag.filter(x=>val(x)===val(k)&&x!==k),give=ok.length?ok[(o.gave++)%ok.length]:null;
+  setTimeout(()=>{if(!mart||!mart.wait)return;const mine=hooks.bag?hooks.bag():{},ok0=b.bag.filter(x=>val(x)===val(k)&&x!==k),ok=ok0.filter(x=>!mine[x]).length?ok0.filter(x=>!mine[x]):ok0,give=ok.length?ok[(o.gave++)%ok.length]:null;
    onInbox({[c]:give?{k:'reply',g:give,f:k,s:b.s,t:Date.now()+(++o.gave)}:{k:'no',s:b.s,t:Date.now()+(++o.gave)}});},1800);}
 /* ---------- life cycle ---------- */
 function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt.cid,seat:opt.seat||0};hooks=opt||{};alive=true;
