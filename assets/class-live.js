@@ -13,12 +13,17 @@ const GAMES={nmth:{n:'臺史博：閉館之後',page:'nmth-quest.html'},prehisto
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KC=(()=>{try{const c=new URLSearchParams(location.search).get('c');return c&&/^\d{4}$/.test(c)?c:'';}catch(e){return '';}})();
 const KQ=(()=>{try{const k=new URLSearchParams(location.search).get('k');return k&&/^[a-z0-9]{4,20}$/.test(k)?k:'';}catch(e){return '';}})();
-let seatUn=[],O=null,sess=null,db=null,rt=null,loading=null,unsub=[],tm=0,box=null,cid='';
+let seatUn=[],O=null,sess=null,db=null,rt=null,loading=null,unsub=[],tm=0,box=null,cid='',skew=0,restT=0;
+/* tablet clocks in a classroom are often minutes off: compare record times with the server's clock, not the tablet's */
+const NOWS=()=>Date.now()+skew;
 try{cid=localStorage.getItem('hhl-nmth-cid')||'';if(!cid){cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);localStorage.setItem('hhl-nmth-cid',cid);}}catch(e){cid='x'+Math.random().toString(36).slice(2,10);}
 const keep=()=>{try{sess?localStorage.setItem(O.store,JSON.stringify(sess)):localStorage.removeItem(O.store);}catch(e){}};
 const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];seatUn=[];};
+/* the free plan allows 100 tablets connected to the Realtime Database at once: a tablet that has left the task hangs up */
+const rest=()=>{clearTimeout(restT);restT=setTimeout(()=>{if(!sess&&rt){try{firebase.database().goOffline();}catch(e){}}},5000);};
+const wake=()=>{clearTimeout(restT);if(rt){try{firebase.database().goOnline();}catch(e){}}};
 const load=()=>loading||(loading=new Promise((ok,no)=>{const need=['app','firestore','database'].filter(n=>!(window.firebase&&(n==='app'||firebase[n]))).map(n=>`https://www.gstatic.com/firebasejs/10.12.2/firebase-${n}-compat.js`);
-  const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();try{rt=firebase.database();}catch(e){rt=null;}ok(db);}catch(e){loading=null;no(e);}return;}
+  const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();try{rt=firebase.database();rt.ref('.info/serverTimeOffset').on('value',s=>{skew=+s.val()||0;},()=>{});}catch(e){rt=null;}ok(db);}catch(e){loading=null;no(e);}return;}
    const sc=document.createElement('script');sc.src=u;sc.onload=next;sc.onerror=()=>{loading=null;no(new Error('net'));};document.head.appendChild(sc);};next();}));
 /* time of a record in ms, from either store */
 const ms=v=>!v||!v.at?0:typeof v.at==='number'?v.at:v.at.seconds?v.at.seconds*1000:0;
@@ -86,7 +91,7 @@ function ask(msg){off();ui(`<h2>輸入任務代碼</h2><p class="cl-sub">看老�
   const go=()=>{const v=box.querySelector('#clCode').value.replace(/\D/g,'');if(v.length!==4){ask('任務代碼是 4 個數字。');return;}join({code:v});};
   box.querySelector('#clGo').onclick=go;box.querySelector('#clCode').onkeydown=e=>{if(e.key==='Enter')go();};box.querySelector('#clNo').onclick=()=>{hide();try{O.onSolo&&O.onSolo();}catch(e){}};box.querySelector('#clCode').focus();}
 function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`);
-  load().then(()=>findRooms(q)).then(rooms=>{
+  load().then(()=>{wake();return findRooms(q);}).then(rooms=>{
     const live=rooms.filter(r=>r.ph!=='closed').sort((a,b)=>ms(b)-ms(a))[0];
     if(!live){ask(rooms.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
     const g=live.game||'nmth';
@@ -96,29 +101,34 @@ function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`
    .catch(()=>ask('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
 /* a seat whose cid starts with '~' was released by the teacher (reopened task, or a pupil who saved and left);
    a seat not heard from for 20 minutes is free as well. Picking one of these brings its progress back. */
-const idle=v=>!ms(v)||Date.now()-ms(v)>1200000;
-function seat(){const sid=sess.sid;let all={};
-  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,v=all[n],tk=v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&!idle(v);return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
+const idle=v=>!ms(v)||NOWS()-ms(v)>1200000;
+function seat(msg){const sid=sess.sid;let all={};
+  const draw=()=>{ui(`<h2>按下你的座號</h2>${msg?`<p class="cl-err" role="alert">${msg}</p>`:''}<p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(40)].map((_,i)=>{const n=i+1,v=all[n],tk=v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&!idle(v);return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
    box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,v=all[n];sess.seat=n;sess.on=0;keep();
     if(v&&v.d&&v.d!=='[]'&&v.d!=='{}'&&(v.cid===cid||String(v.cid)[0]==='~'||idle(v))){try{O.onRestore&&O.onRestore(v);}catch(e){}}
     pushBoth().catch(()=>{});wait();});};
   off();draw();seatsWatch(sid,m=>{all=m;if(sess&&!sess.seat)draw();});}
-function wait(quiet){const sid=sess.sid;off();
+function wait(quiet){const sid=sess.sid,t0=Date.now();off();
   if(!quiet){sess.on=0;keep();ui(`<div class="cl-big">${sess.seat}</div><h2 class="cl-c">${sess.seat} 號，你進大廳了</h2><p class="cl-c">看看大螢幕上有沒有你的座號。等老師按開始。</p><div class="cl-row c"><button class="cl-btn alt" id="clRe">選錯座號了</button></div>`);
    box.querySelector('#clRe').onclick=()=>{const old=sess.seat,blank={sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0};sess.seat=0;keep();
     db.collection('nmth_live').doc(sid+'_'+old).set(Object.assign({},blank,{at:firebase.firestore.FieldValue.serverTimestamp()})).catch(()=>{});
     if(rt)rt.ref('cl_live/'+sid+'/'+old).set(Object.assign({},blank,{at:firebase.database.ServerValue.TIMESTAMP})).catch(()=>{});seat();};}
+  /* someone else took this seat (two pupils tapped the same number): the later one keeps it, this tablet picks again.
+     Needed in the lobby, and for the first 20 seconds of a pupil who came in late. */
+  if(sess&&!sess.on)seatsWatch(sid,m=>{const v=m[sess&&sess.seat];if(sess&&sess.seat&&sess.sid===sid&&(!sess.on||Date.now()-t0<20000)&&v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&ms(v)>NOWS()-60000){const n=sess.seat;sess.seat=0;sess.on=0;keep();seat(`${n} 號剛剛被另一台平板選走了。請再按一次你自己的座號。`);}},seatUn);
   roomWatch(sid,(r,known)=>{if(!sess||!known)return;r=r||{ph:'closed'};
-   if(r.ph==='closed'){const was=sess.on;if(was)pushBoth().catch(()=>{});off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
+   if(r.ph==='closed'){const was=sess.on;if(was)pushBoth().catch(()=>{});off();sess=null;keep();rest();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
    if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();pushBoth().catch(()=>{});if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
-   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();seatUn.forEach(u=>{try{u();}catch(e){}});seatUn=[];try{O.onStart&&O.onStart(sess);}catch(e){}touch();}});
-  /* someone else took this seat while we wait in the lobby: pick again. Only needed before the start. */
-  if(sess&&!sess.on)seatsWatch(sid,m=>{const v=m[sess&&sess.seat];if(sess&&sess.seat&&!sess.on&&v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&ms(v)>Date.now()-60000){sess.seat=0;keep();seat();}},seatUn);}
+   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();
+    /* a pupil who comes in late starts at once, so the "two tablets, one seat" check stays on a little longer */
+    const un=seatUn;seatUn=[];setTimeout(()=>un.forEach(u=>{try{u();}catch(e){}}),Math.max(0,20000-(Date.now()-t0)));
+    try{O.onStart&&O.onStart(sess);}catch(e){}touch();}});
+}
 function isItYou(){let nm='';try{nm=O.who&&O.who()||'';}catch(e){}
   ui(`<h2>是你嗎？</h2><p>這台平板上次是<br><b style="font-size:24px">${esc(sess.label)}　${sess.seat} 號　${esc(nm)}</b><br>在玩。</p>
    <div class="cl-row"><button class="cl-btn cl-wide" id="clMe">是我，繼續玩</button></div><div class="cl-row"><button class="cl-btn alt cl-wide" id="clNotMe">不是我</button></div>`);
   box.querySelector('#clMe').onclick=()=>{ui(`<h2>正在連線</h2><p>等一下下。</p>`);load().then(()=>join({sid:sess.sid})).catch(()=>ask('連不上網路，沒辦法接老師的任務。'));};
-  box.querySelector('#clNotMe').onclick=()=>{sess=null;keep();hide();try{O.onNotMe&&O.onNotMe();}catch(e){}};}
+  box.querySelector('#clNotMe').onclick=()=>{sess=null;keep();hide();rest();try{O.onNotMe&&O.onNotMe();}catch(e){}};}
 /* 存檔下課: send to both stores, wait for at least one to confirm, then hand the tablet back clean.
    The seat is marked '~' so the same pupil can pick it again on any tablet next time. */
 function saveAndLeave(){if(!sess||!sess.seat){try{O.onLeft&&O.onLeft();}catch(e){}return;}
@@ -128,7 +138,7 @@ function saveAndLeave(){if(!sess||!sess.seat){try{O.onLeft&&O.onLeft();}catch(e)
    const a=rt?rt.ref('cl_live/'+sess.sid+'/'+sess.seat).set(Object.assign({},r,{at:firebase.database.ServerValue.TIMESTAMP})).then(()=>1,()=>0):Promise.resolve(0);
    const b=db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set(Object.assign({},r,{at:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>1,()=>0);
    return Promise.race([Promise.all([a,b]),new Promise(z=>setTimeout(()=>z([0,0]),10000))]);})
-  .then(([x,y])=>{if(!x&&!y)throw new Error('fail');off();sess=null;keep();
+  .then(([x,y])=>{if(!x&&!y)throw new Error('fail');off();sess=null;keep();rest();
    ui(`<div class="cl-big" style="border-color:#1f6b4c;color:#1f6b4c">${seatNo}</div><h2 class="cl-c">進度存好了</h2>
     <p class="cl-c">${esc(label)}　${seatNo} 號　${esc(nm)}</p><p class="cl-c">下次上課，打開老師給的網址，<b>選回 ${seatNo} 號</b>，就會接著玩。<br>換一台平板也可以。</p>
     <div class="cl-row c"><button class="cl-btn" id="clDone">好</button></div>`);
@@ -145,5 +155,5 @@ return {
    return sess||KQ||KC?'join':'';},
   /* call after the player has typed a name: join by link, rejoin, or ask for the code */
   begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ,link:1});else if(sess)join({sid:sess.sid});else if(KC)join({code:KC,link:1});else ask();},
-  ask,touch,push,now,saveAndLeave,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
+  ask,touch,push,now,saveAndLeave,sess:()=>sess,leave(){off();sess=null;keep();rest();},link:KQ};
 })();

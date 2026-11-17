@@ -517,9 +517,9 @@ const GAMES={
   T:['找食物','敲打石器','生火','種小米','磨製石器','做陶罐','和外地人交易','煉鐵','試試鐵斧'],E:['舊石器時代','新石器時代','金屬器時代'],EK:['old','neo','iron'],
   parse(v){let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const s=(j.s||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),y=(j.y||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),tm=(j.tm||[]).concat([0,0,0,0,0]).slice(0,5).map(x=>+x||0);
    const o={s,y,tm,dig:j.dig?1:0,h:+j.h||0,gr:+j.gr||0,bf:j.b?1:0,tr:+j.tr||0,nt:+j.nt||0,sk:+j.sk||0,qw:+j.qw||0,cf:+j.cf||0,done:s.filter(Boolean).length+(j.dig?1:0),stars:s.reduce((a,b)=>a+b,0),t:tm.reduce((a,b)=>a+b,0),miss:(+j.qw||0)+(+j.cf||0)};
-   const f=[];[0,1,2].forEach(e=>{if(s.slice(e*3,e*3+3).every(Boolean)&&tm[e]<120)f.push(this.E[e]+'不到 2 分鐘');});if(o.done===10&&o.t<480)f.push('全部不到 8 分鐘');if(o.qw>=6)f.push('題目答錯 '+o.qw+' 次');o.flag=f.join('、');return o;},
+   const f=[];[0,1,2].forEach(e=>{if(s.slice(e*3,e*3+3).every(Boolean)&&tm[e]<120)f.push(this.E[e]+'不到 2 分鐘');});if(o.done===10&&o.t<480)f.push('全部不到 8 分鐘');if(o.qw>=6)f.push('題目答錯 '+o.qw+' 次');if(o.h>=8)f.push('圍獵 '+o.h+' 次，可能一直站在石頭上');o.flag=f.join('、');return o;},
   where(c){const [a,b]=String(c).split(':'),e=this.EK.indexOf(a);if(c==='lobby')return '大廳';if(a==='hub')return '時光隧道';if(a==='dig')return '考古挖掘';if(a==='cert')return '領證書';if(a==='museum')return '博物館';if(e<0)return '';const ids=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],k=ids.indexOf(b);return this.E[e]+(k>=0?'・'+this.T[k]:'');},
-  note:'「圍獵、穀倉、交換」是和同學一起做的活動（人不夠時會有部落的人幫忙），不影響過關。每個時代有三個任務，格子裡是三個任務各拿幾顆星和在這個時代停留的時間。黃色是學生現在所在的時代。「答錯」是任務後的題目答錯次數，「試錯」是動手組合材料失敗的次數（多不代表不好，是在嘗試）。',
+  note:'「圍獵、穀倉、交換」是和同學一起做的活動（人不夠時會有部落的人幫忙），不影響過關。圍獵只有前 3 頭有肉和獸皮，和同一位同學交換最多算 2 次，和外地人最多換 3 次，所以這幾欄刷不高。每個時代有三個任務，格子裡是三個任務各拿幾顆星和在這個時代停留的時間。黃色是學生現在所在的時代。「答錯」是任務後的題目答錯次數，「試錯」是動手組合材料失敗的次數（多不代表不好，是在嘗試）。',
   head(){return `<th>完成</th><th>星星<small>滿分 27</small></th><th>總時間</th>${this.E.map(x=>`<th>${x}</th>`).join('')}<th>考古挖掘</th><th>圍獵<small>抓到幾頭</small></th><th>穀倉<small>放了幾束</small></th><th>交換<small>同學／鄰村</small></th><th>學會本領</th><th>答錯</th><th>試錯</th>`;},
   row(r){return `<td>${r.done}/10</td><td>${r.stars}</td><td>${mmss(r.t)}</td>${[0,1,2].map(e=>{const a=r.s.slice(e*3,e*3+3),on=String(r.cur).split(':')[0]===this.EK[e];return `<td class="${a.some(Boolean)?'':'no'}${on?' now':''}">${a.some(Boolean)||r.tm[e]?`${a.map(n=>n?'★'.repeat(n):'・').join(' ')}<small>${mmss(r.tm[e])}</small>`:'—'}</td>`;}).join('')}<td class="${r.dig?'':'no'}${r.cur==='dig'?' now':''}">${r.dig?'完成':(r.tm[3]?'進行中':'—')}</td><td>${r.h||'—'}</td><td>${r.gr?r.gr+(r.bf?' ✓':''):'—'}</td><td>${r.tr||r.nt?`${r.tr}／${r.nt}`:'—'}</td><td>${r.sk}</td><td>${r.qw}</td><td>${r.cf}</td>`;},
   csvHead(){return ['完成數(滿分10)','星星(滿分27)','總秒數',...this.T.flatMap(t=>[t+'星星',t+'玩幾次']),...this.E.map(e=>e+'秒數'),'考古挖掘秒數','考古挖掘完成','圍獵次數','穀倉放了幾束','穀倉滿了','和同學交換次數','和鄰村交換次數','學會本領數','題目答錯次數','組合試錯次數'];},
@@ -639,20 +639,25 @@ function reopen(){const sid=cur.sid,g=GM();
 const stripAt=v=>{const o=Object.assign({},v);delete o.at;return o;};
 let raw=[];
 /* the room and its seats come from both stores; for each, the newest copy wins */
-function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur={sid,ph:'lobby',code:'',label:'',game:'nmth'};
+function open(sid){off();clearTimeout(drawT);drawT=0;lastH='';room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur={sid,ph:'lobby',code:'',label:'',game:'nmth'};
  let rA=null,rB=null,fsSeen=false,rbSeen=!rt,lA={},lB={};
  const roomEmit=()=>{const r=newerR(rA,rB);if(!r){if(fsSeen&&rbSeen)back();return;}Object.assign(cur,{game:'nmth'},r);calc();draw();};
- const liveEmit=()=>{const m={};new Set([...Object.keys(lA),...Object.keys(lB)]).forEach(k=>{const v=newer(lA[k],lB[k]);if(v&&v.cid)m[k]=v;});raw=Object.values(m);calc();draw();};
+ const liveEmit=()=>{const m={};new Set([...Object.keys(lA),...Object.keys(lB)]).forEach(k=>{const v=newer(lA[k],lB[k]);if(v&&v.cid)m[k]=v;});raw=Object.values(m);drawSoon();};
  unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{fsSeen=true;rA=d.exists?d.data():null;if(!d.exists&&!rbSeen)return;
   if(d.exists&&rt&&!rB)rt.ref('cl_rooms/'+sid).once('value').then(s=>{if(!s.exists())roomMirror(sid,d.data());}).catch(()=>{});roomEmit();},()=>{fsSeen=true;roomEmit();}));
  unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{lA={};q.forEach(d=>{const v=d.data();lA[v.seat]=v;});liveEmit();},()=>{}));
  if(rt){const r1=rt.ref('cl_rooms/'+sid),h1=r1.on('value',s=>{rbSeen=true;rB=s.val();roomEmit();},()=>{rbSeen=true;roomEmit();});unsub.push(()=>r1.off('value',h1));
   const r2=rt.ref('cl_live/'+sid),h2=r2.on('value',s=>{lB={};const v=s.val()||{};Object.keys(v).forEach(k=>{if(v[k])lB[v[k].seat||k]=v[k];});liveEmit();},()=>{});unsub.push(()=>r2.off('value',h2));}
  window.scrollTo(0,0);}
+/* A class of 30 sends several updates a second. Redrawing the whole page each time made the table jump back
+   while the teacher was scrolling it, and buttons could miss a click. So: at most one redraw every 1.5 s,
+   none at all when nothing visible changed, and the table keeps its scroll position. */
+let drawT=0,drawAt=0,lastH='',qrKey='',qrSvg='';
+function drawSoon(){if(!cur)return;const w=1500-(Date.now()-drawAt);if(w<=0||cur.ph==='lobby'){clearTimeout(drawT);drawT=0;calc();draw();return;}if(!drawT)drawT=setTimeout(()=>{drawT=0;if(cur){calc();draw();}},w);}
 function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
-function back(){off();cur=null;room$.hidden=true;loadList();}
-function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,awayN=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
- try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
+function back(){off();clearTimeout(drawT);drawT=0;lastH='';cur=null;room$.hidden=true;loadList();}
+function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,awayN=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
+ try{const k=cur.short?'https://'+cur.short:url;if(k!==qrKey){const q=qrcode(0,'M');q.addData(k);q.make();qrSvg=q.createSvgTag({cellSize:4,margin:3,scalable:true});qrKey=k;}qr=qrSvg;}catch(e){}
  let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
    ${cur.ph==='closed'?'':`<p>學生在網址列輸入下面任何一個網址，或掃 QR 碼：</p>
     <p class="nh-short">${cur.short?`<b>${esc(cur.short)}</b><span>或</span>`:''}<b>geo.twranger.com/${esc(cur.code)}</b>${cur.short?'':'<button class="nh-btn alt" id="nhShort">產生短網址</button>'}</p>
@@ -665,7 +670,8 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
   <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
   ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
- room$.innerHTML=h;
+ if(h===lastH&&room$.firstChild)return;lastH=h;const tw0=room$.querySelector('.nh-tw'),sx=tw0?tw0.scrollLeft:0;
+ room$.innerHTML=h;{const tw=room$.querySelector('.nh-tw');if(tw&&sx)tw.scrollLeft=sx;}
  const B=(id,fn)=>{const b=$(id);if(b)b.onclick=fn;};
  B('#nhStart',()=>roomUpd(cur.sid,{ph:'play',startedAt:TS()}).catch(e=>alert(e.message)));
  B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))roomUpd(cur.sid,{ph:'closed',endedAt:TS()}).catch(e=>alert(e.message));});
@@ -689,7 +695,10 @@ function csvText(g,label,rs){const head=['班級','遊戲','座號','現在在',
 function saveBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);}
 function csv(){saveBlob(new Blob([csvText(GM(),cur.label,rows)],{type:'text/csv'}),`${GM().n}_${cur.label}.csv`);}
 function delSession(sid){return db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete())),()=>0)
- .then(()=>rt?rt.ref('cl_live/'+sid).remove().catch(()=>{}):0).then(()=>rt?rt.ref('cl_rooms/'+sid).remove().catch(()=>{}):0)
+ .then(()=>rt?rt.ref('cl_live/'+sid).remove().catch(()=>{}):0)
+ /* positions, hunting circles, trades and the granary of this session (needs the teacher to be allowed to remove them; harmless if not) */
+ .then(()=>rt?Promise.all(['cl_pos','cl_hunt','cl_trade','cl_coop'].map(t=>rt.ref(t+'/'+sid).remove().catch(()=>{}))):0)
+ .then(()=>rt?rt.ref('cl_rooms/'+sid).remove().catch(()=>{}):0)
  .then(()=>db.collection('nmth_rooms').doc(sid).delete().catch(e=>{if(!rt)throw e;}));}
 /* the pupils of one session, from both stores (newest copy of each seat), as table rows */
 function rowsOf(se){const g=GAMES[se.game]||GAMES.nmth,mv=se.moves||{};

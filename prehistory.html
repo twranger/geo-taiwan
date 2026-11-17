@@ -740,7 +740,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 <div class="modal" id="nt" hidden role="dialog" aria-modal="true"><div class="mbox" id="ntBox"></div></div>
 <footer><div class="wrap"><p>內容依康軒版五上社會第三單元〈尋根探源話臺灣〉第 1 課編寫。場景與小遊戲是依課本想像圖設計的示意，不是真實比例，也不是遺址現場的實景。</p><p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026 ｜ <a href="nmth-host.html?g=prehistory" style="color:inherit">老師入口</a></p></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/class-live.js?v=8"></script>
+<script src="assets/class-live.js?v=9"></script>
 <script>
 /* 3D immersive worlds for the three eras (three.js r128) */
 window.World=(function(){
@@ -952,7 +952,7 @@ function frame(t){raf=requestAnimationFrame(frame);if(paused||!scene)return;cons
     v.set(q.x,q.y+1.6,q.z).project(cam);if(dd<18&&v.z<1&&v.z>-1){q.el.style.display='';q.el.style.transform=`translate(-50%,-50%) translate(${((v.x+1)/2*w).toFixed(1)}px,${((1-v.y)/2*h).toFixed(1)}px)`;}else q.el.style.display='none';}
   if(near!==S.near){S.near=near;cb.onNear&&cb.onNear(near);}
   R.render(scene,cam);}
-return {ext:()=>({T,scene,Hf,S,cam,host,upd,M,part,era,HUNTAT,HUNTS,lowQ}),start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
+return {ext:()=>({T,scene,Hf,S,cam,host,upd,M,part,era,HUNTAT,HUNTS,START,lowQ,q:()=>lowQ,paused:()=>paused}),start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
 })();
 
 /* the nine hands-on games, in 3D (three.js r128).  Falls back to the 2D versions when WebGL is missing. */
@@ -1586,12 +1586,15 @@ function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassL
   status:t=>{if(!t){st.hidden=true;return;}if(st.textContent!==t)st.textContent=t;st.hidden=false;},
   count:n=>{pl.hidden=!n;pl.textContent=`這個時代還有 ${n} 位同學`;},
   bag:()=>S.bag,add:(o,sign)=>{add(o,sign);save();},name:k=>IT[k]?IT[k].n:'',toast:m=>toast(m),
-  given:k=>S[k]||0,saved:(k,n)=>{S[k]=(S[k]||0)+n;save();if(window.ClassLive)ClassLive.now();},
+  given:k=>S[k]||0,
+  /* trading the same two things back and forth with one classmate only counts twice */
+  saved:(k,n,who)=>{if(k==='tr'){S.trw=S.trw||{};const w='s'+(who||0);S.trw[w]=(S.trw[w]||0)+1;if(S.trw[w]>2)n=0;}S[k]=(S[k]||0)+n;save();},
   action:(label,fn)=>{const b=$('#wCoop');if(!label){b.hidden=true;b.onclick=null;return;}b.textContent=label;b.hidden=false;b.onclick=fn;},
-  barnFull:t=>{S.barn=1;save();sfx.win();toast(`<b>穀倉滿了！</b>大家一起存了 ${t.goal} 束小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`);},
+  barnFull:t=>{S.barn=1;save();sfx.win();toast(t.late?`<b>你也出了一份力！</b>部落的穀倉已經存滿 ${t.season} 季了，裡面也有你種的小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`:`<b>穀倉滿了！</b>大家一起存了 ${t.goal} 束小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`);},
   armed:()=>!!(S.st&&S.st.food),hit:()=>sfx.thud(),throw:()=>sfx.whoosh(),sfx:k=>sfx[k]&&sfx[k](),
-  caught:team=>{S.hunt=(S.hunt||0)+1;add({meat:1,hide:1});save();sfx.win();
-   toast(`<b>圍獵成功！</b>${team.length?'和 '+team.join('、')+' 一起':''}丟長矛打中一頭水鹿，分到一塊鹿肉和一張獸皮。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`);}});}
+  /* the first three deer fill your bag; after that the catch goes to the rest of the tribe, so standing there all lesson earns nothing */
+  caught:team=>{S.hunt=(S.hunt||0)+1;const loot=S.hunt<=3;if(loot)add({meat:1,hide:1});save();sfx.win();const w=team.length?'和 '+team.join('、')+' 一起':'';
+   toast(loot?`<b>圍獵成功！</b>${w}丟長矛打中一頭水鹿，分到一塊鹿肉和一張獸皮。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`:`<b>圍獵成功！</b>${w}打中一頭水鹿。你的肉和獸皮已經夠用，這一頭分給部落裡的其他人。`);}});}
 let toastT=0;function toast(m){const t=$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,Math.max(4000,String(m).replace(/<[^>]*>/g,'').length*230));}
 function hudGoal(){const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])return;const g=curGoal(),L=GOALS[cur.k],n=L.filter(x=>x.ok()).length;
   const f=S.fails[cur.k]||0,h=g&&g.h?g.h.slice(0,Math.min(g.h.length,f>=2?2:1)):[];
@@ -1729,7 +1732,9 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
   onRestore:v=>{let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const st=j.s||[],y=j.y||[],tm=j.tm||[];
    TID.forEach((id,i)=>{const n=+st[i]||0;if(n>(S.st[id]||0))S.st[id]=n;if(n)S.known[id]=1;if((+y[i]||0)>(S.tries[id]||0))S.tries[id]=+y[i];});
    ['old','neo','iron','dig','museum'].forEach((k,i)=>{if((+tm[i]||0)>(S.tm[k]||0))S.tm[k]=+tm[i];});
-   if(j.dig)S.dig=1;S.qw=Math.max(S.qw||0,+j.qw||0);S.cf=Math.max(S.cf||0,+j.cf||0);try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
+   if(j.dig)S.dig=1;S.qw=Math.max(S.qw||0,+j.qw||0);S.cf=Math.max(S.cf||0,+j.cf||0);
+   /* what was done together comes back too, so the teacher's numbers do not drop when a pupil changes tablets */
+   [['hunt','h'],['gr','gr'],['tr','tr'],['nt','nt']].forEach(([a,b])=>{S[a]=Math.max(S[a]||0,+j[b]||0);});if(j.b)S.barn=1;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
   who:()=>S.name,
   onNotMe:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');$('#nm').focus();},
   onLeft:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');svUI();},
@@ -1745,4 +1750,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=7"></script>
+<script src="assets/tribe.js?v=8"></script>
