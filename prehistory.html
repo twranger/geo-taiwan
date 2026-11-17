@@ -494,6 +494,9 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 #guide.next{background:#e8a33d;border-color:#e8a33d;color:#1a1408;animation:gnext 1.6s ease-in-out infinite}
 @keyframes gnext{0%,100%{box-shadow:0 0 0 0 rgba(232,163,61,.6)}50%{box-shadow:0 0 0 10px rgba(232,163,61,0)}}
 @media (prefers-reduced-motion:reduce){#guide.next{animation:none}}
+.st-left{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.svl{border-color:#1f6b4c;color:#1f6b4c}
+#vHub .unit-head .svl{margin-top:10px}
 .wvig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 52%,rgba(8,16,26,.42) 100%),linear-gradient(180deg,rgba(255,236,200,.06),rgba(20,30,50,.08))}
 .wchap{position:absolute;inset:0;z-index:40;background:#080c10;color:#f1ead8;display:grid;place-content:center;justify-items:center;gap:10px;text-align:center;padding:24px;pointer-events:none;animation:wchap 3s ease-in forwards}
 .wchap small{font-size:17px;letter-spacing:.4em;color:#b9ad92}
@@ -655,12 +658,12 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 </div></section>
 
 <section class="unit" id="vHub" hidden><div class="wrap">
-  <div class="unit-head"><h2 id="hubHi"></h2><p class="sub">照順序闖過三個時代，再到「現在」當考古學家。　<button class="linkbtn" id="clAsk2" hidden>老師有給任務代碼？</button></p></div>
+  <div class="unit-head"><h2 id="hubHi"></h2><p class="sub">照順序闖過三個時代，再到「現在」當考古學家。　<button class="linkbtn" id="clAsk2" hidden>老師有給任務代碼？</button></p><button class="bigbtn alt svl" data-save hidden>存檔下課</button></div>
   <div class="hub" id="hub"></div>
 </div></section>
 
 <section class="unit" id="vScene" hidden><div class="wrap">
-  <div class="scene-top"><button class="bigbtn alt" id="toHub">← 時光隧道</button><div><h2 id="scTitle"></h2><p class="sub" id="scSub"></p></div><button class="bigbtn" id="guide">帶我去下一個任務</button></div>
+  <div class="scene-top"><div class="st-left"><button class="bigbtn alt" id="toHub">← 時光隧道</button><button class="bigbtn alt svl" data-save hidden>存檔下課</button></div><div><h2 id="scTitle"></h2><p class="sub" id="scSub"></p></div><button class="bigbtn" id="guide">帶我去下一個任務</button></div>
   <div class="w3d" id="w3d" hidden><canvas id="wcv" aria-label="3D 史前世界"></canvas><div class="wvig" aria-hidden="true"></div><div id="wLabels"></div><div class="wchap" id="wChap" hidden aria-hidden="true"></div>
     <div class="whelp">拖曳畫面：轉頭看四周　點地面或光柱：走過去　鍵盤 W A S D 或方向鍵也可以走</div>
     <button class="wfull" id="wFull" aria-label="全螢幕">全螢幕</button><button class="wfull wsnd" id="wSnd">音效：開</button>
@@ -714,7 +717,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 <div class="modal" id="nt" hidden role="dialog" aria-modal="true"><div class="mbox" id="ntBox"></div></div>
 <footer><div class="wrap"><p>內容依康軒版五上社會第三單元〈尋根探源話臺灣〉第 1 課編寫。場景與小遊戲是依課本想像圖設計的示意，不是真實比例，也不是遺址現場的實景。</p><p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026 ｜ <a href="nmth-host.html?g=prehistory" style="color:inherit">老師入口</a></p></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/class-live.js?v=7"></script>
+<script src="assets/class-live.js?v=8"></script>
 <script>
 /* 3D immersive worlds for the three eras (three.js r128) */
 window.World=(function(){
@@ -1369,7 +1372,8 @@ function exhibit(id){const t=MUSEUM.tasks.find(t=>t.id===id);task=null;W3.pause(
 const W3=window.World||null;
 let fitBusy=0;function fitW(){const el=$('#w3d');if(!el||el.hidden||document.fullscreenElement||fitBusy)return;const top=el.getBoundingClientRect().top+scrollY,h=Math.max(300,innerHeight-top-10)+'px';if(el.style.getPropertyValue('--wh')===h)return;el.style.setProperty('--wh',h);fitBusy=1;try{dispatchEvent(new Event('resize'));}finally{fitBusy=0;}}
 addEventListener('resize',fitW);addEventListener('orientationchange',()=>setTimeout(fitW,300));$('#wSnd').onclick=()=>$('#btnSound').click();
-function show(id){if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
+function svUI(){const on=!!(window.ClassLive&&ClassLive.sess()&&ClassLive.sess().on);document.querySelectorAll('[data-save]').forEach(b=>b.hidden=!on);}
+function show(id){setTimeout(svUI,0);if(W3&&id!=='vScene')W3.stop();if(id!=='vScene')Amb.set(null);document.body.classList.toggle('inworld',id==='vScene'&&!!W3);setTimeout(fitW,0);document.body.classList.toggle('playing',id!=='vStart');['vStart','vHub','vScene','vDig','vCert'].forEach(v=>$('#'+v).hidden=v!==id);window.scrollTo({top:0});}
 function hub(){show('vHub');$('#hubHi').textContent=`${S.name}，要去哪個時代？`;{const b=$('#clAsk2');if(b)b.hidden=!window.ClassLive||!!ClassLive.sess();}
   const h=ERAS.map((e,i)=>{const open=i===0||eraDone(ERAS[i-1]),d=eraDone(e);return `<button class="node" style="--c:${e.c}" data-e="${e.k}" ${open?'':'disabled'}><span class="ago">${e.ago}</span><b>${e.n}</b><span class="site">${e.site}</span>${d?`<span class="bdg">${e.badge}</span>`:''}<span class="st" aria-label="${eraStars(e)} 顆星">${e.tasks.map(t=>S.st[t.id]?'★':'☆').join('')}</span><span class="lk">${open?(d?`完成！共 ${eraStars(e)} / 9 顆星，可以再挑戰`:'進入這個時代 →'):'先完成上一個時代'}</span></button>`;}).join('');
   const dOpen=allDone();$('#hub').innerHTML=h+`<button class="node" style="--c:#882255" data-e="dig" ${dOpen?'':'disabled'}><span class="ago">現在</span><b>換你當考古學家</b><span class="site">把你留下的東西挖出來</span>${S.dig?'<span class="bdg">小小考古學家</span>':''}<span class="st">${S.dig?'★':'☆'}</span><span class="lk">${dOpen?(S.dig?'完成！去領證書 →':'開始挖掘 →'):'先完成三個時代'}</span></button>`+(W3&&window.G3?`<button class="node" style="--c:#5E5E5E" data-e="museum"><span class="ago">隨時開放</span><b>我的史前博物館</b><span class="site">走進 3D 展場，看你親手做的東西</span><span class="st">${total()?Object.keys(S.st).length+' / 9 件展品':'還沒有展品'}</span><span class="lk">進去參觀 →</span></button>`:'');}
@@ -1637,11 +1641,13 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
    TID.forEach((id,i)=>{const n=+st[i]||0;if(n>(S.st[id]||0))S.st[id]=n;if(n)S.known[id]=1;if((+y[i]||0)>(S.tries[id]||0))S.tries[id]=+y[i];});
    ['old','neo','iron','dig','museum'].forEach((k,i)=>{if((+tm[i]||0)>(S.tm[k]||0))S.tm[k]=+tm[i];});
    if(j.dig)S.dig=1;S.qw=Math.max(S.qw||0,+j.qw||0);S.cf=Math.max(S.cf||0,+j.cf||0);try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
-  onStart:se=>{if(!S.name)S.name=se.seat+' 號';save();sfx.win();hub();},
   who:()=>S.name,
   onNotMe:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');$('#nm').focus();},
+  onLeft:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');svUI();},
+  onStart:se=>{svUI();if(!S.name)S.name=se.seat+' 號';save();sfx.win();hub();},
   onSolo:()=>{if(!S.name)S.name=($('#nm').value||'').trim().slice(0,10)||'探險家';save();hub();}});}
 if($('#clAsk2'))$('#clAsk2').onclick=()=>ClassLive.ask();
+document.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{if(!$('#gm').hidden)closeGm();ClassLive.saveAndLeave();});
 if(clState==='join'&&!ClassLive.sess())$('#nm').value='';
 if(clState!=='confirm'&&clState!=='join'&&S.name&&Object.keys(S.st).length)hub();
 window.__tm={cr:{jadeTrip,pick,wbOpen,skOpen,canDo},museum,exhibit,S,G,finish:n=>finishTask(n),openTask,play,scene,hub,dig,cert};

@@ -487,12 +487,13 @@ select.nh-in{min-width:0}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
 /* 任務控制台 — the teacher's page for class play. Firestore: nmth_rooms/{sid} (teacher writes), nmth_live/{sid_seat} (tablets write).
    One page serves every game on the site; each game has its own table layout below. */
 (()=>{
-const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
+const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',databaseURL:'https://orienteering-30fdc-default-rtdb.asia-southeast1.firebasedatabase.app',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
 const SITE='https://geo.twranger.com/';
 const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mmss=t=>`${Math.floor(t/60)} 分 ${String(Math.round(t%60)).padStart(2,'0')} 秒`;
@@ -524,6 +525,20 @@ const GAMES={
 const auth$=$('#nhAuth'),room$=$('#nhRoom'),list$=$('#nhList');
 if(!window.firebase){auth$.innerHTML='<p class="nh-msg err">連不上 Firebase。請確認網路，再重新整理。</p>';return;}
 firebase.initializeApp(FB);const auth=firebase.auth(),db=firebase.firestore(),TS=()=>firebase.firestore.FieldValue.serverTimestamp();
+/* Realtime Database: live copy of rooms and progress, and the fallback when Firestore is out of quota */
+const rt=firebase.database?firebase.database():null,RTS=()=>firebase.database.ServerValue.TIMESTAMP;
+const ekey=e=>String(e).toLowerCase().replace(/\./g,',');
+const msv=v=>!v||!v.at?0:typeof v.at==='number'?v.at:v.at.seconds?v.at.seconds*1000:0;
+const msR=v=>!v?0:(v.up?(typeof v.up==='number'?v.up:v.up.seconds?v.up.seconds*1000:0):0)||msv(v);
+const newer=(a,b)=>!a?b:!b?a:msv(b)>msv(a)?b:a,newerR=(a,b)=>!a?b:!b?a:msR(b)>msR(a)?b:a;
+const rtOk=p=>p.then(()=>true,()=>false);
+function roomMirror(sid,v){if(!rt)return Promise.resolve(false);return rtOk(rt.ref('cl_rooms/'+sid).set({code:v.code||'',label:v.label||'',game:v.game||'nmth',ph:v.ph||'lobby',owner:v.owner||user.uid,moves:v.moves||null,short:v.short||null,at:msv(v)||Date.now(),up:RTS()}));}
+/* change a room in both stores; succeeds if either took it */
+function roomUpd(sid,upd){const f=Object.assign({},upd,{up:TS()}),r={up:RTS()};
+ Object.keys(upd).forEach(k=>{const v=upd[k];if(k==='startedAt'||k==='endedAt'||k==='reopenedAt')return;r[k.replace(/\./g,'/')]=(v&&typeof v==='object'&&v.isEqual)?null:v;});
+ return Promise.all([rtOk(db.collection('nmth_rooms').doc(sid).update(f)),rt?rtOk(rt.ref('cl_rooms/'+sid).update(r)):Promise.resolve(false)]).then(([a,b])=>{if(!a&&!b)throw new Error('兩個資料庫都寫不進去');return a;});}
+function liveSet(sid,seat,v){const a=rtOk(db.collection('nmth_live').doc(sid+'_'+seat).set(Object.assign({},v,{seat,at:TS()}))),b=rt?rtOk(rt.ref('cl_live/'+sid+'/'+seat).set(Object.assign({},v,{seat,at:RTS()}))):Promise.resolve(false);return Promise.all([a,b]);}
+function liveDel(sid,seat){return Promise.all([rtOk(db.collection('nmth_live').doc(sid+'_'+seat).delete()),rt?rtOk(rt.ref('cl_live/'+sid+'/'+seat).remove()):Promise.resolve(false)]);}
 const G0=(()=>{try{const g=new URLSearchParams(location.search).get('g');return GAMES[g]?g:'';}catch(e){return '';}})();
 const RULES=`    // ── 全班一起玩（geo.twranger.com）──
     function isClassTeacher() {
@@ -556,7 +571,7 @@ function shorten(url,names){return new Promise(done=>{let tries=names.concat([''
    window[cb]=r=>end(r&&r.shorturl?String(r.shorturl).replace(/^https?:\/\//,''):'');sc.onerror=()=>end('');setTimeout(()=>end(''),6000);
    sc.src='https://is.gd/create.php?format=json&callback='+cb+'&url='+encodeURIComponent(url)+(name?'&shorturl='+encodeURIComponent(name):'');document.head.appendChild(sc);};go();});}
 function makeShort(sid,g,code){const L='abcdefghjkmnpqrstuvwxyz',r=()=>L[Math.floor(Math.random()*L.length)];
- return shorten(SITE+g.page+'?k='+sid,['hd'+code,'hd'+code+r(),'hd'+code+r()]).then(v=>{if(v)db.collection('nmth_rooms').doc(sid).update({short:v}).catch(()=>{});return v;});}
+ return shorten(SITE+g.page+'?k='+sid,['hd'+code,'hd'+code+r(),'hd'+code+r()]).then(v=>{if(v)roomUpd(sid,{short:v}).catch(()=>{});return v;});}
 let user=null,cur=null,unsub=[],rows=[],sessions=[],isAdmin=false,teachers=[];
 const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
 const GM=()=>GAMES[cur&&cur.game]||GAMES.nmth;
@@ -566,9 +581,11 @@ auth.onAuthStateChanged(u=>{user=u;off();cur=null;isAdmin=false;room$.hidden=lis
   $('#nhIn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$('#nhErr').textContent=e.code==='auth/unauthorized-domain'?'這個網域還沒加進 Firebase 的登入網域。請到 Firebase 主控台 → Authentication → Settings → Authorized domains，加入 geo.twranger.com。':'登入失敗：'+e.message;});return;}
  auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b><span id="nhRole"></span></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
  $('#nhOut').onclick=()=>auth.signOut();
- db.collection('nmth_teachers').doc('_admin').set({at:TS()}).then(()=>{isAdmin=true;$('#nhRole').textContent='（管理者）';loadList();})
+ db.collection('nmth_teachers').doc('_admin').set({at:TS()}).then(()=>{isAdmin=true;$('#nhRole').textContent='（管理者）';loadList();syncTeachers();})
   .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists){loadList();return;}throw new Error('no');})
   .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">這個帳號還不在老師名單裡。</p><p>請把你的 email <b>${esc(u.email||'')}</b> 告訴管理者，加進名單後重新整理這一頁就能用。換了帳號的話，先按右上角「登出」。</p>`;}));});
+/* the Realtime Database rules check the teacher list there, so it mirrors the Firestore list */
+function syncTeachers(){if(!rt)return;db.collection('nmth_teachers').get().then(q=>{const m={};q.docs.forEach(d=>{if(d.id[0]!=='_')m[ekey(d.id)]=true;});return rt.ref('cl_teachers').set(m);}).catch(()=>{});}
 function teacherPanel(){if(!isAdmin)return '';
  return `<details class="nh-teach" style="margin-top:26px"><summary class="nh-big" style="cursor:pointer">老師名單（只有管理者看得到）</summary>
   <p>名單上的老師用自己的 Google 帳號登入這一頁，就能發任務給自己的班級。每位老師只看得到、只管得到自己發的任務，你看得到全部。</p>
@@ -578,17 +595,19 @@ function teacherPanel(){if(!isAdmin)return '';
 function teacherBind(){if(!isAdmin)return;
  const draw=()=>db.collection('nmth_teachers').get().then(q=>{teachers=q.docs.filter(d=>d.id!=='_admin').map(d=>Object.assign({email:d.id},d.data()));
   $('#nhTList').innerHTML=teachers.length?teachers.map(t=>`<li><span><b>${esc(t.name||'')}</b>　${esc(t.email)}</span><button class="nh-btn alt" data-rm="${esc(t.email)}">移除</button></li>`).join(''):'<li>還沒有其他老師。</li>';
-  $$('#nhTList [data-rm]').forEach(b=>b.onclick=()=>{if(!confirm('把 '+b.dataset.rm+' 從老師名單移除？他發過的任務和紀錄會留著。'))return;db.collection('nmth_teachers').doc(b.dataset.rm).delete().then(draw);});});
+  $$('#nhTList [data-rm]').forEach(b=>b.onclick=()=>{if(!confirm('把 '+b.dataset.rm+' 從老師名單移除？他發過的任務和紀錄會留著。'))return;db.collection('nmth_teachers').doc(b.dataset.rm).delete().then(()=>{if(rt)rt.ref('cl_teachers/'+ekey(b.dataset.rm)).remove().catch(()=>{});draw();});});});
  draw();
  $('#nhTAdd').onclick=()=>{const m=$('#nhTMail').value.trim().toLowerCase(),nm=$('#nhTName').value.trim().slice(0,20);
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='email 的格式不對。';return;}
-  db.collection('nmth_teachers').doc(m).set({name:nm,at:TS()}).then(()=>{$('#nhTMsg').className='nh-msg ok';$('#nhTMsg').textContent='已加入：'+m;$('#nhTMail').value='';$('#nhTName').value='';draw();})
+  db.collection('nmth_teachers').doc(m).set({name:nm,at:TS()}).then(()=>{if(rt)rt.ref('cl_teachers/'+ekey(m)).set(true).catch(()=>{});$('#nhTMsg').className='nh-msg ok';$('#nhTMsg').textContent='已加入：'+m;$('#nhTMail').value='';$('#nhTName').value='';draw();})
    .catch(e=>{$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='加不進去：'+e.code;});};}
 const $$=s=>[...document.querySelectorAll(s)];
 function newCode(){const used=new Set(sessions.map(s=>s.code)),live=new Set(sessions.filter(s=>s.ph!=='closed').map(s=>s.code));let code,k=0;
  do{code=String(1000+Math.floor(Math.random()*9000));k++;}while((k<300?used.has(code):live.has(code)));return code;}
 function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
- db.collection('nmth_rooms').get().then(q=>{sessions=q.docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data())).sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0));
+ const A=db.collection('nmth_rooms').get().then(q=>q.docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data())),()=>null),Bq=rt?rt.ref('cl_rooms').once('value').then(s=>{const v=s.val()||{};return Object.keys(v).map(k=>Object.assign({sid:k},v[k]));},()=>null):Promise.resolve(null);
+ Promise.all([A,Bq]).then(([a,b])=>{if(!a&&!b)throw new Error('兩個資料庫都讀不到');const m={};(a||[]).concat(b||[]).forEach(r=>{m[r.sid]=newerR(m[r.sid],r);});
+  sessions=Object.values(m).sort((x,y)=>msv(y)-msv(x));
   const mine=isAdmin?sessions:sessions.filter(s=>s.owner===user.uid);
   const day=s=>s.at?new Date(s.at.seconds*1000).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   list$.innerHTML=`<p class="nh-big">發新任務</p><div class="nh-row"><select class="nh-in" id="nhGame" aria-label="哪一個遊戲">${Object.keys(GAMES).map(k=>`<option value="${k}" ${k===(G0||'prehistory')?'selected':''}>${GAMES[k].n}</option>`).join('')}</select>
@@ -599,22 +618,30 @@ function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
    ${teacherPanel()}`;
   $('#nhNew').onclick=()=>{const label=$('#nhLabel').value.trim();if(!label){$('#nhLabel').focus();return;}
    const code=newCode(),sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4),game=$('#nhGame').value;
-   db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',owner:user.uid,ownerEmail:mail(),at:TS()}).then(()=>{open(sid);makeShort(sid,GAMES[game],code);})
+   Promise.all([rtOk(db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',owner:user.uid,ownerEmail:mail(),at:TS(),up:TS()})),roomMirror(sid,{code,label,game,ph:'lobby',owner:user.uid})]).then(([a,b])=>{if(!a&&!b)throw {code:'兩個資料庫都寫不進去'};open(sid);makeShort(sid,GAMES[game],code);})
     .catch(e=>alert('發不出任務：'+e.code));};
   $('#nhLabel').onkeydown=e=>{if(e.key==='Enter')$('#nhNew').click();};
   list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));teacherBind();}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
 /* reopen an ended task: same code if nobody else is using it, seats released ('~') so pupils can pick them again on any tablet and get their progress back */
 function reopen(){const sid=cur.sid,g=GM();
- db.collection('nmth_rooms').get().then(q=>{const clash=q.docs.some(d=>d.id!==sid&&d.data().ph!=='closed'&&d.data().code===cur.code);sessions=q.docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data()));
+ db.collection('nmth_rooms').get().then(q=>q.docs,()=>[]).then(docs=>{const clash=docs.some(d=>d.id!==sid&&d.data().ph!=='closed'&&d.data().code===cur.code);if(docs.length)sessions=docs.filter(d=>d.id[0]!=='_').map(d=>Object.assign({sid:d.id},d.data()));
   const code=clash?newCode():cur.code,upd={ph:'lobby',code,reopenedAt:TS()};if(clash)upd.short=firebase.firestore.FieldValue.delete();if(!cur.owner&&!isAdmin)upd.owner=user.uid;
-  return db.collection('nmth_rooms').doc(sid).update(upd).then(()=>db.collection('nmth_live').where('sid','==',sid).get()).then(lq=>Promise.all(lq.docs.filter(d=>d.data().cid).map(d=>d.ref.update({cid:'~'+String(d.data().cid).replace(/^~/,'').slice(0,12)}))))
+  return roomUpd(sid,upd).then(()=>Promise.all(raw.filter(v=>v.cid&&v.cid[0]!=='~').map(v=>liveSet(sid,v.seat,Object.assign({},stripAt(v),{cid:'~'+String(v.cid).slice(0,12)})))))
    .then(()=>{if(clash||!cur.short)makeShort(sid,g,code);});}).catch(e=>alert('開不起來：'+(e.code||e.message)));}
+const stripAt=v=>{const o=Object.assign({},v);delete o.at;return o;};
 let raw=[];
+/* the room and its seats come from both stores; for each, the newest copy wins */
 function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur={sid,ph:'lobby',code:'',label:'',game:'nmth'};
- unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!d.exists){back();return;}Object.assign(cur,{game:'nmth'},d.data());calc();draw();}));
- unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{raw=[];q.forEach(d=>{const v=d.data();if(v.cid)raw.push(v);});calc();draw();}));
+ let rA=null,rB=null,fsSeen=false,rbSeen=!rt,lA={},lB={};
+ const roomEmit=()=>{const r=newerR(rA,rB);if(!r){if(fsSeen&&rbSeen)back();return;}Object.assign(cur,{game:'nmth'},r);calc();draw();};
+ const liveEmit=()=>{const m={};new Set([...Object.keys(lA),...Object.keys(lB)]).forEach(k=>{const v=newer(lA[k],lB[k]);if(v&&v.cid)m[k]=v;});raw=Object.values(m);calc();draw();};
+ unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{fsSeen=true;rA=d.exists?d.data():null;if(!d.exists&&!rbSeen)return;
+  if(d.exists&&rt&&!rB)rt.ref('cl_rooms/'+sid).once('value').then(s=>{if(!s.exists())roomMirror(sid,d.data());}).catch(()=>{});roomEmit();},()=>{fsSeen=true;roomEmit();}));
+ unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{lA={};q.forEach(d=>{const v=d.data();lA[v.seat]=v;});liveEmit();},()=>{}));
+ if(rt){const r1=rt.ref('cl_rooms/'+sid),h1=r1.on('value',s=>{rbSeen=true;rB=s.val();roomEmit();},()=>{rbSeen=true;roomEmit();});unsub.push(()=>r1.off('value',h1));
+  const r2=rt.ref('cl_live/'+sid),h2=r2.on('value',s=>{lB={};const v=s.val()||{};Object.keys(v).forEach(k=>{if(v[k])lB[v[k].seat||k]=v[k];});liveEmit();},()=>{});unsub.push(()=>r2.off('value',h2));}
  window.scrollTo(0,0);}
-function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
+function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
 function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,back=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
@@ -632,23 +659,21 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
   ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
  room$.innerHTML=h;
  const B=(id,fn)=>{const b=$(id);if(b)b.onclick=fn;};
- B('#nhStart',()=>db.collection('nmth_rooms').doc(cur.sid).update({ph:'play',startedAt:TS()}));
- B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))db.collection('nmth_rooms').doc(cur.sid).update({ph:'closed',endedAt:TS()});});
+ B('#nhStart',()=>roomUpd(cur.sid,{ph:'play',startedAt:TS()}).catch(e=>alert(e.message)));
+ B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))roomUpd(cur.sid,{ph:'closed',endedAt:TS()}).catch(e=>alert(e.message));});
  B('#nhBack',back);B('#nhCsv',csv);B('#nhReopen',()=>{const b=$('#nhReopen');b.disabled=true;b.textContent='開啟中……';reopen();});
  B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
- B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete()))).then(()=>db.collection('nmth_rooms').doc(sid).delete());});
+ B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete())),()=>0).then(()=>rt&&rt.ref('cl_live/'+sid).remove().catch(()=>{})).then(()=>rt&&rt.ref('cl_rooms/'+sid).remove().catch(()=>{})).then(()=>db.collection('nmth_rooms').doc(sid).delete()).catch(e=>alert('刪不掉：'+(e.code||e.message)));});
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>fixSeat(+b.dataset.rel));}
 /* move a pupil to the right seat: the tablet follows the change (rooms.moves[cid]) and keeps sending to the new seat; progress moves with it */
 function fixSeat(from){const g=GM(),r=rows.find(x=>x.seat===from);if(!r)return;
  const ans=prompt(g.follow?`${from} 號要改成幾號？\n（輸入 0 是把這個座號空出來，讓那台平板重新選）`:`把 ${from} 號空出來，讓那台平板重新選？輸入 0 確定。`,'');if(ans==null)return;const to=parseInt(ans,10);
- if(to===0){db.collection('nmth_live').doc(cur.sid+'_'+from).delete();return;}
+ if(to===0){liveDel(cur.sid,from);return;}
  if(!g.follow||!(to>=1&&to<=40)||to===from){if(ans.trim())alert('座號要是 1 到 40 的數字。');return;}
  const other=raw.find(v=>v.seat===to&&String(v.cid)[0]!=='~'&&!(cur.moves&&cur.moves[v.cid]&&+cur.moves[v.cid]!==to));
- if(other&&!(other.at&&other.at.seconds&&Date.now()/1000-other.at.seconds>1200)){alert(`${to} 號現在有別台平板在用。請先把那一位改到正確的座號，或輸入 0 把 ${to} 號空出來。`);return;}
- const ref=db.collection('nmth_live').doc(cur.sid+'_'+from);
- ref.get().then(d=>{if(!d.exists)return;const v=d.data();const up={};up['moves.'+v.cid]=to;
-  return db.collection('nmth_live').doc(cur.sid+'_'+to).set(Object.assign({},v,{seat:to,at:TS()}))
-   .then(()=>db.collection('nmth_rooms').doc(cur.sid).update(up)).then(()=>ref.delete());}).catch(e=>alert('改不了：'+(e.code||e.message)));}
+ if(other&&!(msv(other)&&Date.now()-msv(other)>1200000)){alert(`${to} 號現在有別台平板在用。請先把那一位改到正確的座號，或輸入 0 把 ${to} 號空出來。`);return;}
+ const v=raw.find(x=>x.seat===from);if(!v)return;const up={};up['moves.'+v.cid]=to;
+ liveSet(cur.sid,to,stripAt(v)).then(()=>roomUpd(cur.sid,up)).then(()=>liveDel(cur.sid,from)).catch(e=>alert('改不了：'+(e.code||e.message)));}
 function csv(){const g=GM(),q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];
  const t='﻿'+[head,...rows.map(r=>[cur.label,g.n,r.seat,g.where(r.cur),...g.csvRow(r),r.at?new Date(r.at).toLocaleString('zh-TW'):'',r.flag])].map(a=>a.map(q).join(',')).join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=`${g.n}_${cur.label}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}

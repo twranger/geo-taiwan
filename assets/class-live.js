@@ -1,35 +1,64 @@
 /* Class play, shared by the games on this site.
    The teacher starts a task on nmth-host.html. A tablet enters the 4-digit task code (or opens a ?k= link),
-   picks a seat number, waits in the lobby, and starts when the teacher does. While playing, the game's own
-   snapshot is written to Firestore (nmth_live/{sid}_{seat}). Only the seat number is sent, never a name.
-   Uses the school's existing Firebase project (same one as the orienteering game). */
+   picks a seat number, waits in the lobby, and starts when the teacher does. Only the seat number is sent, never a name.
+   Two stores in the school's Firebase project, each a backup for the other:
+   - Realtime Database (cl_rooms/{sid}, cl_live/{sid}/{seat}): live progress, every few seconds. Billed by traffic, so cheap.
+   - Firestore (nmth_rooms/{sid}, nmth_live/{sid}_{seat}): the record, written when a task is finished, every 2 minutes,
+     and when the pupil saves and leaves. Billed per write, so kept sparse.
+   Reads merge both and keep whichever copy is newer. */
 window.ClassLive=(function(){
 'use strict';
-const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
+const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',databaseURL:'https://orienteering-30fdc-default-rtdb.asia-southeast1.firebasedatabase.app',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
 const GAMES={nmth:{n:'臺史博：閉館之後',page:'nmth-quest.html'},prehistory:{n:'史前生存大冒險',page:'prehistory.html'}};
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KC=(()=>{try{const c=new URLSearchParams(location.search).get('c');return c&&/^\d{4}$/.test(c)?c:'';}catch(e){return '';}})();
-let seatUn=null,O=null,sess=null,db=null,loading=null,unsub=[],tm=0,box=null,cid='';
-try{cid=localStorage.getItem('hhl-nmth-cid')||'';if(!cid){cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);localStorage.setItem('hhl-nmth-cid',cid);}}catch(e){cid='x'+Math.random().toString(36).slice(2,10);}
 const KQ=(()=>{try{const k=new URLSearchParams(location.search).get('k');return k&&/^[a-z0-9]{4,20}$/.test(k)?k:'';}catch(e){return '';}})();
+let seatUn=[],O=null,sess=null,db=null,rt=null,loading=null,unsub=[],tm=0,box=null,cid='';
+try{cid=localStorage.getItem('hhl-nmth-cid')||'';if(!cid){cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);localStorage.setItem('hhl-nmth-cid',cid);}}catch(e){cid='x'+Math.random().toString(36).slice(2,10);}
 const keep=()=>{try{sess?localStorage.setItem(O.store,JSON.stringify(sess)):localStorage.removeItem(O.store);}catch(e){}};
-const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
-const load=()=>loading||(loading=new Promise((ok,no)=>{const need=['app','firestore'].map(n=>`https://www.gstatic.com/firebasejs/10.12.2/firebase-${n}-compat.js`);
-  if(window.firebase&&firebase.firestore)need.length=0;
-  const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();ok(db);}catch(e){loading=null;no(e);}return;}
+const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];seatUn=[];};
+const load=()=>loading||(loading=new Promise((ok,no)=>{const need=['app','firestore','database'].filter(n=>!(window.firebase&&(n==='app'||firebase[n]))).map(n=>`https://www.gstatic.com/firebasejs/10.12.2/firebase-${n}-compat.js`);
+  const next=()=>{const u=need.shift();if(!u){try{if(!firebase.apps.length)firebase.initializeApp(FB);db=firebase.firestore();try{rt=firebase.database();}catch(e){rt=null;}ok(db);}catch(e){loading=null;no(e);}return;}
    const sc=document.createElement('script');sc.src=u;sc.onload=next;sc.onerror=()=>{loading=null;no(new Error('net'));};document.head.appendChild(sc);};next();}));
-let last=0,pend=false,fails=0;
-function push(){clearTimeout(tm);if(!db||!sess||!sess.seat)return;last=Date.now();let v;try{v=O.snapshot()||{};}catch(e){return;}
-  const d=typeof v.d==='string'?v.d:JSON.stringify(v.d||[]);
-  db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set({sid:sess.sid,seat:sess.seat,cid,mode:String(v.mode||'c').slice(0,4),cur:String(sess.on?(v.cur||''):'lobby').slice(0,30),d:d.slice(0,1900),
-   done:v.done|0,stars:v.stars|0,miss:v.miss|0,t:v.t|0,notes:v.notes|0,at:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{pend=false;fails=0;}).catch(()=>{pend=true;fails++;});}
-/* a task finished: send now, whatever the 15-second limit says */
-const now=()=>{if(sess&&sess.seat&&db)push();};
-/* at most one write every 15 s per tablet, so a whole class stays well inside the free Firestore quota */
-const touch=()=>{if(!sess||!sess.seat)return;clearTimeout(tm);tm=setTimeout(push,Math.max(1800,15000-(Date.now()-last)));};
-setInterval(()=>{if(sess&&sess.seat&&sess.on&&!document.hidden&&db&&(Date.now()-last>40000||(pend&&Date.now()-last>Math.min(600000,30000*fails))))push();},15000);
-addEventListener('online',()=>{if(pend)push();});
-addEventListener('pagehide',()=>{if(sess&&sess.seat&&sess.on&&db)push();});
+/* time of a record in ms, from either store */
+const ms=v=>!v||!v.at?0:typeof v.at==='number'?v.at:v.at.seconds?v.at.seconds*1000:0;
+const newer=(a,b)=>!a?b:!b?a:ms(b)>ms(a)?b:a;
+/* rooms keep their creation time in at; up is the time of the last change */
+const msR=v=>!v?0:(v.up?ms({at:v.up}):0)||ms(v);const newerR=(a,b)=>!a?b:!b?a:msR(b)>msR(a)?b:a;
+/* ---- sending ---- */
+let lastRt=0,lastFs=0,pendRt=false,pendFs=false,failRt=0,failFs=0;
+function rec(){let v;try{v=O.snapshot()||{};}catch(e){return null;}const d=typeof v.d==='string'?v.d:JSON.stringify(v.d||[]);
+  return {sid:sess.sid,seat:sess.seat,cid,mode:String(v.mode||'c').slice(0,4),cur:String(sess.on?(v.cur||''):'lobby').slice(0,30),d:d.slice(0,1900),done:v.done|0,stars:v.stars|0,miss:v.miss|0,t:v.t|0,notes:v.notes|0};}
+function sendRt(r){if(!rt)return Promise.reject(new Error('no rtdb'));lastRt=Date.now();
+  return rt.ref('cl_live/'+sess.sid+'/'+sess.seat).set(Object.assign({},r,{at:firebase.database.ServerValue.TIMESTAMP})).then(()=>{pendRt=false;failRt=0;},e=>{pendRt=true;failRt++;throw e;});}
+function sendFs(r){if(!db)return Promise.reject(new Error('no firestore'));lastFs=Date.now();
+  return db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set(Object.assign({},r,{at:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>{pendFs=false;failFs=0;},e=>{pendFs=true;failFs++;throw e;});}
+/* both stores now; resolves if at least one of them took it */
+function pushBoth(){clearTimeout(tm);if(!db||!sess||!sess.seat)return Promise.reject(new Error('not ready'));const r=rec();if(!r)return Promise.reject(new Error('no data'));
+  const a=sendRt(r).then(()=>1,()=>0),b=sendFs(r).then(()=>1,()=>0);return Promise.all([a,b]).then(([x,y])=>{if(!x&&!y)throw new Error('both failed');return {rt:!!x,fs:!!y};});}
+/* the cheap store every few seconds; the record only when it has been a while (or the cheap one is failing) */
+function push(){clearTimeout(tm);if(!db||!sess||!sess.seat)return;const r=rec();if(!r)return;
+  const fsDue=Date.now()-lastFs>120000||(pendRt&&failRt>=2);
+  sendRt(r).catch(()=>{if(!fsDue)sendFs(r).catch(()=>{});});if(fsDue)sendFs(r).catch(()=>{});}
+const now=()=>{if(sess&&sess.seat&&db)pushBoth().catch(()=>{});};
+const touch=()=>{if(!sess||!sess.seat)return;clearTimeout(tm);tm=setTimeout(push,Math.max(1500,5000-(Date.now()-lastRt)));};
+setInterval(()=>{if(!(sess&&sess.seat&&sess.on&&db)||document.hidden)return;const t=Date.now();
+  if(t-lastRt>30000||(pendRt&&t-lastRt>Math.min(300000,20000*failRt)))push();
+  if(pendFs&&t-lastFs>Math.min(600000,30000*failFs))sendFs(rec()).catch(()=>{});},10000);
+addEventListener('online',()=>{if(sess&&sess.seat&&(pendRt||pendFs))pushBoth().catch(()=>{});});
+addEventListener('pagehide',()=>{if(sess&&sess.seat&&sess.on&&db)pushBoth().catch(()=>{});});
+/* ---- reading: Firestore and Realtime Database together, newest copy wins ---- */
+/* a room counts as gone only when both stores have answered and neither has it (one store may be out of quota) */
+function roomWatch(sid,fn){let a=null,b=null,aS=false,bS=!rt;const emit=()=>{const r=newerR(a,b);if(r){fn(r,true);return;}if(aS&&bS)fn(null,true);};
+  unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{aS=true;a=d.exists?d.data():null;emit();},()=>{aS=true;a=null;emit();}));
+  if(rt){const ref=rt.ref('cl_rooms/'+sid),h=ref.on('value',s=>{bS=true;b=s.val();emit();},()=>{bS=true;b=null;emit();});unsub.push(()=>ref.off('value',h));}}
+function seatsWatch(sid,fn,list){let A={},B={};const emit=()=>{const m={};new Set([...Object.keys(A),...Object.keys(B)]).forEach(k=>{m[k]=newer(A[k],B[k]);});fn(m);};
+  const u1=db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{A={};q.forEach(d=>{const v=d.data();A[v.seat]=v;});emit();},()=>{});(list||unsub).push(u1);unsub.includes(u1)||unsub.push(u1);
+  if(rt){const ref=rt.ref('cl_live/'+sid),h=ref.on('value',s=>{B={};const v=s.val()||{};Object.keys(v).forEach(k=>{if(v[k])B[v[k].seat||k]=v[k];});emit();},()=>{});const u2=()=>ref.off('value',h);(list||unsub).push(u2);unsub.includes(u2)||unsub.push(u2);}}
+function findRooms(q){const fs=(q.sid?db.collection('nmth_rooms').doc(q.sid).get().then(d=>d.exists?[Object.assign({sid:d.id},d.data())]:[]):db.collection('nmth_rooms').where('code','==',q.code).get().then(r=>r.docs.map(d=>Object.assign({sid:d.id},d.data()))));
+  const rd=!rt?Promise.resolve([]):(q.sid?rt.ref('cl_rooms/'+q.sid).once('value').then(s=>s.val()?[Object.assign({sid:q.sid},s.val())]:[]):rt.ref('cl_rooms').orderByChild('code').equalTo(q.code).once('value').then(s=>{const v=s.val()||{};return Object.keys(v).map(k=>Object.assign({sid:k},v[k]));}));
+  return Promise.all([fs.then(x=>({ok:1,x}),()=>({ok:0,x:[]})),rd.then(x=>({ok:1,x}),()=>({ok:0,x:[]}))]).then(([a,b])=>{if(!a.ok&&!b.ok)throw new Error('net');
+   const m={};a.x.concat(b.x).forEach(r=>{m[r.sid]=newerR(m[r.sid],r);});return Object.values(m);});}
 /* ---- overlay ---- */
 const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.92);display:grid;place-items:center;padding:18px;overflow:auto;font-family:"Noto Sans TC",system-ui,sans-serif}
 .cl-box{width:min(560px,100%);background:#f6f1e6;color:#182226;border-radius:14px;padding:26px 24px 22px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
@@ -40,7 +69,7 @@ const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.
 .cl-btn.alt{background:transparent;color:#182226}
 .cl-btn.cl-wide{flex:1;font-size:19px;min-height:54px}
 .cl-solo{margin:18px 0 0;font-size:15px;color:#5a6467;text-align:center}.cl-solo button{background:none;border:0;padding:6px 4px;font:inherit;color:#33464d;text-decoration:underline;cursor:pointer}
-.cl-err{color:#a8371f;font-weight:700}
+.cl-err{color:#a8371f;font-weight:700}.cl-ok{color:#1f6b4c;font-weight:700}
 .cl-seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;margin-top:14px}
 .cl-seats button{min-height:54px;font-family:inherit;font-weight:900;font-size:22px;line-height:1;border:2px solid #182226;background:#fff;color:#182226;border-radius:10px;cursor:pointer}
 .cl-seats button:disabled{border-color:#b9b3a4;color:#a09a8c;background:#e2dccd;cursor:default}
@@ -57,37 +86,58 @@ function ask(msg){off();ui(`<h2>輸入任務代碼</h2><p class="cl-sub">看老�
   const go=()=>{const v=box.querySelector('#clCode').value.replace(/\D/g,'');if(v.length!==4){ask('任務代碼是 4 個數字。');return;}join({code:v});};
   box.querySelector('#clGo').onclick=go;box.querySelector('#clCode').onkeydown=e=>{if(e.key==='Enter')go();};box.querySelector('#clNo').onclick=()=>{hide();try{O.onSolo&&O.onSolo();}catch(e){}};box.querySelector('#clCode').focus();}
 function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`);
-  load().then(db=>(q.sid?db.collection('nmth_rooms').doc(q.sid).get().then(d=>d.exists?[d]:[]):db.collection('nmth_rooms').where('code','==',q.code).get().then(r=>r.docs)).then(docs=>{
-    const live=docs.map(d=>Object.assign({sid:d.id},d.data())).filter(r=>r.ph!=='closed').sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0))[0];
-    if(!live){ask(docs.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
+  load().then(()=>findRooms(q)).then(rooms=>{
+    const live=rooms.filter(r=>r.ph!=='closed').sort((a,b)=>ms(b)-ms(a))[0];
+    if(!live){ask(rooms.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
     const g=live.game||'nmth';
     if(g!==O.game){const G=GAMES[g]||GAMES.nmth;if(q.link){location.replace(G.page+'?k='+live.sid);return;}ui(`<h2>這個代碼是另一個遊戲的</h2><p>老師發的任務是「${esc(G.n)}」。</p><div class="cl-row"><a class="cl-btn" style="text-decoration:none;display:inline-grid;place-items:center" href="${G.page}?k=${live.sid}">去那個遊戲</a><button class="cl-btn alt" id="clBack">重新輸入</button></div>`);box.querySelector('#clBack').onclick=()=>ask();return;}
     if(!sess||sess.sid!==live.sid){sess={sid:live.sid,code:live.code||'',label:live.label||'',seat:0,on:0};keep();try{O.onJoin&&O.onJoin(sess);}catch(e){}}
-    sess.seat?wait():seat();}))
+    sess.seat?wait():seat();})
    .catch(()=>ask('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
-/* a seat whose cid starts with '~' was released by the teacher when a task was reopened: free to pick, and its progress comes back */
-const idle=v=>!v.at||!v.at.seconds||Date.now()/1000-v.at.seconds>1200;
-function seat(){const sid=sess.sid;let taken={},rec={};
-  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,tk=taken[n]&&taken[n][0]!=='~'&&taken[n]!==cid&&!idle(rec[n]);return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
-   box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,v=rec[n];sess.seat=n;sess.on=0;keep();
+/* a seat whose cid starts with '~' was released by the teacher (reopened task, or a pupil who saved and left);
+   a seat not heard from for 20 minutes is free as well. Picking one of these brings its progress back. */
+const idle=v=>!ms(v)||Date.now()-ms(v)>1200000;
+function seat(){const sid=sess.sid;let all={};
+  const draw=()=>{ui(`<h2>按下你的座號</h2><p class="cl-sub">${esc(sess.label)}　灰色的已經有人選了，按錯請舉手</p><div class="cl-seats">${[...Array(35)].map((_,i)=>{const n=i+1,v=all[n],tk=v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&!idle(v);return `<button data-n="${n}" ${tk?'disabled':''}>${n}</button>`;}).join('')}</div>`);
+   box.querySelectorAll('.cl-seats button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n,v=all[n];sess.seat=n;sess.on=0;keep();
     if(v&&v.d&&v.d!=='[]'&&v.d!=='{}'&&(v.cid===cid||String(v.cid)[0]==='~'||idle(v))){try{O.onRestore&&O.onRestore(v);}catch(e){}}
-    push();wait();});};
-  draw();off();unsub.push(db.collection('nmth_live').where('sid','==',sid).onSnapshot(q=>{taken={};rec={};q.forEach(d=>{const v=d.data();taken[v.seat]=v.cid;rec[v.seat]=v;});if(sess&&!sess.seat)draw();},()=>{}));}
+    pushBoth().catch(()=>{});wait();});};
+  off();draw();seatsWatch(sid,m=>{all=m;if(sess&&!sess.seat)draw();});}
 function wait(quiet){const sid=sess.sid;off();
   if(!quiet){sess.on=0;keep();ui(`<div class="cl-big">${sess.seat}</div><h2 class="cl-c">${sess.seat} 號，你進大廳了</h2><p class="cl-c">看看大螢幕上有沒有你的座號。等老師按開始。</p><div class="cl-row c"><button class="cl-btn alt" id="clRe">選錯座號了</button></div>`);
-   box.querySelector('#clRe').onclick=()=>{const old=sess.seat;sess.seat=0;keep();db.collection('nmth_live').doc(sid+'_'+old).set({sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0,at:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});seat();};}
-  unsub.push(db.collection('nmth_rooms').doc(sid).onSnapshot(d=>{if(!sess)return;const r=d.exists?d.data():{ph:'closed'};
-   if(r.ph==='closed'){const was=sess.on;if(was)push();off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
-   if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();push();if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
-   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();if(seatUn){try{seatUn();}catch(e){}seatUn=null;}try{O.onStart&&O.onStart(sess);}catch(e){}touch();}},()=>{}));
-  if(!sess.on)unsub.push(seatUn=db.collection('nmth_live').doc(sid+'_'+sess.seat).onSnapshot(d=>{if(sess&&sess.seat&&!sess.on&&d.exists&&d.data().cid&&d.data().cid[0]!=='~'&&d.data().cid!==cid){sess.seat=0;keep();seat();}},()=>{}));}
+   box.querySelector('#clRe').onclick=()=>{const old=sess.seat,blank={sid,seat:old,cid:'',mode:'c',cur:'left',d:'[]',done:0,stars:0,miss:0,t:0,notes:0};sess.seat=0;keep();
+    db.collection('nmth_live').doc(sid+'_'+old).set(Object.assign({},blank,{at:firebase.firestore.FieldValue.serverTimestamp()})).catch(()=>{});
+    if(rt)rt.ref('cl_live/'+sid+'/'+old).set(Object.assign({},blank,{at:firebase.database.ServerValue.TIMESTAMP})).catch(()=>{});seat();};}
+  roomWatch(sid,(r,known)=>{if(!sess||!known)return;r=r||{ph:'closed'};
+   if(r.ph==='closed'){const was=sess.on;if(was)pushBoth().catch(()=>{});off();sess=null;keep();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
+   if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();pushBoth().catch(()=>{});if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
+   if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();seatUn.forEach(u=>{try{u();}catch(e){}});seatUn=[];try{O.onStart&&O.onStart(sess);}catch(e){}touch();}});
+  /* someone else took this seat while we wait in the lobby: pick again. Only needed before the start. */
+  if(sess&&!sess.on)seatsWatch(sid,m=>{const v=m[sess&&sess.seat];if(sess&&sess.seat&&!sess.on&&v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&ms(v)>Date.now()-60000){sess.seat=0;keep();seat();}},seatUn);}
 function isItYou(){let nm='';try{nm=O.who&&O.who()||'';}catch(e){}
   ui(`<h2>是你嗎？</h2><p>這台平板上次是<br><b style="font-size:24px">${esc(sess.label)}　${sess.seat} 號　${esc(nm)}</b><br>在玩。</p>
    <div class="cl-row"><button class="cl-btn cl-wide" id="clMe">是我，繼續玩</button></div><div class="cl-row"><button class="cl-btn alt cl-wide" id="clNotMe">不是我</button></div>`);
   box.querySelector('#clMe').onclick=()=>{ui(`<h2>正在連線</h2><p>等一下下。</p>`);load().then(()=>join({sid:sess.sid})).catch(()=>ask('連不上網路，沒辦法接老師的任務。'));};
   box.querySelector('#clNotMe').onclick=()=>{sess=null;keep();hide();try{O.onNotMe&&O.onNotMe();}catch(e){}};}
+/* 存檔下課: send to both stores, wait for at least one to confirm, then hand the tablet back clean.
+   The seat is marked '~' so the same pupil can pick it again on any tablet next time. */
+function saveAndLeave(){if(!sess||!sess.seat){try{O.onLeft&&O.onLeft();}catch(e){}return;}
+  const seatNo=sess.seat,label=sess.label;let nm='';try{nm=O.who&&O.who()||'';}catch(e){}
+  ui(`<h2>存檔中</h2><p>等一下下，不要關掉。</p>`);
+  load().then(()=>{const r=rec();if(!r)throw new Error('no data');r.cid='~'+cid;r.cur='left';
+   const a=rt?rt.ref('cl_live/'+sess.sid+'/'+sess.seat).set(Object.assign({},r,{at:firebase.database.ServerValue.TIMESTAMP})).then(()=>1,()=>0):Promise.resolve(0);
+   const b=db.collection('nmth_live').doc(sess.sid+'_'+sess.seat).set(Object.assign({},r,{at:firebase.firestore.FieldValue.serverTimestamp()})).then(()=>1,()=>0);
+   return Promise.race([Promise.all([a,b]),new Promise(z=>setTimeout(()=>z([0,0]),10000))]);})
+  .then(([x,y])=>{if(!x&&!y)throw new Error('fail');off();sess=null;keep();
+   ui(`<div class="cl-big" style="border-color:#1f6b4c;color:#1f6b4c">${seatNo}</div><h2 class="cl-c">進度存好了</h2>
+    <p class="cl-c">${esc(label)}　${seatNo} 號　${esc(nm)}</p><p class="cl-c">下次上課，打開老師給的網址，<b>選回 ${seatNo} 號</b>，就會接著玩。<br>換一台平板也可以。</p>
+    <div class="cl-row c"><button class="cl-btn" id="clDone">好</button></div>`);
+   box.querySelector('#clDone').onclick=()=>{hide();try{O.onLeft&&O.onLeft();}catch(e){}};})
+  .catch(()=>{ui(`<h2>還沒存到</h2><p class="cl-err">網路好像斷了，進度還沒送到老師那邊。</p><p>進度還留在這台平板上。先不要關機，等網路好了再按一次；或請老師幫忙。</p>
+    <div class="cl-row"><button class="cl-btn cl-wide" id="clAgain">再存一次</button></div><div class="cl-row"><button class="cl-btn alt cl-wide" id="clStay">回去繼續玩</button></div>`);
+   box.querySelector('#clAgain').onclick=saveAndLeave;box.querySelector('#clStay').onclick=hide;});}
 return {
-  /* o: {game, store, snapshot(), who(), onJoin(sess), onRestore(liveDoc), onStart(sess), onSeat(sess), onNotMe(), onClosed(wasPlaying)} */
+  /* o: {game, store, snapshot(), who(), onJoin(sess), onRestore(liveDoc), onStart(sess), onSeat(sess), onNotMe(), onLeft(), onClosed(wasPlaying)} */
   init(o){O=o;try{sess=JSON.parse(localStorage.getItem(o.store)||'null');}catch(e){sess=null;}
    if(KQ&&sess&&sess.sid!==KQ){sess=null;keep();}
    if(!KQ&&KC&&sess&&sess.code!==KC){sess=null;keep();}
@@ -95,5 +145,5 @@ return {
    return sess||KQ||KC?'join':'';},
   /* call after the player has typed a name: join by link, rejoin, or ask for the code */
   begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ,link:1});else if(sess)join({sid:sess.sid});else if(KC)join({code:KC,link:1});else ask();},
-  ask,touch,push,now,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
+  ask,touch,push,now,saveAndLeave,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
 })();
