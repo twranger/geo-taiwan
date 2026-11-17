@@ -783,7 +783,7 @@ function fire(x,z,s=1){const g=new T.Group(),cs=[];[['#D55E00',.6,1.5],['#E69F00
   const sm=[];for(let i=0;i<6;i++){const p=mesh(GEO.sph,new T.MeshBasicMaterial({color:'#d9d9d9',transparent:true,opacity:.3,depthWrite:false}),0,0,0);p.castShadow=false;g.add(p);sm.push([p,i/6]);}
   upd.push((dt,t)=>{cs.forEach((f,i)=>{const k=1+Math.sin(t*(9+i*3)+i)*.18;f.scale.y=[1.5,1.1,.7][i]*k;f.position.y=f.scale.y/2+.1;});L.userData.f=.85+Math.sin(t*13)*.1+Math.sin(t*7.3)*.08;
     sm.forEach(([p,o])=>{const k=(t*.22+o)%1;p.position.set(Math.sin(k*5+o*9)*.5,1.6+k*6,Math.cos(k*4+o*7)*.4);p.scale.setScalar(.3+k*1.1);p.material.opacity=.32*(1-k);});});return g;}
-function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)&&!(START[era]&&Math.hypot(x-START[era][0],z-START[era][1])<9)&&!(HUNTAT[era]&&Math.hypot(x-HUNTAT[era][0],z-HUNTAT[era][1])<12)){put(fn(),x,z);k++;}}}
+function scatter(n,fn,ok){let k=0,guard=0;while(k<n&&guard++<n*40){const x=rnd(-92,92),z=rnd(-92,92),h=Hf(x,z);if(ok(x,z,h)&&!(START[era]&&Math.hypot(x-START[era][0],z-START[era][1])<9)&&!(HUNTS[era]||[]).some(p=>Math.hypot(x-p[0],z-p[1])<12)){put(fn(),x,z);k++;}}}
 const far=(x,z,d)=>spots.every(s=>Math.hypot(s.x-x,s.z-z)>d);
 /* ---- the three worlds ---- */
 const BUILD={
@@ -849,7 +849,14 @@ const ART={
  chop(){const g=new T.Group();const h=part('box',M('#7a4a22'),.07,1.2,.07,0,.62,0);h.rotation.z=.25;g.add(h,part('box',M('#5d6166',{roughness:.4,metalness:.7}),.5,.3,.09,-.38,1.02,0));return g;}};
 const MORD=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],MERA=i=>['old','neo','iron'][Math.floor(i/3)];
 /* where the shared hunt happens (assets/tribe.js); kept clear of trees */
-const HUNTAT={old:[-14,20],neo:[13,-9],iron:[3,24]};
+const HUNTAT={old:[-14,20],neo:[13,-9],iron:[3,24]},HUNTS={};
+/* the 舊石器 grassland gets up to five hunting grounds, so a whole class never queues for one deer.
+   Picked from the terrain only, so every tablet finds the same places. */
+function huntGrounds(e){if(e!=='old')return HUNTAT[e]?[HUNTAT[e]]:[];const base=HUNTAT.old,list=[base],avoid=[...Object.values(SPOT.old),START.old];
+  for(const r of [22,30,38,46])for(let i=0;i<14&&list.length<5;i++){const a=i/14*6.2832+r*.07,x=base[0]+Math.cos(a)*r,z=base[1]+Math.sin(a)*r;if(Math.abs(x)>82||Math.abs(z)>82)continue;
+    const h0=Hf(x,z);let ok=h0>.7;for(let j=0;j<8&&ok;j++){const b=j/8*6.2832,h=Hf(x+Math.cos(b)*8,z+Math.sin(b)*8);if(h<.45||Math.abs(h-h0)>2.2)ok=false;}
+    if(ok&&avoid.every(p=>Math.hypot(x-p[0],z-p[1])>14)&&list.every(p=>Math.hypot(x-p[0],z-p[1])>18))list.push([+x.toFixed(1),+z.toFixed(1)]);}
+  return list;}
 const START={museum:[0,27,0],old:[6,10,1.9],neo:[6,-22,-.2],iron:[2,6,-1.6]},SPOT={museum:Object.fromEntries(MORD.map((id,i)=>[id,[(Math.floor(i/3)-1)*19+[-4.5,0,4.5][i%3],[-3,-7,-3][i%3]]])),old:{food:[17,13],knap:[0,-16],fire:[-30,0]},neo:{farm:[24,0],grind:[-3,-10],pot:[-20,11]},iron:{trade:[13,0],smelt:[-5,-11],chop:[-21,12]}};
 /* day cycle key frames: 0 morning, 1 noon, 2 golden hour, 3 night */
 const TOD=[{top:'#4f9fe0',bot:'#d2ecf8',sun:'#fff1cf',si:.8,am:.42,el:.6,st:0},{top:'#3a8ad6',bot:'#d8f0fa',sun:'#ffffff',si:.9,am:.46,el:1.05,st:0},{top:'#5a67ad',bot:'#ffb170',sun:'#ff9a4d',si:.8,am:.34,el:.2,st:.15},{top:'#070d24',bot:'#1c2a52',sun:'#8ea6ff',si:.28,am:.2,el:.8,st:1}];
@@ -874,7 +881,7 @@ function click(e){const r=cv.getBoundingClientRect(),v=new T.Vector2((e.clientX-
   const hb=ray.intersectObjects(spots.map(s=>s.hit));if(hb.length){const s=spots.find(s=>s.hit===hb[0].object);S.auto={x:s.x,z:s.z,stop:3.2};return;}
   const ht=ray.intersectObject(terrain);if(ht.length){const p=ht[0].point;if(p.y>-.6&&Math.hypot(p.x-S.x,p.z-S.z)<90)S.auto={x:p.x,z:p.z,stop:.6};}}
 function dispose(){if(!scene)return;scene.traverse(o=>{if(o.geometry&&!Object.values(GEO).includes(o.geometry))o.geometry.dispose();});scene=null;upd=[];fires=[];spots=[];res=[];for(const k in MC)delete MC[k];document.getElementById('wLabels').innerHTML='';}
-function start(e,tasks,done,callbacks){if(!R)init();cancelAnimationFrame(raf);dispose();era=e;cb=callbacks||{};Hf=HF[e];scene=new T.Scene();scene.fog=new T.Fog('#d2ecf8',70,260);
+function start(e,tasks,done,callbacks){if(!R)init();cancelAnimationFrame(raf);dispose();era=e;cb=callbacks||{};Hf=HF[e];HUNTS[e]=huntGrounds(e);scene=new T.Scene();scene.fog=new T.Fog('#d2ecf8',70,260);
   // sky
   sky=new T.Mesh(new T.SphereGeometry(600,24,14),new T.ShaderMaterial({side:T.BackSide,fog:false,depthWrite:false,uniforms:{top:{value:new T.Color()},bot:{value:new T.Color()}},vertexShader:'varying float h;void main(){h=normalize(position).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform vec3 top;uniform vec3 bot;varying float h;void main(){gl_FragColor=vec4(mix(bot,top,pow(clamp(h*1.25+.04,0.,1.),.55)),1.);}'}));scene.add(sky);
   const sp=new Float32Array(900);for(let i=0;i<300;i++){const a=rnd(0,6.283),b=rnd(.08,1.5);sp[i*3]=Math.cos(a)*Math.cos(b)*560;sp[i*3+1]=Math.sin(b)*560;sp[i*3+2]=Math.sin(a)*Math.cos(b)*560;}const sg=new T.BufferGeometry();sg.setAttribute('position',new T.BufferAttribute(sp,3));stars=new T.Points(sg,new T.PointsMaterial({color:'#ffffff',size:2.2,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false}));scene.add(stars);
@@ -945,7 +952,7 @@ function frame(t){raf=requestAnimationFrame(frame);if(paused||!scene)return;cons
     v.set(q.x,q.y+1.6,q.z).project(cam);if(dd<18&&v.z<1&&v.z>-1){q.el.style.display='';q.el.style.transform=`translate(-50%,-50%) translate(${((v.x+1)/2*w).toFixed(1)}px,${((1-v.y)/2*h).toFixed(1)}px)`;}else q.el.style.display='none';}
   if(near!==S.near){S.near=near;cb.onNear&&cb.onNear(near);}
   R.render(scene,cam);}
-return {ext:()=>({T,scene,Hf,S,cam,host,upd,M,part,era,HUNTAT,lowQ}),start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
+return {ext:()=>({T,scene,Hf,S,cam,host,upd,M,part,era,HUNTAT,HUNTS,lowQ}),start,setDone,spawnRes,stop(){cancelAnimationFrame(raf);era=null;if(host)host.hidden=true;dispose();},pause(p){paused=p;S.keys={};last=0;},art(id){return ART[id]();},walkTo(id){const s=spots.find(s=>s.id===id);if(s)S.auto={x:s.x,z:s.z,stop:3.2};},state:S,get spots(){return spots;}};
 })();
 
 /* the nine hands-on games, in 3D (three.js r128).  Falls back to the 2D versions when WebGL is missing. */
@@ -1738,4 +1745,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=6"></script>
+<script src="assets/tribe.js?v=7"></script>
