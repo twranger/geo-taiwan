@@ -457,6 +457,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .nh-big{font-size:20px;font-weight:700}
 .nh-tb th small{display:block;font-weight:500;font-size:12.5px}
 select.nh-in{min-width:0}
+.nh-short{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin:4px 0 14px}.nh-short b{font:900 clamp(26px,3.6vw,44px)/1.2 ui-monospace,Menlo,Consolas,monospace;color:#14323a;word-break:break-all}.nh-short span{color:#4c5759}
+.nh-code{font-size:clamp(44px,7vw,84px)}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -533,6 +535,13 @@ const RULES=`    // ── 臺史博：閉館之後（geo.twranger.com）──
       allow delete: if isOrienteeringAdmin();
     }
 `;
+/* short link through is.gd (no account needed). Tries a readable name first, then lets is.gd pick one. */
+function shorten(url,want){return new Promise(done=>{let tries=[want,''].filter((v,i)=>i||v),n=0;
+  const go=()=>{if(n>=tries.length){done('');return;}const name=tries[n++],cb='__isgd'+Date.now()+n,sc=document.createElement('script');let fin=false;
+   const end=v=>{if(fin)return;fin=true;try{delete window[cb];}catch(e){}sc.remove();v?done(v):go();};
+   window[cb]=r=>end(r&&r.shorturl?String(r.shorturl).replace(/^https?:\/\//,''):'');sc.onerror=()=>end('');setTimeout(()=>end(''),6000);
+   sc.src='https://is.gd/create.php?format=json&callback='+cb+'&url='+encodeURIComponent(url)+(name?'&shorturl='+encodeURIComponent(name):'');document.head.appendChild(sc);};go();});}
+function makeShort(sid,g,code){const d=new Date();return shorten(SITE+g.page+'?k='+sid,'hd'+code+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')).then(v=>{if(v)db.collection('nmth_rooms').doc(sid).update({short:v}).catch(()=>{});return v;});}
 let user=null,cur=null,unsub=[],rows=[],sessions=[];
 const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
 const GM=()=>GAMES[cur&&cur.game]||GAMES.nmth;
@@ -555,7 +564,7 @@ function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
   $('#nhNew').onclick=()=>{const label=$('#nhLabel').value.trim();if(!label){$('#nhLabel').focus();return;}
    const live=sessions.filter(s=>s.ph!=='closed').map(s=>s.code);let code;do{code=String(1000+Math.floor(Math.random()*9000));}while(live.includes(code));
    const sid=Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4);
-   db.collection('nmth_rooms').doc(sid).set({code,label,game:$('#nhGame').value,ph:'lobby',at:TS()}).then(()=>open(sid));};
+   const game=$('#nhGame').value;db.collection('nmth_rooms').doc(sid).set({code,label,game,ph:'lobby',at:TS()}).then(()=>{open(sid);makeShort(sid,GAMES[game],code);});};
   $('#nhLabel').onkeydown=e=>{if(e.key==='Enter')$('#nhNew').click();};
   list$.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>open(b.dataset.open));}).catch(e=>{list$.innerHTML='<p class="nh-msg err">讀不到場次：'+esc(e.message)+'</p>';});}
 let raw=[];
@@ -566,9 +575,11 @@ function open(sid){off();room$.hidden=false;list$.hidden=true;rows=[];raw=[];cur
 function calc(){const g=GM();rows=raw.map(v=>Object.assign({seat:v.seat,cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:v.at?v.at.seconds*1000:0},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 function back(){off();cur=null;room$.hidden=true;loadList();}
 function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
- try{const q=qrcode(0,'M');q.addData(url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
+ try{const q=qrcode(0,'M');q.addData(cur.short?'https://'+cur.short:url);q.make();qr=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){}
  let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
-   ${cur.ph==='closed'?'':`<p>學生打開 <b>geo.twranger.com/${g.page}</b>，按「輸入任務代碼」，輸入：</p><p class="nh-code">${esc(cur.code)}</p><p>或是直接給這個連結（不用輸入代碼）：</p><p class="nh-url">${esc(url)}</p>`}</div>
+   ${cur.ph==='closed'?'':`<p>學生在網址列輸入下面任何一個網址，或掃 QR 碼：</p>
+    <p class="nh-short">${cur.short?`<b>${esc(cur.short)}</b><span>或</span>`:''}<b>geo.twranger.com/${esc(cur.code)}</b>${cur.short?'':'<button class="nh-btn alt" id="nhShort">產生短網址</button>'}</p>
+    <p>已經在遊戲裡的學生，輸入任務代碼：</p><p class="nh-code">${esc(cur.code)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
    <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn alt" id="nhDel">刪除這一場的資料</button>':''}</div>`;
@@ -581,6 +592,7 @@ function draw(){if(!cur)return;const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cu
  B('#nhStart',()=>db.collection('nmth_rooms').doc(cur.sid).update({ph:'play',startedAt:TS()}));
  B('#nhEnd',()=>{if(confirm('結束這一場？學生的平板會停止回傳，已經收到的紀錄會留著。'))db.collection('nmth_rooms').doc(cur.sid).update({ph:'closed',endedAt:TS()});});
  B('#nhBack',back);B('#nhCsv',csv);
+ B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
  B('#nhDel',()=>{if(!confirm('刪除「'+cur.label+'」這一場的所有紀錄？刪掉就救不回來。'))return;const sid=cur.sid;db.collection('nmth_live').where('sid','==',sid).get().then(q=>Promise.all(q.docs.map(d=>d.ref.delete()))).then(()=>db.collection('nmth_rooms').doc(sid).delete());});
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>{if(confirm('把 '+b.dataset.rel+' 號空出來，讓別台平板重新選？'))db.collection('nmth_live').doc(cur.sid+'_'+b.dataset.rel).delete();});}
 function csv(){const g=GM(),q=v=>`"${String(v).replace(/"/g,'""')}"`,head=['班級','遊戲','座號','現在在',...g.csvHead(),'最後回傳','留意'];

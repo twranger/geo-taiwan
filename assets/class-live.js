@@ -8,6 +8,7 @@ window.ClassLive=(function(){
 const FB={apiKey:'AIzaSyAIY5trDnEYdzNAG2Y59LD-is7n-if_UG4',authDomain:'orienteering-30fdc.firebaseapp.com',projectId:'orienteering-30fdc',storageBucket:'orienteering-30fdc.firebasestorage.app',messagingSenderId:'991787236670',appId:'1:991787236670:web:7ddb997f5dbeb54245406f'};
 const GAMES={nmth:{n:'臺史博：閉館之後',page:'nmth-quest.html'},prehistory:{n:'史前生存大冒險',page:'prehistory.html'}};
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KC=(()=>{try{const c=new URLSearchParams(location.search).get('c');return c&&/^\d{4}$/.test(c)?c:'';}catch(e){return '';}})();
 let O=null,sess=null,db=null,loading=null,unsub=[],tm=0,box=null,cid='';
 try{cid=localStorage.getItem('hhl-nmth-cid')||'';if(!cid){cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);localStorage.setItem('hhl-nmth-cid',cid);}}catch(e){cid='x'+Math.random().toString(36).slice(2,10);}
 const KQ=(()=>{try{const k=new URLSearchParams(location.search).get('k');return k&&/^[a-z0-9]{4,20}$/.test(k)?k:'';}catch(e){return '';}})();
@@ -55,8 +56,8 @@ function join(q){off();ui(`<h2>正在找這個任務</h2><p>等一下下。</p>`
     const live=docs.map(d=>Object.assign({sid:d.id},d.data())).filter(r=>r.ph!=='closed').sort((a,b)=>(b.at&&b.at.seconds||0)-(a.at&&a.at.seconds||0))[0];
     if(!live){ask(docs.length?'這個任務已經結束了。請看大螢幕上新的任務代碼。':'找不到這個任務。再看一次大螢幕上的數字。');return;}
     const g=live.game||'nmth';
-    if(g!==O.game){const G=GAMES[g]||GAMES.nmth;ui(`<h2>這個代碼是另一個遊戲的</h2><p>老師發的任務是「${esc(G.n)}」。</p><div class="cl-row"><a class="cl-btn" style="text-decoration:none;display:inline-grid;place-items:center" href="${G.page}?k=${live.sid}">去那個遊戲</a><button class="cl-btn alt" id="clBack">重新輸入</button></div>`);box.querySelector('#clBack').onclick=()=>ask();return;}
-    if(!sess||sess.sid!==live.sid){sess={sid:live.sid,label:live.label||'',seat:0,on:0};keep();try{O.onJoin&&O.onJoin(sess);}catch(e){}}
+    if(g!==O.game){const G=GAMES[g]||GAMES.nmth;if(q.link){location.replace(G.page+'?k='+live.sid);return;}ui(`<h2>這個代碼是另一個遊戲的</h2><p>老師發的任務是「${esc(G.n)}」。</p><div class="cl-row"><a class="cl-btn" style="text-decoration:none;display:inline-grid;place-items:center" href="${G.page}?k=${live.sid}">去那個遊戲</a><button class="cl-btn alt" id="clBack">重新輸入</button></div>`);box.querySelector('#clBack').onclick=()=>ask();return;}
+    if(!sess||sess.sid!==live.sid){sess={sid:live.sid,code:live.code||'',label:live.label||'',seat:0,on:0};keep();try{O.onJoin&&O.onJoin(sess);}catch(e){}}
     sess.seat?wait():seat();}))
    .catch(()=>ask('連不上網路，沒辦法接老師的任務。可以先按「自己玩」。'));}
 function seat(){const sid=sess.sid;let taken={};
@@ -74,9 +75,10 @@ return {
   /* o: {game, store, snapshot(), onJoin(sess), onStart(sess), onClosed(wasPlaying)} */
   init(o){O=o;try{sess=JSON.parse(localStorage.getItem(o.store)||'null');}catch(e){sess=null;}
    if(KQ&&sess&&sess.sid!==KQ){sess=null;keep();}
+   if(!KQ&&KC&&sess&&sess.code!==KC){sess=null;keep();}
    if(sess&&sess.on){load().then(()=>wait(true)).catch(()=>{});return 'playing';}
-   return sess||KQ?'join':'';},
+   return sess||KQ||KC?'join':'';},
   /* call after the player has typed a name: join by link, rejoin, or ask for the code */
-  begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ});else if(sess)join({sid:sess.sid});else ask();},
+  begin(){if(sess&&sess.on)return;if(KQ)join({sid:KQ,link:1});else if(sess)join({sid:sess.sid});else if(KC)join({code:KC,link:1});else ask();},
   ask,touch,push,sess:()=>sess,leave(){off();sess=null;keep();},link:KQ};
 })();
