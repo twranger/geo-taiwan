@@ -65,7 +65,8 @@ function findRooms(q){const fs=(q.sid?db.collection('nmth_rooms').doc(q.sid).get
   return Promise.all([fs.then(x=>({ok:1,x}),()=>({ok:0,x:[]})),rd.then(x=>({ok:1,x}),()=>({ok:0,x:[]}))]).then(([a,b])=>{if(!a.ok&&!b.ok)throw new Error('net');
    const m={};a.x.concat(b.x).forEach(r=>{m[r.sid]=newerR(m[r.sid],r);});return Object.values(m);});}
 /* ---- overlay ---- */
-const CSS=`.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.92);display:grid;place-items:center;padding:18px;overflow:auto;font-family:"Noto Sans TC",system-ui,sans-serif}
+const CSS=`/* the box sits in the upper part of the screen, so a tablet's on-screen keyboard does not cover the code field and its button */
+.cl-ov{position:fixed;inset:0;z-index:9000;background:rgba(12,18,22,.92);display:grid;place-items:start center;padding:max(18px,9vh) 18px 18px;overflow:auto;font-family:"Noto Sans TC",system-ui,sans-serif}
 .cl-box{width:min(560px,100%);background:#f6f1e6;color:#182226;border-radius:14px;padding:26px 24px 22px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .cl-box h2{margin:0 0 4px;font-size:26px;line-height:1.3}.cl-box .cl-sub{margin:0 0 6px;color:#4a5558;font-size:16px}.cl-box p{font-size:17px;line-height:1.7;margin:10px 0}
 .cl-code{display:block;width:100%;box-sizing:border-box;margin:16px 0 6px;font:900 44px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.35em;text-align:center;padding:10px 6px;border:2px solid #182226;border-radius:10px;background:#fff;color:#182226}
