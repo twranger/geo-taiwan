@@ -740,7 +740,7 @@ body.inworld #vScene .scene-top h2{font-size:clamp(18px,2.4vw,24px);margin:0}bod
 <div class="modal" id="nt" hidden role="dialog" aria-modal="true"><div class="mbox" id="ntBox"></div></div>
 <footer><div class="wrap"><p>內容依康軒版五上社會第三單元〈尋根探源話臺灣〉第 1 課編寫。場景與小遊戲是依課本想像圖設計的示意，不是真實比例，也不是遺址現場的實景。</p><p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026 ｜ <a href="nmth-host.html?g=prehistory" style="color:inherit">老師入口</a></p></div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/class-live.js?v=9"></script>
+<script src="assets/class-live.js?v=10"></script>
 <script>
 /* 3D immersive worlds for the three eras (three.js r128) */
 window.World=(function(){
@@ -1593,7 +1593,7 @@ function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassL
   barnFull:t=>{S.barn=1;save();sfx.win();toast(t.late?`<b>你也出了一份力！</b>部落的穀倉已經存滿 ${t.season} 季了，裡面也有你種的小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`:`<b>穀倉滿了！</b>大家一起存了 ${t.goal} 束小米。新石器時代的人種田、存糧食，才能在一個地方住下來，不必一直搬家。`);},
   armed:()=>!!(S.st&&S.st.food),hit:()=>sfx.thud(),throw:()=>sfx.whoosh(),sfx:k=>sfx[k]&&sfx[k](),
   /* the first three deer fill your bag; after that the catch goes to the rest of the tribe, so standing there all lesson earns nothing */
-  caught:team=>{S.hunt=(S.hunt||0)+1;const loot=S.hunt<=3;if(loot)add({meat:1,hide:1});save();sfx.win();const w=team.length?'和 '+team.join('、')+' 一起':'';
+  caught:(team,pals)=>{S.hunt=(S.hunt||0)+1;const loot=S.hunt<=3,three=pals>=2;if(three)S.ht=(S.ht||0)+1;if(loot)add({meat:1,hide:1});save();sfx.win();const w=(team.length?'和 '+team.join('、')+' 一起':'')+(three?'（三個人都是同學，沒有靠部落的人幫忙！）':'');
    toast(loot?`<b>圍獵成功！</b>${w}丟長矛打中一頭水鹿，分到一塊鹿肉和一張獸皮。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`:`<b>圍獵成功！</b>${w}打中一頭水鹿。你的肉和獸皮已經夠用，這一頭分給部落裡的其他人。`);}});}
 let toastT=0;function toast(m){const t=$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,Math.max(4000,String(m).replace(/<[^>]*>/g,'').length*230));}
 function hudGoal(){const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])return;const g=curGoal(),L=GOALS[cur.k],n=L.filter(x=>x.ok()).length;
@@ -1726,7 +1726,7 @@ if(DEMO){window.ClassLive=null;document.body.classList.add('demo');
  $('#demoReset').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();};}
 if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehistory-class',
   snapshot:()=>{const st=TID.map(id=>S.st[id]||0),tm=['old','neo','iron','dig','museum'].map(k=>S.tm[k]||0);
-   return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,h:S.hunt||0,gr:S.gr||0,b:S.barn?1:0,tr:S.tr||0,nt:S.nt||0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
+   return {cur:whereNow(),d:JSON.stringify({s:st,y:TID.map(id=>S.tries[id]||0),tm,dig:S.dig?1:0,h:S.hunt||0,ht:S.ht||0,gr:S.gr||0,b:S.barn?1:0,tr:S.tr||0,nt:S.nt||0,sk:Object.keys(S.sk).length,qw:S.qw||0,cf:S.cf||0}),
     done:st.filter(Boolean).length+(S.dig?1:0),stars:st.reduce((a,b)=>a+b,0),miss:(S.qw||0)+(S.cf||0),t:tm.reduce((a,b)=>a+b,0),notes:0};},
   onJoin:()=>{const nm=($('#nm').value||'').trim().slice(0,10)||S.name;for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:nm,st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
   onRestore:v=>{let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const st=j.s||[],y=j.y||[],tm=j.tm||[];
@@ -1734,11 +1734,15 @@ if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehis
    ['old','neo','iron','dig','museum'].forEach((k,i)=>{if((+tm[i]||0)>(S.tm[k]||0))S.tm[k]=+tm[i];});
    if(j.dig)S.dig=1;S.qw=Math.max(S.qw||0,+j.qw||0);S.cf=Math.max(S.cf||0,+j.cf||0);
    /* what was done together comes back too, so the teacher's numbers do not drop when a pupil changes tablets */
-   [['hunt','h'],['gr','gr'],['tr','tr'],['nt','nt']].forEach(([a,b])=>{S[a]=Math.max(S[a]||0,+j[b]||0);});if(j.b)S.barn=1;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
+   [['hunt','h'],['ht','ht'],['gr','gr'],['tr','tr'],['nt','nt']].forEach(([a,b])=>{S[a]=Math.max(S[a]||0,+j[b]||0);});if(j.b)S.barn=1;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}},
   who:()=>S.name,
   onNotMe:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');$('#nm').focus();},
   onLeft:()=>{for(const k of Object.keys(S))if(k!=='sound')delete S[k];Object.assign(S,{name:'',st:{},dig:0,bag:{},known:{},took:{},sk:{},fails:{},tm:{},tries:{},qw:0,cf:0,ns:{}});try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}$('#nm').value='';show('vStart');svUI();},
   onStart:se=>{svUI();if(!S.name)S.name=se.seat+' 號';save();sfx.win();hub();},
+  /* the teacher gave this tablet another seat number: classmates should see the new one */
+  onSeat:se=>{if(window.Tribe&&Tribe.seat)Tribe.seat(se.seat);},
+  /* the teacher ended the task: stop sharing positions; the pupil can go on alone */
+  onClosed:was=>{svUI();if(was&&!$('#vScene').hidden&&cur&&W3)tribeEnter(cur.k);},
   onSolo:()=>{if(!S.name)S.name=($('#nm').value||'').trim().slice(0,10)||'探險家';save();hub();}});}
 if($('#clAsk2'))$('#clAsk2').onclick=()=>ClassLive.ask();
 document.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{if(!$('#gm').hidden)closeGm();ClassLive.saveAndLeave();});
@@ -1750,4 +1754,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=8"></script>
+<script src="assets/tribe.js?v=9"></script>

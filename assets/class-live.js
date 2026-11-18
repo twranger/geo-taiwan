@@ -117,7 +117,9 @@ function wait(quiet){const sid=sess.sid,t0=Date.now();off();
      Needed in the lobby, and for the first 20 seconds of a pupil who came in late. */
   if(sess&&!sess.on)seatsWatch(sid,m=>{const v=m[sess&&sess.seat];if(sess&&sess.seat&&sess.sid===sid&&(!sess.on||Date.now()-t0<20000)&&v&&v.cid&&v.cid[0]!=='~'&&v.cid!==cid&&ms(v)>NOWS()-60000){const n=sess.seat;sess.seat=0;sess.on=0;keep();seat(`${n} 號剛剛被另一台平板選走了。請再按一次你自己的座號。`);}},seatUn);
   roomWatch(sid,(r,known)=>{if(!sess||!known)return;r=r||{ph:'closed'};
-   if(r.ph==='closed'){const was=sess.on;if(was)pushBoth().catch(()=>{});off();sess=null;keep();rest();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was)ask('這個任務已經結束了。');return;}
+   if(r.ph==='closed'){const was=sess.on,last=was?pushBoth().then(()=>1,()=>0):null;off();sess=null;keep();rest();try{O.onClosed&&O.onClosed(was);}catch(e){}if(!was){ask('這個任務已經結束了。');return;}
+    /* say so on the tablet: otherwise 30 pupils keep playing and nobody knows the lesson part is over */
+    last.then(okd=>{if(sess)return;ui(`<h2>老師結束這一場任務了</h2><p>${okd?'你的進度已經傳給老師。':'網路好像斷了，最後一點進度可能沒傳到，老師那邊有前幾分鐘的紀錄。'}</p><p>先停下來，聽老師說話。</p><div class="cl-row c"><button class="cl-btn" id="clEnd">好</button></div>`);box.querySelector('#clEnd').onclick=hide;});return;}
    if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();pushBoth().catch(()=>{});if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
    if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();
     /* a pupil who comes in late starts at once, so the "two tablets, one seat" check stays on a little longer */

@@ -78,7 +78,8 @@ function heldOf(H,now){const held={};let first=0;if(myG===H.gi&&myK>=0&&holding)
   H.first=first;return held;}
 function huntTick(dt,ts){if(!hunts.length)return;const {S,Hf}=X,now=NOW();
   // which stone am I on
-  let g=-1,k=-1,unarmed=false;hunts.forEach(H=>H.marks.forEach(m=>{if(Math.hypot(S.x-m.x,S.z-m.z)<1.7){g=H.gi;k=m.k;}}));
+  let g=-1,k=-1,unarmed=false,asleep=false;hunts.forEach(H=>H.marks.forEach(m=>{if(Math.hypot(S.x-m.x,S.z-m.z)<1.7){g=H.gi;k=m.k;}}));
+  if(g>=0&&NET.ref&&isIdle()&&hunts[g].state==='idle'){asleep=true;g=k=-1;}
   if(g>=0&&hooks.armed&&!hooks.armed()&&hunts[g].state!=='throw'){unarmed=true;g=k=-1;}
   if(g!==myG||k!==myK){myG=g;myK=k;myJ=g>=0?now:0;ringAt=-1e9;}
   blocked=g>=0&&rival(g,k,now);const hold=g>=0&&!blocked;
@@ -110,14 +111,15 @@ function huntTick(dt,ts){if(!hunts.length)return;const {S,Hf}=X,now=NOW();
   /* the catch has to reach the other tablets right away, not at the next heartbeat */
   if(holding&&ringAt<0&&hunts[g].myC){ringAt=ts;NET.hold({g,k,s:me.seat||0,t:TSV(),j:myJ,c:hunts[g].myC});}
   if(!hooks.status)return;
-  if(unarmed)hooks.status('空手抓不到水鹿。先到「找食物」用石器和樹枝綁一支長矛，學會了再來圍獵。');
+  if(asleep)hooks.status('你在這顆石頭上站很久了。走一走，再回來圍獵。');
+  else if(unarmed)hooks.status('空手抓不到水鹿。先到「找食物」用石器和樹枝綁一支長矛，學會了再來圍獵。');
   else if(blocked)hooks.status(here&&here.humans>=NEED&&hunts.length>1?'這群水鹿已經有 3 個人了。看別群頭上的牌子，找還沒滿的那一群。':'這顆石頭已經有同學站了，換一顆黃色的圓圈。');
   else if(mine){const {H,held,full,waited,wantNpc}=mine,miss=NEED-Object.keys(held).length,wt=NET.ref&&NET.up?WAITH:WAITS;
     if(H.state==='idle')hooks.status(full?`圍住了！別動……${Math.ceil(HOLD-H.hold)}`:`還差 ${miss} 個人。${wantNpc?'部落的人過來幫忙了。':NET.ref&&NET.up?`等同學過來；${Math.max(0,Math.ceil(wt-waited))} 秒後部落的人會來幫忙。`:'部落的人馬上過來。'}`);}
   else if(near&&nd<20){hooks.status(hunts.length>1?`草原上有 ${hunts.length} 群水鹿，每群要 3 個人各站一顆石頭。看頭上的牌子，找還沒滿的那群。`:'圍獵水鹿：要 3 個人各站一顆石頭，把水鹿圍住。走到黃色圓圈上。');}
-  else if(huntTick.st){hooks.status(null);}huntTick.st=!!(unarmed||mine||blocked||(near&&nd<20));}
+  else if(huntTick.st){hooks.status(null);}huntTick.st=!!(asleep||unarmed||mine||blocked||(near&&nd<20));}
 function startThrow(H,held){const {S,Hf}=X;H.state='throw';H.tt=0;H.hold=0;H.wasMine=myG===H.gi&&holding;
-  H.team=[...new Set(Object.values(held).map(h=>h.who==='me'?null:h.who==='pal'?(h.s?h.s+' 號':'同學'):h.n).filter(Boolean))];
+  H.pals=Object.values(held).filter(h=>h.who==='pal').length;H.team=[...new Set(Object.values(held).map(h=>h.who==='me'?null:h.who==='pal'?(h.s?h.s+' 號':'同學'):h.n).filter(Boolean))];
   const dy=Hf(H.at[0],H.at[1]);H.fly=H.marks.map((m,i)=>{const sp=spear();X.scene.add(sp);sp.visible=false;const a=held[m.k]&&held[m.k].who==='me'?{x:S.x,z:S.z,y:Hf(S.x,S.z)+1.5}:{x:m.x,z:m.z,y:m.y+1.6};
     const ang=Math.atan2(a.z-H.at[1],a.x-H.at[0]);return {m:sp,d:i*.45,a,b:{x:H.at[0]+Math.cos(ang)*.2,z:H.at[1]+Math.sin(ang)*.2,y:dy+1.3}};});
   if(myG===H.gi){hooks.status&&hooks.status('丟出長矛！');hooks.throw&&hooks.throw();}}
@@ -128,7 +130,7 @@ function throwTick(H,dt,now){H.tt+=dt;const at=(f,k)=>[f.a.x+(f.b.x-f.a.x)*k,f.a
   if(H.fly.every(f=>f.hit))H.dr.rotation.z=Math.min(1.45,H.dr.rotation.z+dt*2.2);
   if(H.fly.every(f=>f.hit)&&H.tt>(H.fly.length-1)*.45+.8+1){H.state='caught';H.caughtAt=now;
     // everybody who was on this ground when the circle closed gets the catch, even if they stepped off during the throw
-    if(H.wasMine){hooks.status&&hooks.status(null);hooks.caught&&hooks.caught(H.team);}H.wasMine=false;}}
+    if(H.wasMine){hooks.status&&hooks.status(null);hooks.caught&&hooks.caught(H.team,H.pals||0);}H.wasMine=false;}}
 function onRing(r){ring=r||{};if(!skewOk)return;const now=NOW();
   Object.keys(ring).forEach(c=>{const v=ring[c];if(c!==me.cid&&v&&typeof v.t==='number'&&now-v.t>600000&&!swept['r'+c]){swept['r'+c]=1;NET.put(NET.hb+'/ring/'+c,null);}});}
 function npcNew(H,i){const [hx,hz]=H.at,a=Math.random()*6.28,x=hx+Math.cos(a)*16,z=hz+Math.sin(a)*16,g=person('npc',i+H.gi),sp=spear();sp.rotation.x=-1.25;sp.position.set(.32,1.05,0);g.add(sp);X.scene.add(g);
@@ -159,12 +161,17 @@ function palTick(dt,ts){const {Hf,S}=X;
     if(d>.05){const m=o.bot?d*Math.min(1,dt*6):Math.min(d,o.sp*dt);o.x+=dx/d*m;o.z+=dz/d*m;}
     if(!o.vis)return;o.g.position.set(o.x,Hf(o.x,o.z),o.z);
     if(d>.05){o.g.rotation.y=Math.atan2(dx,dz);walk(o.g,ts,1);}else{o.g.rotation.y=o.tr+Math.PI;walk(o.g,ts,0);}place(o.el,o.x,Hf(o.x,o.z)+2.4,o.z,40);});}
-let movedAt=0;
+/* A tablet left lying open must not keep the whole class downloading its heartbeat (and must not keep hunting):
+   after 3 minutes without walking or looking around it goes quiet until somebody touches it again. */
+let movedAt=0,away=false;const IDLE=180000,isIdle=()=>Date.now()-movedAt>IDLE;
+function hush(){if(away)return;away=true;if(NET.mine)NET.mine.remove().catch(()=>{});NET.hold(null);holding=false;ringAt=-1e9;}
+function onVis(){if(document.hidden)hush();else{movedAt=Date.now();}}
 function sendTick(){const {S}=X,now=Date.now();if(!NET.ref)return;const d=Math.hypot(S.x-sent.x,S.z-sent.z),moved=d>.8;
-  if(Math.hypot(S.x-sent.lx,S.z-sent.lz)>.02){sent.lx=S.x;sent.lz=S.z;movedAt=now;}
+  if(Math.hypot(S.x-sent.lx,S.z-sent.lz)>.02||Math.abs(S.yaw-sent.ly)>.05){sent.lx=S.x;sent.lz=S.z;sent.ly=S.yaw;movedAt=now;}
+  if(isIdle()||document.hidden){hush();return;}if(away){away=false;lastSend=0;}
   /* also once when I have stopped, so classmates see me standing where I really am */
   const stopped=d>.25&&now-movedAt>1200;
-  if(((moved||stopped)&&now-lastSend>sendIv())||now-lastSend>BEAT){lastSend=now;sent={x:S.x,z:S.z,lx:S.x,lz:S.z};NET.pos({x:+S.x.toFixed(1),z:+S.z.toFixed(1),r:+S.yaw.toFixed(1),s:me.seat||0,t:TSV()});}}
+  if(((moved||stopped)&&now-lastSend>sendIv())||now-lastSend>BEAT){lastSend=now;sent={x:S.x,z:S.z,lx:S.x,lz:S.z,ly:S.yaw};NET.pos({x:+S.x.toFixed(1),z:+S.z.toFixed(1),r:+S.yaw.toFixed(1),s:me.seat||0,t:TSV()});}}
 /* ---------- 新石器時代：the village granary, filled together ---------- */
 const BGOAL_CLASS=12,BGOAL_SOLO=5,NPC_EVERY=15000,BMAX=40;
 function barnBuild(at){const {T,scene,Hf,M,part}=X,[x,z]=at,y=Hf(x,z),g=new T.Group();
@@ -256,7 +263,7 @@ function onInbox(all,part){const M=mart;if(!M)return;const now=NOW();all=all||{}
   Object.keys(all).forEach(from=>{const v=all[from];if(!v||typeof v.k!=='string')return;const id=from+':'+v.k+':'+(v.i||0)+':'+v.t;if(M.seen[id])return;
     const bot=isBot(from),put=(p,x)=>{if(!bot)NET.put(p,x);},box=tradePath(me.cid,from),theirs=tradePath(from,me.cid);
     if(typeof v.t==='number'&&now-v.t>90000){if(!part)put(box,null);return;}M.seen[id]=1;
-    const who=v.s?v.s+' 號':'同學',no=b=>{const m={k:'no',i:v.i||0,s:me.seat||0,t:TSV()};if(b)m.b=1;put(theirs,m);};
+    const who=v.s?v.s+' 號':'同學',no=b=>{const m={k:'no',g:'-',i:v.i||0,s:me.seat||0,t:TSV()};if(b)m.b=1;put(theirs,m);};
     if(v.k==='offer'){
       /* one thing at a time: a second offer, or one that comes while I am in a task, gets "busy" instead of covering what I am doing */
       if(modal||M.wait||M.pend||M.ask||(X.paused&&X.paused())||!hooks.name(v.g)){put(box,null);no(1);return;}
@@ -268,7 +275,7 @@ function onInbox(all,part){const M=mart;if(!M)return;const now=NOW();all=all||{}
         if(bot)setTimeout(()=>onInbox({[from]:{k:'ok',i:v.i,s:v.s,t:Date.now()}},1),600);
       },'這次不換',k=>k===v.g?'一樣的東西，不用換':val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
     else if(v.k==='reply'){put(box,null);const w=M.wait,mineW=w&&w.cid===from&&w.g===v.f&&(v.i==null||v.i===w.i);
-      if(mineW&&(hooks.bag()[v.f]||0)>0&&hooks.name(v.g)){M.wait=null;swap(v.f,v.g,who,v.s);if(v.i!=null)put(theirs,{k:'ok',i:v.i,s:me.seat||0,t:TSV()});}
+      if(mineW&&(hooks.bag()[v.f]||0)>0&&hooks.name(v.g)){M.wait=null;swap(v.f,v.g,who,v.s);if(v.i!=null)put(theirs,{k:'ok',g:'-',i:v.i,s:me.seat||0,t:TSV()});}
       else{if(mineW){M.wait=null;hooks.toast&&hooks.toast(`你身上已經沒有「${hooks.name(v.f)}」了，這次沒換成。`);}if(v.i!=null)no(0);}}
     else if(v.k==='ok'){put(box,null);const q=late[v.i];
       if(q&&q.from===from&&!q.done){q.done=1;if(M.pend===q)M.pend=null;if((hooks.bag()[q.give]||0)>0)swap(q.give,q.get,q.who,q.s);}}
@@ -307,7 +314,7 @@ function botReply(c,k){const o=others[c],b=o.bot,w=mart.wait;
   setTimeout(()=>{if(!mart||mart.wait!==w)return;const mine=hooks.bag?hooks.bag():{},ok0=b.bag.filter(x=>val(x)===val(k)&&x!==k),ok=ok0.filter(x=>!mine[x]).length?ok0.filter(x=>!mine[x]):ok0,give=ok.length?ok[(o.gave++)%ok.length]:null;
    onInbox({[c]:give?{k:'reply',g:give,f:k,i:w.i,s:b.s,t:Date.now()+(++o.gave)}:{k:'no',i:w.i,s:b.s,t:Date.now()+(++o.gave)}},1);},1800);}
 /* ---------- life cycle ---------- */
-function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt.cid,seat:opt.seat||0};hooks=opt||{};alive=true;pv=new X.T.Vector3();VW=X.host.clientWidth;VH=X.host.clientHeight;lastSend=0;sent={x:1e9,z:1e9,lx:1e9,lz:1e9};palSeq=0;swept={};
+function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt.cid,seat:opt.seat||0};hooks=opt||{};alive=true;pv=new X.T.Vector3();VW=X.host.clientWidth;VH=X.host.clientHeight;lastSend=0;sent={x:1e9,z:1e9,lx:1e9,lz:1e9,ly:9};palSeq=0;swept={};movedAt=Date.now();away=false;document.addEventListener('visibilitychange',onVis);
   labels=document.createElement('div');labels.className='tb-labels';X.host.appendChild(labels);
   ring={};myG=myK=-1;myJ=0;blocked=holding=false;ringAt=-1e9;
   const live=opt.sid?NET.on(opt.sid,opt.cid,e,onPal,drop,onRing):false;
@@ -319,8 +326,8 @@ function enter(e,opt){leave();X=World.ext();if(!X.scene)return;era=e;me={cid:opt
   if(opt.demo)botsAdd();
   let prev=0;X.upd.push((dt0,ts)=>{if(!alive)return;const pn=performance.now(),dt=prev?Math.min(.25,(pn-prev)/1000):dt0;prev=pn;VW=X.host.clientWidth;VH=X.host.clientHeight;sendTick();if(opt.demo)botsTick(dt,ts);palTick(dt,ts);if(hunts.length){huntTick(dt,ts);npcTick(dt,ts);}if(barn)barnTick(dt,ts);if(mart)martTick(dt,ts);});
   return {live};}
-function leave(){alive=false;NET.off();modalClose();action(null);Object.keys(others).forEach(drop);others={};palN=0;holding=false;
+function leave(){alive=false;document.removeEventListener('visibilitychange',onVis);if(mart&&mart.wait&&NET.ref&&!isBot(mart.wait.cid))NET.put(tradePath(mart.wait.cid,me.cid),null);NET.off();modalClose();action(null);Object.keys(others).forEach(drop);others={};palN=0;holding=false;
   hunts.forEach(H=>{H.npcs.forEach(n=>{try{X.scene&&X.scene.remove(n.g);}catch(e){}n.el.remove();});H.marks.forEach(m=>m.el.remove());H.sign.remove();});hunts=[];ring={};myG=myK=-1;if(barn)barn.sign.remove();barn=null;if(mart)mart.el.remove();mart=null;
   if(labels)labels.remove();labels=null;if(hooks.status)hooks.status(null);}
-return {enter,leave,get hunt(){return hunts[0]||null;},get hunts(){return hunts;},get ring(){return ring;},get barn(){return barn;},get mart(){return mart;},get others(){return others;},get npcs(){return hunts.flatMap(H=>H.npcs);},get net(){return {up:NET.up,skew,iv:sendIv()};},_inbox:(a,p)=>onInbox(a,p)};
+return {enter,leave,seat(n){if(me){me.seat=n||0;lastSend=0;ringAt=-1e9;}},get hunt(){return hunts[0]||null;},get hunts(){return hunts;},get ring(){return ring;},get barn(){return barn;},get mart(){return mart;},get others(){return others;},get npcs(){return hunts.flatMap(H=>H.npcs);},get net(){return {up:NET.up,skew,iv:sendIv()};},_inbox:(a,p)=>onInbox(a,p)};
 })();
