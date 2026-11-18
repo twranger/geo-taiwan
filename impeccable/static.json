@@ -315,7 +315,7 @@
   {
     "antipattern": "side-tab",
     "name": "Side-tab accent border",
-    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/index.html",
@@ -325,7 +325,7 @@
   {
     "antipattern": "side-tab",
     "name": "Side-tab accent border",
-    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/index.html",
@@ -335,7 +335,7 @@
   {
     "antipattern": "side-tab",
     "name": "Side-tab accent border",
-    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/index.html",
@@ -345,7 +345,7 @@
   {
     "antipattern": "side-tab",
     "name": "Side-tab accent border",
-    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/index.html",
@@ -616,16 +616,6 @@
     "snippet": "2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff (and 2 more)"
   },
   {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/prehistory.html",
-    "line": 0,
-    "snippet": "placeholder \"輸入名字\" 2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff"
-  },
-  {
     "antipattern": "cramped-padding",
     "name": "Cramped padding",
     "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
@@ -684,7 +674,7 @@
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/prehistory.html",
     "line": 0,
-    "snippet": "Zero-offset box-shadow glow (#f4ecd2)"
+    "snippet": "Colored box-shadow glow (#10313b) on dark page"
   },
   {
     "antipattern": "repeating-stripes-gradient",
@@ -791,7 +781,7 @@
   {
     "antipattern": "side-tab",
     "name": "Side-tab accent border",
-    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/sealevel.html",
