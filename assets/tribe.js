@@ -252,18 +252,21 @@ function swap(give,get,who,seat){hooks.add({[give]:1},-1);hooks.add({[get]:1},1)
 /* A trade takes three messages, and nothing leaves a bag until both sides have agreed:
      offer (A: "I give g")  ->  reply (B: "I give k for it")  ->  ok (A has swapped; now B swaps).
    If A took the offer back, lost the item or walked off, B gets "no" (or nothing) and keeps everything.
-   Each side has one slot per classmate: cl_trade/{sid}/{to}/{from}. i ties the three messages together. */
+   Each side has one slot per classmate: cl_trade/{sid}/{to}/{from}. An id ties the three messages together; it rides in g
+   ("pot#123456") so the messages have exactly the fields the database rules already allow: k, g, f, s, t. */
 function offerTo(c){const who=nameOf(c),list=goodsOf();if(!list.length){hooks.toast&&hooks.toast('你只有路邊就撿得到的東西，沒有人會想換。先做出陶罐、抓到魚，或找到獸皮再來。');return;}
   pick(`你要拿什麼給 <b>${who}</b>？`,'他會挑一樣差不多值錢、你沒有的東西給你。',list,k=>{if(!k||!mart)return;const i=1+Math.floor(Math.random()*999999);mart.wait={g:k,i,cid:c,who,t:NOW()};
-   if(isBot(c)){botReply(c,k);return;}NET.put(tradePath(c,me.cid),{k:'offer',g:k,i,s:me.seat||0,t:TSV()});});}
+   if(isBot(c)){botReply(c,k);return;}NET.put(tradePath(c,me.cid),{k:'offer',g:k+'#'+i,s:me.seat||0,t:TSV()});});}
 function onInbox(all,part){const M=mart;if(!M)return;const now=NOW();all=all||{};
   /* the classmate took the offer back while I was still choosing */
-  if(!part&&M.ask&&!(all[M.ask.from]&&all[M.ask.from].k==='offer'&&(all[M.ask.from].i||0)===M.ask.i)){const a=M.ask;M.ask=null;modalClose();hooks.toast&&hooks.toast(`${a.who}不換了。`);}
+  const idOf=m=>{const p=String(m&&m.g||'').split('#');return p[1]?+p[1]:(m&&m.i)||0;};
+  if(!part&&M.ask&&!(all[M.ask.from]&&all[M.ask.from].k==='offer'&&idOf(all[M.ask.from])===M.ask.i)){const a=M.ask;M.ask=null;modalClose();hooks.toast&&hooks.toast(`${a.who}不換了。`);}
   Object.keys(late).forEach(i=>{if(now-late[i].t>90000)delete late[i];});
-  Object.keys(all).forEach(from=>{const v=all[from];if(!v||typeof v.k!=='string')return;const id=from+':'+v.k+':'+(v.i||0)+':'+v.t;if(M.seen[id])return;
+  Object.keys(all).forEach(from=>{const m0=all[from];if(!m0||typeof m0.k!=='string')return;const gp=String(m0.g||'').split('#'),v=Object.assign({},m0,{g:gp[0],i:gp[1]?+gp[1]:(m0.i==null?null:m0.i)});if(v.k==='busy'){v.k='no';v.b=1;}
+    const id=from+':'+m0.k+':'+(v.i||0)+':'+v.t;if(M.seen[id])return;
     const bot=isBot(from),put=(p,x)=>{if(!bot)NET.put(p,x);},box=tradePath(me.cid,from),theirs=tradePath(from,me.cid);
     if(typeof v.t==='number'&&now-v.t>90000){if(!part)put(box,null);return;}M.seen[id]=1;
-    const who=v.s?v.s+' 號':'同學',no=b=>{const m={k:'no',g:'-',i:v.i||0,s:me.seat||0,t:TSV()};if(b)m.b=1;put(theirs,m);};
+    const who=v.s?v.s+' 號':'同學',no=b=>put(theirs,{k:b?'busy':'no',g:'-#'+(v.i||0),s:me.seat||0,t:TSV()});
     if(v.k==='offer'){
       /* one thing at a time: a second offer, or one that comes while I am in a task, gets "busy" instead of covering what I am doing */
       if(modal||M.wait||M.pend||M.ask||(X.paused&&X.paused())||!hooks.name(v.g)){put(box,null);no(1);return;}
@@ -271,11 +274,11 @@ function onInbox(all,part){const M=mart;if(!M)return;const now=NOW();all=all||{}
       pick(`${who}拿 <b>${hooks.name(v.g)}</b> 想跟你換`,'你要給他什麼？只能選差不多值錢、又不一樣的東西。',list,k=>{M.ask=null;put(box,null);
         if(!k){no(0);return;}
         if(v.i==null){/* an older tablet: it swaps as soon as it hears back */swap(k,v.g,who,v.s);put(theirs,{k:'reply',g:k,f:v.g,s:me.seat||0,t:TSV()});return;}
-        const q=M.pend={from,i:v.i,give:k,get:v.g,who,s:v.s||0,t:NOW()};late[v.i]=q;put(theirs,{k:'reply',g:k,f:v.g,i:v.i,s:me.seat||0,t:TSV()});
+        const q=M.pend={from,i:v.i,give:k,get:v.g,who,s:v.s||0,t:NOW()};late[v.i]=q;put(theirs,{k:'reply',g:k+'#'+v.i,f:v.g,s:me.seat||0,t:TSV()});
         if(bot)setTimeout(()=>onInbox({[from]:{k:'ok',i:v.i,s:v.s,t:Date.now()}},1),600);
       },'這次不換',k=>k===v.g?'一樣的東西，不用換':val(k)===w?'':val(k)<w?'太便宜，他不換':'太貴了，你會吃虧');}
     else if(v.k==='reply'){put(box,null);const w=M.wait,mineW=w&&w.cid===from&&w.g===v.f&&(v.i==null||v.i===w.i);
-      if(mineW&&(hooks.bag()[v.f]||0)>0&&hooks.name(v.g)){M.wait=null;swap(v.f,v.g,who,v.s);if(v.i!=null)put(theirs,{k:'ok',g:'-',i:v.i,s:me.seat||0,t:TSV()});}
+      if(mineW&&(hooks.bag()[v.f]||0)>0&&hooks.name(v.g)){M.wait=null;swap(v.f,v.g,who,v.s);if(v.i!=null)put(theirs,{k:'ok',g:'-#'+v.i,s:me.seat||0,t:TSV()});}
       else{if(mineW){M.wait=null;hooks.toast&&hooks.toast(`你身上已經沒有「${hooks.name(v.f)}」了，這次沒換成。`);}if(v.i!=null)no(0);}}
     else if(v.k==='ok'){put(box,null);const q=late[v.i];
       if(q&&q.from===from&&!q.done){q.done=1;if(M.pend===q)M.pend=null;if((hooks.bag()[q.give]||0)>0)swap(q.give,q.get,q.who,q.s);}}
