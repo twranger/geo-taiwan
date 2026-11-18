@@ -491,10 +491,10 @@ body.atstart .top .links .only-play{display:none}
 #vHub .unit-head{display:block}
 #vHub .unit-head .svl{margin-top:10px}
 .hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--s3)}
-.node{position:relative;border:2px solid var(--line);border-top:8px solid var(--c);border-radius:var(--r3);background:var(--surface);padding:var(--s3) var(--s4) var(--s4);text-align:left;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:2px;cursor:pointer;min-height:176px;transition:border-color .15s,transform .15s}
-.node:hover:not(:disabled),.node:focus-visible{border-color:var(--c)}
+.node{position:relative;border:3px solid var(--c);border-radius:var(--r3);background:var(--surface);padding:var(--s3) var(--s4) var(--s4);text-align:left;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:2px;cursor:pointer;min-height:176px;transition:border-color .15s,transform .15s}
+.node:hover:not(:disabled){background:color-mix(in srgb,var(--c) 7%,var(--surface))}
 .node:active:not(:disabled){transform:translateY(1px)}
-.node:disabled{cursor:not-allowed;border-style:dashed;border-top-style:solid;background:var(--surface-2);color:var(--muted)}
+.node:disabled{cursor:not-allowed;border-style:dashed;border-color:var(--muted);background:var(--surface-2);color:var(--muted)}
 .node:disabled b{color:var(--muted)}
 .node .ago{font-family:var(--f-num);font-weight:600;font-size:var(--t-s);color:var(--muted)}
 .node b{font-size:22px;line-height:1.3}
@@ -600,7 +600,7 @@ body.inworld #vScene .scene-top .bigbtn{min-height:40px;padding:4px 14px;font-si
 .wtip b{display:block;font-size:var(--t-l);color:#fff;margin-bottom:var(--s1)}
 .wtip button{margin-top:var(--s3);min-height:var(--tap);padding:0 var(--s5);border-radius:var(--rp);border:0;background:var(--ph-bone);color:var(--ph-ink);font:inherit;font-weight:700;cursor:pointer}
 /* messages */
-.wtoast{position:absolute;right:12px;top:100px;max-width:min(400px,calc(100% - 24px));background:rgba(22,33,29,.94);color:var(--ph-bone);border:1px solid var(--ph-edge);border-left:5px solid var(--ph-amber);border-radius:var(--r2);padding:10px var(--s4);font-size:var(--t-m);line-height:1.6;z-index:3}
+.wtoast{position:absolute;right:12px;top:100px;max-width:min(400px,calc(100% - 24px));background:rgba(22,33,29,.94);color:var(--ph-bone);border:2px solid var(--ph-amber);border-radius:var(--r2);padding:10px var(--s4);font-size:var(--t-m);line-height:1.6;z-index:3}
 .wtoast b{color:#ffd27a}
 .wprompt{position:absolute;left:50%;bottom:72px;transform:translateX(-50%);min-height:56px;border:3px solid var(--ph-rock);background:var(--ph-amber);color:var(--ph-amber-ink);border-radius:var(--rp);padding:8px 28px;font:inherit;font-weight:700;font-size:var(--t-xl);cursor:pointer;box-shadow:0 0 0 3px var(--ph-bone);white-space:nowrap;z-index:6;display:inline-flex;align-items:center;gap:var(--s2);max-width:calc(100% - 24px)}
 .wprompt.lock{background:var(--ph-bone);color:var(--ph-ink)}
@@ -687,7 +687,7 @@ body.modal-on{overflow:hidden}
 .intro p{font-size:var(--t-l);margin-top:6px}
 .intro .bigbtn,.done .bigbtn{margin-top:14px}
 .stars{font-size:38px;letter-spacing:4px;color:#9a5c00}
-.fact{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c,var(--ph-ink));border-radius:var(--r2);padding:10px 14px;margin-top:10px;font-size:17px}
+.fact{background:var(--surface);border:2px solid color-mix(in srgb,var(--c,var(--ph-ink)) 55%,var(--surface));border-radius:var(--r2);padding:10px 14px;margin-top:10px;font-size:17px}
 .qq{margin-top:12px}.qq>b{font-size:var(--t-l)}
 .qq .qo{display:block;width:100%;margin-top:8px;min-height:var(--tap)}
 .say{border:1px solid var(--line);background:var(--surface);border-radius:var(--rp);padding:3px 12px;min-height:32px;font:inherit;font-size:var(--t-s);cursor:pointer;color:var(--ink);margin-top:8px}
@@ -1870,7 +1870,7 @@ const wbNote=t=>{const e=$('#wbNote');if(e.textContent!==(t||''))e.textContent=t
 function wbOpen(){W3&&W3.pause(true);$('#wb').hidden=false;wbSel=[];wbAct='';wbNote('');wbDraw();$('#wbRes').innerHTML='';}
 function wbDraw(){const ids=Object.keys(S.bag).filter(k=>S.bag[k]>0&&IT[k]);
   $('#wbBag').innerHTML=ids.length?ids.map(k=>{const n=S.bag[k],used=wbSel.filter(x=>x===k).length;return `<button class="itm${used?' on':''}" data-k="${k}" data-sel="已選 ${used}" aria-pressed="${!!used}" style="--c:${IT[k].c}">${ti(k)}<span>${IT[k].n}</span><em>×${n}</em></button>`;}).join(''):'<p class="note">背包是空的。在世界裡走到東西旁邊就會撿起來。</p>';
-  $('#wbSlots').innerHTML=[0,1].map(i=>{const k=wbSel[i];return k?`<button class="slot" data-i="${i}" aria-label="拿掉${IT[k].n}">${ti(k)}<span>${IT[k].n}<small>點一下拿掉</small></span></button>`:`<div class="slot">${i?(wbSel.length?'可以只選一樣':''):'先從左邊選材料'}</div>`;}).join('<i aria-hidden="true">＋</i>');
+  $('#wbSlots').innerHTML=[0,1].map(i=>{const k=wbSel[i];return k?`<button class="slot" data-i="${i}" aria-label="拿掉${IT[k].n}">${ti(k)}<span>${IT[k].n}<small>點一下拿掉</small></span></button>`:`<div class="slot">${i?(wbSel.length?'可以只選一樣':''):'先選材料'}</div>`;}).join('<i aria-hidden="true">＋</i>');
   $('#wbCnt').textContent=`已選 ${wbSel.length} / 2`;
   $('#wbActs').innerHTML=ACTS.filter(([k])=>!cur||cur.k!=='old'||['knock','drill','tie'].includes(k)).map(([k,n])=>`<button class="act${wbAct===k?' on':''}" data-a="${k}" aria-pressed="${wbAct===k}">${n}</button>`).join('');
   $('#wbPick').textContent=wbSel.length?wbSel.map(k=>IT[k].n).join(' ＋ ')+(wbAct?`　→　${ACTN[wbAct]}`:'　→　再選一種做法'):'還沒選';$('#wbGo').disabled=!wbSel.length||!wbAct;}
@@ -2051,7 +2051,7 @@ else if(clState!=='confirm'&&clState!=='join'&&S.name&&Object.keys(S.st).length)
 {const MODALS=[...document.querySelectorAll('.modal')],stack=[],open=()=>MODALS.filter(m=>!m.hidden);
  const sync=m=>{if(!m.hidden){if(!stack.some(x=>x.m===m)){stack.push({m,back:document.activeElement});setTimeout(()=>{if(m.hidden||m.contains(document.activeElement))return;const f=m.querySelector('.mbox');if(f)try{f.focus({preventScroll:true});}catch(e){}},40);}}
    else{const i=stack.findIndex(x=>x.m===m);if(i>=0){const e=stack.splice(i,1)[0];if(!open().length&&e.back&&e.back!==document.body&&document.contains(e.back)&&e.back.offsetParent!==null)try{e.back.focus({preventScroll:true});}catch(_){}}}
-   const any=open().length>0;document.body.classList.toggle('modal-on',any);if(W3&&!$('#vScene').hidden&&!$('#w3d').hidden)W3.pause(any);};
+   const any=open().length>0;document.body.classList.toggle('modal-on',any);if(any&&document.fullscreenElement)try{document.exitFullscreen();}catch(e){}if(W3&&!$('#vScene').hidden&&!$('#w3d').hidden)W3.pause(any);};
  const mo=new MutationObserver(rs=>rs.forEach(r=>sync(r.target)));MODALS.forEach(m=>mo.observe(m,{attributes:true,attributeFilter:['hidden']}));
  document.addEventListener('keydown',e=>{if(e.key!=='Tab'||!stack.length)return;const m=stack[stack.length-1].m,f=[...m.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x=>!x.disabled&&x.offsetParent!==null);if(!f.length)return;
    const a=document.activeElement,first=f[0],last=f[f.length-1];if(!m.contains(a)||a===m.querySelector('.mbox')){e.preventDefault();(e.shiftKey?last:first).focus();}else if(e.shiftKey&&a===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&a===last){e.preventDefault();first.focus();}});
