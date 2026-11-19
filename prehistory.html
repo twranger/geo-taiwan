@@ -1731,7 +1731,7 @@ function openTask(id){if(document.fullscreenElement)try{document.exitFullscreen(
 function play(){try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}catch(e){}Mus.set('game');S.tries[task.id]=(S.tries[task.id]||0)+1;try{speechSynthesis.cancel();}catch(e){}$('#gmIntro').hidden=true;$('#gmDone').hidden=true;$('#gmPlay').hidden=false;$('#gmHow').textContent=task.how;stopGame&&stopGame();const my=++runId,finish=n=>{if(my===runId)finishTask(n);};const use3=window.G3&&G3.has(task.id)&&!G3.lost();$('#gcv').hidden=!!use3;$('#gcv3').hidden=!use3;$('#ghud').hidden=!use3;if(use3){$('#gmHow').textContent='';stopGame=G3.run(task.id,finish);}else{$('#ghMsg').hidden=true;$('#ghTray').hidden=true;runGame(a=>G[task.id](a,finish));}}
 let runId=0;
 const FAILTXT={food:'只找到一點點，不夠大家吃。再試一次！',trade:'一樣都沒換到，船都開走了。看清楚船上的人要什麼，再試一次。'};
-const STAR3={food:'30 秒內找到 8 份食物。',knap:'敲歪不超過 1 次。',fire:'10 秒內把火生起來。',farm:'收成 5 塊田以上，別讓小鳥吃掉。',grind:'16 秒內磨好，記得加水。',pot:'泥條和參考線一樣寬的時候再放，放得越準越好。',trade:'每一艘船都給對東西，不要讓船開走。',smelt:'15 秒內煉好，溫度一直停在「剛好」。',chop:'數清楚兩把斧頭各砍幾下。'};
+const STAR3={food:'30 秒內找到 8 份食物。',knap:'敲歪不超過 1 次。',fire:'10 秒內把火生起來。',farm:'收成 5 塊田以上，別讓小鳥吃掉。',grind:'16 秒內磨好，記得加水。',pot:'泥條和線一樣寬的時候再放，放得越準越好。',trade:'每一艘船都給對東西，不要讓船開走。',smelt:'15 秒內煉好，溫度一直停在「剛好」。',chop:'數清楚兩把斧頭各砍幾下。'};
 function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
   d.innerHTML=`<div class="done"><p style="font-size:19px;font-weight:700">${FAILTXT[task.id]||'這次沒成功，再試一次。'}</p><div class="row"><button class="bigbtn" id="again">再玩一次</button><button class="bigbtn alt" id="back">先離開</button></div></div>`;
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();$('#again').focus();return;}setTimeout(()=>{if(window.ClassLive)ClassLive.now();},50);runId++;stopGame&&stopGame();stopGame=null;const best=Math.max(S.st[task.id]||0,n),first=!S.st[task.id];S.st[task.id]=best;S.known[task.id]=1;save();if(first)grant(task.id);$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
@@ -1740,7 +1740,7 @@ function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmP
    <div class="qq"><b>${task.q.t}</b>${shuffle(task.q.o.map((o,i)=>[o,i])).map(([o,i])=>`<button class="qo" data-i="${i}">${o}</button>`).join('')}<p class="qfb" id="qfb"></p></div>
    <div class="fact" id="qFact" style="--c:${cur.c}" hidden><b>你剛剛學到的事</b><br>${task.fact}<br><button class="say" data-t="${esc(task.fact)}">唸給我聽</button></div>
    <div class="row"><button class="bigbtn alt" id="again" hidden>再玩一次</button><button class="bigbtn" id="back" hidden>${first&&eraDone(cur)?'天黑了，看看今晚過得怎樣 →':'回到部落'}</button></div></div>`;
-  let qWrong=0;if(first){S.qx=S.qx||{};S.qx[task.id]=1;save();}d.querySelector('.qq').addEventListener('click',e=>{const b=e.target.closest('.qo');if(!b||b.disabled)return;const ok=+b.dataset.i===task.q.a;b.classList.add(ok?'right':'wrong');if(ok){sfx.good();d.querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#qfb').textContent=S.qx&&S.qx[task.id]?'答對了！比較表多了一格。':'答對了！';if(S.qx){delete S.qx[task.id];save();}$('#qFact').hidden=false;$('#back').hidden=false;$('#again').hidden=false;$('#back').focus();}else{sfx.bad();b.disabled=true;S.qw=(S.qw||0)+1;save();qWrong++;$('#qfb').textContent=qWrong<2?`再想一想：回想剛剛「${task.n}」做了什麼、發生了什麼。`:'看看下面「你剛剛學到的事」，答案就在裡面。';if(qWrong>=2)$('#qFact').hidden=false;}});
+  const qAt=performance.now()+900;let qWrong=0;if(first){S.qx=S.qx||{};S.qx[task.id]=1;save();}d.querySelector('.qq').addEventListener('click',e=>{const b=e.target.closest('.qo');if(!b||b.disabled||performance.now()<qAt)return;const ok=+b.dataset.i===task.q.a;b.classList.add(ok?'right':'wrong');if(ok){sfx.good();d.querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#qfb').textContent=S.qx&&S.qx[task.id]?'答對了！比較表多了一格。':'答對了！';if(S.qx){delete S.qx[task.id];save();}$('#qFact').hidden=false;$('#back').hidden=false;$('#again').hidden=false;$('#back').focus();}else{sfx.bad();b.disabled=true;S.qw=(S.qw||0)+1;save();qWrong++;$('#qfb').textContent=qWrong<2?`再想一想：回想剛剛「${task.n}」做了什麼、發生了什麼。`:'看看下面「你剛剛學到的事」，答案就在裡面。';if(qWrong>=2)$('#qFact').hidden=false;}});
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();}
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 function closeGm(){if(cur)Mus.set($('#vScene')&&!$('#vScene').hidden?cur.k:'hub');runId++;stopGame&&stopGame();stopGame=null;try{speechSynthesis.cancel();}catch(e){}$('#gm').hidden=true;if(cur&&!$('#vScene').hidden)paint();W3&&W3.pause(false);if(cur&&cur!==MUSEUM&&ERAS.includes(cur)&&eraDone(cur)&&!(S.ns&&S.ns[cur.k]))night();}
@@ -1793,7 +1793,7 @@ const RCP=[
  {id:'herd',a:['piglet','millet'],act:'feed',need:'farm',use:{piglet:1,millet:1},skill:'herd',say:'小野豬每天都來吃你的小米，後來就留在村子裡不走了。這就是「畜養動物」。'},
  {id:'charcoal',a:['branch','clay'],act:'burn',need:'fire',use:{branch:2,clay:1},make:{charcoal:2},say:'用泥土蓋住樹枝，讓它悶著燒，不會燒成灰，變成了黑黑的木炭。'},
  {id:'smelt',a:['ironsand','charcoal'],act:'burn',need:'trade',needItem:'method',use:{ironsand:1,charcoal:1},task:'smelt',prod:{iron:1,slag:1},say:'照外地人教的方法：鐵砂加木炭，再用力送風。到「煉鐵」那裡把火控制好！'},
- {id:'chop',a:['iron','branch'],act:'knock',need:'smelt',use:{iron:1,branch:1},task:'chop',prod:{ironaxe:1},say:'鐵塊燒紅了就能敲成斧頭，再裝上木柄。到「試試鐵斧」那裡做好它，和石斧比比看。'}];
+ {id:'chop',a:['iron','branch'],act:'knock',need:'smelt',use:{iron:1,branch:1},task:'chop',prod:{ironaxe:1},say:'鐵塊燒紅了，敲成斧頭，再裝上木柄，鐵斧做好了！到「試試鐵斧」那裡，和石斧比比看誰砍得快。'}];
 /* a skill from an earlier era counts as learned when you are already in a later era (the teacher may open an era directly) */
 const needOk=id=>!!S.st[id]||(()=>{const e=ERAS.findIndex(e=>e.tasks.some(t=>t.id===id));return e>=0&&cur&&ERAS.indexOf(cur)>e;})();
 const NEED_N={knap:'打製石器',fire:'生火',grind:'磨製石器',farm:'種小米',trade:'和外地人交易',smelt:'煉鐵'};
@@ -1876,7 +1876,7 @@ function hudGoal(){g2dDraw();const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])re
 function craftEnter(){if(!W3||!RESDEF[cur.k])return;const defs=RESDEF[cur.k].map(d=>Object.assign({},d,{n:d.once?Math.max(0,d.n-(S.took[cur.k+d.it]||0)):d.n})).filter(d=>d.n>0&&!(d.it==='canoe'&&S.sk.jade));W3.spawnRes(defs);$('#wHud').hidden=false;hudGoal();}
 function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});sfx.pop();const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
   if((q.it==='shell'||q.it==='fruit')&&!S.sk.gather&&((S.bag.shell||0)+(S.bag.fruit||0)>=3)){S.sk.gather=1;toast('你學會了<b>採集</b>：在海邊撿貝殼、在林子裡摘野果。');}
-  else if(q.it==='piglet')toast(S.st.farm?'抓到一隻<b>小野豬</b>！要養牠，就給牠吃你種的小米：打開「動手試試」，選<b>小野豬</b>和<b>小米</b>，再選「餵」。':'抓到一隻<b>小野豬</b>！要養牠，得先有牠愛吃又吃得到的食物。先去完成「種小米」，再打開「動手試試」餵牠。');
+  else if(q.it==='piglet')toast(S.st.farm?'抓到一隻<b>小野豬</b>！打開「動手試試」，選<b>小野豬</b>和<b>小米</b>，再選「餵」，牠就會留下來。':'抓到一隻<b>小野豬</b>！先去「種小米」種出小米，再打開「動手試試」拿小米餵牠。');
   else toast(`撿到 <b>${IT[q.it].n}</b>。${IT[q.it].d}`);
   if(cur.k==='old'&&d&&d.once&&(S.took.oldshell||0)>=8&&(S.took.oldfruit||0)>=6&&!S.sk.moved){S.sk.moved=1;setTimeout(()=>toast('這附近的貝殼和野果都撿光了。舊石器時代的人就是這樣：<b>食物吃完了，就要搬到別的地方</b>。'),3800);}
   sfx.good&&sfx.good();save();hudGoal();paint();g2dDraw();}
@@ -1930,12 +1930,12 @@ const LOOK={knock:'敲的時候看仔細：哪一樣先裂開？哪一樣一點�
 function wbTry(){if(wbBusy||!wbSel.length||!wbAct)return;wbBusy=1;setTimeout(()=>{wbBusy=0;},400);
   const sel=wbSel.slice(),act=wbAct,r=RCP.find(r=>same(r.a,sel)&&r.act===act),out=$('#wbRes');let ok=false,msg='',kind='',look='';
   if(!r){const n=NOPE.find(n=>same(n[0],sel)&&n[1]===act);msg=n?n[2]:`${sel.map(k=>IT[k]?IT[k].n:k).join('和')}用「${ACTN[act]}」的，什麼都沒改變。換一種做法，或換別的材料。`;
-    if(!n)look=sel.length<2&&['knock','tie','drill'].includes(act)?`只有一樣東西，「${ACTN[act]}」不起來。再選一樣一起試。`:RCP.some(r=>r.act===act&&r.a.some(k=>sel.includes(k)))?LOOK[act]||'':'';
+    if(!n)look=sel.length<2&&['knock','tie','drill'].includes(act)?`只有一樣東西，「${ACTN[act]}」不起來。再選一樣一起試。`:RCP.some(r=>r.act===act&&sel.every(k=>r.a.includes(k)))?LOOK[act]||'':'';
     if(act==='burn'&&!S.st.fire&&!S.known.fire){msg='你還沒有火。先想辦法生火吧。';look='';}}
   else if(r.needItem&&S.st.trade&&!S.bag[r.needItem]&&(S.bag[r.needItem]=1),r.need&&!needOk(r.need)){msg=`方向對了！不過要先完成「${NEED_N[r.need]}」，才做得出來。`;if(r.id==='smelt')msg='鐵砂和木炭放在一起燒，什麼都沒發生。你不知道該怎麼做……也許從海外來的人會知道。';}
   else if(r.needItem&&!S.bag[r.needItem])msg='你不知道該怎麼做……也許從海外來的人會知道。';
   else if(!has(r.use))msg=`材料不夠：需要 ${itn(r.use)}。`;
-  else if(r.task&&!cur.tasks.some(t=>t.id===r.task)&&needOk(r.task)){ok=true;kind='old';msg='這個本領你在前一個時代就學會了，這裡不用再做一次。';}
+  else if(r.task&&!cur.tasks.some(t=>t.id===r.task)&&needOk(r.task)){if(r.prod&&!has(r.use))msg=`材料不夠：需要 ${itn(r.use)}。`;else if(r.prod){ok=true;add(r.use,-1);add(r.prod);kind='prod';msg='這是前一個時代就學會的本領，你一下子就做好了。';}else{ok=true;kind='old';msg='這個本領你在前一個時代就學會了，這裡不用再做一次。';}}
   else if(r.task&&((!S.st[r.task]&&S.known[r.task])||(S.st[r.task]&&!r.prod))){ok=true;kind=S.st[r.task]?'known':'ready';msg=S.st[r.task]?`你已經知道方法了，材料先留著。到發光的「${(cur.tasks.find(t=>t.id===r.task)||{n:'任務'}).n}」那裡動手做。`:`方法你已經想出來了，材料先留著。去發光的「${(cur.tasks.find(t=>t.id===r.task)||{n:'任務'}).n}」那裡把它做出來！`;}
   else{ok=true;add(r.use,-1);
     if(r.task&&!S.st[r.task]){S.known[r.task]=1;kind='idea';msg='<b>你想到一個新方法！</b><br>'+r.say;}
