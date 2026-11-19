@@ -1144,7 +1144,7 @@ const RLOOK={
  ironsand:()=>{const g=new T.Group();g.add(part('sph',M('#2f2c2a'),.6,.08,.5,0,.03,0));return g;},
  hide:()=>{const g=new T.Group();g.add(part('box',M('#a07850'),1,.04,.7,0,.04,0));return g;},
  canoe:()=>{const g=new T.Group();const b=part('cyl',M('#7a5230'),.42,3.6,.42,0,.3,0);b.rotation.x=Math.PI/2;b.scale.set(.42,3.6,.3);g.add(b);g.add(part('cyl',M('#5a3d22'),.03,1.6,.03,.4,.6,-.3));return g;}};
-function spawnRes(defs){res.forEach(q=>{scene.remove(q.g,q.hit);q.el.remove();});res=[];const lab=document.getElementById('wLabels');
+function spawnRes(defs,keep){if(!keep){res.forEach(q=>{scene.remove(q.g,q.hit);q.el.remove();});res=[];}const lab=document.getElementById('wLabels');
   defs.forEach(d=>{let k=0,guard=0,where=d.where;const R0=d.r||48;while(k<d.n&&guard++<6000){if(guard===3000&&where!=='any')where='any';const x=S.x+rnd(-R0,R0),z=S.z+rnd(-R0,R0),h=Hf(x,z);
     if(Math.abs(x)>92||Math.abs(z)>92||!WHERE[where](h)||!far(x,z,4.5)||res.some(q=>Math.hypot(q.x-x,q.z-z)<3.2)||Math.hypot(x-S.x,z-S.z)<4)continue;
     const g=RLOOK[d.it]();const ring=new T.Mesh(new T.TorusGeometry(d.special?2:.75,.05,6,24),new T.MeshBasicMaterial({color:'#ffe680'}));ring.rotation.x=Math.PI/2;ring.position.y=.04;g.add(ring);
@@ -1874,7 +1874,9 @@ function hudGoal(){g2dDraw();const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])re
   const bn=Object.values(S.bag).reduce((a,b)=>a+b,0),bb=$('#btnBag');$('#bagN').textContent=bn;bb.setAttribute('aria-label',`背包，裡面有 ${bn} 樣東西`);
   if(bagLast>=0&&bn!==bagLast&&!RM){bb.classList.remove('bump');void bb.offsetWidth;bb.classList.add('bump');}bagLast=bn;}
 function craftEnter(){if(!W3||!RESDEF[cur.k])return;const defs=RESDEF[cur.k].map(d=>Object.assign({},d,{n:d.once?Math.max(0,d.n-(S.took[cur.k+d.it]||0)):d.n})).filter(d=>d.n>0&&!(d.it==='canoe'&&S.sk.jade));W3.spawnRes(defs);$('#wHud').hidden=false;hudGoal();}
-function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});sfx.pop();const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
+function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});sfx.pop();const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);
+  /* everyday materials grow back a few seconds after they are picked, so nobody waits with nothing left to pick */
+  if(d&&!d.once&&!d.special){const era=cur.k;setTimeout(()=>{if(!cur||cur.k!==era)return;if(W3&&!$('#w3d').hidden){if(W3.ext().era===era)W3.spawnRes([Object.assign({},d,{n:1})],true);}else{g2dLeft[d.it]=(g2dLeft[d.it]||0)+1;g2dDraw();}},5000);}if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
   if((q.it==='shell'||q.it==='fruit')&&!S.sk.gather&&((S.bag.shell||0)+(S.bag.fruit||0)>=3)){S.sk.gather=1;toast('你學會了<b>採集</b>：在海邊撿貝殼、在林子裡摘野果。');}
   else if(q.it==='piglet')toast(S.st.farm?'抓到一隻<b>小野豬</b>！打開「動手試試」，選<b>小野豬</b>和<b>小米</b>，再選「餵」，牠就會留下來。':'抓到一隻<b>小野豬</b>！先去「種小米」種出小米，再打開「動手試試」拿小米餵牠。');
   else toast(`撿到 <b>${IT[q.it].n}</b>。${IT[q.it].d}`);
