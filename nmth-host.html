@@ -472,6 +472,8 @@ select.nh-in{min-width:0}
 .nh-delrow{margin-top:28px;text-align:right}
 .nh-note{margin-top:6px}.nh-note summary{cursor:pointer;color:#0b5c7a;font-weight:700}.nh-note p{margin-top:6px;max-width:72ch}
 .nh-flag{min-width:9em;max-width:14em;color:#8a3b00;font-size:14px}
+.nh-inv{display:flex;flex-direction:column;gap:6px;margin:12px 0;padding:10px 12px;border:1px solid #c9d6da;border-radius:10px;background:#f4f8f9}.nh-inv small{color:#3d5560;font-size:14px}
+#nhTList li small{display:block;color:#3d5560;font-size:13px}#nhTList li.nh-off{opacity:.6}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -551,13 +553,39 @@ function liveSet(sid,seat,v){const a=rtOk(db.collection('nmth_live').doc(sid+'_'
 function liveDel(sid,seat){return Promise.all([rtOk(db.collection('nmth_live').doc(sid+'_'+seat).delete()),rt?rtOk(rt.ref('cl_live/'+sid+'/'+seat).remove()):Promise.resolve(false)]);}
 const G0=(()=>{try{const g=new URLSearchParams(location.search).get('g');return GAMES[g]?g:'';}catch(e){return '';}})();
 const RULES=`    // ── 全班一起玩（geo.twranger.com）──
+    function teacherDoc() {
+      return /databases/\$(database)/documents/nmth_teachers/\$(request.auth.token.email.lower());
+    }
     function isClassTeacher() {
       return request.auth != null && request.auth.token.email != null
-             && exists(/databases/$(database)/documents/nmth_teachers/$(request.auth.token.email.lower()));
+             && exists(teacherDoc())
+             && get(teacherDoc()).data.get('off', false) != true;
+    }
+    function inviteDoc(code) {
+      return /databases/\$(database)/documents/nmth_invites/\$(code);
     }
     match /nmth_teachers/{email} {
-      allow read: if request.auth != null;
+      allow read: if isOrienteeringAdmin()
+                  || (request.auth != null && request.auth.token.email != null && email == request.auth.token.email.lower());
       allow write: if isOrienteeringAdmin();
+      // 老師用註冊序號自己加入：序號要存在、名額未滿，同一批寫入要把已用名額 +1
+      allow create: if request.auth != null && request.auth.token.email != null
+                    && email == request.auth.token.email.lower()
+                    && request.resource.data.keys().hasOnly(['name', 'uid', 'code', 'at'])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.code is string
+                    && exists(inviteDoc(request.resource.data.code))
+                    && get(inviteDoc(request.resource.data.code)).data.n < get(inviteDoc(request.resource.data.code)).data.max
+                    && getAfter(inviteDoc(request.resource.data.code)).data.n == get(inviteDoc(request.resource.data.code)).data.n + 1;
+    }
+    match /nmth_invites/{code} {
+      allow read, write: if isOrienteeringAdmin();
+      allow update: if request.auth != null && request.auth.token.email != null
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['n'])
+                    && request.resource.data.n == resource.data.n + 1
+                    && resource.data.n < resource.data.max
+                    && !exists(teacherDoc())
+                    && getAfter(teacherDoc()).data.code == code;
     }
     match /nmth_rooms/{doc} {
       allow read: if true;
@@ -587,31 +615,60 @@ const off=()=>{unsub.forEach(u=>{try{u();}catch(e){}});unsub=[];};
 const GM=()=>GAMES[cur&&cur.game]||GAMES.nmth;
 const mail=()=>String(user&&user.email||'').toLowerCase();
 auth.onAuthStateChanged(u=>{user=u;off();cur=null;isAdmin=false;room$.hidden=list$.hidden=true;
- if(!u){auth$.innerHTML=`<p class="nh-big">用老師的 Google 帳號登入</p><p>第一次使用的老師，請先請管理者把你的 Google 帳號（email）加進老師名單。</p><div class="nh-row"><button class="nh-btn" id="nhIn">用 Google 登入</button></div><p class="nh-msg err" id="nhErr"></p>`;
+ if(!u){auth$.innerHTML=`<p class="nh-big">用老師的 Google 帳號登入</p><p>第一次使用的老師：登入後輸入管理者給你的註冊序號。</p><div class="nh-row"><button class="nh-btn" id="nhIn">用 Google 登入</button></div><p class="nh-msg err" id="nhErr"></p>`;
   $('#nhIn').onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$('#nhErr').textContent=e.code==='auth/unauthorized-domain'?'這個網域還沒加進 Firebase 的登入網域。請到 Firebase 主控台 → Authentication → Settings → Authorized domains，加入 geo.twranger.com。':'登入失敗：'+e.message;});return;}
  auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b><span id="nhRole"></span></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
  $('#nhOut').onclick=()=>auth.signOut();
  db.collection('nmth_teachers').doc('_admin').set({at:TS()}).then(()=>{isAdmin=true;$('#nhRole').textContent='（管理者）';loadList();syncTeachers();})
-  .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists){loadList();return;}throw new Error('no');})
-  .catch(e=>{$('#nhSetup').innerHTML=`<p class="nh-msg err">這個帳號還不在老師名單裡。</p><p>請把你的 email <b>${esc(u.email||'')}</b> 告訴管理者，加進名單後重新整理這一頁就能用。換了帳號的話，先按右上角「登出」。</p>`;}));});
+  .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists&&!d.data().off){loadList();return;}if(d.exists){$('#nhSetup').innerHTML='<p class="nh-msg err">這個帳號已經停用。有問題請聯絡管理者。</p>';return;}throw new Error('no');})
+  .catch(e=>joinForm(u)));});
+/* a teacher with the shared code signs up by herself; the database rules only let it through while there are seats left */
+function joinForm(u){$('#nhSetup').innerHTML=`<p class="nh-big" style="margin-top:14px">第一次使用：輸入註冊序號</p><p>序號由管理者提供。註冊後，這個 Google 帳號（<b>${esc(u.email||'')}</b>）就能發任務給自己的班級。換帳號的話，先按右上角「登出」。</p>
+  <div class="nh-row"><input class="nh-in" id="nhJCode" placeholder="註冊序號" aria-label="註冊序號" autocomplete="off" autocapitalize="off" spellcheck="false" style="min-width:180px"><input class="nh-in" id="nhJName" placeholder="怎麼稱呼你（例：王老師）" aria-label="稱呼" style="min-width:200px"><button class="nh-btn" id="nhJGo">註冊</button></div><p class="nh-msg" id="nhJMsg"></p>`;
+ $('#nhJGo').onclick=()=>{const code=$('#nhJCode').value.trim().toLowerCase(),nm=$('#nhJName').value.trim().slice(0,20),m=mail(),msg=$('#nhJMsg'),b=$('#nhJGo');
+  if(!code){msg.className='nh-msg err';msg.textContent='請輸入序號。';return;}if(!/^[a-z0-9_-]{4,30}$/.test(code)){msg.className='nh-msg err';msg.textContent='序號不對。';return;}
+  b.disabled=true;msg.className='nh-msg';msg.textContent='註冊中……';
+  const bt=db.batch();bt.set(db.collection('nmth_teachers').doc(m),{name:nm,uid:user.uid,code,at:TS()});bt.update(db.collection('nmth_invites').doc(code),{n:firebase.firestore.FieldValue.increment(1)});
+  bt.commit().then(()=>{const up={};up['cl_teachers/'+ekey(m)]=code;up['cl_invites/'+code+'/n']=firebase.database.ServerValue.increment(1);return rt?rt.ref().update(up).catch(()=>{}):0;})
+   .then(()=>{msg.className='nh-msg ok';msg.textContent='註冊好了！';setTimeout(()=>{$('#nhSetup').innerHTML='';loadList();},600);})
+   .catch(()=>{b.disabled=false;msg.className='nh-msg err';msg.textContent='註冊不了：序號不對，或是名額已經滿了。';});};}
 /* the Realtime Database rules check the teacher list there, so it mirrors the Firestore list */
-function syncTeachers(){if(!rt)return;db.collection('nmth_teachers').get().then(q=>{const m={};q.docs.forEach(d=>{if(d.id[0]!=='_')m[ekey(d.id)]=true;});return rt.ref('cl_teachers').set(m);}).catch(()=>{});}
+function syncTeachers(){if(!rt)return;db.collection('nmth_teachers').get().then(q=>{const m={};q.docs.forEach(d=>{if(d.id[0]!=='_'){const v=d.data();m[ekey(d.id)]=v.off?false:(v.code||true);}});return rt.ref('cl_teachers').set(m);}).catch(()=>{});}
 function teacherPanel(){if(!isAdmin)return '';
  return `<details class="nh-teach" style="margin-top:26px"><summary class="nh-big" style="cursor:pointer">老師名單（只有管理者看得到）</summary>
   <p>名單上的老師用自己的 Google 帳號登入這一頁，就能發任務給自己的班級。每位老師只看得到、只管得到自己發的任務，你看得到全部。</p>
   <div class="nh-row"><input class="nh-in" id="nhTMail" type="email" placeholder="老師的 Google 帳號 email" aria-label="老師的 email" style="flex:1;min-width:240px"><input class="nh-in" id="nhTName" placeholder="稱呼（可以不填）" aria-label="老師的稱呼" style="min-width:160px"><button class="nh-btn" id="nhTAdd">加進名單</button></div>
-  <p class="nh-msg" id="nhTMsg"></p><ul class="nh-list" id="nhTList"><li>讀取中……</li></ul>
+  <p class="nh-msg" id="nhTMsg"></p><div id="nhInv"></div><ul class="nh-list" id="nhTList"><li>讀取中……</li></ul>
   <p>給老師的使用說明：打開 <b>geo.twranger.com/nmth-host.html</b>（遊戲頁最下面也有「老師入口」），用這個 email 的 Google 帳號登入。</p></details>`;}
 function teacherBind(){if(!isAdmin)return;
  const draw=()=>db.collection('nmth_teachers').get().then(q=>{teachers=q.docs.filter(d=>d.id!=='_admin').map(d=>Object.assign({email:d.id},d.data()));
-  $('#nhTList').innerHTML=teachers.length?teachers.map(t=>`<li><span><b>${esc(t.name||'')}</b>　${esc(t.email)}</span><button class="nh-btn alt" data-rm="${esc(t.email)}">移除</button></li>`).join(''):'<li>還沒有其他老師。</li>';
-  $$('#nhTList [data-rm]').forEach(b=>b.onclick=()=>{if(!confirm('把 '+b.dataset.rm+' 從老師名單移除？他發過的任務和紀錄會留著。'))return;db.collection('nmth_teachers').doc(b.dataset.rm).delete().then(()=>{if(rt)rt.ref('cl_teachers/'+ekey(b.dataset.rm)).remove().catch(()=>{});draw();});});});
- draw();
+  return db.collection('nmth_rooms').get().then(r=>{const cnt={};r.docs.forEach(d=>{const v=d.data(),k=v.ownerEmail||'';cnt[k]=(cnt[k]||0)+1;});return cnt;},()=>({})).then(cnt=>{
+  $('#nhTList').innerHTML=teachers.length?teachers.map(t=>`<li class="${t.off?'nh-off':''}"><span><b>${esc(t.name||'')}</b>　${esc(t.email)}<small>${t.code?'用序號註冊':'管理者加入'}・${cnt[t.email]||0} 場任務${t.off?'・已停用':''}</small></span><span class="nh-row" style="margin:0">${t.off?`<button class="nh-btn alt" data-on="${esc(t.email)}">恢復</button>`:`<button class="nh-btn alt" data-off="${esc(t.email)}">停用</button>`}<button class="nh-btn alt nh-del" data-wipe="${esc(t.email)}">停用並刪除他的全部任務</button></span></li>`).join(''):'<li>還沒有其他老師。</li>';
+  $$('#nhTList [data-off]').forEach(b=>b.onclick=()=>{if(!confirm('停用 '+b.dataset.off+'？他就不能再登入發任務。他發過的任務和學生紀錄會留著。'))return;b.disabled=true;teacherOff(b.dataset.off).then(draw,e=>{alert('停用不了：'+(e.code||e.message));draw();});});
+  $$('#nhTList [data-on]').forEach(b=>b.onclick=()=>{b.disabled=true;const m=b.dataset.on,t=teachers.find(x=>x.email===m)||{};db.collection('nmth_teachers').doc(m).update({off:false}).then(()=>rt?rt.ref('cl_teachers/'+ekey(m)).set(t.code||true).catch(()=>{}):0).then(()=>t.code?bump(t.code,1):0).then(draw,e=>{alert('恢復不了：'+(e.code||e.message));draw();});});
+  $$('#nhTList [data-wipe]').forEach(b=>b.onclick=()=>{const m=b.dataset.wipe,t=teachers.find(x=>x.email===m)||{};const mine=x=>x.ownerEmail===m||(t.uid&&x.owner===t.uid);
+   db.collection('nmth_rooms').get().then(r=>{const sids=r.docs.filter(d=>mine(d.data())).map(d=>d.id);
+    if(!confirm(`停用 ${m}，並刪除他發過的 ${sids.length} 場任務和所有學生紀錄？\n刪掉就救不回來。`))return;b.disabled=true;b.textContent='刪除中……';
+    return (rt?rt.ref('cl_rooms').once('value').then(s=>{const v=s.val()||{};Object.keys(v).forEach(k=>{if(mine(v[k])&&!sids.includes(k))sids.push(k);});},()=>0):Promise.resolve())
+     .then(()=>sids.reduce((p,sid)=>p.then(()=>delSession(sid).catch(()=>{})),Promise.resolve())).then(()=>teacherOff(m)).then(()=>{alert(`已停用，刪掉 ${sids.length} 場任務。`);draw();});}).catch(e=>{alert('刪不完：'+(e.code||e.message));draw();});});});});
+ draw();invDraw();
  $('#nhTAdd').onclick=()=>{const m=$('#nhTMail').value.trim().toLowerCase(),nm=$('#nhTName').value.trim().slice(0,20);
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='email 的格式不對。';return;}
   db.collection('nmth_teachers').doc(m).set({name:nm,at:TS()}).then(()=>{if(rt)rt.ref('cl_teachers/'+ekey(m)).set(true).catch(()=>{});$('#nhTMsg').className='nh-msg ok';$('#nhTMsg').textContent='已加入：'+m;$('#nhTMail').value='';$('#nhTName').value='';draw();})
    .catch(e=>{$('#nhTMsg').className='nh-msg err';$('#nhTMsg').textContent='加不進去：'+e.code;});};}
 const $$=s=>[...document.querySelectorAll(s)];
+/* switch a teacher off: the doc stays (so the code cannot be used again with that account) and a seat is given back */
+function teacherOff(m){const t=teachers.find(x=>x.email===m)||{};return db.collection('nmth_teachers').doc(m).set({off:true,offAt:TS()},{merge:true})
+ .then(()=>rt?rt.ref('cl_teachers/'+ekey(m)).set(false).catch(()=>{}):0).then(()=>t.code&&!t.off?bump(t.code,-1):0);}
+function bump(code,d){const inc=firebase.firestore.FieldValue.increment(d);return db.collection('nmth_invites').doc(code).update({n:inc}).catch(()=>{}).then(()=>rt?rt.ref('cl_invites/'+code+'/n').set(firebase.database.ServerValue.increment(d)).catch(()=>{}):0).then(invDraw);}
+/* the shared registration code: how many seats are taken; the admin can set it up or change the number of seats */
+function invDraw(){const el=$('#nhInv');if(!el)return;db.collection('nmth_invites').get().then(q=>{const L=q.docs.map(d=>Object.assign({code:d.id},d.data()));
+ el.innerHTML=`<div class="nh-inv"><b>註冊序號</b>${L.length?L.map(v=>`<span>「${esc(v.code)}」已用 <b>${v.n||0} / ${v.max||0}</b> 位${(v.n||0)>=(v.max||0)?'（滿了，不能再註冊）':''}</span>`).join(''):'<span>還沒有序號</span>'}
+  <span class="nh-row" style="margin:0"><input class="nh-in" id="nhIvC" placeholder="序號" value="${esc(L[0]?L[0].code:'')}" style="width:130px"><input class="nh-in" id="nhIvM" type="number" min="0" max="200" value="${L[0]?L[0].max||10:10}" style="width:80px" aria-label="名額"><button class="nh-btn alt" id="nhIvGo">設定名額</button></span>
+  <small>老師用 Google 登入後輸入這個序號就能自己註冊，名額用完就停。停用一位老師會空出一個名額，但那個帳號不能再用序號註冊。</small></div>`;
+ $('#nhIvGo').onclick=()=>{const c=$('#nhIvC').value.trim().toLowerCase(),mx=Math.max(0,Math.min(200,parseInt($('#nhIvM').value,10)||0));if(!/^[a-z0-9_-]{4,30}$/.test(c)){alert('序號只能用英文小寫、數字、- 和 _，4 到 30 個字。');return;}
+  const cur=L.find(v=>v.code===c),n=cur?cur.n||0:teachers.filter(t=>t.code===c&&!t.off).length;
+  db.collection('nmth_invites').doc(c).set({max:mx,n},{merge:true}).then(()=>rt?rt.ref('cl_invites/'+c).update({max:mx,n}):0).then(invDraw,e=>alert('設定不了：'+(e.code||e.message)));};},()=>{el.innerHTML='';});}
 function newCode(){const used=new Set(sessions.map(s=>s.code)),live=new Set(sessions.filter(s=>s.ph!=='closed').map(s=>s.code));let code,k=0;
  do{code=String(1000+Math.floor(Math.random()*9000));k++;}while((k<300?used.has(code):live.has(code)));return code;}
 function loadList(){list$.hidden=false;list$.innerHTML='<p>讀取中……</p>';
