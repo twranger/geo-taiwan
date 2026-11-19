@@ -7,7 +7,7 @@
     "category": "slop",
     "file": "https://geo.twranger.com/energy.html",
     "line": 0,
-    "snippet": "inline <svg> scene: 29 primitive shapes, ~300x300px, 3 fill colors",
+    "snippet": "inline <svg> scene: 32 primitive shapes, ~300x300px, 4 fill colors",
     "advisory": true,
     "selector": "body"
   }
