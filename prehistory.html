@@ -774,6 +774,7 @@ button.slot small{display:block;font-weight:500;font-size:var(--t-xs);color:var(
 /* ---------- bag ---------- */
 .bg-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--s2)}
 .bgi{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;background:var(--ph-card);border:1px solid var(--ph-line);border-radius:var(--r2);padding:8px 10px}
+.real{margin-top:6px;font-size:var(--t-s)}.real summary{cursor:pointer;font-weight:700;min-height:32px;display:list-item}.real figure{margin:6px 0 0}.real img{display:block;max-width:100%;max-height:260px;border-radius:8px;background:#fff}.real figcaption{margin-top:6px;line-height:1.6}.real a{color:inherit}
 .bgi b{display:block;font-size:var(--t-m)}.bgi b small{font-family:var(--f-num);font-size:var(--t-s);margin-left:6px;color:var(--ph-mute)}.bgi span{font-size:var(--t-s);color:var(--ph-mute);line-height:1.5;display:block}
 
 /* ---------- skill chart ---------- */
@@ -1961,7 +1962,7 @@ function wbTry(){if(wbBusy||!wbSel.length||!wbAct)return;wbBusy=1;setTimeout(()=
     if(kind==='idea'&&tk)chips.push(`<li>任務「${tk.n}」可以開始了</li>`);
     if(kind==='make'&&r.skill)chips.push(`<li>技能圖亮了一格：${Object.fromEntries(SKC.flatMap(g=>g[1]))[r.skill]||''}</li>`);
     out.innerHTML=`<div class="res ok" tabindex="-1"><span class="rk">${icon('check')}${{idea:'想到新方法',prod:'做出來了',make:'做出來了',known:'這個你已經會了',ready:'可以去做了！',old:'你已經會了'}[kind]}</span>`+
-      (made?Object.keys(made).map(k=>`<div class="made">${ti(k,1)}<div><b>${IT[k].n}${made[k]>1?' ×'+made[k]:''}</b><span>${IT[k].d}</span></div></div>`).join(''):'')+
+      (made?Object.keys(made).map(k=>`<div class="made">${ti(k,1)}<div><b>${IT[k].n}${made[k]>1?' ×'+made[k]:''}</b><span>${IT[k].d}</span>${realPhoto(k)}</div></div>`).join(''):'')+
       `<p>${msg}</p>${chips.length?`<ul class="chg">${chips.join('')}</ul>`:''}`+(tk&&kind!=='prod'?`<button class="bigbtn go" id="wbToTask">帶我去「${tk.n}」</button>`:'')+`</div>`;
     const b=$('#wbToTask');if(b)b.onclick=()=>{wbClose();goSpot(r.task);};}
   /* a failed try keeps the materials on the bench, so one thing can be changed and tried again */
@@ -1971,7 +1972,10 @@ $('#wbGo').onclick=wbTry;
 function wbClose(){$('#wb').hidden=true;W3&&W3.pause(false);paint();}
 $('#wbX').onclick=wbClose;
 /* bag (read-only list with descriptions) */
-function bagOpen(){W3&&W3.pause(true);$('#bg').hidden=false;const ids=Object.keys(S.bag).filter(k=>IT[k]&&S.bag[k]>0);$('#bgList').innerHTML=ids.length?ids.map(k=>`<div class="bgi">${ti(k)}<div><b>${IT[k].n}<small>×${S.bag[k]}</small></b><span>${IT[k].d}</span></div></div>`).join(''):(W3?'<p class="note">背包是空的。在世界裡走到發光的東西旁邊，就會撿起來。</p>':'<p class="note">背包還沒有材料。關掉這個視窗，到場景下方按「撿石頭」這類按鈕。</p>');}
+const PHOTO={jade:{t:'人獸形玉玦（玉耳飾）',w:'卑南遺址出土，大約 3500 到 2300 年前。兩個人頭頂著一隻動物，是國寶。',a:'https://collections.culture.tw/nmp_collectionsweb/image.aspx?Size=640&FileName=5JKY5UM2M6MRM8MA5LMLMAMRM8MAMGMLMWMSM8MD',b:'https://collections.culture.tw/nmp_collectionsweb/File/16/JPG200/20121600001_0001.jpg',u:'https://collections.culture.tw/nmp_collectionsweb/collection.aspx?GID=MQMYM6MNMW'},
+ adze:{t:'玉錛（磨製的玉斧）',w:'卑南遺址出土，大約 3500 到 2300 年前。用臺灣玉磨成，長 4.3 公分，刀口磨得又平又利。',a:'https://collections.culture.tw/nmp_collectionsweb/Image?Size=640&FileName=5V5EMVM2M6MRM8MA5LMKMDMSM8MAMGM8MDMRM8MD',b:'https://collections.culture.tw/nmp_collectionsweb/File/16/JPG200/20040600149_0001.JPG',u:'https://collections.culture.tw/nmp_collectionsweb/collection.aspx?GID=MCMAMIMQMD'}};
+function realPhoto(k){const p=PHOTO[k];if(!p)return '';return `<details class="real"><summary>看卑南遺址出土的真東西</summary><figure><img src="${p.a}" alt="${p.t}的照片" loading="lazy" referrerpolicy="no-referrer" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${p.b}';}else{this.hidden=true;}"><figcaption><b>${p.t}</b>　${p.w}<br><small>照片：<a href="${p.u}" target="_blank" rel="noopener">國立臺灣史前文化博物館</a>，創用 CC 姓名標示－非商業性（CC BY-NC）。</small></figcaption></figure></details>`;}
+function bagOpen(){W3&&W3.pause(true);$('#bg').hidden=false;const ids=Object.keys(S.bag).filter(k=>IT[k]&&S.bag[k]>0);$('#bgList').innerHTML=ids.length?ids.map(k=>`<div class="bgi">${ti(k)}<div><b>${IT[k].n}<small>×${S.bag[k]}</small></b><span>${IT[k].d}</span>${realPhoto(k)}</div></div>`).join(''):(W3?'<p class="note">背包是空的。在世界裡走到發光的東西旁邊，就會撿起來。</p>':'<p class="note">背包還沒有材料。關掉這個視窗，到場景下方按「撿石頭」這類按鈕。</p>');}
 $('#bgX')&&($('#bgX').onclick=()=>{$('#bg').hidden=true;W3&&W3.pause(false);});
 /* skill chart, laid out like the textbook's 「器物製作與生活技能」 diagram */
 const SKC=[['器物製作',[['knap','打製石器'],['grind','磨製石器'],['pot','製作陶罐'],['jade','玉器'],['smelt','製作鐵器']]],['生活技能',[['fire','使用火'],['gather','採集'],['food','漁獵'],['farm','農耕'],['herd','畜養動物'],['trade','對外貿易']]]];

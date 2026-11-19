@@ -338,6 +338,65 @@ footer p+p{margin-top:6px}
 .home-link{display:block;color:inherit;text-decoration:none;border-radius:12px}
 .home-link .kicker::before{content:"⌂ 海佃地圖首頁 › ";color:var(--ink);font-weight:700}
 .home-link:hover h1,.home-link:focus-visible h1{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+/* under our school + big quakes */
+.ud-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.ud-grid{grid-template-columns:minmax(0,1fr)}}
+.ud-map{padding:12px;background:#0c1822;border-color:#22384a;color:#e9eef2;position:relative}
+.ud-find{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.ud-q{flex:1;min-width:200px;display:grid;gap:4px;font-size:14px;color:#cbd8e1}
+.ud-q input{font:inherit;font-size:16px;padding:8px 12px;min-height:44px;border-radius:8px;border:1px solid #3a5163;background:#0f1e29;color:#fff}
+.ud-find .bigbtn{font-size:14px;padding:8px 14px;min-height:44px}
+.ud-qh{margin:6px 0 8px;font-size:13px;color:#9fb4c4}
+.ud-sug{position:absolute;left:12px;right:12px;top:84px;z-index:5;background:#11252c;border:1px solid #3a5163;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);max-height:300px;overflow:auto}
+.ud-sug[hidden]{display:none}
+.ud-sug button{display:block;width:100%;text-align:left;font:inherit;font-size:15px;padding:10px 14px;min-height:44px;border:0;border-bottom:1px solid #22384a;background:transparent;color:#e9eef2;cursor:pointer}
+.ud-sug button:hover,.ud-sug button:focus{background:#22384a;outline:none}
+.ud-sug small{color:#9fb4c4;margin-left:8px}
+#udMap{display:block;width:100%;aspect-ratio:1/1;border-radius:10px;cursor:crosshair;touch-action:manipulation}
+.ud-bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-top:10px}
+.ud-leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:#cbd8e1}
+.ud-leg i{display:inline-block;width:18px;height:0;vertical-align:middle;margin-right:5px}
+.ud-leg .lg-col{height:12px;width:12px;border-radius:50%;border:2px dashed #F2C14E;background:rgba(242,193,78,.15)}
+.ud-leg .lg-f1{border-top:3px solid #ff5c7a}.ud-leg .lg-f2{border-top:3px dashed #ffa14a}
+.ud-leg .lg-sh{width:10px;height:10px;background:#2fd38a;border-radius:2px}
+.ud-side{padding:16px 18px}
+.ud-head h3{margin:0;font-size:22px}.ud-head p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.ud-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px;font-size:15px}
+.ud-big{font-size:18px;line-height:1.7;margin:10px 0}
+.ud-big b.num{font-size:28px;color:var(--conv)}
+#udCol{display:block;width:100%;height:300px;border-radius:10px;background:#0c1822}
+.ud-cap{font-size:13px;color:var(--muted);margin:6px 0 0}
+.ud-side .bigbtn{margin-top:14px;width:100%}
+.ud-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:860px){.ud-two{grid-template-columns:minmax(0,1fr)}}
+.ud-card h3{margin:0 0 6px;font-size:19px}
+.ud-card .ud-k{font-size:22px;font-weight:700;margin:4px 0}
+.ud-card .ud-k b{color:var(--conv)}
+.ud-card p{margin:6px 0;line-height:1.7}
+.ud-card ol{margin:6px 0;padding-left:22px;line-height:1.7}
+.ud-card li{margin:4px 0}
+.ud-card .note{font-size:14px;color:var(--muted)}
+.ud-card .src{font-size:12px;color:var(--muted)}
+.ud-card a{color:inherit}
+#bgPick{margin-bottom:12px}
+.bg-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}
+@media (max-width:860px){.bg-grid{grid-template-columns:minmax(0,1fr)}}
+.bg-map{padding:10px;background:#0c1822;border-color:#22384a}
+#bgMap{display:block;width:100%;aspect-ratio:5/6;border-radius:10px;cursor:pointer}
+.bg-card h3{margin:0;font-size:24px}
+.bg-meta{margin:4px 0 10px;color:var(--muted);font-size:15px}
+.bg-card p{line-height:1.8;margin:8px 0;max-width:36em}
+.bg-stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.bg-stat div{background:var(--surface-2);border-radius:10px;padding:8px 10px}
+.bg-stat span{display:block;font-size:13px;color:var(--muted)}.bg-stat b{font-size:20px}
+.bg-far{font-size:15px;color:var(--muted)}
+.bg-q{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--surface-2);border-left:4px solid #B2182B}
+.bg-q summary{font-weight:700;cursor:pointer;min-height:36px;display:list-item;margin-top:6px}
+.bg-card .bigbtn{font-size:14px;padding:8px 14px;min-height:40px;margin-top:12px}
+.bg-card .src{font-size:12px;color:var(--muted);margin-top:12px}
+.bg-card .src a{color:inherit}
+.ud-lb{color:#F2C14E;font-weight:700;font-size:14px;text-shadow:0 1px 3px #000}
+.ud-lb[hidden]{display:none}
 </style>
 <style>
 .top .unit-link{font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:15.5px;white-space:nowrap}
@@ -559,6 +618,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <nav class="rail" aria-label="段落">
   <div class="wrap" id="rail">
     <a href="#model"><span class="dot" style="background:#0072B2"></span>3D 地震模型</a>
+    <a href="#under"><span class="dot" style="background:#C77700"></span>我們學校底下</a>
+    <a href="#big"><span class="dot" style="background:#B2182B"></span>臺灣的大地震</a>
     <a href="#cut"><span class="dot" style="background:#D55E00"></span>切一刀看板塊</a>
     <a href="#after"><span class="dot" style="background:#009E73"></span>大地震之後</a>
     <a href="#ask"><span class="dot" style="background:#CC79A7"></span>想一想</a>
@@ -615,6 +676,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
           <label class="ep-tg ep-sub">山的高度放大<select id="exag"><option value="1">1 倍（真實）</option><option value="3">3 倍</option><option value="5" selected>5 倍</option></select></label>
           <label class="ep-tg"><input type="checkbox" id="tgSlab"><span>隱沒的板塊表面<small>（USGS Slab2 模型）</small></span></label>
           <label class="ep-tg"><input type="checkbox" id="tgGnss"><span>臺灣每年移動的方向<small>（GNSS 測站）</small></span></label>
+          <label class="ep-tg"><input type="checkbox" id="tgFault"><span>活動斷層<small>（地調所，紅線第一類、橘線第二類）</small></span></label>
+          <label class="ep-tg"><input type="checkbox" id="tgCol"><span>學校底下的光柱<small>（在「我們學校底下」換地方）</small></span></label>
           <label class="ep-tg"><input type="checkbox" id="tgSec"><span>只看剖面附近的地震</span></label>
         </div>
         <details class="ep-sec ep-q">
@@ -627,6 +690,59 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       </aside>
     </div>
     <p class="eq-note">地震的深度是<b>真實比例</b>（1 公里就是 1 公里）。只有陸地上的山放大，海底深度沒有放大，所以外海的淺地震會正確地出現在海底下面。</p>
+  </div>
+</section>
+
+<section class="unit" id="under">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#C77700">家</div>
+      <h2>我們學校底下，發生過多少地震？</h2>
+      <p class="sub">從地面往下拉一根光柱，數一數柱子裡有幾個地震。一開始在海佃國小。點地圖上別的地方，或搜尋學校名稱，就能看你家附近。</p>
+    </div>
+    <div class="ud-grid">
+      <div class="panel ud-map">
+        <div class="ud-find">
+          <label class="ud-q"><span>搜尋學校或地點</span><input id="udQ" type="search" placeholder="例如：安佃國小" autocomplete="off" aria-describedby="udQh" aria-controls="udSug"></label>
+          <button class="bigbtn alt" id="udHome">回到海佃國小</button>
+        </div>
+        <p class="ud-qh" id="udQh">可以搜尋全臺 4 千多個避難收容處所，大部分是學校和活動中心。</p>
+        <div class="ud-sug" id="udSug" role="listbox" aria-label="搜尋結果" hidden></div>
+        <canvas id="udMap" aria-label="光柱位置地圖：點一下可以換地方"></canvas>
+        <div class="ud-bar">
+          <div class="ep-chips" id="udZoom" role="group" aria-label="地圖範圍"><button data-z="near" aria-pressed="true">看附近</button><button data-z="all" aria-pressed="false">看全臺</button></div>
+          <div class="ud-leg"><span><i class="lg-col"></i>光柱範圍</span><span><i class="lg-f1"></i>第一類活動斷層</span><span><i class="lg-f2"></i>第二類活動斷層</span><span><i class="lg-sh"></i>避難收容處所</span></div>
+        </div>
+      </div>
+      <div class="panel ud-side">
+        <div class="ud-head"><h3 id="udName">海佃國小</h3><p id="udWhere"></p></div>
+        <div class="ud-r"><span>光柱半徑</span><div class="ep-chips" id="udR" role="group" aria-label="光柱半徑"><button data-r="10" aria-pressed="false">10 公里</button><button data-r="30" aria-pressed="true">30 公里</button><button data-r="50" aria-pressed="false">50 公里</button></div></div>
+        <p class="ud-big" id="udCount" aria-live="polite"></p>
+        <canvas id="udCol" aria-label="光柱的側面：橫的是東西方向，直的是深度"></canvas>
+        <p class="ud-cap">光柱的側面：橫的是東西方向，直的是深度。點越大，規模越大。</p>
+        <div class="af-nums" id="udNums"></div>
+        <button class="bigbtn" id="ud3d">在 3D 模型裡看這根光柱</button>
+      </div>
+    </div>
+    <div class="ud-two">
+      <div class="panel pad ud-card" id="udFault"></div>
+      <div class="panel pad ud-card" id="udShel"></div>
+    </div>
+  </div>
+</section>
+
+<section class="unit" id="big">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#B2182B">災</div>
+      <h2>臺灣的大地震</h2>
+      <p class="sub">這幾個地震造成很大的災害。選一個，看看它發生在哪裡、是哪一條斷層，再想一想下面的問題。</p>
+    </div>
+    <div class="tabs" id="bgPick" role="tablist" aria-label="選一個大地震"></div>
+    <div class="bg-grid">
+      <div class="panel bg-map"><canvas id="bgMap" aria-label="大地震的位置和斷層"></canvas></div>
+      <div class="panel pad bg-card" id="bgCard" aria-live="polite"></div>
+    </div>
   </div>
 </section>
 
@@ -699,7 +815,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   </div>
 </section>
 </main>
-<footer><div class="wrap"><p class="credit">地震資料：交通部中央氣象署地震目錄（政府資料開放授權條款第 1 版）。地形：NOAA ETOPO 2022。板塊表面：USGS Slab2（Hayes 等，2018）。GNSS：見「臺灣每年都在移動」。</p></div></footer>
+<footer><div class="wrap"><p class="credit">地震資料：交通部中央氣象署地震目錄（政府資料開放授權條款第 1 版）。地形：NOAA ETOPO 2022。板塊表面：USGS Slab2（Hayes 等，2018）。GNSS：見「臺灣每年都在移動」。活動斷層：經濟部地質調查及礦業管理中心。避難收容處所：內政部消防署（政府資料開放授權條款第 1 版）。</p></div></footer>
 <script>
 (function(){const H='https://geo.twranger.com/';const hd=document.querySelector('header.top');if(!hd)return;const k=hd.querySelector('.kicker'),h=hd.querySelector('h1');if(!k||!h||k.closest('a'))return;
   const a=document.createElement('a');a.href=H;a.className='home-link';a.setAttribute('aria-label','回到海佃地圖首頁：'+h.textContent);k.parentNode.insertBefore(a,k);a.appendChild(k);a.appendChild(h);})();
@@ -786,7 +902,7 @@ function lineChart(svgSel,series,opt){const svg=d3.select(svgSel);const W=opt.w|
 /* 臺灣底下的地震 — 3D earthquake model, cross-sections and aftershock replays.
    Data: data/eq/eq.bin (CWA catalog), geo.json (slabs, coast, GNSS, named quakes), terrain.bin + tex.webp (ETOPO 2022). */
 (()=>{
-const B='https://geo.twranger.com/data/eq/',V='?v=1';
+const B='https://geo.twranger.com/data/eq/',V='?v=1',V2='?v=2';
 const LON0=121,LAT0=23.5,KX=111.32*Math.cos(23.5*Math.PI/180),KY=110.95;
 const RG={lon0:118.5,lon1:123.5,lat0:20.5,lat1:26.5};
 const X=lon=>(lon-LON0)*KX,Z=lat=>-(lat-LAT0)*KY;
@@ -828,7 +944,7 @@ const pass=i=>E.t[i]>=tMin&&E.t[i]<=tMax&&E.mag[i]>=mMin-1e-3&&qMask[E.q[i]];
 function init(){
   for(const n of G.named){const [y,m,d]=n.d.split('-').map(Number),a=dayOf(y,m,d);let b=-1;for(let i=0;i<E.n;i++){if(E.t[i]>=a&&E.t[i]<a+1&&(b<0||E.mag[i]>E.mag[b]))b=i;}n.i=b;}
   $('#nAll').textContent=nf(E.n);$('#eqLoad').remove();
-  legend();init3d();initHist();initPanel();initCut();initAfter();initAsk();initSrc();update();
+  legend();init3d();initHist();initPanel();initCut();initAfter();initAsk();initSrc();initUnder();initBig();update();
 }
 
 /* ---------- legend ---------- */
@@ -851,14 +967,15 @@ function init3d(){
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
   g.setAttribute('aMag',new THREE.BufferAttribute(am,1));g.setAttribute('aT',new THREE.BufferAttribute(at,1));g.setAttribute('aQ',new THREE.BufferAttribute(aq,1));g.setAttribute('aDep',new THREE.BufferAttribute(ad,1));
   const ramp=STOPS.map(s=>`vec3(${(s[1][0]/255).toFixed(3)},${(s[1][1]/255).toFixed(3)},${(s[1][2]/255).toFixed(3)})`);
-  S.pm=new THREE.ShaderMaterial({uniforms:{uT0:{value:0},uT1:{value:1e9},uM:{value:3},uQ:{value:new THREE.Vector4(1,1,1,1)},uScale:{value:900},uSecOn:{value:0},uSec:{value:new THREE.Vector4()},uSecW:{value:20}},
-   vertexShader:`uniform float uT0,uT1,uM,uScale,uSecOn,uSecW;uniform vec4 uQ,uSec;attribute float aMag,aT,aQ,aDep;varying vec3 vC;
+  S.pm=new THREE.ShaderMaterial({uniforms:{uT0:{value:0},uT1:{value:1e9},uM:{value:3},uQ:{value:new THREE.Vector4(1,1,1,1)},uScale:{value:900},uSecOn:{value:0},uSec:{value:new THREE.Vector4()},uSecW:{value:20},uCol:{value:new THREE.Vector4(0,0,30,0)}},
+   vertexShader:`uniform float uT0,uT1,uM,uScale,uSecOn,uSecW;uniform vec4 uQ,uSec,uCol;attribute float aMag,aT,aQ,aDep;varying vec3 vC;varying float vD;
     vec3 rp(float d){if(d<30.)return mix(${ramp[0]},${ramp[1]},d/30.);if(d<70.)return mix(${ramp[1]},${ramp[2]},(d-30.)/40.);if(d<150.)return mix(${ramp[2]},${ramp[3]},(d-70.)/80.);return mix(${ramp[3]},${ramp[4]},clamp((d-150.)/150.,0.,1.));}
     void main(){float qm=aQ<.5?uQ.x:aQ<1.5?uQ.y:aQ<2.5?uQ.z:uQ.w;bool on=aT>=uT0&&aT<=uT1&&aMag>=uM-.001&&qm>.5;
      if(uSecOn>.5){vec2 p=position.xz,a=uSec.xy,ab=uSec.zw-uSec.xy;float t=clamp(dot(p-a,ab)/dot(ab,ab),0.,1.);if(length(p-(a+t*ab))>uSecW)on=false;}
      vec4 mv=modelViewMatrix*vec4(position,1.);gl_Position=on?projectionMatrix*mv:vec4(2.,2.,2.,1.);
-     gl_PointSize=on?clamp(1.6*pow(1.75,aMag-3.)*uScale/(-mv.z),1.6,64.):0.;vC=rp(aDep);}`,
-   fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);if(r>.5)discard;gl_FragColor=vec4(mix(vC*.35,vC,smoothstep(.5,.4,r)),1.);}`});
+     vD=1.;if(uCol.w>.5&&length(position.xz-uCol.xy)>uCol.z)vD=.16;
+     gl_PointSize=on?clamp(1.6*pow(1.75,aMag-3.)*uScale/(-mv.z),1.6,64.)*(vD<.5?.7:1.):0.;vC=rp(aDep);}`,
+   fragmentShader:`varying vec3 vC;varying float vD;void main(){float r=length(gl_PointCoord-.5);if(r>.5)discard;gl_FragColor=vec4(mix(vC*.35,vC,smoothstep(.5,.4,r))*vD,1.);}`});
   S.pts=new THREE.Points(g,S.pm);sc.add(S.pts);
   // terrain
   const W=5*KX,H=6*KY,tg=new THREE.PlaneGeometry(W,H,299,359);tg.rotateX(-Math.PI/2);S.tg=tg;
@@ -884,7 +1001,7 @@ function init3d(){
   // labels
   S.lbs=[['歐亞板塊',119.5,25.6,4,'pl'],['菲律賓海板塊',122.7,21.3,4,'pl'],['琉球海溝',123.0,23.7,2,'tr'],['馬尼拉海溝',119.75,20.9,2,'tr'],
     ...[['臺北',121.52,25.04],['臺中',120.68,24.14],['高雄',120.3,22.62],['宜蘭',121.75,24.75],['花蓮',121.6,23.98],['臺東',121.15,22.76],['恆春',120.74,22.0]].map(t=>[t[0],t[1],t[2],0,'tw'])];
-  $('#eqLabels').innerHTML=S.lbs.map((l,i)=>`<span class="eq-lb ${l[4]}" id="lb${i}">${l[0]}</span>`).join('')+'<span class="eq-sel" id="eqSel" hidden></span>'+[50,100,150,200,250,300].map(d=>`<span class="eq-lb tr" id="dk${d}">${d} 公里</span>`).join('');
+  $('#eqLabels').innerHTML=S.lbs.map((l,i)=>`<span class="eq-lb ${l[4]}" id="lb${i}">${l[0]}</span>`).join('')+'<span class="eq-sel" id="eqSel" hidden></span><span class="eq-lb ud-lb" id="udLb" hidden></span>'+[50,100,150,200,250,300].map(d=>`<span class="eq-lb tr" id="dk${d}">${d} 公里</span>`).join('');
   // controls
   ctrl(cv);new ResizeObserver(resize).observe(st);resize();go('tilt',true);
 }
@@ -897,7 +1014,7 @@ function slabMesh(s){const P=[],I=[],idx=new Int32Array(s.nx*s.ny).fill(-1),L=[]
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setIndex(I);
   const grp=new THREE.Group();grp.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x9fd3f5,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false})));grp.add(lines(L,0x9fd3f5,.45));return grp;}
 function setTerrain(){const p=S.tg.attributes.position;for(let r=0;r<360;r++)for(let c=0;c<300;c++){const e=TER[(359-r)*300+c];p.setY(r*300+c,(e>0?e*S.exag:e)/1000+S.lift);}
-  p.needsUpdate=true;S.terr.material.opacity=1-S.clear;if(S.coast)S.coast.position.y=S.lift;dirty();}
+  p.needsUpdate=true;S.terr.material.opacity=1-S.clear;if(S.coast)S.coast.position.y=S.lift;if(FLT)fault3d();if(S.col)col3d();dirty();}
 function resize(){const st=$('#eqGl'),w=st.clientWidth,h=st.clientHeight;S.r.setSize(w,h,false);S.cam.aspect=w/h;S.cam.updateProjectionMatrix();S.pm.uniforms.uScale.value=900*S.r.getPixelRatio()*Math.sqrt(h/700);S.W=w;S.H=h;dirty();}
 const VIEWS={tilt:{az:.35,el:.62,f:1},top:{az:0,el:1.5,f:.95},east:{az:Math.PI/2,el:.09,f:1.32},south:{az:0,el:.09,f:1.38}};
 function fitDist(v){const a=S.W/S.H,fy=Math.tan(19*Math.PI/180),need=v.el>1.2?Math.max(690/2/fy,560/2/(fy*a)):Math.max(420/2/fy,(v.az>.8?690:560)/2/(fy*a));return need*v.f*(a<.8&&v.el<1.2?1.15:1);}
@@ -913,7 +1030,7 @@ const proj=(x,y,z)=>{const v=new THREE.Vector3(x,y,z).project(S.cam);return v.z>
 function labels(){const side=S.view.el<.35;S.lbs.forEach((l,i)=>{const e=document.getElementById('lb'+i);if(side&&l[4]==='tw'){e.style.display='none';return;}const y=l[4]==='tw'?Math.max(0,hAt(l[1],l[2]))/1000*S.exag+S.lift+4:l[3]+S.lift;const p=S.terr.visible||l[4]!=='tw'?proj(X(l[1]),y,Z(l[2])):proj(X(l[1]),2,Z(l[2]));
     if(!p||p[0]<0||p[1]<0||p[0]>S.W||p[1]>S.H){e.style.display='none';return;}e.style.display='';e.style.left=p[0]+'px';e.style.top=p[1]+'px';});
   const x1=X(RG.lon1),z1=Z(RG.lat0);[50,100,150,200,250,300].forEach(d=>{const e=document.getElementById('dk'+d),p=proj(x1+6,-d,z1+6);if(!p||S.view.el>1.3){e.style.display='none';return;}e.style.display='';e.style.left=(p[0]+28)+'px';e.style.top=p[1]+'px';});
-  const se=$('#eqSel');if(sel>=0){const p=proj(X(E.lon[sel]),-E.dep[sel],Z(E.lat[sel]));if(p){se.hidden=false;se.style.left=p[0]+'px';se.style.top=p[1]+'px';}else se.hidden=true;}else se.hidden=true;}
+  const se=$('#eqSel');if(sel>=0){const p=proj(X(E.lon[sel]),-E.dep[sel],Z(E.lat[sel]));if(p){se.hidden=false;se.style.left=p[0]+'px';se.style.top=p[1]+'px';}else se.hidden=true;}else se.hidden=true;colLabel();}
 function ctrl(cv){const P=new Map();let moved=0,last=null;
   const panV=(dx,dy)=>{const v=S.view,k=v.dist/S.H*0.75,ca=Math.cos(v.az),sa=Math.sin(v.az);
     v.tx-=(dx*ca)*k;v.tz-=(-dx*sa)*k;if(v.el>1.0){v.tx-=(dy*sa)*k;v.tz-=(dy*ca)*k;}else v.ty+=dy*k;
@@ -1095,12 +1212,190 @@ function initAsk(){const Q=[
   ['臺灣每年移動的箭頭和地震有什麼關係？','東部的箭頭最長，代表菲律賓海板塊推著臺灣往西北移動。地底下的岩石一直被擠壓，力量累積到受不了就會突然錯動，這就是地震。所以東部的箭頭最長，地震也最多。','打開移動箭頭',()=>{$('#tgGnss').checked=true;S.gn.visible=true;go('top');}]];
   $('#askList').innerHTML=Q.map((q,i)=>`<div class="panel ask"><h3>${i+1}. ${q[0]}</h3><button class="bigbtn alt" data-k="${i}">${q[2]}</button><details><summary>看答案</summary><p>${q[1]}</p></details></div>`).join('');
   $$('#askList button').forEach(b=>b.onclick=()=>{Q[+b.dataset.k][3]();if(+b.dataset.k!==1&&+b.dataset.k!==4)$('#model').scrollIntoView({behavior:RM?'auto':'smooth'});dirty();});}
+/* ---------- under our school: light column, nearest active fault, shelters ---------- */
+const HOME={lon:120.2004,lat:23.0277,n:'海佃國小',w:'臺南市安南區'};
+const UP={...HOME,r:30,zoom:'near',L:[]};
+let FLT=null,SHL=null;
+const kmXZ=(lo,la)=>[X(lo),Z(la)];
+function segKm(px,pz,ax,az,bx,bz){const ux=bx-ax,uz=bz-az,l=ux*ux+uz*uz,t=l?Math.max(0,Math.min(1,((px-ax)*ux+(pz-az)*uz)/l)):0;const qx=ax+t*ux,qz=az+t*uz;return [Math.hypot(px-qx,pz-qz),qx,qz];}
+function faultDist(f,lon,lat){const [px,pz]=kmXZ(lon,lat);let best=[1e9,0,0];for(const l of f.l){for(let k=0;k+3<l.length;k+=2){const r=segKm(px,pz,X(l[k]),Z(l[k+1]),X(l[k+2]),Z(l[k+3]));if(r[0]<best[0])best=r;}if(l.length===2){const d=Math.hypot(px-X(l[0]),pz-Z(l[1]));if(d<best[0])best=[d,X(l[0]),Z(l[1])];}}return best;}
+const fmtKm=d=>d<1?'不到 1':d<10?d.toFixed(1):String(Math.round(d));
+const aboutKm=d=>d<1?'不到 1 公里':`約 ${fmtKm(d)} 公里`;
+function initUnder(){
+  Promise.all([fetch(B+'faults.json'+V2).then(r=>r.json()),fetch(B+'shelters.json'+V2).then(r=>r.json())]).then(([f,s])=>{FLT=f;SHL=s;fault3d();udAll();bgDraw();bgCard();}).catch(e=>{console.error(e);udAll();});
+  $$('#udR button').forEach(b=>b.onclick=()=>{UP.r=+b.dataset.r;$$('#udR button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));udAll();});
+  $$('#udZoom button').forEach(b=>b.onclick=()=>{UP.zoom=b.dataset.z;$$('#udZoom button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));udMap();});
+  $('#udHome').onclick=()=>{setPlace(HOME.lon,HOME.lat,HOME.n,HOME.w);};
+  const cv=$('#udMap');cv.addEventListener('click',e=>{const v=udView(),r=cv.getBoundingClientRect();const lon=v.lo0+(e.clientX-r.left)/r.width*v.klon,lat=v.la1-(e.clientY-r.top)/r.height*v.klat;
+    if(lon<RG.lon0||lon>RG.lon1||lat<RG.lat0||lat>RG.lat1)return;setPlace(lon,lat,'你點的地方','');});
+  const q=$('#udQ'),sug=$('#udSug');let hits=[];
+  const show=()=>{const t=q.value.trim().replace(/台/g,'臺');if(!t||!SHL){sug.hidden=true;return;}
+    const all=[[HOME.n,HOME.w,HOME.lon,HOME.lat],...SHL.s];hits=[];const seen=new Set();
+    for(const s of all){if((s[0].includes(t)||(s[1]+s[0]).includes(t))&&!seen.has(s[1]+s[0])){seen.add(s[1]+s[0]);hits.push(s);if(hits.length>=8)break;}}
+    sug.innerHTML=hits.length?hits.map((s,i)=>`<button role="option" data-i="${i}">${esc(s[0])}<small>${esc(s[1])}</small></button>`).join(''):'<p style="margin:0;padding:12px 14px;color:#9fb4c4">找不到。可以直接點地圖。</p>';sug.hidden=false;};
+  q.addEventListener('input',show);q.addEventListener('focus',show);
+  q.addEventListener('keydown',e=>{if(e.key==='Enter'&&hits[0]){e.preventDefault();pickHit(hits[0]);}else if(e.key==='ArrowDown'){const b=sug.querySelector('button');if(b){e.preventDefault();b.focus();}}else if(e.key==='Escape')sug.hidden=true;});
+  sug.addEventListener('click',e=>{const b=e.target.closest('button');if(b)pickHit(hits[+b.dataset.i]);});
+  sug.addEventListener('keydown',e=>{const bs=[...sug.querySelectorAll('button')],k=bs.indexOf(document.activeElement);if(e.key==='ArrowDown'&&k<bs.length-1){e.preventDefault();bs[k+1].focus();}else if(e.key==='ArrowUp'){e.preventDefault();(k>0?bs[k-1]:q).focus();}else if(e.key==='Escape'){sug.hidden=true;q.focus();}});
+  document.addEventListener('click',e=>{if(!e.target.closest('.ud-find,#udSug'))sug.hidden=true;});
+  const pickHit=s=>{q.value='';sug.hidden=true;setPlace(s[2],s[3],s[0],s[1]);};
+  $('#ud3d').onclick=()=>{$('#tgCol').checked=true;if(S.clear<.7){$('#clear').value=70;$('#clear').oninput({target:$('#clear')});}col3d();const x=X(UP.lon),z=Z(UP.lat);tween({az:.55,el:.32,dist:Math.max(300,UP.r*9),tx:x,ty:-40,tz:z},RM?0:800);
+    $$('.eq-views button').forEach(b=>b.setAttribute('aria-pressed','false'));$('#model').scrollIntoView({behavior:RM?'auto':'smooth'});};
+  $('#tgCol').onchange=()=>col3d();$('#tgFault').onchange=e=>{if(S.flt){S.flt.visible=e.target.checked;dirty();}};
+  new ResizeObserver(()=>{udMap();udCol();}).observe($('.ud-grid'));
+  udAll();}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function setPlace(lon,lat,n,w){UP.lon=lon;UP.lat=lat;UP.n=n;UP.w=w;udAll();if($('#tgCol').checked)col3d();if(BG.k!=null)bgCard();}
+function udAll(){udCalc();udText();udMap();udCol();udFault();udShel();}
+function udCalc(){const cx=X(UP.lon),cz=Z(UP.lat),R2=UP.r*UP.r,L=[];for(let i=0;i<E.n;i++){const dx=X(E.lon[i])-cx,dz=Z(E.lat[i])-cz;if(dx*dx+dz*dz<=R2)L.push(i);}UP.L=L;}
+function udText(){const L=UP.L,n=L.length,yrs=(E.t[E.n-1]+1)/365.25;let big=-1,n5=0,n4=0,deep=0;
+  for(const i of L){if(big<0||E.mag[i]>E.mag[big])big=i;if(E.mag[i]>=5)n5++;if(E.mag[i]>=4)n4++;if(E.dep[i]>deep)deep=E.dep[i];}
+  $('#udName').textContent=UP.n;$('#udWhere').textContent=(UP.w?UP.w+'・':'')+where(UP.lon,UP.lat).replace('附近','附近');
+  const per=n/yrs;
+  $('#udCount').innerHTML=n?`${esc(UP.n)}底下、半徑 ${UP.r} 公里的光柱裡，1990 年到現在一共有 <b class="num">${nf(n)}</b> 個規模 3 以上的地震，平均一年 ${per>=10?Math.round(per):per.toFixed(1)} 個。`:`${esc(UP.n)}底下、半徑 ${UP.r} 公里的光柱裡，1990 年到現在沒有規模 3 以上的地震。`;
+  const nm=big>=0?G.named.find(x=>x.i===big):null,f=big>=0?fmtT(E.t[big]):null;
+  $('#udNums').innerHTML=`<div><span>規模 4 以上</span><b class="num">${nf(n4)}</b></div><div><span>規模 5 以上</span><b class="num">${nf(n5)}</b></div><div><span>最深的一個</span><b class="num">${n?Math.round(deep):'—'}</b> <span style="display:inline">公里</span></div>`+
+   (big>=0?`<div style="grid-column:1/-1"><span>最大的一個</span><b>${nm?nm.n+'・':''}${f.y} 年 ${f.m} 月 ${f.d} 日，規模 ${E.mag[big].toFixed(1)}，深度 ${E.dep[big].toFixed(1)} 公里</b></div>`:'')+
+   `<div style="grid-column:1/-1"><span>小提醒</span><b style="font-size:15px;font-weight:500">規模 3 的小地震，大多數人感覺不到。光柱只算「震央」在圓圈裡的地震，圓圈外的大地震一樣會讓這裡搖。</b></div>`;}
+function udView(){const cv=$('#udMap'),w=cv.clientWidth||400,h=cv.clientHeight||400;
+  if(UP.zoom==='all'){const klat=3.75,klon=klat*KY/KX*w/h;return {lo0:121.0-klon/2,la1:23.68+klat/2,klon,klat,all:1};}
+  const span=Math.max(36,UP.r*2.7),klon=span/KX,klat=span/KY*h/w;return {lo0:UP.lon-klon/2,la1:UP.lat+klat/2,klon,klat};}
+function drawBase(x,v,w,h,opt={}){const sx=TEX.width/5,sy=TEX.height/6;x.fillStyle='#0c1822';x.fillRect(0,0,w,h);
+  x.drawImage(TEX,(v.lo0-RG.lon0)*sx,(RG.lat1-v.la1)*sy,v.klon*sx,v.klat*sy,0,0,w,h);x.fillStyle=`rgba(12,24,34,${opt.dim==null?.35:opt.dim})`;x.fillRect(0,0,w,h);
+  const P=(lo,la)=>[(lo-v.lo0)/v.klon*w,(v.la1-la)/v.klat*h];
+  x.strokeStyle='rgba(233,238,242,.55)';x.lineWidth=1;x.beginPath();for(const p of G.land){for(let k=0;k+1<p.length;k+=2){const q=P(p[k],p[k+1]);k?x.lineTo(...q):x.moveTo(...q);}}x.stroke();
+  return P;}
+function drawFaults(x,P,opt={}){if(!FLT)return;for(const f of FLT.f){const hi=opt.hi&&opt.hi.includes(f.n);x.strokeStyle=hi?'#fff':f.c===1?'#ff5c7a':'#ffa14a';x.globalAlpha=opt.hi&&!hi?.45:1;x.lineWidth=hi?4:opt.w||2.2;x.setLineDash(f.c===1?[]:[6,4]);
+    x.beginPath();for(const l of f.l){for(let k=0;k+1<l.length;k+=2){const q=P(l[k],l[k+1]);k?x.lineTo(...q):x.moveTo(...q);}}x.stroke();
+    if(hi){x.strokeStyle=f.c===1?'#ff5c7a':'#ffa14a';x.lineWidth=2;x.stroke();}}x.setLineDash([]);x.globalAlpha=1;}
+function label(x,t,px,py,o={}){x.font=`${o.b?'bold ':''}${o.s||14}px "Noto Sans TC",sans-serif`;x.textAlign=o.a||'left';x.textBaseline='middle';x.lineWidth=4;x.strokeStyle='rgba(12,24,34,.9)';x.strokeText(t,px,py);x.fillStyle=o.c||'#fff';x.fillText(t,px,py);}
+function udMap(){if(!E||!TEX)return;const cv=$('#udMap'),dpr=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;if(!w)return;cv.width=w*dpr;cv.height=h*dpr;const x=cv.getContext('2d');x.scale(dpr,dpr);
+  const v=udView(),P=drawBase(x,v,w,h),kpx=w/(v.klon*KX),cx=X(UP.lon),cz=Z(UP.lat),R2=UP.r*UP.r;
+  // quakes
+  const la0=v.la1-v.klat,lo1=v.lo0+v.klon;for(let i=0;i<E.n;i++){if(E.lon[i]<v.lo0||E.lon[i]>lo1||E.lat[i]<la0||E.lat[i]>v.la1)continue;if(v.all&&E.mag[i]<4)continue;
+    const dx=X(E.lon[i])-cx,dz=Z(E.lat[i])-cz,inn=dx*dx+dz*dz<=R2;const p=P(E.lon[i],E.lat[i]),r=Math.max(1,(v.all?.55:1)*Math.pow(1.6,E.mag[i]-3)*Math.min(2.2,Math.sqrt(kpx*1.5)));
+    x.globalAlpha=inn?.95:.28;x.fillStyle=css(dcol(E.dep[i]));x.beginPath();x.arc(p[0],p[1],r,0,7);x.fill();}x.globalAlpha=1;
+  drawFaults(x,P,{w:v.all?1.6:2.4});
+  // column
+  const c=P(UP.lon,UP.lat),rp=UP.r*kpx;x.fillStyle='rgba(242,193,78,.12)';x.strokeStyle='#F2C14E';x.lineWidth=2.5;x.setLineDash([7,5]);x.beginPath();x.arc(c[0],c[1],rp,0,7);x.fill();x.stroke();x.setLineDash([]);
+  // shelters
+  const near=SHL?nearShel(3):[];
+  if(SHL&&!v.all){x.fillStyle='#2fd38a';x.globalAlpha=.75;const ss=UP.r>30?1.6:2.2;for(const s of SHL.s){if(s[2]<v.lo0||s[2]>lo1||s[3]<la0||s[3]>v.la1)continue;const p=P(s[2],s[3]);x.fillRect(p[0]-ss,p[1]-ss,ss*2,ss*2);}x.globalAlpha=1;
+    near.forEach((s,k)=>{const p=P(s[2],s[3]);x.fillStyle='#2fd38a';x.strokeStyle='#0c1822';x.lineWidth=2;x.beginPath();x.arc(p[0],p[1],10,0,7);x.fill();x.stroke();label(x,String(k+1),p[0],p[1]+1,{a:'center',b:1,s:13,c:'#0c1822'});});}
+  // nearest fault label
+  const nf1=FLT?nearFaults(1)[0]:null;if(nf1&&!v.all){const q=[LON0+nf1.qx/KX,LAT0-nf1.qz/KY],p=P(q[0],q[1]);if(p[0]>-20&&p[0]<w+20&&p[1]>-20&&p[1]<h+20){x.strokeStyle='#fff';x.lineWidth=1.5;x.setLineDash([3,3]);x.beginPath();x.moveTo(c[0],c[1]);x.lineTo(p[0],p[1]);x.stroke();x.setLineDash([]);const ux=p[0]-c[0],uy=p[1]-c[1],ul=Math.hypot(ux,uy)||1,lx=p[0]+ux/ul*14,ly=p[1]+uy/ul*14+(Math.abs(uy)<8?16:0);label(x,nf1.f.n,Math.min(w-8,Math.max(8,lx)),Math.min(h-30,Math.max(12,ly)),{b:1,c:nf1.f.c===1?'#ffb3c1':'#ffd0a1',a:ux<0?'right':'left'});}}
+  // towns
+  for(const t of TOWNS){if(t[1]<v.lo0||t[1]>lo1||t[2]<la0||t[2]>v.la1)continue;const p=P(t[1],t[2]);if(!v.all&&Math.hypot(p[0]-c[0],p[1]-c[1])<26)continue;x.fillStyle='#e9eef2';x.beginPath();x.arc(p[0],p[1],2.5,0,7);x.fill();label(x,t[0],p[0]+6,p[1],{s:13,c:'#e9eef2'});}
+  // center pin
+  x.fillStyle='#F2C14E';x.strokeStyle='#0c1822';x.lineWidth=3;x.beginPath();x.arc(c[0],c[1],8,0,7);x.fill();x.stroke();x.fillStyle='#0c1822';x.beginPath();x.arc(c[0],c[1],3,0,7);x.fill();
+  label(x,UP.n,Math.min(w-8,c[0]+12),c[1]-14,{b:1,s:15,c:'#F2C14E',a:c[0]>w-120?'right':'left'});
+  // scale bar
+  const km=v.all?50:10,bar=km*kpx;x.strokeStyle='rgba(255,255,255,.8)';x.lineWidth=2;x.beginPath();x.moveTo(w-bar-14,h-14);x.lineTo(w-14,h-14);x.stroke();label(x,km+' 公里',w-14,h-26,{a:'right',s:13});}
+function udCol(){if(!E)return;const cv=$('#udCol'),dpr=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;if(!w)return;cv.width=w*dpr;cv.height=h*dpr;const x=cv.getContext('2d');x.scale(dpr,dpr);
+  const L=UP.L,R=UP.r,cx=X(UP.lon);let mx=0;for(const i of L)mx=Math.max(mx,E.dep[i]);const D=Math.max(40,Math.min(320,Math.ceil((mx+5)/20)*20));
+  const pl=44,pr=10,pt=30,pb=10,W=w-pl-pr,H=h-pt-pb,XX=d=>pl+(d+R)/(2*R)*W,Y=d=>pt+d/D*H;
+  x.fillStyle='#0c1822';x.fillRect(0,0,w,h);
+  const g=x.createLinearGradient(pl,0,pl+W,0);g.addColorStop(0,'rgba(242,193,78,0)');g.addColorStop(.2,'rgba(242,193,78,.10)');g.addColorStop(.5,'rgba(242,193,78,.22)');g.addColorStop(.8,'rgba(242,193,78,.10)');g.addColorStop(1,'rgba(242,193,78,0)');x.fillStyle=g;x.fillRect(pl,pt,W,H);
+  x.strokeStyle='#22384a';x.lineWidth=1;x.fillStyle='#9fb4c4';x.font='12px "IBM Plex Mono",monospace';x.textAlign='right';x.textBaseline='middle';const st=D>150?50:D>60?20:10;
+  for(let d=0;d<=D;d+=st){x.beginPath();x.moveTo(pl,Y(d));x.lineTo(pl+W,Y(d));x.stroke();x.fillText(String(d),pl-6,Y(d));}
+  x.save();x.translate(11,pt+H/2);x.rotate(-Math.PI/2);x.textAlign='center';x.font='12px "Noto Sans TC",sans-serif';x.fillText('深度（公里）',0,0);x.restore();
+  x.fillStyle='#8aa06a';x.fillRect(pl,pt-5,W,5);
+  const pts=L.slice().sort((a,b)=>E.mag[a]-E.mag[b]),sc=Math.sqrt(Math.min(1.6,W/(2*R)/6));
+  for(const i of pts){const r=Math.max(1.4,1.2*Math.pow(1.6,E.mag[i]-3)*sc*1.6);x.fillStyle=css(dcol(E.dep[i]));x.beginPath();x.arc(XX(X(E.lon[i])-cx),Y(E.dep[i]),r,0,7);x.fill();if(r>4){x.strokeStyle='rgba(12,24,34,.8)';x.lineWidth=1;x.stroke();}}
+  x.fillStyle='#F2C14E';x.beginPath();x.moveTo(XX(0),pt-4);x.lineTo(XX(0)-7,pt-18);x.lineTo(XX(0)+7,pt-18);x.closePath();x.fill();
+  label(x,'西',pl+4,pt-14,{s:12,c:'#9fb4c4'});label(x,'東',pl+W-4,pt-14,{s:12,c:'#9fb4c4',a:'right'});label(x,UP.n,XX(0)+12,pt-14,{s:13,c:'#F2C14E',b:1});}
+function nearFaults(k){if(!FLT)return [];return FLT.f.map(f=>{const [d,qx,qz]=faultDist(f,UP.lon,UP.lat);return {f,d,qx,qz};}).sort((a,b)=>a.d-b.d).slice(0,k);}
+function nearShel(k){if(!SHL)return [];const [px,pz]=kmXZ(UP.lon,UP.lat);return SHL.s.map(s=>[...s,Math.hypot(X(s[2])-px,Z(s[3])-pz)]).sort((a,b)=>a[5]-b[5]).slice(0,k);}
+function udFault(){const el=$('#udFault');if(!FLT){el.innerHTML='<h3>離這裡最近的活動斷層</h3><p>斷層資料載入中…</p>';return;}
+  const L=nearFaults(3),a=L[0],cls=c=>c===1?'第一類':'第二類';
+  el.innerHTML=`<h3>離這裡最近的活動斷層</h3><p class="ud-k">${a.f.n}・${a.d<1?'不到 <b class="num">1</b> 公里':`約 <b class="num">${fmtKm(a.d)}</b> 公里`}</p>
+   <p>${cls(a.f.c)}活動斷層${a.f.k?'・'+esc(a.f.k):''}${a.f.len?'・長度 '+esc(a.f.len):''}${a.f.u?`・<a href="${a.f.u}" target="_blank" rel="noopener">地調所的說明</a>`:''}</p>
+   <p>再來是${L.slice(1).map(o=>`${o.f.n}（約 ${fmtKm(o.d)} 公里）`).join('、')}。</p>
+   <p class="note"><b>活動斷層</b>是最近一萬年內（第一類）或十萬年內（第二類）錯動過、以後還可能再錯動的斷層。斷層錯動就會發生地震。住得離斷層近，不代表一定會有大地震，但是蓋房子、蓋學校要特別小心。</p>
+   <p class="src">距離是到地圖上斷層線最近一點的直線距離。資料：${esc(FLT.src)}。</p>`;}
+function udShel(){const el=$('#udShel');if(!SHL){el.innerHTML='<h3>最近的避難收容處所</h3><p>資料載入中…</p>';return;}
+  const L=nearShel(3);
+  el.innerHTML=`<h3>最近的避難收容處所</h3>`+(L[0][5]>25?`<p>這裡附近 25 公里內沒有登記的避難收容處所，可能是在海上或深山。</p>`:
+   `<ol>${L.map(s=>`<li><b>${esc(s[0])}</b>・${esc(s[1])}・${aboutKm(s[5])}${s[4]?`・可以住 ${nf(s[4])} 人`:''}</li>`).join('')}</ol>`)+
+   `<p class="note">大地震之後，如果家裡的房子不安全，可以到避難收容處所。平常就和家人約好：地震後要在哪裡會合、要去哪一個避難所。</p>
+   <p class="src">只列出登記為「地震時可以使用」的處所，地圖上綠色方塊就是它們。資料：${esc(SHL.src)}，${SHL.at} 更新。</p>`;}
+/* 3D: active faults on the ground, a light column under the chosen place */
+function fault3d(){if(!FLT||!S.sc)return;if(S.flt){S.sc.remove(S.flt);}const g=new THREE.Group();const A=[[],[]];
+  for(const f of FLT.f)for(const l of f.l)for(let k=0;k+3<l.length;k+=2){const y1=Math.max(0,hAt(l[k],l[k+1]))/1000*S.exag+S.lift+.8,y2=Math.max(0,hAt(l[k+2],l[k+3]))/1000*S.exag+S.lift+.8;A[f.c-1].push([X(l[k]),y1,Z(l[k+1])],[X(l[k+2]),y2,Z(l[k+3])]);}
+  g.add(lines(A[0],0xff5c7a,1),lines(A[1],0xffa14a,1));g.visible=$('#tgFault').checked;S.flt=g;S.sc.add(g);dirty();}
+function col3d(){if(!S.sc)return;const on=$('#tgCol').checked,u=S.pm.uniforms;if(S.col){S.sc.remove(S.col);S.col=null;}
+  u.uCol.value.set(X(UP.lon),Z(UP.lat),UP.r,on?1:0);
+  if(on){const x=X(UP.lon),z=Z(UP.lat),top=Math.max(0,hAt(UP.lon,UP.lat))/1000*S.exag+S.lift+6,D=320;const g=new THREE.Group();
+    const cy=new THREE.CylinderGeometry(UP.r,UP.r,top+D,48,1,true);const m=new THREE.Mesh(cy,new THREE.MeshBasicMaterial({color:0xF2C14E,transparent:true,opacity:.09,side:THREE.DoubleSide,depthWrite:false}));m.position.set(x,(top-D)/2,z);g.add(m);
+    const ring=y=>{const a=[];for(let k=0;k<64;k++){const t0=k/64*Math.PI*2,t1=(k+1)/64*Math.PI*2;a.push([x+UP.r*Math.cos(t0),y,z+UP.r*Math.sin(t0)],[x+UP.r*Math.cos(t1),y,z+UP.r*Math.sin(t1)]);}return a;};
+    g.add(lines([...ring(top),...ring(-D),[x,top+18,z],[x,top,z]],0xF2C14E,.9));S.col=g;S.sc.add(g);}
+  const lb=$('#udLb');if(lb){lb.textContent=UP.n;lb.hidden=!on;}dirty();}
+function colLabel(){const lb=$('#udLb');if(!lb||lb.hidden)return;const p=proj(X(UP.lon),Math.max(0,hAt(UP.lon,UP.lat))/1000*S.exag+S.lift+26,Z(UP.lat));if(!p||p[0]<0||p[1]<0||p[0]>S.W||p[1]>S.H){lb.style.display='none';return;}lb.style.display='';lb.style.left=p[0]+'px';lb.style.top=p[1]+'px';}
+
+/* ---------- big damaging earthquakes ---------- */
+const BIGQ=[
+ {k:'ms',y:1906,n:'梅山地震',d:'1906 年 3 月 17 日 清晨 6:43',m:7.1,dead:'1,258 人',house:'6,769 間',lon:120.45,lat:23.55,flt:['梅山斷層'],
+  t:'嘉義的<b>梅山斷層</b>錯動。地面裂開，有的地方噴出沙子，連鐵路都被扭彎了。房子全倒六千多間，1,258 人罹難。',
+  q:'梅山斷層現在還算是活動斷層嗎？',a:'是。它是<b>第一類活動斷層</b>，一萬年內錯動過，以後還可能再錯動。打開上面 3D 模型的「活動斷層」，可以在嘉義找到它。',
+  src:['維基百科〈1906年梅山地震〉（引用氣象署資料）','https://zh.wikipedia.org/zh-tw/1906%E5%B9%B4%E6%A2%85%E5%B1%B1%E5%9C%B0%E9%9C%87']},
+ {k:'hc',y:1935,n:'新竹－臺中地震',d:'1935 年 4 月 21 日 清晨 6:02',m:7.1,dead:'3,276 人',house:'17,907 間',lon:120.8,lat:24.4,flt:['獅潭斷層','屯子腳斷層'],
+  t:'苗栗和臺中山區的<b>獅潭斷層</b>、<b>屯子腳斷層</b>一起錯動，獅潭斷層有的地方高低差了 3 公尺。房子全倒一萬七千多間，3,276 人罹難，是臺灣有紀錄以來<b>死亡人數最多</b>的地震。',
+  q:'為什麼這個地震死了那麼多人？',a:'地震發生在清晨，很多人還在睡覺。那時候很多房子是用泥土做的磚（土角）蓋的，不耐震，一搖就倒。',
+  src:['中央氣象署地震測報中心〈地震百問：臺灣最嚴重的震災情形如何？〉','https://scweb.cwa.gov.tw/zh-tw/guidance/faqdetail/71']},
+ {k:'xh',y:1946,n:'新化地震',d:'1946 年 12 月 5 日 清晨 6:47',m:6.1,dead:'74 人',house:'1,971 間',lon:120.3,lat:23.1,flt:['新化斷層'],local:1,
+  t:'就在<b>臺南</b>！<b>新化斷層</b>錯動，地面出現裂縫，有的地方從地下噴出沙和水（土壤液化）。鐵路、道路、橋和水管都壞了，74 人罹難。',
+  q:'新化斷層離你選的地方有多遠？',a:'@xh',
+  src:['Wikipedia: 1946 Hsinhua earthquake','https://en.wikipedia.org/wiki/1946_Hsinhua_earthquake']},
+ {k:'bh',y:1964,n:'白河地震',d:'1964 年 1 月 18 日 晚上 8:04',m:6.3,dead:'106 人',house:'10,502 間',lon:120.5,lat:23.1,flt:['觸口斷層'],local:1,
+  t:'臺南白河、東山一帶受災最重，<b>觸口斷層</b>附近的房子全倒一萬多間，106 人罹難。嘉義市還發生大火，因為餘震不斷，消防員很難靠近救火。',
+  q:'地震之後，除了房子倒塌，還可能發生什麼危險？',a:'火災、山崩和落石、土壤液化、海邊的海嘯。所以地震停了以後，要先檢查瓦斯有沒有關好，離開可能倒塌的房子，遠離山邊和海邊。',
+  src:['Wikipedia: 1964 Baihe earthquake','https://en.wikipedia.org/wiki/1964_Baihe_earthquake']},
+ {k:'921',s:'921',y:1999,n:'集集地震（921 大地震）',d:'1999 年 9 月 21 日 凌晨 1:47',m:7.3,dead:'2,415 人',house:'51,711 間',flt:['車籠埔斷層'],
+  t:'南投集集附近，<b>車籠埔斷層</b>錯動，地表裂開大約 100 公里長，地面最多被抬高約 4 公尺、橫向錯開約 7 公尺。臺中霧峰光復國中的操場被推出一道隆起，現在成了「921 地震教育園區」。',
+  q:'在上面的 3D 模型按播放：為什麼 1999 年突然多了一大群點？',a:'那是集集地震的<b>餘震</b>。大地震之後，附近會接著發生很多比較小的地震，可以持續好幾個月。下面「大地震之後」那一段可以一天一天看。',
+  src:['中央氣象署地震測報中心〈地震百問：臺灣最嚴重的震災情形如何？〉','https://scweb.cwa.gov.tw/zh-tw/guidance/faqdetail/71']},
+ {k:'mn',s:'美濃',y:2016,n:'美濃地震',d:'2016 年 2 月 6 日 凌晨 3:57',m:6.6,dead:'117 人',house:'',flt:[],local:1,
+  t:'震央在高雄美濃的地底下，可是災情最重的是<b>臺南</b>。臺南平原的土比較鬆軟，會把搖晃放大。永康的維冠金龍大樓倒塌，115 人在這棟大樓裡罹難，這棟大樓本身的結構也有問題。',
+  q:'震央在高雄，為什麼臺南的災情比較重？',a:'臺南平原的土比較軟，震波傳到這裡會被放大；倒塌的大樓結構也有問題。所以蓋房子要看地質，也要照規定蓋得夠堅固。',
+  src:['Wikipedia: 2016 Taiwan earthquake','https://en.wikipedia.org/wiki/2016_Taiwan_earthquake']},
+ {k:'hl',s:'0403',y:2024,n:'0403 花蓮地震',d:'2024 年 4 月 3 日 早上 7:58',m:7.2,dead:'18 人',house:'',flt:[],
+  t:'震央在花蓮外海，是 921 之後臺灣<b>最大</b>的地震。大部分罹難的人是在山區道路被落石擊中；花蓮市的天王星大樓嚴重傾斜。',
+  q:'這個地震規模比美濃地震還大，為什麼倒塌的大樓比較少？',a:'原因很多：震央在海上，離人多的地方比較遠；921 之後，房子的耐震規定變得更嚴格。但是山區的落石還是非常危險。',
+  src:['報導者〈0403花蓮地震〉（死亡人數為 2024 年 4 月 25 日統計）','https://www.twreporter.org/a/taiwan-0403earthquake']}];
+const BG={k:null};
+function bgPos(b){if(b.s){const nm=G.named.find(x=>x.s===b.s);if(nm&&nm.i>=0)return [E.lon[nm.i],E.lat[nm.i],nm.i];}return [b.lon,b.lat,-1];}
+function initBig(){$('#bgPick').innerHTML=BIGQ.map((b,i)=>`<button role="tab" data-i="${i}" aria-selected="false">${b.y} ${b.n.replace('（921 大地震）','')}</button>`).join('');
+  $$('#bgPick button').forEach(b=>b.onclick=()=>{BG.k=+b.dataset.i;$$('#bgPick button').forEach(x=>x.setAttribute('aria-selected',String(x===b)));bgDraw();bgCard();});
+  $('#bgMap').addEventListener('click',e=>{const cv=$('#bgMap'),r=cv.getBoundingClientRect(),v=bgView(),mx=e.clientX-r.left,my=e.clientY-r.top;let best=-1,bd=30;
+    BIGQ.forEach((b,i)=>{const [lo,la]=bgPos(b),px=(lo-v.lo0)/v.klon*r.width,py=(v.la1-la)/v.klat*r.height,d=Math.hypot(px-mx,py-my);if(d<bd){bd=d;best=i;}});if(best>=0)$$('#bgPick button')[best].click();});
+  new ResizeObserver(()=>bgDraw()).observe($('.bg-grid'));$$('#bgPick button')[4].click();}
+function bgView(){const cv=$('#bgMap'),w=cv.clientWidth||400,h=cv.clientHeight||480,klat=3.7,klon=klat*KY/KX*w/h;return {lo0:120.95-klon/2,la1:23.75+klat/2,klon,klat};}
+function bgDraw(){if(!E||!TEX)return;const cv=$('#bgMap'),dpr=Math.min(2,devicePixelRatio||1),w=cv.clientWidth,h=cv.clientHeight;if(!w)return;cv.width=w*dpr;cv.height=h*dpr;const x=cv.getContext('2d');x.scale(dpr,dpr);
+  const v=bgView(),P=drawBase(x,v,w,h,{dim:.3}),b=BG.k!=null?BIGQ[BG.k]:null;drawFaults(x,P,{w:1.5,hi:b?b.flt:null});
+  const hp=P(UP.lon,UP.lat);x.fillStyle='#F2C14E';x.strokeStyle='#0c1822';x.lineWidth=2;x.beginPath();x.arc(hp[0],hp[1],6,0,7);x.fill();x.stroke();label(x,UP.n,hp[0]-10,hp[1]+14,{s:12,c:'#F2C14E',a:'right'});
+  BIGQ.map((q,i)=>i).sort((a,b)=>(a===BG.k)-(b===BG.k)).forEach(i=>{const q=BIGQ[i],[lo,la]=bgPos(q),p=P(lo,la),on=i===BG.k;x.fillStyle=on?'#ff3b5c':'#ffd9df';x.strokeStyle='#0c1822';x.lineWidth=2;star(x,p[0],p[1],on?16:9);
+    label(x,String(q.y),p[0]+(on?18:12),p[1],{s:on?15:12,b:on,c:on?'#fff':'#ffd9df'});});
+  label(x,'★ 震央　',w-10,h-14,{a:'right',s:12,c:'#ffd9df'});}
+function bgCard(){if(BG.k==null)return;const b=BIGQ[BG.k],[lo,la,i]=bgPos(b),far=kmBetween(UP.lon,UP.lat,lo,la);let ans=b.a;
+  if(ans==='@xh'){const f=FLT&&FLT.f.find(o=>o.n==='新化斷層');ans=f?`從${esc(UP.n)}到新化斷層，直線距離大約 <b>${fmtKm(faultDist(f,UP.lon,UP.lat)[0])} 公里</b>。新化斷層是第一類活動斷層，就在臺南的地底下。`:'新化斷層就在臺南新化附近。';}
+  $('#bgCard').innerHTML=`<h3>${b.y} ${b.n}</h3><p class="bg-meta">${b.d}・規模 ${b.m}</p>
+   <div class="bg-stat"><div><span>罹難</span><b class="num">${b.dead}</b></div><div><span>房子全倒</span><b class="num">${b.house||'—'}</b></div><div><span>震央離${esc(UP.n.length>6?'這裡':UP.n)}</span><b class="num">${Math.round(far)} 公里</b></div></div>
+   <p>${b.t}</p>
+   <div class="bg-q"><b>想一想：</b>${b.q}<details><summary>看答案</summary><p>${ans}</p></details></div>
+   ${i>=0?`<button class="bigbtn alt" id="bg3d">在 3D 模型裡看這個地震</button>`:`<p class="bg-far">1990 年以前的地震，不在 3D 模型的地震目錄裡。地圖上的星星是大約的震央位置。</p>`}
+   <p class="src">資料：<a href="${b.src[1]}" target="_blank" rel="noopener">${b.src[0]}</a>。規模是芮氏規模。</p>`;
+  const bt=$('#bg3d');if(bt)bt.onclick=()=>{stopPlay();tMin=0;tMax=E.t[E.n-1]+1;update();sel=i;card();tween({az:.5,el:.4,dist:420,tx:X(E.lon[i]),ty:-E.dep[i]-10,tz:Z(E.lat[i])},RM?0:800);
+    $$('.eq-views button').forEach(x=>x.setAttribute('aria-pressed','false'));$('#model').scrollIntoView({behavior:RM?'auto':'smooth'});};}
+
 function initSrc(){const m=META,h=m.n_history,c=m.n-h,f=fmtT(E.t[E.n-1]);
   $('#srcList').innerHTML=`<h3>地震</h3><p>交通部中央氣象署「地震目錄」（政府資料開放平臺第 97095 號資料集）：規模 3 以上、東經 118–124 度、北緯 20–27 度範圍內的地震。</p>
    <ul><li>1990–2025 年歷史目錄：<b class="num">${nf(h)}</b> 筆 <span class="src-ok">和氣象署目錄筆數一致</span></li><li>${m.current_period[0].slice(0,4)} 年 1 月到 ${f.m} 月：<b class="num">${nf(c)}</b> 筆</li><li>一共 <b class="num">${nf(m.n)}</b> 筆，最後一筆是 ${f.y} 年 ${f.m} 月 ${f.d} 日。每個月自動更新一次。</li></ul>
    <p>每個地震的位置和深度，是用很多個地震測站收到震波的時間算出來的，所以有誤差。外海和山區的測站比較少，定位等級常是 C 或 D。</p>
    <h3>地形和海底</h3><p>NOAA ETOPO 2022（15 弧秒網格）。3D 模型用 1 弧分的平均高度。陸地高度可以放大，海底深度和地震深度都是真實比例。</p>
    <h3>板塊表面</h3><p>美國地質調查所 USGS Slab2（Hayes 等，2018）的琉球隱沒帶和馬尼拉隱沒帶模型。這是科學家根據地震位置和其他觀測推算出來的「板塊上緣」，不是直接看到的。</p>
-   <h3>臺灣每年移動的方向</h3><p>中央氣象署、中央研究院等單位的 GNSS 測站，2010–2024 年的平均速度，以澎湖白沙為參考點。詳細說明在「<a href="https://geo.twranger.com/gnss.html">臺灣每年都在移動</a>」。</p>`;}
+   <h3>臺灣每年移動的方向</h3><p>中央氣象署、中央研究院等單位的 GNSS 測站，2010–2024 年的平均速度，以澎湖白沙為參考點。詳細說明在「<a href="https://geo.twranger.com/gnss.html">臺灣每年都在移動</a>」。</p>
+   <h3>活動斷層</h3><p>經濟部地質調查及礦業管理中心公告的 36 條活動斷層（政府資料開放授權條款第 1 版）。第一類是一萬年內錯動過的斷層，第二類是十萬年內錯動過的斷層。地圖上的線是斷層在地表的位置，有些是推測的位置。</p>
+   <h3>避難收容處所</h3><p>內政部消防署「避難收容處所點位檔」（政府資料開放平臺第 73242 號資料集，政府資料開放授權條款第 1 版），只用登記為「地震時可以使用」的處所，管理人姓名和電話沒有放進網站。</p>
+   <h3>大地震的說明卡</h3><p>死亡人數和房子倒塌的數字，取自中央氣象署地震測報中心〈地震百問〉、維基百科（引用氣象署和當時的統計）和報導者。1990 年以前的震央是大約的位置。</p>`;}
 })();
 </script>
