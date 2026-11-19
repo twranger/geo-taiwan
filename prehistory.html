@@ -1979,8 +1979,16 @@ $('#skX')&&($('#skX').onclick=()=>{$('#sk').hidden=true;W3&&W3.pause(false);});
 /* jade trip to 豐田 */
 function jadeTrip(){W3&&W3.pause(true);$('#jt').hidden=false;const b=$('#jtBody');
   b.innerHTML=`<div class="jt-map">${TWSVG}</div><div class="jt-side"><p>卑南的人用的玉，原料大多來自<b>花蓮豐田</b>一帶。要不要划獨木舟沿著海岸往北，去找玉料？</p><p class="note">考古學家在臺灣各地，還有東南亞的遺址，都找到用豐田玉做的飾品。</p><button class="bigbtn" id="jtGo">出發去豐田</button></div>`;
-  $('#jtGo').onclick=()=>{const am=$('#jtBoat animateMotion');try{am.beginElement();}catch(e){}$('#jtGo').disabled=true;
-    setTimeout(()=>{add({jaderaw:2});save();hudGoal();b.querySelector('.jt-side').innerHTML=`<p><b>你在豐田找到了 2 塊玉料！</b></p><p>玉非常硬，要回到部落，用<b>磨石</b>慢慢磨。</p><button class="bigbtn" id="jtBack">划回卑南</button>`;$('#jtBack').onclick=jtClose;$('#jtBack').focus();},RM?200:2400);};}
+  /* paddle there yourself: left and right in turn, eight strokes along the coast */
+  $('#jtGo').onclick=()=>{const boat=$('#jtBoat'),am=boat&&boat.querySelector('animateMotion'),P=[[91.2,222.0],[99.8,218.6],[114.0,194.6],[124.2,165.4],[132.1,132.9],[126.6,127.7]];if(am)am.remove();
+    const seg=P.slice(1).map((q,i)=>Math.hypot(q[0]-P[i][0],q[1]-P[i][1])),L=seg.reduce((x,y)=>x+y,0);
+    const at=f=>{let d=f*L;for(let i=0;i<seg.length;i++){if(d<=seg[i]||i===seg.length-1){const k=Math.min(1,d/seg[i]);return [P[i][0]+(P[i+1][0]-P[i][0])*k,P[i][1]+(P[i+1][1]-P[i][1])*k];}d-=seg[i];}};
+    const N=8;let n=0,last='',busy=false;const put=f=>{const [x,y]=at(f);if(boat)boat.setAttribute('transform',`translate(${x.toFixed(1)},${y.toFixed(1)})`);};put(0);
+    const side=b.querySelector('.jt-side');side.innerHTML=`<p><b>划獨木舟去豐田</b></p><p>左邊、右邊輪流划，船才會直直往前走。</p><div class="row"><button class="bigbtn" id="jtL">← 划左槳</button><button class="bigbtn" id="jtR">划右槳 →</button></div><p class="qfb" id="jtMsg">還要划 ${N} 下</p>`;
+    const stroke=s=>{if(busy||n>=N)return;if(s===last){$('#jtMsg').textContent='船歪了！換另一邊划。';sfx.bad&&sfx.bad();return;}last=s;n++;sfx.pop&&sfx.pop();const f0=(n-1)/N,f1=n/N,t0=performance.now();busy=true;
+      const step=()=>{const k=Math.min(1,(performance.now()-t0)/(RM?1:260));put(f0+(f1-f0)*k);if(k<1)requestAnimationFrame(step);else{busy=false;if(n<N)$('#jtMsg').textContent=`很好！還要划 ${N-n} 下`;else arrive();}};step();};
+    $('#jtL').onclick=()=>stroke('L');$('#jtR').onclick=()=>stroke('R');$('#jtL').focus();
+    const arrive=()=>{add({jaderaw:2});save();hudGoal();sfx.win&&sfx.win();side.innerHTML=`<p><b>到豐田了！你找到了 2 塊玉料！</b></p><p>玉非常硬，要回到部落，用<b>磨石</b>慢慢磨。</p><button class="bigbtn" id="jtBack">划回卑南</button>`;$('#jtBack').onclick=jtClose;$('#jtBack').focus();};};}
 function jtClose(){$('#jt').hidden=true;W3&&W3.pause(false);}
 $('#jtX')&&($('#jtX').onclick=jtClose);
 /* hands-on tasks: locked until you've worked out how; products go into the bag */
