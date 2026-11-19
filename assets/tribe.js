@@ -111,13 +111,15 @@ function huntTick(dt,ts){if(!hunts.length)return;const {S,Hf}=X,now=NOW();
   /* the catch has to reach the other tablets right away, not at the next heartbeat */
   if(holding&&ringAt<0&&hunts[g].myC){ringAt=ts;NET.hold({g,k,s:me.seat||0,t:TSV(),j:myJ,c:hunts[g].myC});}
   if(!hooks.status)return;
+  const nearHint=!!(near&&nd<9&&!(hooks.armed&&!hooks.armed()));
   if(asleep)hooks.status('你在這顆石頭上站很久了。走一走，再回來圍獵。');
   else if(unarmed)hooks.status('空手抓不到水鹿。先到「找食物」用石器和樹枝綁一支長矛，學會了再來圍獵。');
   else if(blocked)hooks.status(here&&here.humans>=NEED&&hunts.length>1?'這群水鹿已經有 3 個人了。看別群頭上的牌子，找還沒滿的那一群。':'這顆石頭已經有同學站了，換一顆黃色的圓圈。');
   else if(mine){const {H,held,full,waited,wantNpc}=mine,miss=NEED-Object.keys(held).length,wt=NET.ref&&NET.up?WAITH:WAITS;
     if(H.state==='idle')hooks.status(full?`圍住了！別動……${Math.ceil(HOLD-H.hold)}`:`還差 ${miss} 個人。${wantNpc?'部落的人過來幫忙了。':NET.ref&&NET.up?`等同學過來；${Math.max(0,Math.ceil(wt-waited))} 秒後部落的人會來幫忙。`:'部落的人馬上過來。'}`);}
-  else if(near&&nd<20){hooks.status(hunts.length>1?`草原上有 ${hunts.length} 群水鹿，每群要 3 個人各站一顆石頭。看頭上的牌子，找還沒滿的那群。`:'圍獵水鹿：要 3 個人各站一顆石頭，把水鹿圍住。走到黃色圓圈上。');}
-  else if(huntTick.st){hooks.status(null);}huntTick.st=!!(asleep||unarmed||mine||blocked||(near&&nd<20));}
+  /* only right next to a herd, and only once you have a spear: otherwise the line covers whatever the pupil is really doing */
+  else if(nearHint){hooks.status(hunts.length>1?`草原上有 ${hunts.length} 群水鹿，每群要 3 個人各站一顆石頭。看頭上的牌子，找還沒滿的那群。`:'圍獵水鹿：要 3 個人各站一顆石頭，把水鹿圍住。走到黃色圓圈上。');}
+  else if(huntTick.st){hooks.status(null);}huntTick.st=!!(asleep||unarmed||mine||blocked||nearHint);}
 function startThrow(H,held){const {S,Hf}=X;H.state='throw';H.tt=0;H.hold=0;H.wasMine=myG===H.gi&&holding;
   H.pals=Object.values(held).filter(h=>h.who==='pal').length;H.team=[...new Set(Object.values(held).map(h=>h.who==='me'?null:h.who==='pal'?(h.s?h.s+' 號':'同學'):h.n).filter(Boolean))];
   const dy=Hf(H.at[0],H.at[1]);H.fly=H.marks.map((m,i)=>{const sp=spear();X.scene.add(sp);sp.visible=false;const a=held[m.k]&&held[m.k].who==='me'?{x:S.x,z:S.z,y:Hf(S.x,S.z)+1.5}:{x:m.x,z:m.z,y:m.y+1.6};
