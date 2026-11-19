@@ -474,6 +474,7 @@ select.nh-in{min-width:0}
 .nh-flag{min-width:9em;max-width:14em;color:#8a3b00;font-size:14px}
 .nh-inv{display:flex;flex-direction:column;gap:6px;margin:12px 0;padding:10px 12px;border:1px solid #c9d6da;border-radius:10px;background:#f4f8f9}.nh-inv small{color:#3d5560;font-size:14px}
 #nhTList li small{display:block;color:#3d5560;font-size:13px}#nhTList li.nh-off{opacity:.6}
+.nh-acct{margin-top:14px}.nh-acct summary{cursor:pointer;color:#3d5560;font-weight:700}.nh-acct p{margin-top:6px}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -577,6 +578,10 @@ const RULES=`    // ── 全班一起玩（geo.twranger.com）──
                     && exists(inviteDoc(request.resource.data.code))
                     && get(inviteDoc(request.resource.data.code)).data.n < get(inviteDoc(request.resource.data.code)).data.max
                     && getAfter(inviteDoc(request.resource.data.code)).data.n == get(inviteDoc(request.resource.data.code)).data.n + 1;
+      // 老師可以自己刪除帳號（被管理者停用的不行）
+      allow delete: if request.auth != null && request.auth.token.email != null
+                    && email == request.auth.token.email.lower()
+                    && resource.data.get('off', false) != true;
     }
     match /nmth_invites/{code} {
       allow read, write: if isOrienteeringAdmin();
@@ -586,6 +591,14 @@ const RULES=`    // ── 全班一起玩（geo.twranger.com）──
                     && resource.data.n < resource.data.max
                     && !exists(teacherDoc())
                     && getAfter(teacherDoc()).data.code == code;
+      // 老師刪除自己的帳號時，同一批寫入把名額還回來
+      allow update: if request.auth != null && request.auth.token.email != null
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['n'])
+                    && request.resource.data.n == resource.data.n - 1
+                    && exists(teacherDoc())
+                    && get(teacherDoc()).data.get('code', '') == code
+                    && get(teacherDoc()).data.get('off', false) != true
+                    && !existsAfter(teacherDoc());
     }
     match /nmth_rooms/{doc} {
       allow read: if true;
@@ -620,9 +633,23 @@ auth.onAuthStateChanged(u=>{user=u;off();cur=null;isAdmin=false;room$.hidden=lis
  auth$.innerHTML=`<div class="nh-row" style="margin-top:0;justify-content:space-between"><span>已登入：<b>${esc(u.email||u.uid)}</b><span id="nhRole"></span></span><button class="nh-btn alt" id="nhOut">登出</button></div><div id="nhSetup"></div>`;
  $('#nhOut').onclick=()=>auth.signOut();
  db.collection('nmth_teachers').doc('_admin').set({at:TS()}).then(()=>{isAdmin=true;$('#nhRole').textContent='（管理者）';loadList();syncTeachers();})
-  .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists&&!d.data().off){loadList();return;}if(d.exists){$('#nhSetup').innerHTML='<p class="nh-msg err">這個帳號已經停用。有問題請聯絡管理者。</p>';return;}throw new Error('no');})
+  .catch(()=>db.collection('nmth_teachers').doc(mail()).get().then(d=>{if(d.exists&&!d.data().off){loadList();acctUI(d.data());return;}if(d.exists){$('#nhSetup').innerHTML='<p class="nh-msg err">這個帳號已經停用。有問題請聯絡管理者。</p>';return;}throw new Error('no');})
   .catch(e=>joinForm(u)));});
 /* a teacher with the shared code signs up by herself; the database rules only let it through while there are seats left */
+/* a teacher can remove herself: every session she ran, every pupil record in them, her place on the list (the seat comes back) and her sign-in */
+function acctUI(me){$('#nhSetup').innerHTML=`<details class="nh-acct"><summary>我的帳號</summary><p>不再使用的話，可以刪除你的帳號。你發過的每一場任務、所有學生的進度和成績都會一起刪掉，救不回來。需要的話，先在每一場任務裡下載 ZIP 備份。</p>
+  <div class="nh-row"><input class="nh-in" id="nhDelMe" placeholder="輸入「刪除」兩個字" aria-label="輸入刪除確認" style="width:200px"><button class="nh-btn alt nh-del" id="nhDelGo">刪除我的帳號和全部資料</button></div><p class="nh-msg" id="nhDelMsg"></p></details>`;
+ $('#nhDelGo').onclick=()=>{const msg=$('#nhDelMsg'),b=$('#nhDelGo');if($('#nhDelMe').value.trim()!=='刪除'){msg.className='nh-msg err';msg.textContent='請在框裡輸入「刪除」兩個字。';return;}
+  if(!confirm('確定刪除你的帳號、你發過的全部任務和學生資料？刪掉就救不回來。'))return;b.disabled=true;msg.className='nh-msg';msg.textContent='刪除中……';
+  const uid=user.uid,m=mail();off();cur=null;room$.hidden=true;list$.hidden=true;let sids=[];
+  db.collection('nmth_rooms').where('owner','==',uid).get().then(q=>{sids=q.docs.map(d=>d.id);},()=>0)
+   .then(()=>rt?rt.ref('cl_rooms').orderByChild('owner').equalTo(uid).once('value').then(s=>{Object.keys(s.val()||{}).forEach(k=>{if(!sids.includes(k))sids.push(k);});},()=>0):0)
+   .then(()=>sids.reduce((p,sid)=>p.then(()=>{msg.textContent=`刪除任務中……（還有 ${sids.length-sids.indexOf(sid)} 場）`;return delSession(sid).catch(()=>{});}),Promise.resolve()))
+   .then(()=>db.collection('nmth_teachers').doc(m).get()).then(d=>{const code=d.exists&&d.data().code;const bt=db.batch();bt.delete(db.collection('nmth_teachers').doc(m));if(code)bt.update(db.collection('nmth_invites').doc(code),{n:firebase.firestore.FieldValue.increment(-1)});
+     return bt.commit().then(()=>{if(!rt)return;const up={};up['cl_teachers/'+ekey(m)]=null;if(code)up['cl_invites/'+code+'/n']=firebase.database.ServerValue.increment(-1);return rt.ref().update(up).catch(()=>{});});})
+   .then(()=>Promise.resolve().then(()=>user.delete()).catch(e=>e&&e.code==='auth/requires-recent-login'?user.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()).then(()=>user.delete()):Promise.reject(e)).catch(()=>auth.signOut()))
+   .then(()=>{auth$.innerHTML=`<p class="nh-big">已經刪除</p><p>你的帳號、${sids.length} 場任務和學生資料都刪掉了。謝謝你用過這個平台。</p>`;})
+   .catch(e=>{b.disabled=false;msg.className='nh-msg err';msg.textContent='沒有刪完：'+(e.code||e.message)+'。可以再按一次，已經刪掉的不會重複。';});};}
 function joinForm(u){$('#nhSetup').innerHTML=`<p class="nh-big" style="margin-top:14px">第一次使用：輸入註冊序號</p><p>序號由管理者提供。註冊後，這個 Google 帳號（<b>${esc(u.email||'')}</b>）就能發任務給自己的班級。換帳號的話，先按右上角「登出」。</p>
   <div class="nh-row"><input class="nh-in" id="nhJCode" placeholder="註冊序號" aria-label="註冊序號" autocomplete="off" autocapitalize="off" spellcheck="false" style="min-width:180px"><input class="nh-in" id="nhJName" placeholder="怎麼稱呼你（例：王老師）" aria-label="稱呼" style="min-width:200px"><button class="nh-btn" id="nhJGo">註冊</button></div><p class="nh-msg" id="nhJMsg"></p>`;
  $('#nhJGo').onclick=()=>{const code=$('#nhJCode').value.trim().toLowerCase(),nm=$('#nhJName').value.trim().slice(0,20),m=mail(),msg=$('#nhJMsg'),b=$('#nhJGo');
@@ -630,7 +657,7 @@ function joinForm(u){$('#nhSetup').innerHTML=`<p class="nh-big" style="margin-to
   b.disabled=true;msg.className='nh-msg';msg.textContent='註冊中……';
   const bt=db.batch();bt.set(db.collection('nmth_teachers').doc(m),{name:nm,uid:user.uid,code,at:TS()});bt.update(db.collection('nmth_invites').doc(code),{n:firebase.firestore.FieldValue.increment(1)});
   bt.commit().then(()=>{const up={};up['cl_teachers/'+ekey(m)]=code;up['cl_invites/'+code+'/n']=firebase.database.ServerValue.increment(1);return rt?rt.ref().update(up).catch(()=>{}):0;})
-   .then(()=>{msg.className='nh-msg ok';msg.textContent='註冊好了！';setTimeout(()=>{$('#nhSetup').innerHTML='';loadList();},600);})
+   .then(()=>{msg.className='nh-msg ok';msg.textContent='註冊好了！';setTimeout(()=>{$('#nhSetup').innerHTML='';loadList();acctUI({code});},600);})
    .catch(()=>{b.disabled=false;msg.className='nh-msg err';msg.textContent='註冊不了：序號不對，或是名額已經滿了。';});};}
 /* the Realtime Database rules check the teacher list there, so it mirrors the Firestore list */
 function syncTeachers(){if(!rt)return;db.collection('nmth_teachers').get().then(q=>{const m={};q.docs.forEach(d=>{if(d.id[0]!=='_'){const v=d.data();m[ekey(d.id)]=v.off?false:(v.code||true);}});return rt.ref('cl_teachers').set(m);}).catch(()=>{});}
