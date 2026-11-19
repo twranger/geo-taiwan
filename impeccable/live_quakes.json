@@ -20,5 +20,39 @@
     "line": 0,
     "snippet": "Purple/violet gradient background",
     "selector": "#eqRamp > div:nth-of-type(4) > i"
+  },
+  {
+    "antipattern": "low-contrast",
+    "name": "Low contrast text",
+    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "https://geo.twranger.com/quakes.html",
+    "line": 0,
+    "snippet": "placeholder \"例如：安佃國小\" 3.2:1 (need 4.5:1) — text #557079 on #0f1e29",
+    "advisory": true,
+    "selector": "#udQ"
+  },
+  {
+    "antipattern": "side-tab",
+    "name": "Side-tab accent border",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/quakes.html",
+    "line": 0,
+    "snippet": "border-left: 4px + border-radius: 10px",
+    "selector": "div.bg-q"
+  },
+  {
+    "antipattern": "nested-cards",
+    "name": "Nested cards",
+    "description": "Cards inside cards create visual noise and excessive depth. Flatten the hierarchy — use spacing, typography, and dividers instead of nesting containers.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/quakes.html",
+    "line": 0,
+    "snippet": "Card inside card",
+    "selector": "div.bg-q"
   }
 ]
