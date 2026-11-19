@@ -551,7 +551,7 @@ body.inworld #vScene .scene-top .bigbtn{min-height:40px;padding:4px 14px;font-si
 .wl.lock{background:#4d5a55;border-style:dashed}
 .wl.res{background:#fffbeaf0;color:#4a3500;border:2px solid #b97f00;font-size:var(--t-xs);padding:2px 10px;min-height:0}
 .wl.res::after{display:none}
-.nmnew{margin-top:12px;padding:12px 14px;border-radius:12px;background:#fff8e6;border:1px solid #e0c27a;color:#3a2c10}.nmnew p{margin:0 0 8px}
+.nmnew{margin-top:12px;padding:12px 14px;border-radius:12px;background:#fff8e6;border:1px solid #e0c27a;color:#3a2c10}.nmnew p{margin:0 0 8px;color:#3a2c10!important;font-size:var(--t-m)}.nmnew b{color:#000}
 #gm canvas,#gmPlay{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .g2d{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r3);background:var(--surface,#fff);display:grid;gap:10px}
 .g2d-goal span{font-size:var(--t-xs);color:var(--muted);font-weight:700;display:block}.g2d-goal b{font-size:var(--t-l)}.g2d-goal small{display:block;font-size:var(--t-s);color:var(--muted)}
@@ -559,6 +559,7 @@ body.inworld #vScene .scene-top .bigbtn{min-height:40px;padding:4px 14px;font-si
 .g2d-it{min-height:52px;padding:6px 14px;border-radius:12px;border:2px solid var(--c,#8a7a66);background:#fffbea;font:inherit;font-weight:700;cursor:pointer;display:grid;text-align:left}.g2d-it small{font-weight:500;font-size:13px;color:#5a5040}
 .g2d-it.ping{animation:wlping .45s ease-in-out 6 alternate}
 .g2d-tools{display:flex;flex-wrap:wrap;gap:8px}
+.t2d{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:70;width:min(560px,calc(100% - 24px));background:rgba(22,33,29,.96);color:var(--ph-bone,#f3ead7);border:2px solid var(--ph-amber,#e6a23c);border-radius:12px;padding:10px 16px;font-size:var(--t-m);line-height:1.6;box-shadow:0 6px 24px #0005}
 .wl.res.ping{animation:wlping .45s ease-in-out 6 alternate;z-index:3}
 @keyframes wlping{to{background:#ffe680;box-shadow:0 0 0 8px #ffe68099}}
 @media (prefers-reduced-motion:reduce){.wl.res.ping{animation:none;outline:4px solid #ffe680}}
@@ -817,7 +818,7 @@ button.slot small{display:block;font-weight:500;font-size:var(--t-xs);color:var(
 /* ---------- end of a day ---------- */
 .night{text-align:center;padding-top:var(--s4)}
 .night .moon{width:64px;height:64px;margin:0 auto 10px;border-radius:50%;background:#f4ecd2;box-shadow:inset -14px -6px 0 #d9cfae}
-#nt .mbox{background:#14202e;color:#eef2f4;--ink:#eef2f4}#nt .night h3,#nt .night p,#nt .night li{color:#eef2f4}
+#nt{background:rgba(6,10,14,.9)}#nt .mbox{background:#14202e;color:#eef2f4;--ink:#eef2f4}#nt .night h3,#nt .night p,#nt .night li{color:#eef2f4}
 #nt .mbox .bigbtn{background:var(--ph-amber);border-color:var(--ph-amber);color:var(--ph-amber-ink)}#nt .mbox .bigbtn.alt{background:transparent;border-color:#9fb0ba;color:#eef2f4}
 #nt .mbox :focus-visible{outline-color:var(--ph-focus-d)}
 .night ul{text-align:left;margin:10px auto 0;max-width:30em;display:inline-block}
@@ -904,7 +905,7 @@ button.slot small{display:block;font-weight:500;font-size:var(--t-xs);color:var(
     <div class="wtoast" id="wToast" role="status" hidden></div><button class="wprompt" id="wPrompt" hidden></button>
     <div class="wlost" id="wLost" hidden role="alert"><b>畫面停住了</b><p>平板一下子忙不過來。你的進度都還在。</p><button id="wLostGo">重新載入畫面</button></div></div>
   <div class="scene" id="scene" tabindex="0" aria-label="史前場景，可以左右拖曳"><div class="scene-in" id="sceneIn"></div></div>
-  <div class="g2d" id="g2d" hidden><div class="g2d-goal" id="g2dGoal" aria-live="polite"></div><div class="g2d-res" id="g2dRes"></div><div class="g2d-tools"><button class="bigbtn" data-t="wb">動手試試</button><button class="bigbtn alt" data-t="bag">背包 <b id="g2dBag">0</b></button><button class="bigbtn alt" data-t="sk">技能圖</button></div></div>
+  <div class="t2d" id="t2d" role="status" hidden></div><div class="g2d" id="g2d" hidden><div class="g2d-goal" id="g2dGoal" aria-live="polite"></div><div class="g2d-res" id="g2dRes"></div><div class="g2d-tools"><button class="bigbtn" data-t="wb">動手試試</button><button class="bigbtn alt" data-t="bag">背包 <b id="g2dBag">0</b></button><button class="bigbtn alt" data-t="sk">技能圖</button></div></div>
   <p class="note" id="scNote">走到發光的光柱旁邊就能開始任務。任務做得越多，天色越晚，最後會天黑。</p>
   <div class="tasks" id="taskList"></div>
 </div></section>
@@ -1281,9 +1282,9 @@ G.farm=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9d38a');cam.position.se
 G.smelt=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9a98c');cam.position.set(1.2,3.4,8.4);cam.lookAt(.3,1.6,0);const pts=[[1.6,0],[1.7,.7],[1.25,2.1],[.75,3],[.65,3.3]].map(p=>new T.Vector2(p[0],p[1]));const fur=new T.Mesh(new T.LatheGeometry(pts,14),mat('#8a5f47',{side:T.DoubleSide}));fur.castShadow=true;scene.add(fur);
   const gm=bas('#5a2a14');const glow=P('sph',gm,.55,.5,.3,0,.55,1.5);scene.add(glow);const L=new T.PointLight(0xff7a2e,0,16,2);L.position.set(0,1,2.4);scene.add(L);const bel=P('cone',mat('#8a5a33'),.7,2,.7,-2.9,.7,1);bel.rotation.z=-Math.PI/2;scene.add(bel);const me=person('#7a4a22');me.position.set(-4.4,0,1);me.rotation.y=1.57;scene.add(me);
   const knife=new T.Group();knife.add(P('box',mat('#5d6166',{roughness:.4,metalness:.7}),1.8,.06,.3,.5,0,0),P('box',mat('#7a4a22'),.7,.12,.2,-.75,0,0));knife.position.set(3,.4,2);knife.visible=false;scene.add(knife);const sp=[];for(let i=0;i<14;i++){const s=P('sph',bas('#E69F00'),.05,.05,.05);s.castShadow=false;scene.add(s);sp.push([s,Math.random()]);}
-  let temp=20,ok=0,t=0,hot=0,end=0,pump=false,puff=0;const NEED=7;A.tap=()=>{pump=true;puff=.35;};A.up=()=>pump=false;A.key=(k,d)=>{if(k===' ')pump=d;};hud.gauge(20);
-  A.upd.push((dt,ts)=>{puff=Math.max(0,puff-dt);const blow=pump||puff>0;if(!end){t+=dt;temp=cl(temp+(blow?38:-24)*dt,0,100);if(temp>=60&&temp<=82){ok+=dt;if(Math.random()<.1&&sfx.tick)sfx.tick();}if(temp>92){hot+=dt;if(hot>1.5){hot=0;ok=Math.max(0,ok-1.5);sfx.bad&&sfx.bad();}}else hot=0;if(ok>=NEED){end=1;sfx.win&&sfx.win();knife.visible=true;hud.msg('煉好了！得到一塊鐵，旁邊剩下鐵渣','#00684B');setTimeout(()=>fin(t<15?3:t<24?2:1),1500);}}
-    const g=temp/100;gm.color.setRGB(.35+g*.65,.16+g*.5,.08+g*.1);L.intensity=g*2.6;bel.scale.y=pump?1.3+Math.sin(ts*14)*.5:2;me.userData.aR.rotation.x=me.userData.aL.rotation.x=pump?-1.2+Math.sin(ts*14)*.4:-.3;if(end)knife.rotation.y+=dt;
+  let temp=20,ok=0,t=0,hot=0,end=0,pump=false,puff=0;const NEED=7;A.tap=()=>{pump=true;puff=.5;};A.up=()=>pump=false;A.key=(k,d)=>{if(k===' ')pump=d;};hud.gauge(20);
+  A.upd.push((dt,ts)=>{puff=Math.max(0,puff-dt);const blow=pump||puff>0;if(!end){t+=dt;temp=cl(temp+(blow?38:-15)*dt,0,100);if(temp>=60&&temp<=82){ok+=dt;if(Math.random()<.1&&sfx.tick)sfx.tick();}if(temp>92){hot+=dt;if(hot>1.5){hot=0;ok=Math.max(0,ok-1.5);sfx.bad&&sfx.bad();}}else hot=0;if(ok>=NEED){end=1;sfx.win&&sfx.win();knife.visible=true;hud.msg('煉好了！得到一塊鐵，旁邊剩下鐵渣','#00684B');setTimeout(()=>fin(t<15?3:t<24?2:1),1500);}}
+    const g=temp/100;gm.color.setRGB(.35+g*.65,.16+g*.5,.08+g*.1);L.intensity=g*2.6;bel.scale.y=blow?1.3+Math.sin(ts*14)*.5:2;me.userData.aR.rotation.x=me.userData.aL.rotation.x=blow?-1.2+Math.sin(ts*14)*.4:-.3;if(end)knife.rotation.y+=dt;
     sp.forEach(([s,o])=>{const k=(ts*.9+o)%1;s.visible=g>.45;s.position.set(Math.sin(o*40)*.4*k,3.3+k*2.4*g,Math.cos(o*33)*.4*k);});
     hud.gauge(temp);hud.bar(ok/NEED,`鐵砂變成鐵 ${Math.round(ok/NEED*100)}%`,'#B2182B');hud.info(temp>92?'太熱了！':temp>=60&&temp<=82?'溫度剛好':temp<60?'太冷':'有點太熱');if(!end)hud.msg('按住或一直點＝送風升溫，停下來＝降溫。讓指針停在綠色的「剛好」');});};
 /* 8 trade */
@@ -1518,7 +1519,7 @@ G.fire=(a,fin)=>{let heat=0,t=0,end=0,sm=[],px=360;
 G.food=(a,fin)=>{let t=30,score=0,end=0,fish=[],sh=[],sp=[],pop=[];const GOAL=8;
   const nf=()=>{const d=Math.random()<.5?1:-1;fish.push({x:d>0?-40:W+40,y:rnd(70,215),v:d*rnd(70,150),s:rnd(0.8,1.3)});};const ns=()=>sh.push({x:rnd(60,660),y:rnd(320,410),l:rnd(4,7)});
   for(let i=0;i<4;i++)nf();for(let i=0;i<3;i++)ns();
-  a.tap=(x,y)=>{if(end)return;if(y>285){const i=sh.findIndex(s=>Math.hypot(s.x-x,s.y-y)<34);if(i>=0){sh.splice(i,1);score++;sfx.good();pop.push({x,y,l:1,t:'+1 貝'});}}else if(y>50){sp.push({x,y,l:0.32});sfx.tick();}};
+  a.tap=(x,y)=>{if(end)return;if(y>285){const i=sh.findIndex(s=>Math.hypot(s.x-x,s.y-y)<50);if(i>=0){sh.splice(i,1);score++;sfx.good();pop.push({x,y,l:1,t:'+1 貝'});}}else if(y>50){sp.push({x,y,l:0.32});sfx.tick();}};
   a.draw=dt=>{const c=a.c;if(!end){t-=dt;if(Math.random()<dt*0.9&&fish.length<6)nf();if(Math.random()<dt*0.7&&sh.length<4)ns();if(t<=0||score>=GOAL){end=1;score>=GOAL?sfx.win():sfx.bad();setTimeout(()=>fin(score>=GOAL?3:score>=5?2:1),900);}}
     c.fillStyle='#7cc4dd';c.fillRect(0,0,W,260);c.fillStyle='#5aaed0';for(let y=70;y<250;y+=40)for(let x=(y%80)/2;x<W;x+=80){c.beginPath();c.ellipse(x+Math.sin(t*2+y)*8,y,22,3,0,0,7);c.fill();}
     c.fillStyle='#e8d9a8';c.beginPath();c.moveTo(0,270);c.quadraticCurveTo(360,235,W,275);c.lineTo(W,H);c.lineTo(0,H);c.fill();
@@ -1570,14 +1571,14 @@ G.farm=(a,fin)=>{const pl=[];for(let i=0;i<6;i++)pl.push({x:130+(i%3)*230,y:190+
     if(!end&&pl.every(p=>p.s===3||p.dead)){end=1;sfx.win();setTimeout(()=>fin(got>=5?3:got>=3?2:1),900);}};};
 /* 7 smelt iron */
 G.smelt=(a,fin)=>{let temp=20,ok=0,t=0,hot=0,end=0,pump=false,puff=0,sp=[];const NEED=7;
-  a.tap=()=>{pump=true;puff=.35;};a.up=()=>{pump=false;};a.key=(k,d)=>{if(k===' ')pump=d;};
-  a.draw=dt=>{const c=a.c;puff=Math.max(0,puff-dt);const blow=pump||puff>0;if(!end){t+=dt;temp=clamp(temp+(blow?38:-24)*dt,0,100);if(temp>=60&&temp<=82){ok+=dt;if(Math.random()<.1)sfx.tick();}if(temp>92){hot+=dt;if(hot>1.5){hot=0;ok=Math.max(0,ok-1.5);sfx.bad();}}else hot=0;
+  a.tap=()=>{pump=true;puff=.5;};a.up=()=>{pump=false;};a.key=(k,d)=>{if(k===' ')pump=d;};
+  a.draw=dt=>{const c=a.c;puff=Math.max(0,puff-dt);const blow=pump||puff>0;if(!end){t+=dt;temp=clamp(temp+(blow?38:-15)*dt,0,100);if(temp>=60&&temp<=82){ok+=dt;if(Math.random()<.1)sfx.tick();}if(temp>92){hot+=dt;if(hot>1.5){hot=0;ok=Math.max(0,ok-1.5);sfx.bad();}}else hot=0;
       if(ok>=NEED){end=1;sfx.win();setTimeout(()=>fin(t<15?3:t<24?2:1),1300);}}
     c.fillStyle='#d8cdb8';c.fillRect(0,0,W,H);c.fillStyle='#b9a98c';c.fillRect(0,350,W,90);
     const g=temp/100;c.fillStyle='#7a5a44';c.strokeStyle='#4a3628';c.lineWidth=4;c.beginPath();c.moveTo(250,350);c.lineTo(280,150);c.quadraticCurveTo(360,110,440,150);c.lineTo(470,350);c.closePath();c.fill();c.stroke();
     c.fillStyle=`rgb(${90+g*165},${40+g*120},${20+g*20})`;c.beginPath();c.arc(360,300,40,Math.PI,0);c.lineTo(400,350);c.lineTo(320,350);c.fill();
     if(g>0.4&&Math.random()<g*0.5)sp.push({x:360+rnd(-20,20),y:140,vy:rnd(-150,-60),l:1});sp=sp.filter(s=>s.l>0);sp.forEach(s=>{s.y+=s.vy*dt;s.l-=dt;c.fillStyle=`rgba(230,159,0,${s.l})`;c.beginPath();c.arc(s.x,s.y,3,0,7);c.fill();});
-    const sq=pump?0.55:1;c.fillStyle='#8a5a33';c.strokeStyle='#4a2c14';c.beginPath();c.moveTo(250,320);c.lineTo(110,320-48*sq);c.lineTo(110,320+48*sq);c.closePath();c.fill();c.stroke();person(c,70,330,1.4);T(c,pump?'呼～送風中':'放開了',150,240,17);
+    const sq=blow?0.55:1;c.fillStyle='#8a5a33';c.strokeStyle='#4a2c14';c.beginPath();c.moveTo(250,320);c.lineTo(110,320-48*sq);c.lineTo(110,320+48*sq);c.closePath();c.fill();c.stroke();person(c,70,330,1.4);T(c,blow?'呼～送風中':'風停了',150,240,17);
     const bx=560,by=70,bh=250;c.fillStyle='#fff';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,bx,by,54,bh,12);c.fill();c.stroke();const yy=v=>by+bh-(v/100)*bh;c.fillStyle='#009E7355';c.fillRect(bx+3,yy(82),48,yy(60)-yy(82));c.strokeStyle='#00684B';c.setLineDash([5,4]);c.strokeRect(bx+3,yy(82),48,yy(60)-yy(82));c.setLineDash([]);
     T(c,'太熱',bx+86,yy(93),16,'#7a2d00');T(c,'剛好',bx+86,yy(71),18,'#00684B');T(c,'太冷',bx+86,yy(30),16,'#0072B2');c.fillStyle='#10313b';c.beginPath();c.moveTo(bx-14,yy(temp)-9);c.lineTo(bx+8,yy(temp));c.lineTo(bx-14,yy(temp)+9);c.fill();c.fillRect(bx+3,yy(temp)-2,48,4);
     bar(c,20,14,320,30,ok/NEED,'#D55E00',`鐵砂變成鐵 ${Math.round(ok/NEED*100)}%`);
@@ -1730,7 +1731,7 @@ function openTask(id){if(document.fullscreenElement)try{document.exitFullscreen(
 function play(){try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}catch(e){}Mus.set('game');S.tries[task.id]=(S.tries[task.id]||0)+1;try{speechSynthesis.cancel();}catch(e){}$('#gmIntro').hidden=true;$('#gmDone').hidden=true;$('#gmPlay').hidden=false;$('#gmHow').textContent=task.how;stopGame&&stopGame();const my=++runId,finish=n=>{if(my===runId)finishTask(n);};const use3=window.G3&&G3.has(task.id)&&!G3.lost();$('#gcv').hidden=!!use3;$('#gcv3').hidden=!use3;$('#ghud').hidden=!use3;if(use3){$('#gmHow').textContent='';stopGame=G3.run(task.id,finish);}else{$('#ghMsg').hidden=true;$('#ghTray').hidden=true;runGame(a=>G[task.id](a,finish));}}
 let runId=0;
 const FAILTXT={food:'只找到一點點，不夠大家吃。再試一次！',trade:'一樣都沒換到，船都開走了。看清楚船上的人要什麼，再試一次。'};
-const STAR3={food:'30 秒內找到 8 份食物。',knap:'敲歪不超過 1 次。',fire:'10 秒內把火生起來。',farm:'收成 5 塊田以上，別讓小鳥吃掉。',grind:'16 秒內磨好，記得加水。',pot:'泥條和細線的寬度對得更準。',trade:'每一艘船都給對東西，不要讓船開走。',smelt:'15 秒內煉好，溫度一直停在「剛好」。',chop:'數清楚兩把斧頭各砍幾下。'};
+const STAR3={food:'30 秒內找到 8 份食物。',knap:'敲歪不超過 1 次。',fire:'10 秒內把火生起來。',farm:'收成 5 塊田以上，別讓小鳥吃掉。',grind:'16 秒內磨好，記得加水。',pot:'泥條和參考線一樣寬的時候再放，放得越準越好。',trade:'每一艘船都給對東西，不要讓船開走。',smelt:'15 秒內煉好，溫度一直停在「剛好」。',chop:'數清楚兩把斧頭各砍幾下。'};
 function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
   d.innerHTML=`<div class="done"><p style="font-size:19px;font-weight:700">${FAILTXT[task.id]||'這次沒成功，再試一次。'}</p><div class="row"><button class="bigbtn" id="again">再玩一次</button><button class="bigbtn alt" id="back">先離開</button></div></div>`;
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();$('#again').focus();return;}setTimeout(()=>{if(window.ClassLive)ClassLive.now();},50);runId++;stopGame&&stopGame();stopGame=null;const best=Math.max(S.st[task.id]||0,n),first=!S.st[task.id];S.st[task.id]=best;S.known[task.id]=1;save();if(first)grant(task.id);$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
@@ -1739,7 +1740,7 @@ function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmP
    <div class="qq"><b>${task.q.t}</b>${shuffle(task.q.o.map((o,i)=>[o,i])).map(([o,i])=>`<button class="qo" data-i="${i}">${o}</button>`).join('')}<p class="qfb" id="qfb"></p></div>
    <div class="fact" id="qFact" style="--c:${cur.c}" hidden><b>你剛剛學到的事</b><br>${task.fact}<br><button class="say" data-t="${esc(task.fact)}">唸給我聽</button></div>
    <div class="row"><button class="bigbtn alt" id="again" hidden>再玩一次</button><button class="bigbtn" id="back" hidden>${first&&eraDone(cur)?'天黑了，看看今晚過得怎樣 →':'回到部落'}</button></div></div>`;
-  let qWrong=0;if(first){S.qx=S.qx||{};S.qx[task.id]=1;save();}d.querySelector('.qq').addEventListener('click',e=>{const b=e.target.closest('.qo');if(!b||b.disabled)return;const ok=+b.dataset.i===task.q.a;b.classList.add(ok?'right':'wrong');if(ok){sfx.good();d.querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#qfb').textContent=S.qx&&S.qx[task.id]?'答對了！比較表多了一格。':'答對了！';if(S.qx){delete S.qx[task.id];save();}$('#qFact').hidden=false;$('#back').hidden=false;$('#again').hidden=false;$('#back').focus();}else{sfx.bad();b.disabled=true;S.qw=(S.qw||0)+1;save();qWrong++;$('#qfb').textContent=qWrong<2?`再想一想：剛剛在「${task.n}」裡，你是怎麼做的？`:'看看下面「你剛剛學到的事」，答案就在裡面。';if(qWrong>=2)$('#qFact').hidden=false;}});
+  let qWrong=0;if(first){S.qx=S.qx||{};S.qx[task.id]=1;save();}d.querySelector('.qq').addEventListener('click',e=>{const b=e.target.closest('.qo');if(!b||b.disabled)return;const ok=+b.dataset.i===task.q.a;b.classList.add(ok?'right':'wrong');if(ok){sfx.good();d.querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#qfb').textContent=S.qx&&S.qx[task.id]?'答對了！比較表多了一格。':'答對了！';if(S.qx){delete S.qx[task.id];save();}$('#qFact').hidden=false;$('#back').hidden=false;$('#again').hidden=false;$('#back').focus();}else{sfx.bad();b.disabled=true;S.qw=(S.qw||0)+1;save();qWrong++;$('#qfb').textContent=qWrong<2?`再想一想：回想剛剛「${task.n}」做了什麼、發生了什麼。`:'看看下面「你剛剛學到的事」，答案就在裡面。';if(qWrong>=2)$('#qFact').hidden=false;}});
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();}
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 function closeGm(){if(cur)Mus.set($('#vScene')&&!$('#vScene').hidden?cur.k:'hub');runId++;stopGame&&stopGame();stopGame=null;try{speechSynthesis.cancel();}catch(e){}$('#gm').hidden=true;if(cur&&!$('#vScene').hidden)paint();W3&&W3.pause(false);if(cur&&cur!==MUSEUM&&ERAS.includes(cur)&&eraDone(cur)&&!(S.ns&&S.ns[cur.k]))night();}
@@ -1783,7 +1784,7 @@ const ACTN=Object.fromEntries(ACTS);
 const RCP=[
  {id:'knap',a:['stone','stone'],act:'knock',use:{stone:2},task:'knap',prod:{chopper:1},say:'石頭敲出了一道銳利的邊緣！到發光的「敲打石器」那裡，親手敲一把好用的石器吧。'},
  {id:'food',a:['chopper','branch'],act:'tie',need:'knap',use:{branch:1},task:'food',say:'尖尖的石器綁在樹枝上，變成一支長矛！到「找食物」那裡試試。'},
- {id:'fire',a:['branch','grass'],act:'drill',need:'knap',use:{branch:1,grass:1},task:'fire',say:'把木棒抵在樹枝上用力鑽，越鑽越熱，乾草冒煙了！到「生火」那裡把火生起來。'},
+ {id:'fire',a:['branch','grass'],act:'drill',need:'knap',use:{branch:1,grass:1},task:'fire',say:'把一根樹枝抵在另一根樹枝上用力鑽，越鑽越熱，旁邊的乾草冒煙了！到「生火」那裡把火生起來。'},
  {id:'grind',a:['chopper','whet'],act:'grind',need:'knap',use:{chopper:1},task:'grind',prod:{adze:1},say:'加點水在磨石上磨，石器的邊變得又光又亮。到「磨製石器」那裡好好磨一把。'},
  {id:'farm',a:['wmillet','adze'],act:'plant',need:'grind',use:{wmillet:1},task:'farm',prod:{millet:2},say:'用磨製石鋤翻土，把小米種子埋下去。到「種小米」那裡顧好你的田。'},
  {id:'greenware',a:['clay'],act:'shape',use:{clay:1},make:{greenware:1},say:'你把黏土搓成長條、一圈一圈疊成罐子的樣子。這叫「陶坯」，但它還很軟。'},
@@ -1863,7 +1864,7 @@ function tribeEnter(k){if(!window.Tribe)return;const se=window.ClassLive&&ClassL
   /* the first three deer fill your bag; after that the catch goes to the rest of the tribe, so standing there all lesson earns nothing */
   caught:(team,pals)=>{S.hunt=(S.hunt||0)+1;const loot=S.hunt<=3,three=pals>=2;if(three)S.ht=(S.ht||0)+1;if(loot)add({meat:1,hide:1});save();sfx.win();const w=(team.length?'和 '+team.join('、')+' 一起':'')+(three?'（三個人都是同學，沒有靠部落的人幫忙！）':'');
    toast(loot?`<b>圍獵成功！</b>${w}丟長矛打中一頭水鹿，分到一塊鹿肉和一張獸皮。舊石器時代的人常常一群人一起打獵，再把獵物分給大家。`:`<b>圍獵成功！</b>${w}打中一頭水鹿。你的肉和獸皮已經夠用，這一頭分給部落裡的其他人。`);}});}
-let toastT=0;function toastOff(){clearTimeout(toastT);const t=$('#wToast');if(t)t.hidden=true;}function toast(m){const t=$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,Math.max(4000,String(m).replace(/<[^>]*>/g,'').length*230));}
+let toastT=0;function toastOff(){clearTimeout(toastT);['#wToast','#t2d'].forEach(q=>{const t=$(q);if(t)t.hidden=true;});}function toast(m){const t=(!W3||$('#w3d').hidden)&&$('#t2d')&&!$('#vScene').hidden?$('#t2d'):$('#wToast');t.innerHTML=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,Math.max(4000,String(m).replace(/<[^>]*>/g,'').length*230));}
 let hudLast='',bagLast=-1;
 function hudGoal(){g2dDraw();const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])return;const g=curGoal(),L=GOALS[cur.k],n=L.filter(x=>x.ok()).length,td=cur.tasks.filter(t=>S.st[t.id]).length;
   const f=S.fails[cur.k]||0,h=g&&g.h?g.h.slice(0,Math.min(g.h.length,f>=2?2:1)):[];
@@ -1929,7 +1930,7 @@ const LOOK={knock:'敲的時候看仔細：哪一樣先裂開？哪一樣一點�
 function wbTry(){if(wbBusy||!wbSel.length||!wbAct)return;wbBusy=1;setTimeout(()=>{wbBusy=0;},400);
   const sel=wbSel.slice(),act=wbAct,r=RCP.find(r=>same(r.a,sel)&&r.act===act),out=$('#wbRes');let ok=false,msg='',kind='',look='';
   if(!r){const n=NOPE.find(n=>same(n[0],sel)&&n[1]===act);msg=n?n[2]:`${sel.map(k=>IT[k]?IT[k].n:k).join('和')}用「${ACTN[act]}」的，什麼都沒改變。換一種做法，或換別的材料。`;
-    if(!n)look=sel.length<2&&['knock','tie','drill'].includes(act)?`只有一樣東西，「${ACTN[act]}」不起來。再選一樣一起試。`:LOOK[act]||'';
+    if(!n)look=sel.length<2&&['knock','tie','drill'].includes(act)?`只有一樣東西，「${ACTN[act]}」不起來。再選一樣一起試。`:RCP.some(r=>r.act===act&&r.a.some(k=>sel.includes(k)))?LOOK[act]||'':'';
     if(act==='burn'&&!S.st.fire&&!S.known.fire){msg='你還沒有火。先想辦法生火吧。';look='';}}
   else if(r.needItem&&S.st.trade&&!S.bag[r.needItem]&&(S.bag[r.needItem]=1),r.need&&!needOk(r.need)){msg=`方向對了！不過要先完成「${NEED_N[r.need]}」，才做得出來。`;if(r.id==='smelt')msg='鐵砂和木炭放在一起燒，什麼都沒發生。你不知道該怎麼做……也許從海外來的人會知道。';}
   else if(r.needItem&&!S.bag[r.needItem])msg='你不知道該怎麼做……也許從海外來的人會知道。';
