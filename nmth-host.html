@@ -475,6 +475,8 @@ select.nh-in{min-width:0}
 .nh-inv{display:flex;flex-direction:column;gap:6px;margin:12px 0;padding:10px 12px;border:1px solid #c9d6da;border-radius:10px;background:#f4f8f9}.nh-inv small{color:#3d5560;font-size:14px}
 #nhTList li small{display:block;color:#3d5560;font-size:13px}#nhTList li.nh-off{opacity:.6}
 .nh-acct{margin-top:14px}.nh-acct summary{cursor:pointer;color:#3d5560;font-weight:700}.nh-acct p{margin-top:6px}
+.nh-fame{margin-top:12px;padding:10px 14px;border:1px solid #e0c27a;border-radius:10px;background:#fffbea}.nh-fame summary{cursor:pointer;font-weight:900;color:#8a5a00}.nh-fame ul{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px}.nh-fame li b{font-size:18px;color:#7a3d00}.nh-fame li small{display:block;color:#5a5040;font-size:13px}
+.nh-keybox{margin-top:12px;padding:10px 14px;border:1px solid #c9d6da;border-radius:10px;background:#fff}.nh-keybox summary{cursor:pointer;font-weight:900;color:#0b5c7a}.nh-keybox h4{margin:12px 0 4px}.nh-keybox p{margin:8px 0;color:#3d5560}.nh-key{border-collapse:collapse;width:100%;font-size:15px}.nh-key th,.nh-key td{border:1px solid #d5dfe2;padding:5px 8px;text-align:left;vertical-align:top}.nh-key th{background:#f0f5f6}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -748,6 +750,14 @@ let drawT=0,drawAt=0,lastH='',qrKey='',qrSvg='';
 function drawSoon(){if(!cur)return;const w=1500-(Date.now()-drawAt);if(w<=0||cur.ph==='lobby'){clearTimeout(drawT);drawT=0;calc();draw();return;}if(!drawT)drawT=setTimeout(()=>{drawT=0;if(cur){calc();draw();}},w);}
 function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
 /* 史前生存大冒險: which eras this lesson opens. Stored on the room as span "a-b"; tablets follow it at once. */
+/* answer card for the teacher (only drawn after a teacher has signed in) */
+function keyUI(){if(cur.game!=='prehistory')return '';const row=r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`,tb=(t,rs)=>`<h4>${t}</h4><table class="nh-key"><thead><tr><th>要做的事</th><th>材料</th><th>動作</th><th>得到／解鎖</th></tr></thead><tbody>${rs.map(row).join('')}</tbody></table>`;
+ return `<details class="nh-keybox"><summary>教師答案卡：「動手試試」每一關的答案（只有登入的老師看得到）</summary>
+  <p>學生的做法：選材料 → 選動作（敲、磨、鑽、綁、捏、燒、種、餵）→ 按「試試看」。成功後到發光的光柱完成那個任務的小遊戲。學生連續失敗時，畫面左上「下一步」會一層一層給更多提示。</p>
+  ${tb('舊石器時代・八仙洞',[['打製石器','石頭＋石頭','敲','解鎖「敲打石器」'],['長矛','打製石器＋樹枝','綁','解鎖「找食物」'],['生火','樹枝＋乾草','鑽','解鎖「生火」（要先會打製石器）'],['挑戰：圍獵','—','—','有長矛後站上水鹿旁的石頭，3 人到齊就丟長矛（3D 版才有）']])}
+  ${tb('新石器時代・卑南',[['磨製石器','打製石器＋磨石','磨','解鎖「磨製石器」'],['種小米','小米種子＋磨製石器','種','解鎖「種小米」'],['陶坯','黏土','捏','陶坯'],['陶罐','陶坯','燒','解鎖「做陶罐」'],['挑戰：養小野豬','小野豬＋小米','餵','技能「畜養動物」（要先完成種小米）'],['挑戰：玉耳飾','玉料＋磨石','磨','玉耳飾（玉料：划獨木舟到豐田，左右槳輪流 8 下）']])}
+  ${tb('金屬器時代・十三行',[['準備交易','背包要有 2 種：陶罐、獸皮、玉耳飾','—','獸皮在林子裡撿；陶罐用黏土「捏」再「燒」'],['和外地人交易','小遊戲：他要什麼就點什麼','—','學到「煉鐵的方法」'],['木炭','樹枝 2 根＋黏土','燒','木炭 ×2'],['煉鐵','鐵砂＋木炭','燒','解鎖「煉鐵」（要先完成交易）'],['鐵斧','鐵塊＋樹枝','敲','解鎖「試試鐵斧」']])}
+  <p>常見卡關：動作選錯最多；材料不夠時畫面會寫「需要…」；背包沒有打製石器就用「石頭＋石頭＋敲」再做一把。</p></details>`;}
 function spanUI(){if(cur.game!=='prehistory'||cur.ph==='closed')return '';const m=/^([0-2])-([0-3])$/.exec(cur.span||''),a=m?+m[1]:0,b=m?Math.max(+m[1],+m[2]):3,E=['舊石器時代','新石器時代','金屬器時代','考古挖掘和證書'];
  return `<div class="nh-row nh-span"><b>這一節開放</b><label>從 <select id="nhSpA">${E.slice(0,3).map((x,i)=>`<option value="${i}"${i===a?' selected':''}>${x}</option>`).join('')}</select></label><label>玩到 <select id="nhSpB">${E.map((x,i)=>`<option value="${i}"${i===b?' selected':''}>${x}</option>`).join('')}</select></label>
   <small>學生照順序闖關，不會超過「玩到」的時代。第二節課從新石器開始，就把「從」改成新石器時代：上一節沒做完的學生也能直接進去。</small></div>`;}
@@ -759,6 +769,12 @@ function stuckUI(g){if(cur.ph!=='play')return '';const now=Date.now(),live=rows.
  const where={};live.forEach(r=>{const w=g.where(r.cur);if(w)where[w]=(where[w]||0)+1;});const top=Object.entries(where).sort((a,b)=>b[1]-a[1])[0];
  if(!stuck.length&&!top)return '';return `<div class="nh-sum">${stuck.length?`<p><b>超過 4 分鐘沒有進度：</b>${stuck.join('、')} 號</p>`:''}${top&&top[1]>1?`<p><b>最多人在：</b>${esc(top[0])}（${top[1]} 人）</p>`:''}</div>`;}
 setInterval(()=>{if(cur&&cur.ph==='play')drawSoon();},30000);
+/* 史前生存大冒險: light-hearted class titles, for the teacher to read out or project (ties share the title) */
+function fameUI(){if(cur.game!=='prehistory'||cur.ph==='lobby')return '';const live=rows.filter(r=>!r.away);if(!live.length)return '';
+ const T=[['水鹿王','圍獵抓到最多頭水鹿（含部落的人幫忙）',r=>r.h],['真人圍獵王','和兩位同學一起圍獵最多次（沒靠部落的人）',r=>r.ht],['小米王','放進穀倉最多束小米',r=>r.gr],['交換王','和同學交換最多次',r=>r.tr],['外交官','和坐船來的外地人交換最多次',r=>r.nt],['實驗狂','在「動手試試」試最多次',r=>r.cf],['星星收藏家','拿到最多星星',r=>r.stars],['閃電探險家','最快完成九個任務',r=>r.done>=9&&r.t>0?100000-r.t:0]];
+ const out=T.map(([n,why,f])=>{const best=Math.max(0,...live.map(f));if(!best)return '';const who=live.filter(r=>f(r)===best).map(r=>r.seat);if(who.length>4)return '';
+  const v=n==='閃電探險家'?mmss(100000-best):best;return `<li><b>${n}</b>　${who.join('、')} 號<small>${why}：${v}</small></li>`;}).filter(Boolean);
+ return out.length?`<details class="nh-fame" open><summary>全班稱號（可以投影給學生看）</summary><ul>${out.join('')}</ul></details>`:'';}
 function back(){off();clearTimeout(drawT);drawT=0;lastH='';cur=null;room$.hidden=true;loadList();}
 function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,awayN=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const k=cur.short?'https://'+cur.short:url;if(k!==qrKey){const q=qrcode(0,'M');q.addData(k);q.make();qrSvg=q.createSvgTag({cellSize:4,margin:3,scalable:true});qrKey=k;}qr=qrSvg;}catch(e){}
@@ -768,12 +784,12 @@ function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?
     <p>已經在遊戲裡的學生，輸入任務代碼：</p><p class="nh-code">${esc(cur.code)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
-   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button></div>${spanUI()}`;
+   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button></div>${spanUI()}${keyUI()}`;
  if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能改成正確的座號。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
   ${awayN?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。</p><details class="nh-note"><summary>這些欄位是什麼？</summary><p>${g.note}</p></details>
   <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th><th>留意</th>${g.head()}</tr></thead><tbody>
-  ${stuckUI(g)}
+  ${stuckUI(g)}${fameUI()}
   ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td><td class="nh-flag">${esc(r.flag||'')}</td>${g.row(r)}</tr>`).join('')}</tbody></table></div>`;
  h+=`<p class="nh-delrow"><button class="nh-btn alt nh-del" id="nhDel">刪除這一場任務…</button></p>`;
  if(h===lastH&&room$.firstChild)return;lastH=h;const tw0=room$.querySelector('.nh-tw'),sx=tw0?tw0.scrollLeft:0;
