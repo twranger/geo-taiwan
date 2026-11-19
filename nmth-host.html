@@ -477,6 +477,19 @@ select.nh-in{min-width:0}
 .nh-acct{margin-top:14px}.nh-acct summary{cursor:pointer;color:#3d5560;font-weight:700}.nh-acct p{margin-top:6px}
 .nh-fame{margin-top:12px;padding:10px 14px;border:1px solid #e0c27a;border-radius:10px;background:#fffbea}.nh-fame summary{cursor:pointer;font-weight:900;color:#8a5a00}.nh-fame ul{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px}.nh-fame li b{font-size:18px;color:#7a3d00}.nh-fame li small{display:block;color:#5a5040;font-size:13px}
 .nh-keybox{margin-top:12px;padding:10px 14px;border:1px solid #c9d6da;border-radius:10px;background:#fff}.nh-keybox summary{cursor:pointer;font-weight:900;color:#0b5c7a}.nh-keybox h4{margin:12px 0 4px}.nh-keybox p{margin:8px 0;color:#3d5560}.nh-key{border-collapse:collapse;width:100%;font-size:15px}.nh-key th,.nh-key td{border:1px solid #d5dfe2;padding:5px 8px;text-align:left;vertical-align:top}.nh-key th{background:#f0f5f6}
+.nh-live{position:fixed;inset:0;z-index:999;background:#0f1a17;color:#f3ead7;padding:24px 32px;overflow:auto;font-size:20px}
+.nh-live .lv-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.nh-live h2{font-size:30px;margin:0;color:#ffd27a}
+.nh-live .nh-btn.alt{background:transparent;color:#f3ead7;border-color:#9fb0ba}
+.lv-eras{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.lv-era{background:#16241f;border:2px solid #2c4038;border-radius:14px;padding:14px 16px}.lv-era h3{margin:0 0 10px;font-size:24px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}.lv-era h3 span{font-size:16px;color:#b9c7c0;font-weight:500}
+.lv-old h3{color:#f0a64a}.lv-neo h3{color:#4fc39a}.lv-iron h3{color:#6fb3ec}
+.lv-task{position:relative;background:#0b1411;border-radius:10px;padding:10px 12px;margin-top:8px;overflow:hidden;display:flex;justify-content:space-between;gap:8px}.lv-task b,.lv-task span{position:relative;z-index:1}.lv-task i{position:absolute;left:0;top:0;bottom:0;background:#2f6b4f;transition:width .6s}
+.lv-bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.lv-sum{grid-column:1/-1;font-size:22px}.lv-sum b{color:#ffd27a;font-size:30px}
+.lv-feed{list-style:none;margin:0;padding:0;display:grid;gap:6px;align-content:start;align-self:start}.lv-feed li{background:#16241f;border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;gap:10px}.lv-feed li small{color:#8fa39a}.lv-feed li.lv3{border-left:6px solid #ffd27a}.lv-feed li.lv2{border-left:6px solid #4fc39a}
+.lv-flash{margin-top:16px;padding:16px 20px;border-radius:14px;font-size:30px;font-weight:900;text-align:center;background:#ffd27a;color:#3a2600;animation:lvpop .5s ease-out}.lv-flash.lv2{background:#4fc39a;color:#0b2219}
+@keyframes lvpop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.nh-live .nh-fame{background:#16241f;border-color:#3d5a4d;color:#f3ead7}.nh-live .nh-fame summary,.nh-live .nh-fame li b{color:#ffd27a}.nh-live .nh-fame li small{color:#b9c7c0}
+@media (max-width:900px){.lv-eras,.lv-bottom{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -748,7 +761,7 @@ function open(sid){off();clearTimeout(drawT);drawT=0;lastH='';room$.hidden=false
    none at all when nothing visible changed, and the table keeps its scroll position. */
 let drawT=0,drawAt=0,lastH='',qrKey='',qrSvg='';
 function drawSoon(){if(!cur)return;const w=1500-(Date.now()-drawAt);if(w<=0||cur.ph==='lobby'){clearTimeout(drawT);drawT=0;calc();draw();return;}if(!drawT)drawT=setTimeout(()=>{drawT=0;if(cur){calc();draw();}},w);}
-function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);}
+function calc(){const g=GM(),mv=cur.moves||{};rows=raw.filter(v=>!(mv[v.cid]&&+mv[v.cid]!==v.seat)).map(v=>Object.assign({seat:v.seat,cid:v.cid,away:String(v.cid)[0]==='~',cur:v.cur||'',mode:v.mode==='s'?'現場':'教室',at:msv(v)},g.parse(v))).sort((a,b)=>a.seat-b.seat);liveEvents();}
 /* 史前生存大冒險: which eras this lesson opens. Stored on the room as span "a-b"; tablets follow it at once. */
 /* answer card for the teacher (only drawn after a teacher has signed in) */
 function keyUI(){if(cur.game!=='prehistory')return '';const row=r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`,tb=(t,rs)=>`<h4>${t}</h4><table class="nh-key"><thead><tr><th>要做的事</th><th>材料</th><th>動作</th><th>得到／解鎖</th></tr></thead><tbody>${rs.map(row).join('')}</tbody></table>`;
@@ -758,6 +771,34 @@ function keyUI(){if(cur.game!=='prehistory')return '';const row=r=>`<tr>${r.map(
   ${tb('新石器時代・卑南',[['磨製石器','打製石器＋磨石','磨','解鎖「磨製石器」'],['種小米','小米種子＋磨製石器','種','解鎖「種小米」'],['陶坯','黏土','捏','陶坯'],['陶罐','陶坯','燒','解鎖「做陶罐」'],['挑戰：養小野豬','小野豬＋小米','餵','技能「畜養動物」（要先完成種小米）'],['挑戰：玉耳飾','玉料＋磨石','磨','玉耳飾（玉料：划獨木舟到豐田，左右槳輪流 8 下）']])}
   ${tb('金屬器時代・十三行',[['準備交易','背包要有 2 種：陶罐、獸皮、玉耳飾','—','獸皮在林子裡撿；陶罐用黏土「捏」再「燒」'],['和外地人交易','小遊戲：他要什麼就點什麼','—','學到「煉鐵的方法」'],['木炭','樹枝 2 根＋黏土','燒','木炭 ×2'],['煉鐵','鐵砂＋木炭','燒','解鎖「煉鐵」（要先完成交易）'],['鐵斧','鐵塊＋樹枝','敲','解鎖「試試鐵斧」']])}
   <p>常見卡關：動作選錯最多；材料不夠時畫面會寫「需要…」；背包沒有打製石器就用「石頭＋石頭＋敲」再做一把。</p></details>`;}
+/* ---- 投影：即時戰況. Built only from the progress the console already receives: no extra reads, nothing more from the tablets. ---- */
+let evQ=[],evPrev={},evSid='',evFlash=null,evT=0;
+function liveEvents(){if(!cur||cur.game!=='prehistory')return;if(evSid!==cur.sid){evSid=cur.sid;evPrev={};evQ=[];}const g=GAMES.prehistory,now=Date.now();
+ rows.forEach(r=>{if(r.away)return;const p=evPrev[r.seat];evPrev[r.seat]={s:r.s.slice(),h:r.h,ht:r.ht,b:r.bf,dig:r.dig,tr:r.tr,nt:r.nt,sk:r.sk};if(!p||cur.ph!=='play')return;const who=r.seat+' 號',E=[];
+  r.s.forEach((n,i)=>{if(n&&!p.s[i])E.push([`${who} 完成「${g.T[i]}」${n===3?'，三顆星！':''}`,n===3?2:1]);});
+  if(r.ht>p.ht)E.push([`${who} 和同學三個人一起圍到水鹿！`,3]);else if(r.h>p.h)E.push([`${who} 圍獵成功，抓到一頭水鹿！`,2]);
+  if(r.bf&&!p.b)E.push([`${who} 幫忙把部落的穀倉裝滿了！`,3]);
+  if(r.tr>p.tr)E.push([`${who} 和同學交換了東西`,1]);if(r.nt>p.nt)E.push([`${who} 和坐船來的外地人做了一筆交易`,1]);
+  if(r.sk>p.sk&&r.sk>=10)E.push([`${who} 的技能圖幾乎全亮了！`,2]);
+  if(r.dig&&!p.dig)E.push([`${who} 當上考古學家，挖完了探坑！`,3]);
+  if(r.done>=10&&!(p.s.every(Boolean)&&p.dig))E.push([`🏆 ${who} 全部完成，領到探險家證書！`,3]);
+  E.forEach(([t,lv])=>{evQ.unshift({t,lv,at:now});if(lv>=2&&(!evFlash||lv>=evFlash.lv||now-evFlash.at>2500))evFlash={t,lv,at:now};});});
+ evQ=evQ.slice(0,8);if(liveOn())liveDraw();}
+const liveOn=()=>{const el=document.getElementById('nhLive');return !!(el&&!el.hidden);};
+function liveOpen(){let el=document.getElementById('nhLive');if(!el){el=document.createElement('div');el.id='nhLive';el.className='nh-live';document.body.appendChild(el);}
+ el.hidden=false;try{(el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el);}catch(e){}liveDraw();clearInterval(evT);evT=setInterval(()=>{if(liveOn())liveDraw();else clearInterval(evT);},1000);}
+function liveClose(){const el=document.getElementById('nhLive');if(el)el.hidden=true;try{if(document.fullscreenElement)document.exitFullscreen();}catch(e){}clearInterval(evT);}
+function liveDraw(){const el=document.getElementById('nhLive');if(!el||!cur)return;const g=GAMES.prehistory,live=rows.filter(r=>!r.away),n=live.length||1,now=Date.now();
+ const where=k=>live.filter(r=>String(r.cur).split(':')[0]===k).length;
+ const eras=g.E.map((e,ei)=>{const k=g.EK[ei],ids=[0,1,2].map(j=>ei*3+j);return `<div class="lv-era lv-${k}"><h3>${e}<span>現在 ${where(k)} 人在這裡</span></h3>${ids.map(i=>{const d=live.filter(r=>r.s[i]).length;return `<div class="lv-task"><b>${g.T[i]}</b><i style="width:${Math.round(d/n*100)}%"></i><span>${d} 人完成</span></div>`;}).join('')}</div>`;}).join('');
+ const dig=live.filter(r=>r.dig).length,all=live.filter(r=>r.done>=10).length;
+ const fl=evFlash&&now-evFlash.at<4000?`<div class="lv-flash lv${evFlash.lv}">${esc(evFlash.t)}</div>`:'';
+ const html=`<div class="lv-top"><h2>${esc(cur.label)}　史前生存大冒險・即時戰況</h2><button class="nh-btn alt" id="lvX">關閉投影</button></div>${fl}
+  <div class="lv-eras">${eras}</div>
+  <div class="lv-bottom"><div class="lv-sum"><b>${dig}</b> 人挖完探坑　<b>${all}</b> 人全部完成　共 <b>${live.length}</b> 人在線上</div>
+  <ol class="lv-feed">${evQ.map(e=>`<li class="lv${e.lv}">${esc(e.t)}<small>${Math.max(0,Math.round((now-e.at)/1000))} 秒前</small></li>`).join('')||'<li>等大家開始動手……</li>'}</ol>${fameUI()}</div>`;
+ if(el.innerHTML!==html){el.innerHTML=html;const x=document.getElementById('lvX');if(x)x.onclick=liveClose;}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&liveOn())liveClose();});
 function spanUI(){if(cur.game!=='prehistory'||cur.ph==='closed')return '';const m=/^([0-2])-([0-3])$/.exec(cur.span||''),a=m?+m[1]:0,b=m?Math.max(+m[1],+m[2]):3,E=['舊石器時代','新石器時代','金屬器時代','考古挖掘和證書'];
  return `<div class="nh-row nh-span"><b>這一節開放</b><label>從 <select id="nhSpA">${E.slice(0,3).map((x,i)=>`<option value="${i}"${i===a?' selected':''}>${x}</option>`).join('')}</select></label><label>玩到 <select id="nhSpB">${E.map((x,i)=>`<option value="${i}"${i===b?' selected':''}>${x}</option>`).join('')}</select></label>
   <small>學生照順序闖關，不會超過「玩到」的時代。第二節課從新石器開始，就把「從」改成新石器時代：上一節沒做完的學生也能直接進去。</small></div>`;}
@@ -775,7 +816,7 @@ function fameUI(){if(cur.game!=='prehistory'||cur.ph==='lobby')return '';const l
  const out=T.map(([n,why,f])=>{const best=Math.max(0,...live.map(f));if(!best)return '';const who=live.filter(r=>f(r)===best).map(r=>r.seat);if(who.length>4)return '';
   const v=n==='閃電探險家'?mmss(100000-best):best;return `<li><b>${n}</b>　${who.join('、')} 號<small>${why}：${v}</small></li>`;}).filter(Boolean);
  return out.length?`<details class="nh-fame" open><summary>全班稱號（可以投影給學生看）</summary><ul>${out.join('')}</ul></details>`:'';}
-function back(){off();clearTimeout(drawT);drawT=0;lastH='';cur=null;room$.hidden=true;loadList();}
+function back(){liveClose();off();clearTimeout(drawT);drawT=0;lastH='';cur=null;room$.hidden=true;loadList();}
 function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?k='+cur.sid,lob=cur.ph==='lobby',n=rows.filter(r=>!r.away).length,awayN=rows.filter(r=>r.away).length,fin=rows.filter(r=>r.done>=g.total).length;let qr='';
  try{const k=cur.short?'https://'+cur.short:url;if(k!==qrKey){const q=qrcode(0,'M');q.addData(k);q.make();qrSvg=q.createSvgTag({cellSize:4,margin:3,scalable:true});qrKey=k;}qr=qrSvg;}catch(e){}
  let h=`<div class="nh-top"><div><p class="nh-big">${esc(cur.label)}　${esc(g.n)}　${lob?'大廳':cur.ph==='play'?'進行中':'已結束'}</p>
@@ -784,7 +825,7 @@ function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?
     <p>已經在遊戲裡的學生，輸入任務代碼：</p><p class="nh-code">${esc(cur.code)}</p>`}</div>
    ${cur.ph==='closed'?'':`<div class="nh-qr">${qr}</div>`}</div>
   <div class="nh-row">${lob?`<button class="nh-btn" id="nhStart" ${n?'':'disabled'}>大家都進大廳了，開始（${n} 人）</button>`:''}${cur.ph==='play'?'<button class="nh-btn red" id="nhEnd">結束這一場</button>':''}
-   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button></div>${spanUI()}${keyUI()}`;
+   <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button>${cur.game==='prehistory'&&cur.ph==='play'?'<button class="nh-btn" id="nhLiveGo">投影即時戰況</button>':''}</div>${spanUI()}${keyUI()}`;
  if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能改成正確的座號。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
   ${awayN?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
  else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。</p><details class="nh-note"><summary>這些欄位是什麼？</summary><p>${g.note}</p></details>
@@ -800,7 +841,7 @@ function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?
  B('#nhBack',back);B('#nhCsv',csv);B('#nhReopen',()=>{const b=$('#nhReopen');b.disabled=true;b.textContent='開啟中……';reopen();});
  B('#nhShort',()=>{const b=$('#nhShort');b.disabled=true;b.textContent='產生中……';makeShort(cur.sid,g,cur.code).then(v=>{if(!v&&$('#nhShort')){$('#nhShort').disabled=false;$('#nhShort').textContent='短網址服務連不上，再試一次';}});});
  B('#nhDel',()=>{if(!confirm(`刪除「${cur.label}」這一場任務和所有學生紀錄？${cur.ph!=='closed'?'\n這一場還沒結束，學生的平板會停下來。':''}\n刪掉就救不回來，建議先下載 ZIP 備份。`))return;const sid=cur.sid;off();cur=null;delSession(sid).then(back).catch(e=>{alert('刪不掉：'+(e.code||e.message));back();});});
- B('#nhZip1',()=>zipAll([Object.assign({},cur)],$('#nhZip1')));
+ B('#nhZip1',()=>zipAll([Object.assign({},cur)],$('#nhZip1')));B('#nhLiveGo',liveOpen);
  ['#nhSpA','#nhSpB'].forEach(id=>{const el=$(id);if(el)el.onchange=()=>{let a=+$('#nhSpA').value,b=+$('#nhSpB').value;if(b<a)b=a;roomUpd(cur.sid,{span:a+'-'+b}).catch(e=>alert('改不了：'+(e.code||e.message)));};});
  room$.querySelectorAll('[data-rel]').forEach(b=>b.onclick=()=>fixSeat(+b.dataset.rel));}
 /* move a pupil to the right seat: the tablet follows the change (rooms.moves[cid]) and keeps sending to the new seat; progress moves with it */
