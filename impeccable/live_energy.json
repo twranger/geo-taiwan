@@ -1,27 +1,5 @@
 [
   {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/energy.html",
-    "line": 0,
-    "snippet": "<div> \"gseg\": children flush against bg on right/left (no inset)",
-    "selector": "div.gseg.g-r"
-  },
-  {
-    "antipattern": "side-tab",
-    "name": "Side-tab accent border",
-    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
-    "severity": "warning",
-    "category": "slop",
-    "file": "https://geo.twranger.com/energy.html",
-    "line": 0,
-    "snippet": "div.gseg.g-s — 11px stripe child (right)",
-    "selector": "div.gseg.g-s"
-  },
-  {
     "antipattern": "shape-assembled-illustration",
     "name": "Shape-assembled illustration",
     "description": "A large inline SVG that builds a pictorial scene from a pile of primitive shapes reads as placeholder clip art, not illustration. Icons, logos, and data graphics are fine at their scale; a hero-sized visual deserves real artwork, a photograph, or a deliberately drawn graphic.",
@@ -29,7 +7,7 @@
     "category": "slop",
     "file": "https://geo.twranger.com/energy.html",
     "line": 0,
-    "snippet": "inline <svg> scene: 28 primitive shapes, ~300x300px, 4 fill colors",
+    "snippet": "inline <svg> scene: 32 primitive shapes, ~300x300px, 4 fill colors",
     "advisory": true,
     "selector": "body"
   }
