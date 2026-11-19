@@ -1277,7 +1277,7 @@ G.farm=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9d38a');cam.position.se
   A.upd.push((dt,ts)=>{pl.forEach(p=>{if(p.s===2&&!p.dead){p.gr=Math.min(1,p.gr+dt/9);p.st.forEach(([s,e])=>{s.scale.y=.15+p.gr*1.2;s.position.y=.3+s.scale.y/2;s.material.color.set(p.gr>=1?'#B8860B':'#3f8f3a');e.visible=p.gr>.6;e.position.y=.35+s.scale.y;e.material.color.set(p.gr>=1?'#E0A51A':'#9bbf5a');});}});
     const tg=pl.filter(p=>p.s===2&&!p.dead&&p.gr>.35);if(!end&&tg.length&&Math.random()<dt*.7&&birds.length<2){const p=tg[Math.floor(Math.random()*tg.length)];if(!birds.some(b=>b.p===p))mkBird(p);}
     birds=birds.filter(b=>{const f=Math.sin(ts*16)*.7;b.wl.rotation.z=f;b.wr.rotation.z=-f;if(b.p.s===3)b.away=1;if(b.away){b.g.position.y+=9*dt;b.g.position.x+=4*dt;if(b.g.position.y>12){scene.remove(b.g);return false;}}else{const tx=b.p.x,ty=1.7,tz=b.p.z,d=b.g.position.distanceTo(new T.Vector3(tx,ty,tz));if(d>.15)b.g.position.lerp(new T.Vector3(tx,ty,tz),Math.min(1,dt*6/d));else{b.sit+=dt;if(b.sit>2.3&&b.p.s===2){b.p.dead=1;lost++;b.p.st.forEach(([s,e])=>s.visible=e.visible=false);b.p.bed.material.color.set('#5a4a3a');sfx.bad&&sfx.bad();b.away=1;}}}return true;});
-    hud.bar(got/6,`收成 ${got} / 6 塊田`,'#00795A');hud.info(lost?`被吃掉 ${lost} 塊`:'');if(!end&&pl.every(p=>p.s===3||p.dead)){end=1;sfx.win&&sfx.win();hud.msg(got>=5?'大豐收！':'收成了一些小米',got>=3?'#00684B':'#7a2d00');setTimeout(()=>fin(got>=5?3:got>=3?2:1),1100);}});};
+    hud.bar(got/6,`收成 ${got} / 6 塊田（三星要 5 塊）`,'#00795A');hud.info(lost?`被吃掉 ${lost} 塊，繼續顧好剩下的田`:'');if(!end&&pl.every(p=>p.s===3||p.dead)){end=1;sfx.win&&sfx.win();hud.msg(got>=5?'大豐收！':'收成了一些小米',got>=3?'#00684B':'#7a2d00');setTimeout(()=>fin(got>=5?3:got>=3?2:1),1100);}});};
 /* 7 smelt */
 G.smelt=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9a98c');cam.position.set(1.2,3.4,8.4);cam.lookAt(.3,1.6,0);const pts=[[1.6,0],[1.7,.7],[1.25,2.1],[.75,3],[.65,3.3]].map(p=>new T.Vector2(p[0],p[1]));const fur=new T.Mesh(new T.LatheGeometry(pts,14),mat('#8a5f47',{side:T.DoubleSide}));fur.castShadow=true;scene.add(fur);
   const gm=bas('#5a2a14');const glow=P('sph',gm,.55,.5,.3,0,.55,1.5);scene.add(glow);const L=new T.PointLight(0xff7a2e,0,16,2);L.position.set(0,1,2.4);scene.add(L);const bel=P('cone',mat('#8a5a33'),.7,2,.7,-2.9,.7,1);bel.rotation.z=-Math.PI/2;scene.add(bel);const me=person('#7a4a22');me.position.set(-4.4,0,1);me.rotation.y=1.57;scene.add(me);
@@ -1567,7 +1567,7 @@ G.farm=(a,fin)=>{const pl=[];for(let i=0;i<6;i++)pl.push({x:130+(i%3)*230,y:190+
     birds.forEach(b=>{if(b.away){b.y-=260*dt;b.x+=120*dt;}else{const dx=b.p.x-b.x,dy=b.p.y-20-b.y,d=Math.hypot(dx,dy);if(d>6){b.x+=dx/d*170*dt;b.y+=dy/d*170*dt;}else{b.sit+=dt;if(b.sit>2.2&&b.p.s===2){b.p.dead=1;lost++;sfx.bad();b.away=1;}}}
       c.fillStyle='#3a2c22';c.beginPath();c.ellipse(b.x,b.y,16,11,0,0,7);c.fill();c.beginPath();c.arc(b.x+14,b.y-8,8,0,7);c.fill();c.fillStyle='#E69F00';c.beginPath();c.moveTo(b.x+21,b.y-9);c.lineTo(b.x+32,b.y-6);c.lineTo(b.x+21,b.y-3);c.fill();const f=Math.sin(t*18)*10;c.strokeStyle='#3a2c22';c.lineWidth=4;c.beginPath();c.moveTo(b.x-4,b.y-4);c.lineTo(b.x-16,b.y-18+f);c.stroke();if(!b.away&&b.sit>0)T(c,'快點牠！',b.x,b.y-34,15,'#7a2d00');});
     birds=birds.filter(b=>b.y>-60&&!(b.p.s===3&&!b.away&&(b.away=1,false)));
-    T(c,`收成 ${got} / 6 塊田`,110,26,20);if(lost)T(c,`被吃掉 ${lost} 塊`,600,26,17,'#7a2d00');
+    T(c,`收成 ${got} / 6 塊田（三星要 5 塊）`,110,26,20);if(lost)T(c,`被吃掉 ${lost} 塊，繼續顧好剩下的田`,600,26,17,'#7a2d00');
     if(!end&&pl.every(p=>p.s===3||p.dead)){end=1;sfx.win();setTimeout(()=>fin(got>=5?3:got>=3?2:1),900);}};};
 /* 7 smelt iron */
 G.smelt=(a,fin)=>{let temp=20,ok=0,t=0,hot=0,end=0,pump=false,puff=0,sp=[];const NEED=7;
@@ -1736,7 +1736,7 @@ function finishTask(n){if(!n){runId++;stopGame&&stopGame();stopGame=null;$('#gmP
   d.innerHTML=`<div class="done"><p style="font-size:19px;font-weight:700">${FAILTXT[task.id]||'這次沒成功，再試一次。'}</p><div class="row"><button class="bigbtn" id="again">再玩一次</button><button class="bigbtn alt" id="back">先離開</button></div></div>`;
   $('#again').onclick=play;$('#back').onclick=()=>closeGm();$('#again').focus();return;}setTimeout(()=>{if(window.ClassLive)ClassLive.now();},50);runId++;stopGame&&stopGame();stopGame=null;const best=Math.max(S.st[task.id]||0,n),first=!S.st[task.id];S.st[task.id]=best;S.known[task.id]=1;save();try{paint();}catch(e){}if(first)grant(task.id);$('#gmPlay').hidden=true;const d=$('#gmDone');d.hidden=false;
   d.innerHTML=`<div class="done"><div class="stars" aria-label="${n} 顆星">${stars(n)}</div><p style="font-size:19px;font-weight:700">${['','完成了！','做得不錯！','三顆星，太厲害了！'][n]}${n<3&&STAR3[task.id]?`<br><small style="font-weight:500">想拿三顆星：${STAR3[task.id]}</small>`:''}</p>
-   ${first?`<ul class="chg" style="justify-content:center">${GRANT[task.id]?`<li>放進背包：${itn(GRANT[task.id])}</li>`:''}${task.id==='trade'?'<li>學到：煉鐵的方法</li>':''}${task.id!=='chop'?'<li>技能圖亮了一格</li>':''}</ul>`:''}
+   ${first?`<ul class="chg" style="justify-content:center">${GRANT[task.id]?`<li>放進背包：${itn(GRANT[task.id])}</li>`:''}${task.id==='trade'?'<li>學到：煉鐵的方法（遊戲想像）</li>':''}${task.id!=='chop'?'<li>技能圖亮了一格</li>':''}</ul>`:''}
    <div class="qq"><b>${task.q.t}</b>${shuffle(task.q.o.map((o,i)=>[o,i])).map(([o,i])=>`<button class="qo" data-i="${i}">${o}</button>`).join('')}<p class="qfb" id="qfb"></p></div>
    <div class="fact" id="qFact" style="--c:${cur.c}" hidden><b>你剛剛學到的事</b><br>${task.fact}<br><button class="say" data-t="${esc(task.fact)}">唸給我聽</button></div>
    <div class="row"><button class="bigbtn alt" id="again" hidden>再玩一次</button><button class="bigbtn" id="back" hidden>${first&&eraDone(cur)?'天黑了，看看今晚過得怎樣 →':'回到部落'}</button></div></div>`;
@@ -1792,7 +1792,7 @@ const RCP=[
  {id:'jade',a:['jaderaw','whet'],act:'grind',need:'grind',use:{jaderaw:1},make:{jade:1},skill:'jade',say:'玉料很硬，你磨了好久好久，終於磨出一個玉耳飾。'},
  {id:'herd',a:['piglet','millet'],act:'feed',need:'farm',use:{piglet:1,millet:1},skill:'herd',say:'小野豬每天都來吃你的小米，後來就留在村子裡不走了。這就是「畜養動物」。'},
  {id:'charcoal',a:['branch','clay'],act:'burn',need:'fire',use:{branch:2,clay:1},make:{charcoal:2},say:'用泥土蓋住樹枝，讓它悶著燒，不會燒成灰，變成了黑黑的木炭。'},
- {id:'smelt',a:['ironsand','charcoal'],act:'burn',need:'trade',needItem:'method',use:{ironsand:1,charcoal:1},task:'smelt',prod:{iron:1,slag:1},say:'照外地人教的方法：鐵砂加木炭，再用力送風。到「煉鐵」那裡把火控制好！'},
+ {id:'smelt',a:['ironsand','charcoal'],act:'burn',need:'trade',needItem:'method',use:{ironsand:1,charcoal:1},task:'smelt',prod:{iron:1,slag:1},say:'照外地人教的方法（遊戲想像）：鐵砂加木炭，再用力送風。到「煉鐵」那裡把火控制好！'},
  {id:'chop',a:['iron','branch'],act:'knock',need:'smelt',use:{iron:1,branch:1},task:'chop',prod:{ironaxe:1},say:'鐵塊燒紅了，敲成斧頭，再裝上木柄，鐵斧做好了！到「試試鐵斧」那裡，和石斧比比看誰砍得快。'}];
 /* a skill from an earlier era counts as learned when you are already in a later era (the teacher may open an era directly) */
 const needOk=id=>!!S.st[id]||(()=>{const e=ERAS.findIndex(e=>e.tasks.some(t=>t.id===id));return e>=0&&cur&&ERAS.indexOf(cur)>e;})();
@@ -1842,8 +1842,8 @@ const GOALS={
   {t:'（挑戰）划獨木舟到花蓮豐田找玉，磨成玉耳飾',ok:()=>S.sk.jade,side:1,h:['海邊有一艘獨木舟，走過去就能出發。','玉很硬，要用磨石慢慢磨。']}],
  iron:[{t:'準備 2 種東西去河口交易',ok:()=>tradeGoods()>=2||S.st.trade,h:['可以拿去換的：陶罐、獸皮、玉耳飾，要帶兩種。','沒有陶罐？用黏土捏、再燒。林子裡有獸皮。']},
   {t:'到「和外地人交易」',ok:()=>S.st.trade,go:'trade'},
-  {t:'照外地人教的方法，先做木炭',ok:()=>(S.bag.charcoal||0)>0||S.known.smelt,h:['樹枝直接燒會變成灰。','如果用黏土把樹枝蓋住再燒呢？','做法：選「樹枝」和「黏土」，再選「燒」。背包裡要有 2 根樹枝。']},
-  {t:'試著把鐵砂煉成鐵',ok:()=>S.known.smelt,h:['海邊黑色的沙就是鐵砂。','鐵砂要和更熱的燃料一起燒。']},
+  {t:'試做木炭，準備煉鐵',ok:()=>(S.bag.charcoal||0)>0||S.known.smelt,h:['樹枝直接燒會變成灰。','如果用黏土把樹枝蓋住再燒呢？','做法：選「樹枝」和「黏土」，再選「燒」。背包裡要有 2 根樹枝。']},
+  {t:'試著把鐵砂煉成鐵',ok:()=>S.known.smelt,h:['海邊找得到含鐵的沙（鐵砂），可以拿來煉鐵。','鐵砂要和更熱的燃料一起燒。']},
   {t:'到「煉鐵」把爐溫控制好',ok:()=>S.st.smelt,go:'smelt'},
   {t:'把鐵塊打成鐵斧',ok:()=>S.known.chop,h:['鐵塊和一根當柄的樹枝。','燒紅的鐵要用力……']},
   {t:'到「試試鐵斧」比比看',ok:()=>S.st.chop,go:'chop'}]};
@@ -2040,8 +2040,8 @@ function dig(){toastOff();show('vDig');const cv=$('#digCv'),c=cv.getContext('2d'
   const sortStart=()=>{step=2;sortQ=shuffle(LAY.flatMap(L=>L.items.map(it=>[it,L.e])));si=0;sortNext('答對了！在這個探坑裡，越下面的土層越早形成。');};
   const sortNext=msg=>{if(si>=sortQ.length)return ask3();$('#digCard').innerHTML=`<h3>第 3 步：把出土的東西分類</h3><p class="qfb">${msg||''}</p><p>在這個探坑裡，它是從哪一層挖出來的？那一層是哪個時代？（${si+1} / ${sortQ.length}）</p><div class="item">${sortQ[si][0]}</div><div class="shelf">${ERAS.map((e,i)=>`<button style="--c:#10313b" data-i="${i}">${e.n}</button>`).join('')}</div>`;
     $('#digCard .shelf').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(+b.dataset.i===sortQ[si][1]){sfx.good();si++;sortNext('答對了！');}else{sfx.bad();wrong++;$('#digCard .qfb').textContent='不對喔！看看左邊，它是從哪一層挖出來的？';}};};
-  const ask3=()=>{$('#digCard').innerHTML=`<h3>第 4 步：少了什麼？</h3><p>你當時還做了長矛的<b>木頭柄</b>、生火用的<b>木頭</b>，也收了好多<b>小米</b>。可是探坑裡都找不到。為什麼？</p><div class="qq">${shuffle([['木頭和食物容易腐爛，很難保存到現在',1],['太輕了，被風吹走了',0],['史前人類其實沒有用過木頭',0]]).map(([o,k])=>`<button class="qo" data-k="${k}">${o}</button>`).join('')}</div><p class="qfb" id="dfb"></p>`;
-    $('#digCard .qq').onclick=e=>{const b=e.target.closest('.qo');if(!b)return;if(b.dataset.k==='1'){b.classList.add('right');sfx.win();S.dig=1;save();$('#dfb').innerHTML='答對了！沒燒過的木頭和穀子會爛掉；只有燒成炭的穀粒，有時候還找得到。所以考古學家主要靠<b>石器、陶器、鐵器</b>這些不容易壞的器物，來推測史前人類的生活。'+EVI.dig()+'<button class="bigbtn" id="toCert" style="margin-top:10px">領取探險家證書 →</button>';$('#digCard .qq').querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#toCert').onclick=cert;}else{b.classList.add('wrong');b.disabled=true;sfx.bad();}};};
+  const ask3=()=>{$('#digCard').innerHTML=`<h3>第 4 步：少了什麼？</h3><p>史前人類也用過長矛的<b>木頭柄</b>、生火用的<b>木頭</b>，也收過<b>小米</b>。這些東西為什麼在探坑裡很難找到？</p><div class="qq">${shuffle([['木頭和食物容易腐爛，很難保存到現在',1],['太輕了，被風吹走了',0],['史前人類其實沒有用過木頭',0]]).map(([o,k])=>`<button class="qo" data-k="${k}">${o}</button>`).join('')}</div><p class="qfb" id="dfb"></p>`;
+    $('#digCard .qq').onclick=e=>{const b=e.target.closest('.qo');if(!b)return;if(b.dataset.k==='1'){b.classList.add('right');sfx.win();S.dig=1;save();$('#dfb').innerHTML='答對了！木頭和穀粒通常不容易保存，考古學家有時會找到燒成炭的穀粒。所以考古學家主要靠<b>石器、陶器、鐵器</b>這些不容易壞的器物，來推測史前人類的生活。'+EVI.dig()+'<button class="bigbtn" id="toCert" style="margin-top:10px">領取探險家證書 →</button>';$('#digCard .qq').querySelectorAll('.qo').forEach(x=>x.disabled=true);$('#toCert').onclick=cert;}else{b.classList.add('wrong');b.disabled=true;sfx.bad();}};};
   draw();card0();}
 
 /* ---------- certificate ---------- */
@@ -2082,7 +2082,7 @@ setInterval(()=>{if(document.hidden)return;const w=whereNow().split(':')[0];if(w
 let clState='';
 if(DEMO){window.ClassLive=null;document.body.classList.add('demo');
  if(!S.name){Object.assign(S,{name:'試玩',bag:{stone:4,branch:4,grass:2,millet:3,wmillet:2,iron:2,hide:2,pot:1,fish:2,clay:2},sound:S.sound==null?1:S.sound});save();}
- const bn=document.createElement('div');bn.className='demo-bar';bn.innerHTML='<b>試玩模式</b>　每個時代都打開了，背包裡先放了材料，還有兩位假同學（12 號、7 號）陪你圍獵、存糧、交換。圍獵前要先在「找食物」做出長矛。進度不會傳給老師。　<button class="linkbtn" id="demoReset">重新試玩</button>';document.body.prepend(bn);
+ const bn=document.createElement('div');bn.className='demo-bar';bn.innerHTML='<b>試玩模式</b>　每個時代都打開了，背包裡先放了材料'+(window.World?'，還有兩位假同學（12 號、7 號）陪你圍獵、存糧、交換。圍獵前要先在「找食物」做出長矛。':'。這台裝置是平面版，沒有和同學一起的活動。')+'進度不會傳給老師。　<button class="linkbtn" id="demoReset">重新試玩</button>';document.body.prepend(bn);
  $('#demoReset').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();};}
 if(window.ClassLive){clState=ClassLive.init({game:'prehistory',store:'hhl-prehistory-class',
   snapshot:()=>{const st=TID.map(id=>S.st[id]||0),tm=['old','neo','iron','dig','museum'].map(k=>S.tm[k]||0);
