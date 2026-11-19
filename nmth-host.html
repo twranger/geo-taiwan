@@ -470,6 +470,8 @@ select.nh-in{min-width:0}
 .nh-sum{margin-top:12px;padding:10px 12px;border-left:4px solid #E69F00;background:#fff8e6;border-radius:6px}
 .nh-sum p{margin:2px 0}
 .nh-delrow{margin-top:28px;text-align:right}
+.nh-note{margin-top:6px}.nh-note summary{cursor:pointer;color:#0b5c7a;font-weight:700}.nh-note p{margin-top:6px;max-width:72ch}
+.nh-flag{min-width:9em;max-width:14em;color:#8a3b00;font-size:14px}
 </style>
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
@@ -524,10 +526,10 @@ const GAMES={
   parse(v){let j={};try{j=JSON.parse(v.d||'{}');}catch(e){}const s=(j.s||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),y=(j.y||[]).concat([0,0,0,0,0,0,0,0,0]).slice(0,9).map(x=>+x||0),tm=(j.tm||[]).concat([0,0,0,0,0]).slice(0,5).map(x=>+x||0);
    const o={s,y,tm,dig:j.dig?1:0,h:+j.h||0,ht:+j.ht||0,gr:+j.gr||0,bf:j.b?1:0,tr:+j.tr||0,nt:+j.nt||0,sk:+j.sk||0,qw:+j.qw||0,cf:+j.cf||0,done:s.filter(Boolean).length+(j.dig?1:0),stars:s.reduce((a,b)=>a+b,0),t:tm.reduce((a,b)=>a+b,0),miss:(+j.qw||0)+(+j.cf||0)};
    const f=[];[0,1,2].forEach(e=>{if(s.slice(e*3,e*3+3).every(Boolean)&&tm[e]<120)f.push(this.E[e]+'不到 2 分鐘');});if(o.done===10&&o.t<480)f.push('全部不到 8 分鐘');if(o.qw>=6)f.push('題目答錯 '+o.qw+' 次');if(o.h>=8)f.push('圍獵 '+o.h+' 次，可能一直站在石頭上');o.flag=f.join('、');return o;},
-  where(c){const [a,b]=String(c).split(':'),e=this.EK.indexOf(a);if(c==='lobby')return '大廳';if(a==='hub')return '時光隧道';if(a==='dig')return '考古挖掘';if(a==='cert')return '領證書';if(a==='museum')return '博物館';if(e<0)return '';const ids=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],k=ids.indexOf(b);return this.E[e]+(k>=0?'・'+this.T[k]:'');},
+  where(c){const [a,b]=String(c).split(':'),e=this.EK.indexOf(a);if(c==='lobby')return '大廳';if(a==='hub')return '選時代畫面';if(a==='dig')return '考古挖掘';if(a==='cert')return '領證書';if(a==='museum')return '博物館';if(e<0)return '';const ids=['food','knap','fire','farm','grind','pot','trade','smelt','chop'],k=ids.indexOf(b);return this.E[e]+(k>=0?'・'+this.T[k]:'');},
   note:'「圍獵、穀倉、交換」是和同學一起做的活動（人不夠時會有部落的人幫忙），不影響過關。圍獵只有前 3 頭有肉和獸皮，和同一位同學交換最多算 2 次，和外地人最多換 3 次，所以這幾欄刷不高。每個時代有三個任務，格子裡是三個任務各拿幾顆星和在這個時代停留的時間。黃色是學生現在所在的時代。「答錯」是任務後的題目答錯次數，「試錯」是動手組合材料失敗的次數（多不代表不好，是在嘗試）。',
   head(){return `<th>完成</th><th>星星<small>滿分 27</small></th><th>總時間</th>${this.E.map(x=>`<th>${x}</th>`).join('')}<th>考古挖掘</th><th>圍獵<small>抓到幾頭（三位同學一起）</small></th><th>穀倉<small>放了幾束</small></th><th>交換<small>同學／鄰村</small></th><th>學會本領</th><th>答錯</th><th>試錯</th>`;},
-  row(r){return `<td>${r.done}/10</td><td>${r.stars}</td><td>${mmss(r.t)}</td>${[0,1,2].map(e=>{const a=r.s.slice(e*3,e*3+3),on=String(r.cur).split(':')[0]===this.EK[e];return `<td class="${a.some(Boolean)?'':'no'}${on?' now':''}">${a.some(Boolean)||r.tm[e]?`${a.map(n=>n?'★'.repeat(n):'・').join(' ')}<small>${mmss(r.tm[e])}</small>`:'—'}</td>`;}).join('')}<td class="${r.dig?'':'no'}${r.cur==='dig'?' now':''}">${r.dig?'完成':(r.tm[3]?'進行中':'—')}</td><td>${r.h?r.h+(r.ht?`（${r.ht}）`:''):'—'}</td><td>${r.gr?r.gr+(r.bf?' ✓':''):'—'}</td><td>${r.tr||r.nt?`${r.tr}／${r.nt}`:'—'}</td><td>${r.sk}</td><td>${r.qw}</td><td>${r.cf}</td>`;},
+  row(r){return `<td>${r.done}/10</td><td>${r.stars}</td><td>${mmss(r.t)}</td>${[0,1,2].map(e=>{const a=r.s.slice(e*3,e*3+3),on=String(r.cur).split(':')[0]===this.EK[e];return `<td class="${a.some(Boolean)?'':'no'}${on?' now':''}">${a.some(Boolean)||r.tm[e]?`<span title="三個任務各拿幾顆星">${a.map(n=>n?n+'★':'－').join('・')}</span><small>${mmss(r.tm[e])}</small>`:'—'}</td>`;}).join('')}<td class="${r.dig?'':'no'}${r.cur==='dig'?' now':''}">${r.dig?'完成':(r.tm[3]?'進行中':'—')}</td><td>${r.h?r.h+(r.ht?`（${r.ht}）`:''):'—'}</td><td>${r.gr?r.gr+(r.bf?' ✓':''):'—'}</td><td>${r.tr||r.nt?`${r.tr}／${r.nt}`:'—'}</td><td>${r.sk}</td><td>${r.qw}</td><td>${r.cf}</td>`;},
   csvHead(){return ['完成數(滿分10)','星星(滿分27)','總秒數',...this.T.flatMap(t=>[t+'星星',t+'玩幾次']),...this.E.map(e=>e+'秒數'),'考古挖掘秒數','考古挖掘完成','圍獵次數','三位同學一起圍獵次數','穀倉放了幾束','穀倉滿了','和同學交換次數','和鄰村交換次數','學會本領數','題目答錯次數','組合試錯次數'];},
   csvRow(r){return [r.done,r.stars,r.t,...r.s.flatMap((n,i)=>[n,r.y[i]]),r.tm[0],r.tm[1],r.tm[2],r.tm[3],r.dig,r.h,r.ht,r.gr,r.bf,r.tr,r.nt,r.sk,r.qw,r.cf];}}};
 const auth$=$('#nhAuth'),room$=$('#nhRoom'),list$=$('#nhList');
@@ -685,10 +687,10 @@ function draw(){if(!cur)return;drawAt=Date.now();const g=GM(),url=SITE+g.page+'?
    <button class="nh-btn alt" id="nhCsv" ${n?'':'disabled'}>下載 CSV</button><button class="nh-btn alt" id="nhBack">回到場次清單</button>${cur.ph==='closed'?'<button class="nh-btn" id="nhReopen">再開一次，接續進度</button>':''}<button class="nh-btn alt" id="nhZip1" ${n?'':'disabled'}>下載這一班（ZIP）</button></div>${spanUI()}`;
  if(lob)h+=`<p class="nh-big" style="margin-top:22px">已經進大廳：${n} 人</p><p>選錯座號的學生：點他的座號，就能改成正確的座號。晚到的學生，開始以後還是可以進來。</p><div class="nh-seats">${rows.filter(r=>!r.away).map(r=>`<button class="nh-seat" data-rel="${r.seat}">${r.seat}</button>`).join('')||''}</div>
   ${awayN?`<p style="margin-top:16px">上次玩過、還沒回來的座號（選回同一個座號，進度就會回來）：</p><div class="nh-seats">${rows.filter(r=>r.away).map(r=>`<span class="nh-seat nh-away">${r.seat}<small>${r.done}/${g.total}</small></span>`).join('')}</div>`:''}`;
- else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。${g.note}</p>
-  <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th>${g.head()}<th>留意</th></tr></thead><tbody>
+ else h+=`<p style="margin-top:18px">共 <b>${n}</b> 人，全部完成 <b>${fin}</b> 人。</p><details class="nh-note"><summary>這些欄位是什麼？</summary><p>${g.note}</p></details>
+  <div class="nh-tw"><table class="nh-tb"><thead><tr><th>座號</th><th>現在在</th><th>留意</th>${g.head()}</tr></thead><tbody>
   ${stuckUI(g)}
-  ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td>${g.row(r)}<td>${esc(r.flag||'')}</td></tr>`).join('')}</tbody></table></div>`;
+  ${rows.map(r=>`<tr><th>${g.follow&&!r.away?`<button class="nh-fix" data-rel="${r.seat}" title="改座號">${r.seat}</button>`:r.seat}</th><td>${r.away?'<small>還沒回來</small>':esc(g.where(r.cur))}</td><td class="nh-flag">${esc(r.flag||'')}</td>${g.row(r)}</tr>`).join('')}</tbody></table></div>`;
  h+=`<p class="nh-delrow"><button class="nh-btn alt nh-del" id="nhDel">刪除這一場任務…</button></p>`;
  if(h===lastH&&room$.firstChild)return;lastH=h;const tw0=room$.querySelector('.nh-tw'),sx=tw0?tw0.scrollLeft:0;
  room$.innerHTML=h;{const tw=room$.querySelector('.nh-tw');if(tw&&sx)tw.scrollLeft=sx;}

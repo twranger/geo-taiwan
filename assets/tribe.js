@@ -85,7 +85,7 @@ function huntTick(dt,ts){if(!hunts.length)return;const {S,Hf}=X,now=NOW();
   blocked=g>=0&&rival(g,k,now);const hold=g>=0&&!blocked;
   if(hold!==holding){holding=hold;ringAt=-1e9;if(!hold)NET.hold(null);}
   if(holding&&ts-ringAt>RBEAT){ringAt=ts;const v={g,k,s:me.seat||0,t:TSV(),j:myJ};if(hunts[g].myC)v.c=hunts[g].myC;NET.hold(v);}
-  const noSpear=!!(hooks.armed&&!hooks.armed());let mine=null,here=null,near=null,nd=1e9;
+  const noSpear=!!(hooks.armed&&!hooks.armed());let nearH=null;{let bd=1e9;hunts.forEach(H=>{const d=Math.hypot(H.at[0]-S.x,H.at[1]-S.z);if(d<bd){bd=d;nearH=H;}});}let mine=null,here=null,near=null,nd=1e9;
   hunts.forEach(H=>{const held=heldOf(H,now),humans=Object.keys(held).length;
     /* the tribe's hunters come when the first pupil here has waited long enough (counted from when the deer came back) */
     const waited=humans?Math.max(0,(now-Math.max(H.first,H.readyAt))/1000):0,wantNpc=humans>0&&H.state==='idle'&&waited>(NET.ref&&NET.up?WAITH:WAITS);
@@ -95,7 +95,7 @@ function huntTick(dt,ts){if(!hunts.length)return;const {S,Hf}=X,now=NOW();
     const full=H.marks.every(m=>held[m.k]),iam=myG===H.gi&&holding;
     H.marks.forEach(m=>{const h=held[m.k];const col=h?(h.who==='npc'?'#c9a26b':'#7dffb0'):'#ffd23f';if(m.col!==col){m.col=col;m.ring.material.color.set(col);}m.ring.rotation.z=ts*.6;
       const t=myG===H.gi&&myK===m.k?(blocked?'有人了':'你'):h||noSpear?'':'站這裡';if(m.txt!==t){m.txt=t;m.el.textContent=t;}if(t)place(m.el,m.x,m.y+1.6,m.z,26);else hideEl(m.el);});
-    const st=H.state!=='idle'?'圍到了！':noSpear&&!humans?'水鹿：先做長矛才能圍獵':`水鹿：要 3 人圍獵（${Math.min(3,humans)}/3）`;if(H.signT!==st){H.signT=st;H.sign.textContent=st;}place(H.sign,H.at[0],Hf(H.at[0],H.at[1])+3.6,H.at[1],46);
+    const st=H.state!=='idle'?'圍到了！':noSpear&&!humans?'水鹿：先做長矛才能圍獵':NET.ref?`水鹿：要 3 人圍獵（${Math.min(3,humans)}/3）`:'水鹿：站上石頭，部落的人會來幫你';if(H.signT!==st){H.signT=st;H.sign.textContent=st;}if(noSpear&&!humans&&H!==nearH)hideEl(H.sign);else place(H.sign,H.at[0],Hf(H.at[0],H.at[1])+3.6,H.at[1],46);
     // the deer
     const d=H.dr;
     if(H.state==='caught'){d.rotation.z=Math.min(1.45,d.rotation.z+dt*2.5);if(now-H.caughtAt>RESPAWN){H.state='idle';H.readyAt=now;H.myC=0;H.hold=0;d.rotation.z=0;d.rotation.y+=2.4;if(myG===H.gi)ringAt=-1e9;
