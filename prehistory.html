@@ -1837,7 +1837,7 @@ const GOALS={
   {t:'到「種小米」顧好你的田',ok:()=>S.st.farm,go:'farm'},
   {t:'做一個能裝小米的罐子',ok:()=>S.known.pot,h:['河邊的黏土可以用。','泥土要先「捏」成形，再想辦法讓它變硬。']},
   {t:'到「做陶罐」做一個完整的陶罐',ok:()=>S.st.pot,go:'pot'},
-  {t:'（挑戰）養一隻小野豬',ok:()=>S.sk.herd,side:1,h:['草地上有一隻小野豬。','拿你種出來的東西給牠吃。']},
+  {t:'（挑戰）養一隻小野豬',ok:()=>S.sk.herd,side:1,h:['草地上有一隻小野豬，走過去抓牠。','在「動手試試」選小野豬和你種的小米，再選「餵」。']},
   {t:'（挑戰）划獨木舟到花蓮豐田找玉，磨成玉耳飾',ok:()=>S.sk.jade,side:1,h:['海邊有一艘獨木舟，走過去就能出發。','玉很硬，要用磨石慢慢磨。']}],
  iron:[{t:'準備 2 種東西去河口交易',ok:()=>tradeGoods()>=2||S.st.trade,h:['可以拿去換的：陶罐、獸皮、玉耳飾，要帶兩種。','沒有陶罐？用黏土捏、再燒。林子裡有獸皮。']},
   {t:'到「和外地人交易」',ok:()=>S.st.trade,go:'trade'},
@@ -1875,6 +1875,7 @@ function hudGoal(){g2dDraw();const el=$('#wGoal');if(!el||!cur||!GOALS[cur.k])re
 function craftEnter(){if(!W3||!RESDEF[cur.k])return;const defs=RESDEF[cur.k].map(d=>Object.assign({},d,{n:d.once?Math.max(0,d.n-(S.took[cur.k+d.it]||0)):d.n})).filter(d=>d.n>0&&!(d.it==='canoe'&&S.sk.jade));W3.spawnRes(defs);$('#wHud').hidden=false;hudGoal();}
 function pick(q){if(q.it==='canoe'){jadeTrip();return;}add({[q.it]:1});sfx.pop();const d=(RESDEF[cur.k]||[]).find(d=>d.it===q.it);if(d&&d.once)S.took[cur.k+q.it]=(S.took[cur.k+q.it]||0)+1;
   if((q.it==='shell'||q.it==='fruit')&&!S.sk.gather&&((S.bag.shell||0)+(S.bag.fruit||0)>=3)){S.sk.gather=1;toast('你學會了<b>採集</b>：在海邊撿貝殼、在林子裡摘野果。');}
+  else if(q.it==='piglet')toast(S.st.farm?'抓到一隻<b>小野豬</b>！要養牠，就給牠吃你種的小米：打開「動手試試」，選<b>小野豬</b>和<b>小米</b>，再選「餵」。':'抓到一隻<b>小野豬</b>！要養牠，得先有牠愛吃又吃得到的食物。先去完成「種小米」，再打開「動手試試」餵牠。');
   else toast(`撿到 <b>${IT[q.it].n}</b>。${IT[q.it].d}`);
   if(cur.k==='old'&&d&&d.once&&(S.took.oldshell||0)>=8&&(S.took.oldfruit||0)>=6&&!S.sk.moved){S.sk.moved=1;setTimeout(()=>toast('這附近的貝殼和野果都撿光了。舊石器時代的人就是這樣：<b>食物吃完了，就要搬到別的地方</b>。'),3800);}
   sfx.good&&sfx.good();save();hudGoal();paint();g2dDraw();}
