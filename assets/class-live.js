@@ -122,6 +122,7 @@ function wait(quiet){const sid=sess.sid,t0=Date.now();off();
     /* say so on the tablet: otherwise 30 pupils keep playing and nobody knows the lesson part is over */
     last.then(okd=>{if(sess)return;ui(`<h2>老師結束這一場任務了</h2><p>${okd?'你的進度已經傳給老師。':'網路好像斷了，最後一點進度可能沒傳到，老師那邊有前幾分鐘的紀錄。'}</p><p>先停下來，聽老師說話。</p><div class="cl-row c"><button class="cl-btn" id="clEnd">好</button></div>`);box.querySelector('#clEnd').onclick=hide;});return;}
    if(r.moves&&+r.moves[cid]&&+r.moves[cid]!==sess.seat){sess.seat=+r.moves[cid];keep();pushBoth().catch(()=>{});if(!sess.on){wait();return;}try{O.onSeat&&O.onSeat(sess);}catch(e){}}
+   {const sp=r.span||'';if(sp!==(sess.span||'')){sess.span=sp;keep();try{O.onSpan&&O.onSpan(sess);}catch(e){}}}
    if(r.ph==='play'&&!sess.on){sess.on=1;keep();hide();
     /* a pupil who comes in late starts at once, so the "two tablets, one seat" check stays on a little longer */
     const un=seatUn;seatUn=[];setTimeout(()=>un.forEach(u=>{try{u();}catch(e){}}),Math.max(0,20000-(Date.now()-t0)));
