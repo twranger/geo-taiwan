@@ -395,6 +395,7 @@ footer p+p{margin-top:6px}
 .bg-card .bigbtn{font-size:14px;padding:8px 14px;min-height:40px;margin-top:12px}
 .bg-card .src{font-size:12px;color:var(--muted);margin-top:12px}
 .bg-card .src a{color:inherit}
+.no3d #ud3d,.no3d #bg3d,.no3d .ep-tg{display:none!important}
 .ud-lb{color:#F2C14E;font-weight:700;font-size:14px;text-shadow:0 1px 3px #000}
 .ud-lb[hidden]{display:none}
 </style>
@@ -944,7 +945,8 @@ const pass=i=>E.t[i]>=tMin&&E.t[i]<=tMax&&E.mag[i]>=mMin-1e-3&&qMask[E.q[i]];
 function init(){
   for(const n of G.named){const [y,m,d]=n.d.split('-').map(Number),a=dayOf(y,m,d);let b=-1;for(let i=0;i<E.n;i++){if(E.t[i]>=a&&E.t[i]<a+1&&(b<0||E.mag[i]>E.mag[b]))b=i;}n.i=b;}
   $('#nAll').textContent=nf(E.n);$('#eqLoad').remove();
-  legend();init3d();initHist();initPanel();initCut();initAfter();initAsk();initSrc();initUnder();initBig();update();
+  const safe=f=>{try{f();}catch(e){console.error(e);}};safe(legend);try{init3d();}catch(e){console.error(e);no3d();}
+  [initHist,initPanel,initCut,initAfter,initAsk,initSrc,initUnder,initBig,update].forEach(safe);
 }
 
 /* ---------- legend ---------- */
@@ -954,6 +956,11 @@ function legend(){
 }
 
 /* ---------- 3D ---------- */
+// no WebGL: keep every 2D section working, explain the empty model
+function no3d(){S.no3d=1;const vp=()=>new Proxy({},{get:(t,k)=>k in t?t[k]:()=>{},set:(t,k,v)=>(t[k]=v,true)});
+  S.pm={uniforms:new Proxy({},{get:(t,k)=>t[k]||(t[k]={value:vp()})})};for(const k of ['secG','afG','gnG','flt','col'])if(!S[k]||!S[k].isObject3D)S[k]=vp();S.sc=null;
+  const st=$('#eqGl');if(st)st.innerHTML='<div style="display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#e9eef2;line-height:1.8"><div><b style="font-size:20px">這台裝置不能顯示 3D 模型</b><br>下面的「切一刀」「我們學校底下」「臺灣的大地震」都能照常使用。<br><small>換一台電腦或平板，或打開瀏覽器的硬體加速，就能看到 3D。</small></div></div>';
+  document.documentElement.classList.add('no3d');[...document.querySelectorAll('.panel h3,.panel h4,.panel p,.panel div')].filter(e=>e.childElementCount===0&&e.textContent.trim()==='地圖上要顯示').forEach(e=>e.hidden=true);}
 function init3d(){
   const cv=$('#eqCv'),st=$('#eqGl');
   const R=S.r=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));R.setClearColor(0x0c1822,1);
@@ -1015,7 +1022,7 @@ function slabMesh(s){const P=[],I=[],idx=new Int32Array(s.nx*s.ny).fill(-1),L=[]
   const grp=new THREE.Group();grp.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x9fd3f5,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false})));grp.add(lines(L,0x9fd3f5,.45));return grp;}
 function setTerrain(){const p=S.tg.attributes.position;for(let r=0;r<360;r++)for(let c=0;c<300;c++){const e=TER[(359-r)*300+c];p.setY(r*300+c,(e>0?e*S.exag:e)/1000+S.lift);}
   p.needsUpdate=true;S.terr.material.opacity=1-S.clear;if(S.coast)S.coast.position.y=S.lift;if(FLT)fault3d();if(S.col)col3d();dirty();}
-function resize(){const st=$('#eqGl'),w=st.clientWidth,h=st.clientHeight;S.r.setSize(w,h,false);S.cam.aspect=w/h;S.cam.updateProjectionMatrix();S.pm.uniforms.uScale.value=900*S.r.getPixelRatio()*Math.sqrt(h/700);S.W=w;S.H=h;dirty();}
+function resize(){if(S.no3d)return;const st=$('#eqGl'),w=st.clientWidth,h=st.clientHeight;S.r.setSize(w,h,false);S.cam.aspect=w/h;S.cam.updateProjectionMatrix();S.pm.uniforms.uScale.value=900*S.r.getPixelRatio()*Math.sqrt(h/700);S.W=w;S.H=h;dirty();}
 const VIEWS={tilt:{az:.35,el:.62,f:1},top:{az:0,el:1.5,f:.95},east:{az:Math.PI/2,el:.09,f:1.32},south:{az:0,el:.09,f:1.38}};
 function fitDist(v){const a=S.W/S.H,fy=Math.tan(19*Math.PI/180),need=v.el>1.2?Math.max(690/2/fy,560/2/(fy*a)):Math.max(420/2/fy,(v.az>.8?690:560)/2/(fy*a));return need*v.f*(a<.8&&v.el<1.2?1.15:1);}
 function go(k,now){const v=VIEWS[k],tgt={az:v.az,el:v.el,dist:fitDist(v),tx:0,ty:v.el>1.2?0:-140,tz:v.el>1.2?0:10};if(k==='tilt'){tgt.ty=-90;}
@@ -1024,7 +1031,7 @@ function tween(to,ms){const from={...S.view};const t0=performance.now();cancelAn
   const step=now=>{const k=ms?Math.min(1,(now-t0)/ms):1,e=1-Math.pow(1-k,3);for(const p in to)S.view[p]=from[p]+(to[p]-from[p])*e;dirty();if(k<1)S.tw=requestAnimationFrame(step);};S.tw=requestAnimationFrame(step);}
 function place(){const v=S.view,c=Math.cos(v.el);S.cam.position.set(v.tx+v.dist*c*Math.sin(v.az),v.ty+v.dist*Math.sin(v.el),v.tz+v.dist*c*Math.cos(v.az));S.cam.up.set(0,1,0);
   if(v.el>1.45){S.cam.up.set(-Math.sin(v.az),0,-Math.cos(v.az));}S.cam.lookAt(v.tx,v.ty,v.tz);S.cam.updateMatrixWorld();}
-function dirty(){if(!S.raf)S.raf=requestAnimationFrame(()=>{S.raf=0;draw();});}
+function dirty(){if(S.no3d)return;if(!S.raf)S.raf=requestAnimationFrame(()=>{S.raf=0;draw();});}
 function draw(){place();S.r.render(S.sc,S.cam);labels();}
 const proj=(x,y,z)=>{const v=new THREE.Vector3(x,y,z).project(S.cam);return v.z>1?null:[(v.x+1)/2*S.W,(1-v.y)/2*S.H];};
 function labels(){const side=S.view.el<.35;S.lbs.forEach((l,i)=>{const e=document.getElementById('lb'+i);if(side&&l[4]==='tw'){e.style.display='none';return;}const y=l[4]==='tw'?Math.max(0,hAt(l[1],l[2]))/1000*S.exag+S.lift+4:l[3]+S.lift;const p=S.terr.visible||l[4]!=='tw'?proj(X(l[1]),y,Z(l[2])):proj(X(l[1]),2,Z(l[2]));
@@ -1383,7 +1390,7 @@ function bgCard(){if(BG.k==null)return;const b=BIGQ[BG.k],[lo,la,i]=bgPos(b),far
    <p>${b.t}</p>
    <div class="bg-q"><b>想一想：</b>${b.q}<details><summary>看答案</summary><p>${ans}</p></details></div>
    ${i>=0?`<button class="bigbtn alt" id="bg3d">在 3D 模型裡看這個地震</button>`:`<p class="bg-far">1990 年以前的地震，不在 3D 模型的地震目錄裡。地圖上的星星是大約的震央位置。</p>`}
-   <p class="src">資料：<a href="${b.src[1]}" target="_blank" rel="noopener">${b.src[0]}</a>。規模是芮氏規模。</p>`;
+   <p class="src">資料：<a href="${b.src[1]}" target="_blank" rel="noopener">${b.src[0]}</a>。規模是芮氏規模；不同單位的統計數字會有一點出入。</p>`;
   const bt=$('#bg3d');if(bt)bt.onclick=()=>{stopPlay();tMin=0;tMax=E.t[E.n-1]+1;update();sel=i;card();tween({az:.5,el:.4,dist:420,tx:X(E.lon[i]),ty:-E.dep[i]-10,tz:Z(E.lat[i])},RM?0:800);
     $$('.eq-views button').forEach(x=>x.setAttribute('aria-pressed','false'));$('#model').scrollIntoView({behavior:RM?'auto':'smooth'});};}
 
