@@ -606,6 +606,16 @@
     "advisory": true
   },
   {
+    "antipattern": "side-tab",
+    "name": "Side-tab accent border",
+    "description": "A bar down one side of a rounded box. Use a full border, a background tint, or a leading icon or label instead.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/prehistory.html",
+    "line": 0,
+    "snippet": "border-left: 5px + border-radius: 10px"
+  },
+  {
     "antipattern": "low-contrast",
     "name": "Low contrast text",
     "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
