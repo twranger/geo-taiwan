@@ -963,7 +963,7 @@ if(!window.THREE)return null;
 const T=THREE;try{const t=document.createElement('canvas');if(!(t.getContext('webgl')||t.getContext('experimental-webgl')))return null;}catch(e){return null;}
 let R=null,scene,cam,host,cv,raf=0,last=0,paused=false,era=null,cb={},spots=[],upd=[],terrain,water,wbase,sun,amb,hemi,sky,stars,sunBall,fires=[],Hf=null;
 /* hooks for the page: low(true) when the tablet is too slow, lost(true|false) when the WebGL context goes away and comes back */
-const HK={},RMW=matchMedia('(prefers-reduced-motion: reduce)').matches;let lost=false,grassM=null,grassN=0,lowAuto=true,fc=0;
+const HK={},RMW=matchMedia('(prefers-reduced-motion: reduce)').matches;let lost=false,grassM=null,grassN=0,clouds=null,cloudM=null,lowAuto=true,fc=0;
 /* task beacons: a soft shaft of light that fades out upwards, and a pool of light on the ground */
 let _bt=null,_gt=null;const cvTex=(w,h,draw)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'));return new T.CanvasTexture(c);};
 const beamTex=()=>_bt||(_bt=cvTex(4,128,g=>{const gr=g.createLinearGradient(0,0,0,128);gr.addColorStop(.3,'rgba(255,255,255,0)');gr.addColorStop(.72,'rgba(255,255,255,.4)');gr.addColorStop(1,'rgba(255,255,255,1)');g.fillStyle=gr;g.fillRect(0,0,4,128);}));
@@ -1085,7 +1085,7 @@ const CA=new T.Color(),CB=new T.Color();const lc=(a,b,k)=>CA.set(a).lerp(CB.set(
 function applyTod(){const i=Math.min(2,Math.floor(S.tod)),k=S.tod-i,a=TOD[i],b=TOD[i+1],L=(p)=>a[p]+(b[p]-a[p])*k;const top=lc(a.top,b.top,k),bot=lc(a.bot,b.bot,k);
   sky.material.uniforms.top.value.copy(top);sky.material.uniforms.bot.value.copy(bot);scene.fog.color.copy(bot);sun.color.copy(lc(a.sun,b.sun,k));sun.intensity=L('si');amb.intensity=L('am')*.75;hemi.intensity=L('am');hemi.color.copy(top).lerp(new T.Color('#ffffff'),.5);
   const el=L('el'),az=.7+S.tod*.5;sun.userData.dir=new T.Vector3(Math.cos(el)*Math.cos(az),Math.sin(el),Math.cos(el)*Math.sin(az));stars.material.opacity=L('st');sunBall.material.color.copy(lc(a.sun,b.sun,k));sunBall.scale.setScalar(S.tod>2.5?9:14);
-  const night=Math.max(0,S.tod-1.2)/1.8;fires.forEach(f=>f.intensity=(0.5+night*2.4)*(f.userData.f||1));water.material.color.copy(lc('#3d9fc4','#18304f',Math.max(0,S.tod-2)));}
+  const night=Math.max(0,S.tod-1.2)/1.8;if(cloudM)cloudM.color.setRGB(1-night*.75,1-night*.72,1-night*.6),cloudM.emissive.setRGB(.6*(1-night*.8),.65*(1-night*.8),.7*(1-night*.75));fires.forEach(f=>f.intensity=(0.5+night*2.4)*(f.userData.f||1));water.material.color.copy(lc('#3d9fc4','#18304f',Math.max(0,S.tod-2)));}
 /* ---- lifecycle ---- */
 function init(){host=document.getElementById('w3d');cv=document.getElementById('wcv');R=new T.WebGLRenderer({canvas:cv,antialias:!lowQ,powerPreference:'high-performance'});R.setPixelRatio(lowQ?1:Math.min(1.5,window.devicePixelRatio||1));R.shadowMap.enabled=!lowQ;R.shadowMap.type=T.PCFSoftShadowMap;
   /* an old tablet under memory pressure can lose the WebGL context: keep the page, say so, rebuild when it comes back */
@@ -1104,11 +1104,14 @@ function click(e){const r=cv.getBoundingClientRect(),v=new T.Vector2((e.clientX-
   const hb=ray.intersectObjects(spots.map(s=>s.hit));if(hb.length){const s=spots.find(s=>s.hit===hb[0].object);S.auto={x:s.x,z:s.z,stop:3.2};return;}
   const ht=ray.intersectObject(terrain);if(ht.length){const p=ht[0].point;if(p.y>-.6&&Math.hypot(p.x-S.x,p.z-S.z)<90)S.auto={x:p.x,z:p.z,stop:.6};}}
 function dispose(){if(!scene)return;scene.traverse(o=>{if(o.geometry&&!Object.values(GEO).includes(o.geometry))o.geometry.dispose();});scene=null;upd=[];fires=[];spots=[];res=[];for(const k in MC)delete MC[k];document.getElementById('wLabels').innerHTML='';}
-function start(e,tasks,done,callbacks){if(!R)init();cancelAnimationFrame(raf);dispose();era=e;cb=callbacks||{};Hf=HF[e];HUNTS[e]=huntGrounds(e);scene=new T.Scene();scene.fog=new T.Fog('#d2ecf8',70,260);
+function start(e,tasks,done,callbacks){if(!R)init();cancelAnimationFrame(raf);dispose();era=e;cb=callbacks||{};Hf=HF[e];HUNTS[e]=huntGrounds(e);scene=new T.Scene();scene.fog=new T.Fog('#d2ecf8',45,240);
   // sky
   sky=new T.Mesh(new T.SphereGeometry(600,24,14),new T.ShaderMaterial({side:T.BackSide,fog:false,depthWrite:false,uniforms:{top:{value:new T.Color()},bot:{value:new T.Color()}},vertexShader:'varying float h;void main(){h=normalize(position).y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform vec3 top;uniform vec3 bot;varying float h;void main(){gl_FragColor=vec4(mix(bot,top,pow(clamp(h*1.25+.04,0.,1.),.55)),1.);}'}));scene.add(sky);
   const sp=new Float32Array(900);for(let i=0;i<300;i++){const a=rnd(0,6.283),b=rnd(.08,1.5);sp[i*3]=Math.cos(a)*Math.cos(b)*560;sp[i*3+1]=Math.sin(b)*560;sp[i*3+2]=Math.sin(a)*Math.cos(b)*560;}const sg=new T.BufferGeometry();sg.setAttribute('position',new T.BufferAttribute(sp,3));stars=new T.Points(sg,new T.PointsMaterial({color:'#ffffff',size:2.2,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false}));scene.add(stars);
   sunBall=new T.Mesh(GEO.sph,new T.MeshBasicMaterial({fog:false}));scene.add(sunBall);
+  {cloudM=new T.MeshLambertMaterial({color:'#ffffff',emissive:'#9aa6b2',flatShading:true,fog:false,transparent:true,opacity:.92});const CN=9,PER=5,cm=new T.InstancedMesh(new T.IcosahedronGeometry(1,0),cloudM,CN*PER),d=new T.Object3D();let k=0;
+   for(let c=0;c<CN;c++){const a=c/CN*6.283+rnd(-.3,.3),r=rnd(150,230),y=rnd(60,95),cx=Math.cos(a)*r,cz=Math.sin(a)*r,w=rnd(9,15);for(let j=0;j<PER;j++){d.position.set(cx+rnd(-w,w),y+rnd(-2,3),cz+rnd(-w*.5,w*.5));d.scale.set(rnd(6,11),rnd(3.5,5.5),rnd(5,8));d.rotation.set(0,rnd(0,6),0);d.updateMatrix();cm.setMatrixAt(k++,d.matrix);}}
+   clouds=cm;scene.add(cm);}
   amb=new T.AmbientLight(0xffffff,.3);hemi=new T.HemisphereLight(0xffffff,0x6b7a4a,.5);sun=new T.DirectionalLight(0xffffff,1);sun.castShadow=!lowQ;sun.shadow.mapSize.set(1024,1024);const sc=sun.shadow.camera;sc.left=sc.bottom=-46;sc.right=sc.top=46;sc.near=1;sc.far=260;sun.shadow.bias=-.0006;sun.shadow.normalBias=.04;scene.add(amb,hemi,sun,sun.target);
   // terrain
   let g=new T.PlaneGeometry(260,260,104,104);g.rotateX(-Math.PI/2);const p=g.attributes.position;for(let i=0;i<p.count;i++){const X=p.getX(i),Z=p.getZ(i);p.setY(i,e==='museum'&&Math.hypot(X,Z)<34?.9:Hf(X,Z));}g=g.toNonIndexed();const q=g.attributes.position,col=new Float32Array(q.count*3),c=new T.Color();
@@ -1123,8 +1126,8 @@ function start(e,tasks,done,callbacks){if(!R)init();cancelAnimationFrame(raf);di
     const glow=new T.Mesh(new T.CircleGeometry(4.4,24),new T.MeshBasicMaterial({color:'#ffe08a',map:glowTex(),transparent:true,opacity:.8,depthWrite:false,fog:false}));glow.rotation.x=-Math.PI/2;glow.position.set(x,y+.14,z);
     const ring=new T.Mesh(new T.TorusGeometry(2.4,.1,8,28),new T.MeshBasicMaterial({color:'#ffe08a'}));ring.rotation.x=Math.PI/2;ring.position.set(x,y+.25,z);const hit=new T.Mesh(new T.CylinderGeometry(3,3,12,8),new T.MeshBasicMaterial({visible:false}));hit.position.set(x,y+6,z);if(e==='museum'){beam.visible=false;glow.visible=false;ring.scale.setScalar(.5);ring.position.y=y-1.1;}scene.add(beam,glow,ring,hit);
     const el=document.createElement('button');el.className='wl';el.dataset.t=t.id;lab.appendChild(el);el.onclick=()=>{S.auto={x,z,stop:3.2};};return {id:t.id,n:t.n,x,z,y,beam,glow,ring,hit,el,bo:.72,done:t.stars||0};});
-  {const N=3600,gm=new T.InstancedMesh(new T.ConeGeometry(.1,.5,4),new T.MeshStandardMaterial({color:'#5f9a45',flatShading:true,roughness:1}),N),fm=new T.InstancedMesh(new T.IcosahedronGeometry(.16,0),new T.MeshStandardMaterial({color:'#ffffff',flatShading:true,roughness:1}),260),d=new T.Object3D();let k=0,f=0,gd=0;const fc=['#f2e9a0','#ffffff','#e9a8c9','#f0b040'];
-   while(k<N&&gd++<N*20){const x=rnd(-80,80),z=rnd(-80,80),h=Hf(x,z);if(h<1||h>14||(e==='museum'&&Math.hypot(x,z)<37))continue;d.position.set(x,h+.3,z);d.rotation.set(rnd(-.2,.2),rnd(0,6),rnd(-.2,.2));const s=rnd(.6,1.5);d.scale.set(s,s*rnd(.8,1.6),s);d.updateMatrix();gm.setMatrixAt(k++,d.matrix);
+  {const N=3600,gm=new T.InstancedMesh(new T.ConeGeometry(.07,.46,3),new T.MeshStandardMaterial({color:'#ffffff',flatShading:true,roughness:1}),N),fm=new T.InstancedMesh(new T.IcosahedronGeometry(.16,0),new T.MeshStandardMaterial({color:'#ffffff',flatShading:true,roughness:1}),260),d=new T.Object3D();let k=0,f=0,gd=0;const fc=['#f2e9a0','#ffffff','#e9a8c9','#f0b040'],GC=['#5f9a45','#6fae4c','#4f8a3c','#7f9f45','#93ad55','#5a9150'].map(c=>new T.Color(c));
+   let cx0=0,cz0=0;while(k<N&&gd++<N*20){if(k%4===0){cx0=rnd(-80,80);cz0=rnd(-80,80);}const x=cx0+(k%4?rnd(-.35,.35):0),z=cz0+(k%4?rnd(-.35,.35):0),h=Hf(x,z);if(h<1||h>14){if(k%4===0)continue;cx0=rnd(-80,80);cz0=rnd(-80,80);continue;}if(h<1||h>14||(e==='museum'&&Math.hypot(x,z)<37))continue;d.position.set(x,h+.3,z);d.rotation.set(rnd(-.2,.2),rnd(0,6),rnd(-.2,.2));const s=rnd(.55,1.15);d.scale.set(s,s*rnd(.8,1.5),s);d.updateMatrix();gm.setMatrixAt(k,d.matrix);gm.setColorAt(k,GC[k%GC.length]);k++;
      if(f<260&&Math.random()<.12){d.position.y=h+.42;d.scale.setScalar(rnd(.7,1.2));d.updateMatrix();fm.setMatrixAt(f,d.matrix);fm.setColorAt(f,new T.Color(fc[f%4]));f++;}}
    grassM=gm;grassN=k;gm.count=lowQ?Math.ceil(k/3):k;fm.count=f;gm.receiveShadow=true;scene.add(gm,fm);}
   BUILD[e]();const st=START[e];S.x=st[0];S.z=st[1];S.yaw=st[2];{const se=window.ClassLive&&ClassLive.sess&&ClassLive.sess(),n=e!=='museum'&&se&&se.on?(+se.seat||0):0;if(n){const a=n*2.4,r=2+(n%4)*1.1;S.x+=Math.sin(a)*r;S.z+=Math.cos(a)*r;}}S.pitch=-.05;S.auto=null;S.keys={};S.near=null;S.todT=S.tod=e==='museum'?1.75:([0,1,2,3][done]||0);setDone(tasks.map(t=>t.stars||0));
@@ -1156,7 +1159,7 @@ let slowN=0,frN=0,lowQ=false;
 /* light graphics: no shadows, no antialiasing on the next load, 1:1 pixels, a third of the grass, no smoke, slower water.
    Turns itself on when more than half of 90 frames take over 45 ms; the page remembers it and offers a switch. */
 function setLow(b,manual){lowQ=!!b;if(manual)lowAuto=false;frN=slowN=0;if(!R)return;R.shadowMap.enabled=!lowQ;R.setPixelRatio(lowQ?1:Math.min(1.5,window.devicePixelRatio||1));size();if(sun)sun.castShadow=!lowQ;if(grassM)grassM.count=lowQ?Math.ceil(grassN/3):grassN;if(scene)scene.traverse(o=>{if(o.material)o.material.needsUpdate=true;});}
-function frame(t){raf=requestAnimationFrame(frame);if(paused||!scene)return;const raw=(t-(last||t))/1000,dt=Math.min(.05,raw);last=t;const ts=t/1000;
+function frame(t){raf=requestAnimationFrame(frame);if(paused||!scene)return;const raw=(t-(last||t))/1000,dt=Math.min(.05,raw);last=t;const ts=t/1000;if(clouds&&!RMW)clouds.rotation.y+=dt*.006;
   if(lowAuto&&!lowQ&&raw>0){frN++;if(raw>.045)slowN++;if(frN>=90){if(slowN>45){setLow(true);HK.low&&HK.low(true);}frN=slowN=0;}}
   // move
   let f=(S.keys.w||S.keys.arrowup?1:0)-(S.keys.s||S.keys.arrowdown?1:0),sd=(S.keys.d?1:0)-(S.keys.a?1:0);if(S.keys.arrowleft)S.yaw+=dt*1.9;if(S.keys.arrowright)S.yaw-=dt*1.9;let vx=0,vz=0,sp=8.5,free=false;
@@ -1270,15 +1273,17 @@ G.pot=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#d2bf9d');cam.position.set
     hud.bar(i/8,`第 ${Math.min(i+1,8)} / 8 圈`,'#B86E00');});};
 /* 6 farm */
 G.farm=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9d38a');cam.position.set(0,9.5,8.8);cam.lookAt(0,0,.2);const pl=[];for(let i=0;i<6;i++){const x=-4.4+(i%3)*4.4,z=-1.9+Math.floor(i/3)*3.8,g=new T.Group();const bed=P('box',mat('#9fbf6a'),3.6,.3,2.8,0,.15,0);g.add(bed);const st=[];for(let a=0;a<4;a++)for(let b=0;b<3;b++){const s=P('cone',mat('#3f8f3a'),.1,1,.1,-1.2+a*.8,.3,-.8+b*.8);s.visible=false;const e=P('sph',mat('#E0A51A'),.13,.3,.13,-1.2+a*.8,1.5,-.8+b*.8);e.visible=false;g.add(s,e);st.push([s,e]);}
-    const stack=P('cone',mat('#E0A51A'),.7,1.1,.7,0,.85,0);stack.visible=false;g.add(stack);g.position.set(x,0,z);scene.add(g);pl.push({g,bed,st,stack,x,z,s:0,gr:0,dead:0});}
+    const stack=P('cone',mat('#E0A51A'),.7,1.1,.7,0,.85,0);stack.visible=false;g.add(stack);g.position.set(x,0,z);scene.add(g);const lc=document.createElement('canvas');lc.width=256;lc.height=64;const lt=new T.CanvasTexture(lc),lab=new T.Sprite(new T.SpriteMaterial({map:lt,depthTest:false,transparent:true}));lab.scale.set(2.4,.6,1);lab.position.set(0,2.7,0);lab.renderOrder=5;g.add(lab);pl.push({g,bed,st,stack,x,z,s:0,gr:0,dead:0,lc,lt,lw:''});}
+  const sign=p=>{const w=STG3(p);if(w===p.lw)return;p.lw=w;const c=p.lc.getContext('2d');c.clearRect(0,0,256,64);c.fillStyle=w==='成熟可收！'?'#E69F00':w==='被鳥吃掉了'?'#7a2d00':'rgba(255,255,255,.92)';c.strokeStyle='#3d2f20';c.lineWidth=4;c.beginPath();c.roundRect?c.roundRect(4,6,248,52,14):c.rect(4,6,248,52);c.fill();c.stroke();c.fillStyle=w==='被鳥吃掉了'?'#fff':'#1c2a22';c.font='bold 30px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(w,128,33);p.lt.needsUpdate=true;};pl.forEach(sign);
   let birds=[],end=0,got=0,lost=0;const mkBird=p=>{const g=new T.Group(),m=mat('#3a2c22'),wl=P('box',m,.6,.05,.3,-.4,.1,0),wr=P('box',m,.6,.05,.3,.4,.1,0);g.add(P('sph',m,.3,.26,.4),wl,wr,P('cone',mat('#E69F00'),.08,.25,.08,0,.05,.45));g.children[3].rotation.x=Math.PI/2;const hitS=P('sph',bas('#fff',{visible:false}),.9,.9,.9);g.add(hitS);g.position.set(rnd(-9,9),8,-8);scene.add(g);birds.push({g,wl,wr,p,sit:0,away:0,hitS});};
   A.tap=()=>{if(end)return;const hb=A.hit(birds.map(b=>b.hitS));if(hb){const b=birds.find(b=>b.hitS===hb.object);b.away=1;sfx.hit&&sfx.hit();return;}const h=A.hit(pl.map(p=>p.bed));if(!h)return;const p=pl.find(p=>p.bed===h.object);if(p.dead)return;
     if(p.s===0){p.s=1;p.bed.material.color.set('#7a5a3c');sfx.hit&&sfx.hit();}else if(p.s===1){p.s=2;p.st.forEach(([s])=>s.visible=true);sfx.tick&&sfx.tick();}else if(p.s===2&&p.gr>=1){p.s=3;got++;p.st.forEach(([s,e])=>s.visible=e.visible=false);p.stack.visible=true;sfx.good&&sfx.good();}};
-  hud.msg('點田：翻土 → 再點：播種 → 變金黃色再點：收割。小鳥飛來要趕快點牠！');
-  A.upd.push((dt,ts)=>{pl.forEach(p=>{if(p.s===2&&!p.dead){p.gr=Math.min(1,p.gr+dt/9);p.st.forEach(([s,e])=>{s.scale.y=.15+p.gr*1.2;s.position.y=.3+s.scale.y/2;s.material.color.set(p.gr>=1?'#B8860B':'#3f8f3a');e.visible=p.gr>.6;e.position.y=.35+s.scale.y;e.material.color.set(p.gr>=1?'#E0A51A':'#9bbf5a');});}});
+  hud.msg('點田：翻土 → 再點：播種 → 長出小苗 → 變金黃色「成熟可收」再點：收割。小鳥飛來要趕快點牠！');
+  A.upd.push((dt,ts)=>{pl.forEach(sign);pl.forEach(p=>{if(p.s===2&&!p.dead){p.gr=Math.min(1,p.gr+dt/9);p.st.forEach(([s,e])=>{s.scale.y=.15+p.gr*1.2;s.position.y=.3+s.scale.y/2;s.material.color.set(p.gr>=1?'#B8860B':'#3f8f3a');e.visible=p.gr>.6;e.position.y=.35+s.scale.y;e.material.color.set(p.gr>=1?'#E0A51A':'#9bbf5a');});}});
     const tg=pl.filter(p=>p.s===2&&!p.dead&&p.gr>.35);if(!end&&tg.length&&Math.random()<dt*.7&&birds.length<2){const p=tg[Math.floor(Math.random()*tg.length)];if(!birds.some(b=>b.p===p))mkBird(p);}
     birds=birds.filter(b=>{const f=Math.sin(ts*16)*.7;b.wl.rotation.z=f;b.wr.rotation.z=-f;if(b.p.s===3)b.away=1;if(b.away){b.g.position.y+=9*dt;b.g.position.x+=4*dt;if(b.g.position.y>12){scene.remove(b.g);return false;}}else{const tx=b.p.x,ty=1.7,tz=b.p.z,d=b.g.position.distanceTo(new T.Vector3(tx,ty,tz));if(d>.15)b.g.position.lerp(new T.Vector3(tx,ty,tz),Math.min(1,dt*6/d));else{b.sit+=dt;if(b.sit>2.3&&b.p.s===2){b.p.dead=1;lost++;b.p.st.forEach(([s,e])=>s.visible=e.visible=false);b.p.bed.material.color.set('#5a4a3a');sfx.bad&&sfx.bad();b.away=1;}}}return true;});
     hud.bar(got/6,`收成 ${got} / 6 塊田（三星要 5 塊）`,'#00795A');hud.info(lost?`被吃掉 ${lost} 塊，繼續顧好剩下的田`:'');if(!end&&pl.every(p=>p.s===3||p.dead)){end=1;sfx.win&&sfx.win();hud.msg(got>=5?'大豐收！':'收成了一些小米',got>=3?'#00684B':'#7a2d00');setTimeout(()=>fin(got>=5?3:got>=3?2:1),1100);}});};
+const STG3=p=>p.dead?'被鳥吃掉了':p.s===0?'草地':p.s===1?'翻好土了':p.s===3?'收成了':(p.gr!=null?p.gr:p.g)>=1?'成熟可收！':(p.gr!=null?p.gr:p.g)>.35?'長出小苗':'播了種子';
 /* 7 smelt */
 G.smelt=(A,fin)=>{const {scene,cam,hud,sfx}=A;ground(A,'#b9a98c');cam.position.set(1.2,3.4,8.4);cam.lookAt(.3,1.6,0);const pts=[[1.6,0],[1.7,.7],[1.25,2.1],[.75,3],[.65,3.3]].map(p=>new T.Vector2(p[0],p[1]));const fur=new T.Mesh(new T.LatheGeometry(pts,14),mat('#8a5f47',{side:T.DoubleSide}));fur.castShadow=true;scene.add(fur);
   const gm=bas('#5a2a14');const glow=P('sph',gm,.55,.5,.3,0,.55,1.5);scene.add(glow);const L=new T.PointLight(0xff7a2e,0,16,2);L.position.set(0,1,2.4);scene.add(L);const bel=P('cone',mat('#8a5a33'),.7,2,.7,-2.9,.7,1);bel.rotation.z=-Math.PI/2;scene.add(bel);const me=person('#7a4a22');me.position.set(-4.4,0,1);me.rotation.y=1.57;scene.add(me);
@@ -1557,11 +1562,11 @@ G.pot=(a,fin)=>{const TG=[62,92,116,126,116,90,64,56];let i=0,t=0,err=0,ws=[],en
     if(!end){const w=cur(),y=by-(i+1)*ch;c.fillStyle='#e6b98acc';c.strokeStyle='#10313b';c.lineWidth=3;rr(c,cx-w,y,w*2,ch-3,14);c.fill();c.stroke();T(c,'對齊虛線時，點一下放上泥條',360,24,21);T(c,`第 ${i+1} / 8 圈`,90,60,18);}
     else if(fire){for(let k=0;k<7;k++){c.fillStyle=['#D55E00','#E69F00'][k%2];c.beginPath();const x=170+k*64,h=50+Math.sin(t*8+k)*14;c.moveTo(x-22,by+8);c.quadraticCurveTo(x,by-h,x+22,by+8);c.fill();}T(c,'趁軟壓上繩紋，再用火燒硬，陶罐做好了！',360,28,22);}};};
 /* 6 grow millet */
-G.farm=(a,fin)=>{const pl=[];for(let i=0;i<6;i++)pl.push({x:130+(i%3)*230,y:190+Math.floor(i/3)*150,s:0,g:0,dead:0});let birds=[],t=0,end=0,got=0,lost=0;
+G.farm=(a,fin)=>{const STG3=p=>p.dead?'被鳥吃掉了':p.s===0?'草地':p.s===1?'翻好土了':p.s===3?'收成了':p.g>=1?'成熟可收！':p.g>.35?'長出小苗':'播了種子';const pl=[];for(let i=0;i<6;i++)pl.push({x:130+(i%3)*230,y:190+Math.floor(i/3)*150,s:0,g:0,dead:0});let birds=[],t=0,end=0,got=0,lost=0;
   a.tap=(x,y)=>{if(end)return;const b=birds.findIndex(b=>Math.hypot(b.x-x,b.y-y)<44);if(b>=0){birds[b].away=1;sfx.hit();return;}
     const p=pl.find(p=>Math.abs(p.x-x)<90&&Math.abs(p.y-y)<60);if(!p||p.dead)return;if(p.s===0){p.s=1;sfx.hit();}else if(p.s===1){p.s=2;sfx.tick();}else if(p.s===2&&p.g>=1){p.s=3;got++;sfx.good();}};
   a.draw=dt=>{const c=a.c;t+=dt;c.fillStyle='#bfe3f2';c.fillRect(0,0,W,100);c.fillStyle='#8fb37a';c.beginPath();c.moveTo(0,100);c.lineTo(150,40);c.lineTo(330,96);c.lineTo(520,30);c.lineTo(W,100);c.fill();c.fillStyle='#cfe0a4';c.fillRect(0,100,W,340);
-    pl.forEach(p=>{if(p.s===2&&!p.dead)p.g=Math.min(1,p.g+dt/9);c.fillStyle=p.s===0?'#b9c98d':'#8a6a4a';c.strokeStyle='#5a4630';c.lineWidth=3;rr(c,p.x-90,p.y-55,180,110,14);c.fill();c.stroke();
+    pl.forEach(p=>{if(p.s===2&&!p.dead)p.g=Math.min(1,p.g+dt/9);c.fillStyle=p.s===0?'#b9c98d':'#8a6a4a';c.strokeStyle='#5a4630';c.lineWidth=3;rr(c,p.x-90,p.y-55,180,110,14);c.fill();c.stroke();{const w=STG3(p),hi=w==='成熟可收！';c.fillStyle=hi?'#E69F00':p.dead?'#7a2d00':'#fffdf5';c.strokeStyle='#5a4630';c.lineWidth=2;rr(c,p.x-58,p.y-72,116,30,10);c.fill();c.stroke();T(c,w,p.x,p.y-57,15,p.dead?'#fff':'#1c2a22');}
       if(p.s===0){for(let k=0;k<5;k++){c.strokeStyle='#6f8f4a';c.beginPath();c.moveTo(p.x-60+k*30,p.y+20);c.lineTo(p.x-64+k*30,p.y-5);c.stroke();}T(c,'點一下：翻土',p.x,p.y+38,16);}
       else if(p.s===1){T(c,'再點：播種',p.x,p.y+38,16,'#fff');}
       else if(p.s===2&&!p.dead){for(let k=0;k<5;k++){const x=p.x-60+k*30,h=10+p.g*52;c.strokeStyle=p.g>=1?'#B8860B':'#3f8f3a';c.lineWidth=4;c.beginPath();c.moveTo(x,p.y+40);c.lineTo(x,p.y+40-h);c.stroke();if(p.g>0.6){c.fillStyle=p.g>=1?'#E69F00':'#9bbf5a';c.beginPath();c.ellipse(x+4,p.y+40-h,5,12,0.4,0,7);c.fill();}}if(p.g>=1)T(c,'熟了！點一下收割',p.x,p.y+58,16);}
@@ -1630,7 +1635,7 @@ const ERAS=[
   night:'天黑了。你有了一把鐵斧，還換到了漂亮的珠子。',
   tasks:[
    {id:'trade',n:'和外地人交易',x:15,y:62,how:'看船客想換什麼，就點下方相同的貨物（電腦也可以按 1、2、3）。每換一次，就少一件貨物；整輪結束才會更新背包。沒有的東西不能換。',intro:'河口來了一艘船！船上的人帶著我們沒看過的漂亮珠子。用我們有的東西跟他們換吧。',fact:'十三行人住在河口，靠著<b>臨近河海</b>的優勢<b>和外地交流、交易</b>，遺址出土了玻璃珠、瑪瑙珠等外來的物品。',row:['trade','和外地交易，換到玻璃珠、瑪瑙珠等'],q:{t:'十三行人為什麼方便和外地交易？',o:['住在靠近河口和海的地方，船容易到','住在深山裡，翻山越嶺比較快','他們做陶罐比較快，所以船常到這裡'],a:0}},
-   {id:'smelt',n:'煉鐵',x:48,y:66,how:'按住畫面或一直點畫面（或按住空白鍵）送風，爐子會變熱；停下來會變冷。讓箭頭停在綠色的「剛好」。太熱太久，進度會往回掉一點，看到紅色就先停手。',how3:'按住畫面或一直點畫面（或按住空白鍵）送風，爐子會變熱；停下來會變冷。讓指針停在綠色的「剛好」。太熱太久，進度會往回掉一點，看到紅色就先停手。',intro:'外地的船客說要教你煉鐵（這段是遊戲想像）。把鐵砂和木炭放進爐子，用力送風，讓火變得非常熱，鐵砂就會結成一塊燒紅的鐵，溫度要控制得剛剛好。十三行遺址挖出了煉鐵爐和鐵渣，讓我們知道當地人會煉鐵。',fact:'鐵器有可能是跟別人換來的；可是十三行遺址挖出了<b>煉鐵爐</b>和煉鐵留下的<b>鐵渣</b>，讓考古學家知道這裡的人曾經自己<b>煉鐵</b>。煉鐵技術可能是從海外傳入的。',row:['tool','鐵器（鐵刀、鐵斧），石器變少'],q:{t:'考古學家為什麼推測十三行人會煉鐵？',o:['找到了煉鐵爐和煉鐵留下的鐵渣','找到了很多打製石器','因為海邊的沙子是黑色的'],a:0}},
+   {id:'smelt',n:'煉鐵',x:48,y:66,how:'按住畫面或一直點畫面（或按住空白鍵）送風，爐子會變熱；停下來會變冷。讓箭頭停在綠色的「剛好」。太熱太久，進度會往回掉一點，看到紅色就先停手。',how3:'按住畫面或一直點畫面（或按住空白鍵）送風，爐子會變熱；停下來會變冷。讓指針停在綠色的「剛好」。太熱太久，進度會往回掉一點，看到紅色就先停手。',intro:'外地的船客說要教你煉鐵（這段是遊戲想像）。把鐵砂和木炭放進爐子，用力送風，讓火變得非常熱，鐵砂就會結成一塊燒紅的鐵，溫度要控制得剛剛好。十三行遺址挖出了煉鐵爐和鐵渣，讓我們知道當地人會煉鐵。',fact:'十三行遺址挖出了<b>煉鐵爐</b>和煉鐵留下的<b>鐵渣</b>，所以考古學家推測十三行人會<b>煉鐵</b>。他們的煉鐵技術，推測是向外地來的人學的。',row:['tool','鐵器（鐵刀、鐵斧），石器變少'],q:{t:'考古學家為什麼推測十三行人會煉鐵？',o:['找到了煉鐵爐和煉鐵留下的鐵渣','找到了很多打製石器','因為海邊的沙子是黑色的'],a:0}},
    {id:'chop',n:'試試鐵斧',x:82,y:58,how:'左邊用石斧、右邊用鐵斧。兩棵樹都點到倒下來，數數看各要砍幾下。',intro:'新打好的鐵斧真的比較厲害嗎？找兩棵一樣粗的樹，一棵用石斧砍，一棵用鐵斧砍，比比看。',fact:'鐵器又硬又鋒利，<b>做事更快、更省力</b>。所以金屬器時代的石器種類變少了，人們越來越常用鐵器，但也還有人用石製的工具。',row:['skill','煉鐵、做鐵器；鐵器讓工作更快'],q:{t:'金屬器時代的石器為什麼變少了？',o:['砍樹這類工作用鐵器更省力，漸漸改用鐵器','石頭被用光了','鐵器比石器容易做'],a:0}}]}];
 const ROWS=[['live','住在哪裡'],['food','食物怎麼來'],['tool','主要的工具'],['skill','新學會的本領'],['trade','和外地的交流']];
 const eraDone=e=>e.tasks.every(t=>S.st[t.id]);const eraStars=e=>e.tasks.reduce((a,t)=>a+(S.st[t.id]||0),0);
@@ -2023,7 +2028,7 @@ openTask=function(id){const t=cur&&cur.tasks&&cur.tasks.find(t=>t.id===id);if(cu
   _openTask(id);};
 window.PHBAG={get:()=>S.bag,add:(o,sg)=>{add(o,sg);save();}};
 function grant(id){add(GRANT[id]||{});if(id==='trade')add({method:1});save();
-  const g=GRANT[id];if(g)setTimeout(()=>toast(`放進背包：<b>${itn(g)}</b>`),400);if(id==='trade')setTimeout(()=>toast('外地人還教了你<b>煉鐵的方法</b>！<br><small>（這段是遊戲的想像：考古學家推測，煉鐵技術可能是從外地傳進來的。）</small>'),400);}
+  const g=GRANT[id];if(g)setTimeout(()=>toast(`放進背包：<b>${itn(g)}</b>`),400);if(id==='trade')setTimeout(()=>toast('外地人還教了你<b>煉鐵的方法</b>！<br><small>（考古學家推測，十三行人的煉鐵技術是向外地人學的；船客怎麼教你，是遊戲的想像。）</small>'),400);}
 $('#btnBag')&&($('#btnBag').onclick=bagOpen);$('#btnWb')&&($('#btnWb').onclick=wbOpen);$('#btnSk')&&($('#btnSk').onclick=skOpen);$('#btnSk2')&&($('#btnSk2').onclick=skOpen);
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#wb').hidden)wbClose();else if(!$('#bg').hidden){$('#bg').hidden=true;W3&&W3.pause(false);}else if(!$('#sk').hidden){$('#sk').hidden=true;W3&&W3.pause(false);}else if(!$('#jt').hidden)jtClose();});
 
@@ -2169,4 +2174,4 @@ document.body.dataset.ready='1';
 })();
 </script>
 
-<script src="assets/tribe.js?v=13"></script>
+<script src="assets/tribe.js?v=14"></script>

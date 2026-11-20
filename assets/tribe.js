@@ -161,7 +161,7 @@ function palTick(dt,ts){const {Hf,S}=X;
     const L=Object.values(others).map(o=>[Math.hypot(o.x-S.x,o.z-S.z),o]).sort((a,b)=>a[0]-b[0]);L.forEach(([d,o],i)=>{o.vis=i<show&&d<SHOWD;o.g.visible=o.vis;if(!o.vis)hideEl(o.el);});}
   Object.values(others).forEach(o=>{const dx=o.tx-o.x,dz=o.tz-o.z,d=Math.hypot(dx,dz);
     if(d>.05){const m=o.bot?d*Math.min(1,dt*6):Math.min(d,o.sp*dt);o.x+=dx/d*m;o.z+=dz/d*m;}
-    if(!o.vis)return;o.g.position.set(o.x,Hf(o.x,o.z),o.z);{const c=X.cam&&X.cam.position;o.g.visible=Math.hypot(o.x-S.x,o.z-S.z)>2.2&&(!c||Math.hypot(o.x-c.x,o.z-c.z)>3.2);}
+    if(!o.vis)return;o.g.position.set(o.x,Hf(o.x,o.z),o.z);{const c=X.cam&&X.cam.position;o.g.visible=Math.hypot(o.x-S.x,o.z-S.z)>4.5&&(!c||Math.hypot(o.x-c.x,o.z-c.z)>4.5);}
     if(d>.05){o.g.rotation.y=Math.atan2(dx,dz);walk(o.g,ts,1);}else{o.g.rotation.y=o.tr+Math.PI;walk(o.g,ts,0);}place(o.el,o.x,Hf(o.x,o.z)+2.4,o.z,40);});}
 /* A tablet left lying open must not keep the whole class downloading its heartbeat (and must not keep hunting):
    after 3 minutes without walking or looking around it goes quiet until somebody touches it again. */
