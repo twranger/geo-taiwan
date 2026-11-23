@@ -1078,10 +1078,39 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   --mur-comparison:var(--muted);
   --mur-wash:color-mix(in srgb,var(--surface) 91%,var(--mur-variant));
 }
-#indigenous-stories .mur-lead { margin-top:6px;color:var(--mur-variant);font-size:clamp(18px,2.4vw,24px);font-weight:700;line-height:1.45 }
 .mur-main,.mur-card { margin:0;border:1px solid var(--line);border-radius:14px;padding:clamp(12px,2vw,20px) }
-.mur-main { margin-top:14px;background:var(--mur-wash) }
-.mur-card { background:var(--surface-2) }
+.mur-main,.mur-run { margin-top:14px }
+.mur-main,.mur-card { background:var(--surface-2) }
+.mur-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px }
+#indigenous-stories .mur-overview h4 { font-size:clamp(18px,2.3vw,23px) }
+.mur-advantages { background:var(--mur-wash) }
+#indigenous-stories .mur-benefit { margin-top:5px;color:var(--mur-variant);font-size:clamp(18px,2.25vw,23px);font-weight:700;line-height:1.4 }
+.mur-examples { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 }
+.mur-example {
+  display:grid;justify-items:start;gap:3px;padding:8px 10px;border:1px solid var(--line);
+  border-radius:9px;background:var(--surface);font-size:15px;line-height:1.25;
+}
+.mur-count { display:block;margin-top:3px;color:var(--mur-variant);font-weight:700;white-space:nowrap }
+.mur-count strong { font-family:var(--f-num);font-size:clamp(30px,3.4vw,47px);letter-spacing:-.045em;line-height:1.04 }
+.mur-dot-grid {
+  position:relative;display:block;width:clamp(72px,13vw,96px);aspect-ratio:1;background:var(--line);
+  mask:radial-gradient(circle closest-side,#000 77%,transparent 81%) 0 0/10% 10%;
+}
+.mur-dot-grid::before,.mur-dot-grid::after { content:"";position:absolute;left:0;background:var(--mur-variant) }
+.mur-dot-grid::before { inset:0 0 auto;height:calc(var(--mur-rows) * 10%) }
+.mur-dot-grid::after { top:calc(var(--mur-rows) * 10%);width:calc(var(--mur-last) * 10%);height:10% }
+#indigenous-stories .mur-japan { padding-top:8px;border-top:1px solid var(--line);font-size:15px;line-height:1.45 }
+.mur-japan strong { color:var(--mur-variant);font-size:17px }
+.mur-protein { margin:10px 0 0 }
+.mur-protein figcaption { display:flex;align-items:baseline;gap:8px;flex-wrap:wrap }
+.mur-protein figcaption strong { color:var(--mur-variant);white-space:nowrap }
+.mur-protein figcaption b { font-family:var(--f-num);font-size:clamp(30px,3.4vw,47px);line-height:1.04;letter-spacing:-.04em }
+.mur-protein figcaption span { font-size:15px }
+#indigenous-stories .mur-protein .mur-guide { margin-top:8px }
+.mur-run .mur-bars { max-width:520px }
+@media (min-width:940px) {
+  .mur-example { grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px }
+}
 .mur-main figcaption { font-size:clamp(18px,2.2vw,24px);font-weight:700;line-height:1.4 }
 .mur-card figcaption { font-size:19px;font-weight:700;line-height:1.4 }
 #indigenous-stories .mur-guide { margin:4px 0 0;color:var(--muted);font-size:15px;line-height:1.5 }
@@ -1122,7 +1151,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-culture-grid article { padding:14px;border:1px solid var(--line);border-top:3px solid var(--stories-accent);border-radius:10px;background:var(--surface) }
 @media (max-width:700px) {
   .stories-history,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
-  .mur-grid { grid-template-columns:minmax(0,1fr);gap:8px }
+  .mur-grid,.mur-overview { grid-template-columns:minmax(0,1fr);gap:8px }
   .baseball-table th,.baseball-table td { padding-inline:6px }
   .baseball-table th:first-child { width:3.1em }
   .lineup-controls button,.stories-nav a { padding-inline:8px }
@@ -1131,6 +1160,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   .lineup-controls button[aria-pressed="true"] { color:HighlightText;background:Highlight;forced-color-adjust:none }
   .blood-track span,.mur-bar-track span,.mur-variant .mur-bar-track span { background:Highlight;forced-color-adjust:none }
   .mur-bar-track { outline:1px solid CanvasText;outline-offset:-1px }
+  .mur-dot-grid { background:CanvasText;forced-color-adjust:none }
+  .mur-dot-grid::before,.mur-dot-grid::after { background:Highlight }
 }
 </style>
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
@@ -1419,8 +1450,45 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       </div>
     </section>
     <section class="stories-card stories-science" id="miltenberger" aria-labelledby="miltenbergerTitle">
-      <h3 id="miltenbergerTitle">米田堡血型有什麼優勢？</h3>
-      <p class="mur-lead">運動剛停，帶有米田堡第三型的人較快排出二氧化碳</p>
+      <h3 id="miltenbergerTitle">米田堡第三型有多特別？</h3>
+      <div class="mur-overview">
+        <article class="mur-card" aria-labelledby="murRarity">
+          <h4 id="murRarity">有多罕見？</h4>
+          <p class="mur-guide">每圖有 100 人。綠點代表帶有第三型的人。</p>
+          <div class="mur-examples">
+            <div class="mur-example">
+              <div>臺灣捐血者樣本<span class="mur-count">約 <strong>5</strong> 人</span></div>
+              <span class="mur-dot-grid" aria-hidden="true" style="--mur-rows:0;--mur-last:5"></span>
+            </div>
+            <div class="mur-example">
+              <div>阿美族研究樣本<span class="mur-count">約 <strong>88</strong> 人</span></div>
+              <span class="mur-dot-grid" aria-hidden="true" style="--mur-rows:8;--mur-last:8"></span>
+            </div>
+          </div>
+          <p class="mur-japan">日本研究樣本約 <strong>3,900 人中有 1 人</strong>。</p>
+          <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/33946749/" target="_blank" rel="noopener noreferrer">臺灣 4.71%</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/8809963/" target="_blank" rel="noopener noreferrer">阿美族 88.4%</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/34227688/" target="_blank" rel="noopener noreferrer">日本 0.0256%</a></p>
+        </article>
+
+        <article class="mur-card mur-advantages" aria-labelledby="murAdvantage">
+          <h4 id="murAdvantage">運動時有什麼優勢？</h4>
+          <p class="mur-benefit">運動剛停，較快排出二氧化碳</p>
+          <figure class="mur-protein">
+            <figcaption><strong>約多 <b>20%</b></strong><span>紅血球的 Band 3 運送蛋白</span></figcaption>
+            <dl class="mur-bars" style="--mur-scale:120">
+              <div class="mur-variant">
+                <dt>有第三型</dt>
+                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:120"></span></span><strong>約 120</strong></dd>
+              </div>
+              <div>
+                <dt>未帶第三型</dt>
+                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:100"></span></span><strong>100</strong></dd>
+              </div>
+            </dl>
+            <p class="mur-guide">運動時肌肉會產生更多二氧化碳。Band 3 像紅血球的「小門」，幫忙把二氧化碳送到肺。</p>
+            <p class="stories-source">蛋白量以未帶第三型的一組為 100 · <a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年研究</a></p>
+          </figure>
+        </article>
+      </div>
 
       <figure class="mur-main">
         <figcaption>踩完 3 分鐘階梯後，二氧化碳讀數降了多少？</figcaption>
@@ -1457,38 +1525,21 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         <p class="stories-source">米田堡第三型也叫 GP.Mur。圖中為男性受試者的平均讀數降幅（mmHg）。<a href="https://www.nature.com/articles/srep10327.pdf#page=3" target="_blank" rel="noopener noreferrer">2015 年階梯研究圖 2</a></p>
       </figure>
 
-      <div class="mur-grid">
-        <figure class="mur-card">
-          <figcaption>紅血球多了約兩成「小門」</figcaption>
-          <p class="mur-guide">運動時肌肉會產生更多二氧化碳。這些小門叫 Band 3，幫忙把它送到肺。</p>
-          <dl class="mur-bars" style="--mur-scale:120">
-            <div class="mur-variant">
-              <dt>有第三型</dt>
-              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:120"></span></span><strong>約 120</strong></dd>
-            </div>
-            <div>
-              <dt>未帶第三型</dt>
-              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:100"></span></span><strong>100</strong></dd>
-            </div>
-          </dl>
-          <p class="stories-source">蛋白量以未帶第三型的一組為 100 · <a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年研究</a></p>
-        </figure>
-        <figure class="mur-card">
-          <figcaption>跑比較久嗎？兩組時間相近</figcaption>
-          <p class="mur-guide">跑步機逐漸加速，記錄選手平均跑了多久。</p>
-          <dl class="mur-bars" style="--mur-scale:20">
-            <div class="mur-variant">
-              <dt>有第三型</dt>
-              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:19.1"></span></span><strong class="mur-time-value">19.1<span> 分鐘</span></strong></dd>
-            </div>
-            <div>
-              <dt>未帶第三型</dt>
-              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:18.4"></span></span><strong class="mur-time-value">18.4<span> 分鐘</span></strong></dd>
-            </div>
-          </dl>
-          <p class="stories-source">36 名男性選手 · <a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年跑步機研究</a></p>
-        </figure>
-      </div>
+      <figure class="mur-card mur-run">
+        <figcaption>跑比較久嗎？兩組時間相近</figcaption>
+        <p class="mur-guide">跑步機逐漸加速，記錄選手平均跑了多久。</p>
+        <dl class="mur-bars" style="--mur-scale:20">
+          <div class="mur-variant">
+            <dt>有第三型</dt>
+            <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:19.1"></span></span><strong class="mur-time-value">19.1<span> 分鐘</span></strong></dd>
+          </div>
+          <div>
+            <dt>未帶第三型</dt>
+            <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:18.4"></span></span><strong class="mur-time-value">18.4<span> 分鐘</span></strong></dd>
+          </div>
+        </dl>
+        <p class="stories-source">36 名男性選手 · <a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年跑步機研究</a></p>
+      </figure>
 
       <details class="blood-question">
         <summary>怎麼知道這個差異會不會影響棒球表現？</summary>
@@ -1499,8 +1550,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
           <h4>血庫為什麼也在意？</h4>
           <p>紅血球表面有許多標記，叫作抗原。米田堡（Miltenberger）屬於 MNS 血型系統，所以一個人可以同時是 O 型，也帶有 GP.Mur。台灣血液基金會自 2018 年起在血袋標示米田堡相關抗原，幫助血庫找出相容的血液。</p>
           <details>
-            <summary>88.4% 怎麼讀？</summary>
-            <p>把這項研究的阿美族樣本比例換成每 100 人來想，約有 88 人帶有 GP.Mur。要知道一個人的血型，得靠驗血。</p>
+            <summary>怎麼知道自己有沒有這個血型？</summary>
+            <p>米田堡第三型又稱 GP.Mur。要知道個人的血型，需要驗血。</p>
           </details>
         </div>
         <figure class="blood-samples">
