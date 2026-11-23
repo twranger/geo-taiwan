@@ -495,179 +495,322 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
 <style>
-.migration-controls {
-  display:grid;
-  grid-template-columns:180px minmax(0,1fr);
-  gap:24px;
-  align-items:start;
-  margin-bottom:16px;
+#migration { padding-block:38px 52px }
+#migration [hidden] { display:none!important }
+.migration-intro { margin-bottom:18px }
+.migration-intro h2 { font-size:clamp(26px,3.4vw,36px) }
+.migration-intro p { margin-top:6px; color:var(--muted);font-size:16px }
+.migration-toolbar {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px 16px;
+  margin-bottom:14px;
 }
-.migration-controls[hidden],.migration-figure[hidden] { display:none }
-.migration-controls label,.migration-events h3 {
-  display:block;
-  margin-bottom:4px;
-  font-family:var(--f-body);
+.migration-tabs {
+  display:inline-flex;
+  gap:4px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--surface);
+}
+.migration-tabs button {
+  min-height:44px;
+  padding:0 16px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--muted);
   font-size:16px;
   font-weight:700;
-  line-height:1.5;
+  white-space:nowrap;
 }
+.migration-tabs button[aria-pressed="true"] { background:var(--ink);color:var(--paper) }
+.migration-picker { display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700 }
 #migrationGroup {
-  width:100%;
-  min-height:54px;
-  margin-top:4px;
-  padding:8px 12px;
+  min-width:168px;
+  min-height:44px;
+  padding:0 12px;
   border:1px solid var(--line);
-  border-radius:10px;
+  border-radius:9px;
   background:var(--surface);
   color:var(--ink);
   font:inherit;
-  font-size:16px;
 }
+.migration-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.38fr) minmax(320px,1fr);
+  grid-template-areas:"map reading" "map routes";
+  align-items:start;
+  grid-template-rows:auto 1fr;
+  gap:14px 18px;
+}
+.migration-map,.migration-reading,.migration-routes {
+  min-width:0;
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface);
+}
+.migration-map { grid-area:map;overflow:hidden }
+.migration-reading { grid-area:reading;padding:18px;scroll-margin-top:75px }
+.migration-routes { grid-area:routes;padding:16px 16px 12px }
+.migration-map-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px 12px;
+  min-height:68px;
+  padding:10px 14px;
+}
+.migration-map-head h3,.migration-reading h3 { font-size:clamp(20px,2vw,25px);text-wrap:wrap }
+#migrationMapSummary { margin-top:3px;color:var(--muted);font-size:14px;line-height:1.5 }
+.migration-zoom { display:flex;align-items:center;gap:4px;flex:none }
+.migration-zoom button {
+  min-width:44px;
+  min-height:44px;
+  padding:0 5px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface-2);
+  font-size:16px;
+  line-height:1;
+  font-weight:700;
+}
+.migration-zoom button:hover,.migration-tabs button:hover,#migrationGroup:hover { border-color:var(--ink) }
+#migrationMap {
+  isolation:isolate;
+  border:0;
+  border-block:1px solid var(--line);
+  border-radius:0;
+  touch-action:pan-y;
+}
+#migrationSvg {
+  height:clamp(340px,53vh,585px);
+  max-height:none;
+  touch-action:pan-y;
+}
+#migrationMap .migration-north {
+  position:absolute;
+  inset:12px auto auto 12px;
+  width:30px;
+  height:42px;
+  fill:#16343d;
+  pointer-events:none;
+}
+.migration-pin text,.migration-north text {
+  fill:#15363e;
+  stroke:#fff;
+  stroke-width:3.5px;
+  stroke-linejoin:round;
+  paint-order:stroke;
+  pointer-events:none;
+  font-size:18px;
+  font-weight:700;
+}
+.migration-pin .sea-label { fill:#2b636f;font-size:20px;font-weight:500 }
+.migration-track path {
+  fill:none;
+  vector-effect:non-scaling-stroke;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.migration-track .casing { stroke:#fff;stroke-width:5.5px }
+.migration-track .ink { stroke:var(--route-color);stroke-width:3px }
+.migration-track .hit { stroke:transparent;stroke-width:12px;cursor:pointer }
+.migration-track.is-preview .ink,.migration-track.is-active .ink { stroke-width:4.5px }
+.migration-track.is-preview .casing,.migration-track.is-active .casing { stroke-width:7px }
+.migration-track.is-muted,.migration-arrow.is-muted { opacity:.38 }
+.migration-arrow polygon { fill:var(--route-color);stroke:#fff;stroke-width:1.7px;stroke-linejoin:round }
+.migration-arrow,.migration-pin { pointer-events:none }
+.migration-map-foot {
+  padding:8px 14px 12px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+}
+.migration-key,.migration-directions {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:4px 13px;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.migration-key { color:var(--ink) }
+.migration-key li,.migration-directions li { display:inline-flex;align-items:center;gap:6px }
+.migration-key i { flex:none;color:var(--ink);font-size:15px;font-style:normal;font-weight:700 }
+.migration-directions { margin-top:6px }
+.migration-swatch {
+  display:inline-block;
+  flex:none;
+  width:16px;
+  height:3px;
+  border-radius:2px;
+  background:var(--route-color);
+}
+#migrationCaption { margin-top:6px;font-size:13px }
+#migrationEventBar { margin-bottom:12px }
 #migrationTimeline {
   display:flex;
-  gap:8px;
+  gap:6px;
   margin:0;
-  padding:4px 4px 8px;
-  list-style:none;
+  padding:4px 4px 6px;
   overflow-x:auto;
   scroll-padding-inline:4px;
   scrollbar-width:thin;
   scrollbar-color:var(--muted) transparent;
+  list-style:none;
 }
 #migrationTimeline li { flex:1 0 auto }
 #migrationTimeline button {
   display:block;
+  min-height:58px;
   width:100%;
-  min-height:54px;
-  padding:4px 10px;
+  padding:6px 10px;
   border:1px solid var(--line);
-  border-radius:10px;
+  border-radius:9px;
   background:var(--surface);
-  font-size:14px;
-  font-weight:700;
-  line-height:1.45;
   text-align:left;
+  font-size:14px;
+  line-height:1.35;
 }
-#migrationTimeline button:hover { border-color:var(--ink) }
-#migrationTimeline button[aria-pressed="true"] {
-  border-color:var(--ink);
-  background:var(--ink);
-  color:var(--paper);
-}
-#migrationTimeline .num { display:block; font-size:16px }
-.migration-grid {
-  display:grid;
-  grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-  gap:24px;
-  align-items:start;
-}
-.migration-figure { min-width:0; margin:0 }
-.migration-figure[hidden]+#migrationDetail { grid-column:1/-1 }
-#migrationMap {
-  isolation:isolate;
-  border-radius:16px;
-  touch-action:pan-y;
-}
-#migrationSvg {
-  height:clamp(365px, 62vh, 620px);
-  max-height:none;
-  touch-action:pan-y;
-}
-#migrationMap .zoomer button { width:44px; height:44px }
-#migrationCaption { margin-top:8px; font-size:14px }
-.migration-track {
-  fill:none;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:7 6;
-  vector-effect:non-scaling-stroke;
-}
-.migration-pin text,.migration-north text {
-  fill:#16343d;
-  stroke:#fff;
-  stroke-width:3px;
-  stroke-linejoin:round;
-  paint-order:stroke;
-  font-size:17px;
-  font-weight:700;
-}
-.migration-pin .migration-sea {
-  fill:#2b6175;
-  font-weight:500;
-}
-.migration-arrow,.migration-place,.migration-event-point { stroke:#fff; stroke-width:2px }
-#migrationMap .migration-north {
-  position:absolute;
-  inset:12px auto auto 12px;
-  width:28px;
-  height:40px;
-  fill:#16343d;
-  pointer-events:none;
-}
-#migrationDetail {
-  border-radius:16px;
-  box-shadow:none;
-  font-size:16px;
-  line-height:1.7;
-}
-.migration-key,.migration-itineraries {
-  margin:12px 0 0;
-  padding:0;
-  list-style:none;
-}
-.migration-key { display:grid; gap:8px }
-.migration-key li { display:flex; align-items:center; gap:10px }
-.migration-swatch {
-  display:inline-block;
-  width:22px;
-  flex:none;
-  border-top:3px dashed var(--route-color);
-}
-.migration-itineraries>li {
-  padding:12px 0;
-  border-top:1px solid var(--line);
-}
-.migration-itineraries>li:last-child { padding-bottom:0 }
-.migration-itineraries h4 {
-  display:flex;
-  align-items:baseline;
-  gap:8px;
-  margin:4px 0 0;
-  font-size:16px;
-  line-height:1.6;
-}
-.migration-itineraries h4 .migration-swatch { align-self:center }
-.migration-period {
+#migrationTimeline button .num { display:block;font-size:15px;font-weight:700 }
+#migrationTimeline button[aria-pressed="true"] { border-color:var(--ink);background:var(--ink);color:var(--paper) }
+.migration-reading p { margin-top:7px;font-size:15px;line-height:1.65 }
+.migration-reading .migration-period {
   display:block;
+  margin:0 0 4px;
   color:var(--muted);
   font-size:14px;
   font-weight:700;
 }
-#migrationDetail .migration-source,.migration-source {
-  margin-top:8px;
+.migration-investigation { margin-top:12px;border-top:1px solid var(--line) }
+.migration-investigation summary {
+  display:list-item;
+  min-height:44px;
+  padding:9px 0;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+.migration-comparison { margin:0 }
+.migration-comparison div {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:6px;
+  padding:6px 8px;
+  border-radius:7px;
+  background:var(--surface-2);
   font-size:14px;
 }
-.migration-source a { color:var(--ink); text-underline-offset:3px }
+.migration-comparison dd { flex:none;margin:0;font-weight:700;font-size:17px }
+.migration-reading .migration-source { margin-top:10px;color:var(--muted);font-size:13px }
+.migration-source a { color:var(--ink);text-underline-offset:3px }
 .migration-source a:hover { color:var(--muted) }
-@media (max-width:900px) {
-  .migration-grid { grid-template-columns:minmax(0,1fr) }
+.migration-event-flow,.migration-route-flow {
+  display:grid;
+  gap:7px;
+  margin:12px 0 0;
+  padding:0;
+  list-style:none;
 }
-@media (max-width:600px) {
-  .migration-controls { grid-template-columns:minmax(0,1fr); gap:12px }
-  #migrationGroup { margin-top:0; min-height:44px }
-  #migrationSvg { height:clamp(325px, 54vh, 465px) }
-  #migrationMap .zoomer {
-    position:static;
-    flex-direction:row;
-    justify-content:flex-end;
-    padding:6px 10px;
-    border-top:1px solid var(--line);
-    background:var(--surface-2);
+.migration-event-flow li,.migration-route-flow li {
+  display:grid;
+  grid-template-columns:96px minmax(0,1fr);
+  gap:8px;
+  align-items:baseline;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface-2);
+  font-size:15px;
+  line-height:1.5;
+}
+.migration-event-flow strong,.migration-route-flow strong { font-size:13px;color:var(--muted) }
+.migration-reading .migration-path-summary { font-weight:700;font-size:16px }
+.migration-link {
+  min-height:44px;
+  padding:3px 10px;
+  margin-top:8px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface-2);
+  font-size:14px;
+  font-weight:700;
+}
+.migration-link:hover { border-color:var(--ink) }
+#migrationRouteInspector:not([hidden]):not(:first-child) { margin-top:12px }
+#migrationReading:not([hidden])+#migrationRouteInspector:not([hidden]) {
+  padding-top:12px;
+  border-top:1px solid var(--line);
+}
+.migration-routes h3 { font-size:19px }
+#migrationRouteList {
+  max-block-size:298px;
+  overflow:auto;
+  scrollbar-width:thin;
+  scrollbar-color:var(--muted) transparent;
+  margin:6px -4px 0;
+  padding:4px 4px 6px;
+  list-style:none;
+}
+#migrationRouteList li+li { margin-top:5px }
+#migrationRouteList button {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:1px 8px;
+  align-items:center;
+  width:100%;
+  min-height:56px;
+  padding:6px 9px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+  text-align:left;
+  line-height:1.4;
+}
+#migrationRouteList button:hover { border-color:var(--ink) }
+#migrationRouteList button[aria-pressed="true"] {
+  border-color:var(--ink);
+  background:var(--surface-2);
+  box-shadow:inset 0 0 0 1px var(--ink);
+}
+.migration-row-name { font-size:15px }
+.migration-row-year { margin-left:6px;color:var(--muted);font-size:13px }
+.migration-row-path { grid-column:2;color:var(--muted);font-size:14px }
+@media (max-width:850px) {
+  .migration-layout {
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"map" "reading" "routes";
+    grid-template-rows:repeat(3,auto);
   }
-  #migrationMap .zoomer button { box-shadow:none }
+}
+@media (max-width:540px) {
+  #migration { padding-block:25px 36px }
+  .migration-intro { margin-bottom:12px }
+  .migration-intro p { font-size:15px }
+  .migration-toolbar { gap:8px }
+  .migration-tabs { flex:1 0 auto }
+  .migration-tabs button { flex:1;padding-inline:11px }
+  .migration-picker { flex:1 0 auto }
+  #migrationGroup { flex:1;min-width:0 }
+  .migration-map-head { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 7px;padding:8px 10px }
+  .migration-map-head>div:first-child { display:contents }
+  .migration-map-head h3 { font-size:18px }
+  #migrationMapSummary { grid-area:2 / 1 / 3 / -1;margin-top:0 }
+  #migrationSvg { height:clamp(330px,51svh,455px) }
+  .migration-zoom { gap:3px }
+  .migration-map-foot { padding-inline:10px }
+  .migration-reading,.migration-routes { padding:13px }
 }
 @media (forced-colors:active) {
-  #migrationTimeline button[aria-pressed="true"] { border:2px solid Highlight }
+  .migration-tabs button[aria-pressed="true"],#migrationTimeline button[aria-pressed="true"] { border:2px solid Highlight }
   .migration-swatch { forced-color-adjust:none }
 }
 </style>
@@ -801,41 +944,68 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 
 <section class="unit" id="migration" aria-labelledby="migrationTitle">
   <div class="wrap">
-    <div class="unit-head">
-      <div class="badge" style="background:#6b4f91" aria-hidden="true">遷</div>
-      <h2 id="migrationTitle">平埔族群的遷徙路徑</h2>
-      <p class="sub">跟著箭頭，看看不同部落往哪裡移動。點選時間軸上的事件，找出哪些事改變了族人的生活。</p>
-    </div>
-    <div class="migration-controls" hidden>
-      <div>
-        <label for="migrationGroup">依族群看路線</label>
-        <select id="migrationGroup" aria-controls="migrationSvg migrationDetail">
-          <option value="" disabled hidden>選擇族群</option>
-          <option value="all" selected>路線總覽</option>
-        </select>
-      </div>
-      <div class="migration-events">
-        <h3 id="migrationTimelineTitle">重大事件</h3>
-        <ol id="migrationTimeline" aria-labelledby="migrationTimelineTitle"></ol>
-      </div>
-    </div>
-    <div class="migration-grid">
-      <figure class="migration-figure" hidden>
-        <div class="mapbox" id="migrationMap">
-          <svg id="migrationSvg" role="img" aria-label="臺灣平埔族群遷徙示意圖"></svg>
-          <svg class="migration-north" viewBox="0 0 28 40" aria-hidden="true">
-            <text x="14" y="15" text-anchor="middle">北</text>
-            <path d="M14 20 7 36l7-4 7 4Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
+    <header class="migration-intro">
+      <h2 id="migrationTitle">平埔族群的遷徙路線</h2>
+      <p>選一條路線，看族人何時出發、為何離開，以及在哪裡落腳。</p>
+    </header>
+    <div class="migration-workbench" hidden>
+      <div class="migration-toolbar">
+        <div class="migration-tabs" role="group" aria-label="地圖檢視">
+          <button type="button" data-view="routes" aria-pressed="true">遷徙路線</button>
+          <button type="button" data-view="events" aria-pressed="false">年代與事件</button>
         </div>
-        <figcaption id="migrationCaption" class="note">虛線箭頭連起史料中的代表地點，表示大致遷徙方向。菱形標示事件地點。有些族人也留在原鄉。</figcaption>
-      </figure>
-      <div class="panel pad card" id="migrationDetail" aria-live="polite" aria-atomic="true">
-        <h3>族人往哪裡去？</h3>
-        <p>19 世紀，有些中部平埔族群遷到蘭陽平原或埔里盆地，有些西南部的族群遷入花東縱谷。也有噶瑪蘭族人從宜蘭沿海向南搬到花蓮。</p>
-        <p class="migration-source"><a href="https://www.cip.gov.tw/zh-tw/news/data-list/A9E092C6104ACAD5/0C3331F0EBD318C21343E658D0B5C9EF-info.html">參考資料｜原住民族委員會</a></p>
+        <div class="migration-picker">
+          <label for="migrationGroup">族群</label>
+          <select id="migrationGroup" aria-controls="migrationSvg migrationDetail migrationRouteList">
+            <option value="all" selected>全部族群</option>
+          </select>
+        </div>
+      </div>
+      <div id="migrationEventBar" hidden>
+        <ol id="migrationTimeline" aria-label="事件時間軸"></ol>
+      </div>
+      <div class="migration-layout">
+        <figure class="migration-map">
+          <header class="migration-map-head">
+            <div>
+              <h3 id="migrationMapTitle">遷徙路線總圖</h3>
+              <p id="migrationMapSummary"></p>
+            </div>
+            <div class="migration-zoom" role="group" aria-label="地圖縮放">
+              <button type="button" data-zoom="out" aria-label="縮小">−</button>
+              <button type="button" data-zoom="in" aria-label="放大">＋</button>
+              <button type="button" data-zoom="home" aria-label="回到全臺範圍">全臺</button>
+            </div>
+          </header>
+          <div class="mapbox" id="migrationMap">
+            <svg id="migrationSvg" role="img" aria-label="臺灣平埔族群遷徙示意圖"></svg>
+            <svg class="migration-north" viewBox="0 0 30 42" aria-hidden="true">
+              <text x="15" y="16" text-anchor="middle">北</text>
+              <path d="M15 21 7 38l8-5 8 5Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <figcaption class="migration-map-foot">
+            <ul class="migration-key" aria-label="地圖符號">
+              <li><i aria-hidden="true">○</i>出發地</li>
+              <li><i aria-hidden="true">●</i>到達地</li>
+              <li><i aria-hidden="true">→</i>遷徙方向</li>
+              <li><i aria-hidden="true">◆</i>事件地點</li>
+            </ul>
+            <ul class="migration-directions" aria-label="路線顏色"></ul>
+            <p id="migrationCaption">箭頭連接史料中的代表地點，表示大致方向。部分族人也留在原鄉。</p>
+          </figcaption>
+        </figure>
+        <article class="migration-reading" id="migrationDetail" aria-live="polite">
+          <div id="migrationReading"></div>
+          <div id="migrationRouteInspector" hidden></div>
+        </article>
+        <section class="migration-routes" id="migrationCatalog" aria-labelledby="migrationListTitle">
+          <h3 id="migrationListTitle">選一條路線</h3>
+          <ol id="migrationRouteList"></ol>
+        </section>
       </div>
     </div>
+    <p class="migration-fallback">19 世紀，有些中部平埔族群遷到蘭陽平原或埔里盆地，有些西南部的族群遷入花東縱谷。噶瑪蘭族也有部落從宜蘭沿海遷到花蓮。<a href="https://www.cip.gov.tw/zh-tw/news/data-list/A9E092C6104ACAD5/0C3331F0EBD318C21343E658D0B5C9EF-info.html">原住民族委員會〈地理分佈〉</a></p>
   </div>
 </section>
 
@@ -946,6 +1116,8 @@ function reliefMap(svgSel,opts={}){
     svg.interrupt();
     return opts.respectReducedMotion&&matchMedia('(prefers-reduced-motion: reduce)').matches?svg:svg.transition().duration(duration);
   };
+  const pinAt=(x,y)=>inner.append('g').attr('class','zs').attr('data-p',`${x},${y}`)
+    .attr('transform',`translate(${x},${y}) scale(${Math.min(1,Math.max(S,0.72))/(K*S)})`);
   const api={svg,g:inner,P,k:()=>K,s:()=>S,VW,VH,img,
     zoomIn:()=>zoomTarget(300).call(z.scaleBy,1.6),zoomOut:()=>zoomTarget(300).call(z.scaleBy,1/1.6),
     home:()=>zoomTarget(500).call(z.transform,d3.zoomIdentity),
@@ -959,7 +1131,7 @@ function reliefMap(svgSel,opts={}){
     },
     flyTo:(lon,lat,k)=>{const p=P(lon,lat);svg.transition().duration(700).call(z.transform,d3.zoomIdentity.translate(VW/2,VH/2).scale(k).translate(-(p[0]-a[0]),-(p[1]-a[1])));},
     // a group that stays the same size on screen while zooming
-    pin:(lon,lat)=>{const p=P(lon,lat);return inner.append('g').attr('class','zs').attr('data-p',p.join(',')).attr('transform',`translate(${p[0]},${p[1]}) scale(${Math.min(1,Math.max(S,0.72))/(K*S)})`);}};
+    pin:(lon,lat)=>pinAt(...P(lon,lat)),pinAt};
   return api;}
 function zoomButtons(box,api){const z=document.createElement('div');z.className='zoomer';
   z.innerHTML='<button aria-label="放大">＋</button><button aria-label="縮小">－</button><button aria-label="回到整張地圖">⤢</button>';
@@ -1427,11 +1599,11 @@ const groups = {
 };
 
 const directions = {
-  yilan: { title: '中部 → 蘭陽平原', color: '#006b9c', representative: 'pazehYilan' },
-  puli: { title: '中部 → 埔里盆地', color: '#955600', representative: 'pazehPuli' },
-  southwest: { title: '臺南平原 → 西南部丘陵', color: '#a03d54', representative: 'sirayaHills' },
-  rift: { title: '西南部 → 花東縱谷', color: '#00705d', representative: 'makataoEast' },
-  coast: { title: '蘭陽 → 花東海岸', color: '#684d91', representative: 'kavalanSouth' }
+  yilan: { title: '中部 → 蘭陽平原', color: '#006b9c' },
+  puli: { title: '中部 → 埔里盆地', color: '#955600' },
+  southwest: { title: '臺南 → 西南丘陵', color: '#a03d54' },
+  rift: { title: '西南部 → 花東縱谷', color: '#00705d' },
+  coast: { title: '蘭陽 → 花東海岸', color: '#684d91' }
 };
 
 const routes = {
@@ -1513,227 +1685,584 @@ const routes = {
   }
 };
 
-const events = [
-  {
-    period: '1731–1732 年', shortTitle: '大甲西社事件', title: '大甲西社事件', place: 'dajia', routes: [],
-    text: '道卡斯族的大甲西社等部落起身反抗清朝官府。後來參與的部落擴大到大肚、沙轆等社，反映各部落在清朝統治下面臨的壓力。',
-    sources: ['dajia']
+Object.assign(sources, {
+  jibei: ['內政部〈東山吉貝耍西拉雅族夜祭〉', 'https://taiwangods.moi.gov.tw/html/Cultural/3_0011.aspx?i=49'],
+  jibeiRecord: ['成大文史脈流〈吉貝耍部落〉', 'https://deh.csie.ncku.edu.tw/poi_detail/32973'],
+  eastLand: ['國立臺灣圖書館〈晚清開山撫番前 西拉雅人在東臺灣的移墾〉', 'https://www.ntl.edu.tw/wSite/public/Attachment/512416415176.pdf']
+});
+
+const routeIds = Object.keys(routes);
+const puliRoutes = routeIds.filter(id => routes[id].direction === 'puli');
+
+const routeReasons = {
+  yilan: {
+    title: '跨部落集體行動',
+    text: '阿里史社與岸裡大社先前有社務紛爭。1804 年，潘賢文帶領來自多個部落的族人翻山到蘭陽，尋找新的開墾空間。各社參與的原因，史料有不同解讀。',
+    event: 'intoYilan', sources: ['pan']
   },
-  {
-    period: '1804 年', shortTitle: '中部族群入蘭', title: '中部族群翻山到蘭陽', place: 'yilan',
-    routes: ['pazehYilan', 'taokasYilan'],
-    text: '巴宰族潘賢文帶領中部多個部落的族人穿越山區，到達蘭陽平原的五圍一帶。參與的部落包括巴宰族阿里史社、道卡斯族通霄社等。',
-    sources: ['pan']
+  puli: {
+    title: '埔里社與中部各社協議',
+    text: '1815 年事件後，埔里社為求自保，與想遷入的中部部落商議。1823 年簽下入墾合約，之後各社分批遷入。',
+    event: 'puliAgreement', sources: ['puli']
   },
-  {
-    period: '1815 年', shortTitle: '郭百年事件', title: '郭百年事件', place: 'puli', routes: [],
-    text: '郭百年帶人進入水沙連開墾，攻擊了當地部落。事件後，埔里社為求自保，與有意搬進埔里的中部各社商議，促成後來的遷徙。',
-    sources: ['puli']
+  sirayaHills: {
+    title: '開墾壓力與清廷政策',
+    text: '原鄉的土地受到漢人移墾擠壓，部分蕭壠社族人往內陸尋找土地。清廷安排部落屯守的政策，也影響這一帶的遷居。',
+    event: 'jibei', sources: ['jibei']
   },
-  {
-    period: '1823 年起', shortTitle: '各社遷入埔里', title: '中部各社分批遷入埔里', place: 'puli',
-    routes: ['taokasPuli', 'pazehPuli', 'kaxabuPuli', 'paporaPuli', 'babuzaPuli', 'hoanyaPuli'],
-    text: '中部各社的頭人商議後簽下入墾合約。從 1823 年起，道卡斯、巴宰、噶哈巫、拍瀑拉、巴布薩與洪雅等族群的部分族人陸續搬到埔里，建立許多新聚落。',
+  sirayaEast: {
+    title: '土地與生計的壓力',
+    text: '部分西拉雅族人為了尋找可以耕作與生活的地方，從臺南、高雄一帶越過山脈，陸續遷往花東縱谷。',
+    event: 'settleDazhuang', sources: ['sirayaEast', 'eastVillages']
+  },
+  taivoanHills: {
+    title: '清代遷居紀錄',
+    text: '文獻記下玉井盆地不同部落在乾隆、道光年間的遷居地點。甲仙是其中一個去處，原鄉各社分成不同支線移動。',
+    sources: ['taivoan']
+  },
+  taivoanEast: {
+    title: '族人邀請赴東部開墾',
+    text: '先到東部生活的族人透過布農族人協助，回到荖濃溪流域邀請更多人到花東發展。六龜一帶的大武壠族人有些也遷入大庄。',
+    event: 'settleDazhuang', sources: ['east', 'dazhuang']
+  },
+  makataoEast: {
+    title: '兩次搬遷',
+    text: '1829 年，屏東部分族人因原鄉土地受侵墾，翻山往東。1836 年起，部分人在卑南與當地族人的關係緊張，又往縱谷北移。',
+    event: 'makatao', sources: ['east', 'eastLand']
+  },
+  kavalanSouth: {
+    title: '蘭陽原鄉的土地縮小',
+    text: '漢人移墾後，宜蘭五結的加禮宛社生活空間縮小。約 1840 年代起，部分噶瑪蘭族人乘船南下，落腳花蓮新城一帶。',
+    event: 'kavalanSouth', sources: ['wujie', 'kavalan']
+  },
+  kavalanCoast: {
+    title: '戰役後分散遷居',
+    text: '1878 年加禮宛戰役後，清軍強令遷移，部分噶瑪蘭族人沿東岸南下，分別在豐濱、長濱等地生活。',
+    event: 'kavalanBattle', sources: ['kavalanBattle']
+  }
+};
+
+const events = {
+  dajia: {
+    date: '1731–1732 年', chip: '大甲西社事件', title: '大甲西社事件',
+    place: 'dajia', routes: [], relation: '歷史背景',
+    summary: '道卡斯族大甲西社等部落反抗清朝官府。',
+    steps: [['1731–1732 年', '道卡斯族大甲西社起事，大肚、沙轆等社也捲入。']],
+    text: '這場事件反映西部部落在清治時期面臨的壓力。圖上的入蘭與入埔里路線，則是十九世紀的遷徙紀錄。',
+    link: ['intoYilan', '看 1804 年的遷徙紀錄'], sources: ['dajia']
+  },
+  jibei: {
+    date: '1791 年文書', chip: '蕭壠往吉貝耍', title: '西拉雅族往臺南丘陵遷居',
+    place: 'dongshan', routes: ['sirayaHills'], relation: '遷徙紀錄',
+    summary: '18 世紀後期，佳里蕭壠社 → 東山吉貝耍。',
+    steps: [['18 世紀後期', '原鄉的開墾壓力使部分蕭壠社族人向內陸尋找土地。'],
+      ['1791 年文書', '記下蕭壠社在吉貝耍附近開墾。']],
+    text: '清廷在這一帶施行番屯政策，安排部落守衛，影響了部落往丘陵遷居的過程。',
+    sources: ['jibei', 'jibeiRecord']
+  },
+  intoYilan: {
+    date: '1804 年', chip: '中部族群入蘭', title: '中部各社翻山到蘭陽',
+    place: 'yilan', routes: ['taokasYilan', 'pazehYilan'], relation: '遷徙行動',
+    summary: '1804 年，潭子阿里史社、通霄社等 → 蘭陽平原。',
+    steps: [['遷徙前', '阿里史社和岸裡大社有社務紛爭，各社的遷居動機也有不同解讀。'],
+      ['1804 年', '巴宰族潘賢文集結中部多個部落的部分族人。'],
+      ['抵達後', '族人翻山抵達蘭陽平原的五圍，約在今天的宜蘭市一帶。']],
+    text: '地圖選錄巴宰族阿里史社與道卡斯族通霄社的代表路線。',
+    sources: ['pan', 'taokas']
+  },
+  guo: {
+    date: '1815 年', chip: '郭百年事件', title: '郭百年事件與埔里移居',
+    place: 'puli', routes: puliRoutes, relation: '遷徙之前',
+    summary: '1815 年郭百年事件 → 1823 年起，中部各社分批遷入埔里。',
+    steps: [['1815 年', '郭百年帶人進入水沙連侵墾，埔里一帶的部落遭到攻擊。'],
+      ['1823 年', '埔里社為求自保，與有意移居的中部各社商議並簽訂入墾合約。'],
+      ['1823 年起', '部分族人由苗栗、臺中、彰化及南投其他地方分批遷入埔里。']],
+    text: '箭頭標的是後來遷入埔里的路線。菱形標出郭百年事件所在的埔里一帶。',
+    sources: ['puli', 'ailan']
+  },
+  puliAgreement: {
+    date: '1823 年起', chip: '各社遷入埔里', title: '中部各社分批遷入埔里',
+    place: 'puli', routes: puliRoutes, relation: '協議後遷徙',
+    summary: '1823 年起，苗栗、臺中、彰化及南投各地 → 埔里盆地。',
+    steps: [['1815 年', '郭百年事件重創埔里一帶的部落。'],
+      ['1823 年', '埔里社和中部各社談妥入墾安排。'],
+      ['1823 年起', '道卡斯、巴宰、噶哈巫、拍瀑拉、巴布薩、洪雅等族群有部分族人陸續搬入。']],
+    text: '點選下面的路線，可以比較不同部落的原鄉與新聚落，例如豐原、神岡一帶的巴宰族人移居埔里愛蘭。',
     sources: ['puli', 'puliVillages', 'kaxabu']
   },
-  {
-    period: '1829 年起', shortTitle: '馬卡道東遷', title: '馬卡道族人從屏東往東遷', place: 'dawu', routes: ['makataoEast'],
-    text: '屏東枋寮一帶的部分族人因土地被侵墾，翻山來到臺東大武和卑南。之後有人沿花東縱谷繼續北移。',
-    sources: ['east']
+  makatao: {
+    date: '1829 年起', chip: '馬卡道東遷', title: '馬卡道族先往東，再沿縱谷往北',
+    place: 'dawu', routes: ['makataoEast'], relation: '分段遷徙',
+    summary: '1829 年枋寮 → 大武、卑南。1836 年起卑南 → 玉里長良。',
+    steps: [['1829 年', '枋寮一帶有族人因土地受侵墾，翻山抵達臺東大武，再到卑南。'],
+      ['1836 年起', '在卑南與當地族人的關係緊張，有些族人沿縱谷續往北，遷到玉里長良。']],
+    text: '同一條遷徙路線上，族人可能在不同時間搬家，移動的方向也會改變。',
+    sources: ['east', 'eastLand', 'changliang']
   },
-  {
-    period: '約 1845 年', shortTitle: '定居富里大庄', title: '西南部族人定居富里大庄', place: 'dazhuang',
-    routes: ['sirayaEast', 'taivoanEast'],
-    text: '大庄（今富里東里）原是阿美族舊部落，19 世紀中葉，西拉雅、大武壠與馬卡道等族群的族人陸續在這一帶開墾、生活。後來大庄成為花東縱谷的重要聚落。',
-    sources: ['dazhuang', 'eastVillages', 'sirayaEast']
+  kavalanSouth: {
+    date: '約 1840 年代起', chip: '宜蘭沿海南遷', title: '噶瑪蘭族從宜蘭搭船南遷',
+    place: 'xincheng', routes: ['kavalanSouth'], relation: '土地受擠壓',
+    summary: '約 1840 年代起，宜蘭五結加禮宛 → 花蓮新城。',
+    steps: [['遷徙前', '漢人入墾，使蘭陽原鄉的土地與生活空間縮小。'],
+      ['約 1840 年代起', '部分族人從五結加禮宛乘船南下，在花蓮新城一帶建立聚落。']],
+    text: '這是圖上噶瑪蘭族南遷的第一段。約三十多年後，加禮宛戰役使部分族人再度搬家。',
+    link: ['kavalanBattle', '接著看 1878 年加禮宛戰役'], sources: ['wujie', 'kavalan']
   },
-  {
-    period: '1878 年', shortTitle: '加禮宛戰役', title: '加禮宛戰役／達固湖灣戰役', place: 'xincheng', routes: ['kavalanCoast'],
-    text: '噶瑪蘭族與撒奇萊雅族聯合反抗清軍。戰役後，部分噶瑪蘭族人往豐濱和長濱的海岸移居，撒奇萊雅族人也分散到其他部落或地區。',
-    sources: ['kavalanBattle', 'kavalan']
+  settleDazhuang: {
+    date: '約 1845 年前後', chip: '定居富里大庄', title: '西南部族人在富里大庄落腳',
+    place: 'dazhuang', routes: ['sirayaEast', 'taivoanEast'], relation: '不同部落陸續定居',
+    summary: '19 世紀中葉，臺南、高雄一帶 → 花蓮富里大庄。',
+    steps: [['19 世紀', '有些族人因土地與生計的壓力越過山脈，也有人受到已移居東部的族人邀請。'],
+      ['約 1845 年前後', '西拉雅、大武壠與馬卡道等族群的部分族人陸續在富里大庄一帶生活。']],
+    text: '大庄約在今天的富里東里村，原是阿美族舊部落。圖上標出西拉雅族與大武壠族往這一帶的代表路線。',
+    sources: ['dazhuang', 'east', 'eastVillages', 'sirayaEast']
   },
-  {
-    period: '1888 年', shortTitle: '大庄事件', title: '大庄事件', place: 'dazhuang', routes: [],
-    text: '清朝在花東縱谷丈量土地和收費，引發當地居民反抗。事件涉及大武壠、馬卡道、阿美、卑南等族群，也有客家居民捲入。',
-    sources: ['dazhuangEvent']
+  kavalanBattle: {
+    date: '1878 年', chip: '加禮宛戰役', title: '加禮宛戰役／達固湖灣戰役',
+    place: 'xincheng', routes: ['kavalanCoast'], relation: '戰役後遷徙',
+    summary: '1878 年戰役後，花蓮嘉里 → 豐濱、臺東長濱等東海岸聚落。',
+    steps: [['約 1840 年代起', '部分噶瑪蘭族人先從宜蘭遷到花蓮新城的加禮宛。'],
+      ['1878 年', '噶瑪蘭族與撒奇萊雅族聯合反抗清軍。'],
+      ['戰役後', '部分噶瑪蘭族人離開嘉里一帶，分散到豐濱新社、臺東長濱等地。']],
+    text: '地圖的紫線標示噶瑪蘭族戰役後的遷徙。撒奇萊雅族人也離開原居地，分散到壽豐、瑞穗等地方。',
+    sources: ['kavalanBattle', 'kavalan', 'east']
+  },
+  dazhuang: {
+    date: '1888 年', chip: '大庄事件', title: '大庄事件',
+    place: 'dazhuang', routes: [], relation: '遷居之後的事件',
+    summary: '族人已在富里大庄落腳。1888 年因清廷清丈土地和收費而起衝突。',
+    steps: [['約 1845 年前後', '西南部的部分族人已陸續遷入富里大庄一帶。'],
+      ['1888 年', '土地丈量、收費與官吏的作為引起當地居民反抗。']],
+    text: '事件涉及大武壠族、馬卡道族、阿美族、卑南族與客家居民等。菱形標在事件相關的富里大庄。',
+    link: ['settleDazhuang', '回看族人遷入大庄的路線'], sources: ['dazhuangEvent', 'dazhuang']
   }
-];
+};
 
+const eastPlaces = new Set(['yilan', 'wujie', 'xincheng', 'xinshe', 'changbin', 'dazhuang', 'dawu', 'beinan', 'changliang']);
 const overviewLabels = [
-  [places.yilan, '蘭陽平原'],
-  [places.puli, '埔里盆地'],
-  [places.xincheng, '花蓮嘉里'],
-  [places.dazhuang, '富里大庄'],
-  [places.fangliao, '屏東'],
-  [places.jiali, '臺南'],
-  [place('臺灣海峽', 119.875, 23.440, '臺灣海峽', 'center')],
-  [place('太平洋', 121.730, 22.880, '太平洋', 'center')]
+  ['yilan', '蘭陽平原'], ['puli', '埔里盆地'], ['xincheng', '花蓮嘉里'],
+  ['dazhuang', '富里大庄'], ['changhua', '彰化平原'], ['jiali', '臺南'],
+  ['fangliao', '屏東'], ['changbin', '長濱']
 ];
+const seaLabels = [
+  place('臺灣海峽', 119.84, 24.05, '臺灣海峽', 'center'),
+  place('太平洋', 121.82, 22.84, '太平洋', 'center')
+];
+// Small bends spread nearby schematic tracks while keeping their endpoints fixed.
+const routeBends = {
+  taokasYilan: -24, taokasPuli: -10, pazehPuli: 21, kaxabuPuli: -12,
+  paporaPuli: -17, babuzaPuli: 7, hoanyaPuli: 13, sirayaEast: 26, taivoanEast: -18
+};
 
-const sourceLinks = keys => `<p class="migration-source">${keys.map(key => {
-  const [title, url] = sources[key];
-  return `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-}).join('　')}</p>`;
-
-const swatch = direction => `<span class="migration-swatch" style="--route-color:${direction.color}" aria-hidden="true"></span>`;
-
-function routeText(route) {
-  const direction = directions[route.direction];
-  const stops = route.stops.map(id => places[id].name).join(' → ');
-  return `<li>
-    <span class="migration-period">${route.period}</span>
-    <h4>${swatch(direction)}<span>${stops}</span></h4>
-    <p>${route.text}</p>
-    ${sourceLinks(route.sources)}
-  </li>`;
+function endpoints(route) {
+  return [route.stops[0], route.stops.at(-1)];
 }
 
-function initMigrationMap(reliefMap, zoomButtons) {
-  const section = document.querySelector('#migration');
-  const groupSelect = section.querySelector('#migrationGroup');
-  const timeline = section.querySelector('#migrationTimeline');
-  const detail = section.querySelector('#migrationDetail');
-  const map = reliefMap('#migrationSvg', {
-    crop: [119.52, 122.10, 21.89, 25.36],
-    scrollZoom: false,
-    respectReducedMotion: true
+function sourcesHtml(keys) {
+  const links = [...new Set(keys)].map(key => {
+    const [title, url] = sources[key];
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`;
   });
-  zoomButtons(section.querySelector('#migrationMap'), map);
+  return `<p class="migration-source">${links.join('　')}</p>`;
+}
+
+function swatch(direction) {
+  return `<span class="migration-swatch" style="--route-color:${directions[direction].color}" aria-hidden="true"></span>`;
+}
+
+function eventLink(id, text) {
+  return `<button type="button" class="migration-link" data-event-link="${id}">${text}</button>`;
+}
+
+function routeFlow(rows, className) {
+  return `<ol class="${className}">${rows.map(([label, text]) =>
+    `<li><strong>${label}</strong><span>${text}</span></li>`).join('')}</ol>`;
+}
+
+function investigation() {
+  const eastward = routeIds.filter(id => {
+    const [origin, arrival] = endpoints(routes[id]);
+    return places[arrival].point[0] > places[origin].point[0];
+  }).length;
+  const acrossTaiwan = routeIds.filter(id => {
+    const [origin, arrival] = endpoints(routes[id]);
+    return !eastPlaces.has(origin) && eastPlaces.has(arrival);
+  }).length;
+  return `<h3>遷徙大多由西向東嗎？</h3>
+    <p>沿著箭頭看起點和終點。若終點比起點靠東，族人就一定搬到了臺灣東部嗎？</p>
+    <details class="migration-investigation">
+      <summary>看完地圖，再核對統計</summary>
+      <dl class="migration-comparison">
+        <div><dt>終點比出發地更靠東</dt><dd>${eastward} / ${routeIds.length} 條</dd></div>
+        <div><dt>由西部遷到蘭陽或花東</dt><dd>${acrossTaiwan} / ${routeIds.length} 條</dd></div>
+      </dl>
+      <p>依圖上起點與終點的位置計算。苗栗到埔里的終點更東，但仍在臺灣中部。統計的單位是圖上路線，每條各算一次。</p>
+    </details>
+    ${sourcesHtml(['distribution'])}`;
+}
+
+function initMigrationMap() {
+  const section = document.querySelector('#migration');
+  const get = id => section.querySelector('#' + id);
+  const workbench = section.querySelector('.migration-workbench');
+  const groupSelect = get('migrationGroup');
+  const picker = section.querySelector('.migration-picker');
+  const modeButtons = [...section.querySelectorAll('[data-view]')];
+  const eventBar = get('migrationEventBar');
+  const timeline = get('migrationTimeline');
+  const catalog = get('migrationCatalog');
+  const list = get('migrationRouteList');
+  const reading = get('migrationReading');
+  const inspector = get('migrationRouteInspector');
+  const detail = get('migrationDetail');
+  const mapTitle = get('migrationMapTitle');
+  const mapSummary = get('migrationMapSummary');
+  const legend = section.querySelector('.migration-directions');
+  const narrow = matchMedia('(max-width:850px)');
+  const reduceMotion = matchMedia('(prefers-reduced-motion:reduce)');
+
+  let labels = [];
+  let labelFrame = 0;
+  const positions = {
+    left: [-12, 5, 'end'], right: [12, 5, 'start'],
+    top: [0, -12, 'middle'], bottom: [0, 23, 'middle'], center: [0, 1, 'middle']
+  };
+
+  function layoutLabels() {
+    labelFrame = 0;
+    const frame = map.svg.node().getBoundingClientRect();
+    const placed = [];
+    for (const {node, preferred} of labels) {
+      const matrix = node.parentNode.getScreenCTM();
+      if (!matrix || matrix.e < frame.left || matrix.e > frame.right || matrix.f < frame.top || matrix.f > frame.bottom) {
+        node.setAttribute('visibility', 'hidden');
+        continue;
+      }
+      const size = node.getComputedTextLength() * matrix.a;
+      let visible = false;
+      const choices = preferred === 'center' ? ['center'] : new Set([preferred, 'right', 'left', 'top', 'bottom']);
+      for (const choice of choices) {
+        const [x, y, align] = positions[choice];
+        const start = matrix.e + x * matrix.a - (align === 'end' ? size : align === 'middle' ? size / 2 : 0);
+        const base = matrix.f + y * matrix.d;
+        const box = { left:start - 3, right:start + size + 3, top:base - 18 * matrix.d, bottom:base + 5 * matrix.d };
+        const fits = box.left > frame.left + 5 && box.right < frame.right - 5 &&
+          box.top > frame.top + 4 && box.bottom < frame.bottom - 3;
+        const overlaps = placed.some(other => box.left < other.right && box.right > other.left &&
+          box.top < other.bottom && box.bottom > other.top);
+        if (!fits || overlaps) continue;
+        node.setAttribute('x', x);
+        node.setAttribute('y', y);
+        node.setAttribute('text-anchor', align);
+        placed.push(box);
+        visible = true;
+        break;
+      }
+      node.setAttribute('visibility', visible ? 'visible' : 'hidden');
+    }
+  }
+
+  function scheduleLabels() {
+    if (!labelFrame) labelFrame = requestAnimationFrame(layoutLabels);
+  }
+
+  const map = reliefMap('#migrationSvg', {
+    crop: [119.48, 122.09, 21.89, 25.36],
+    scrollZoom: false, respectReducedMotion: true, onZoom: scheduleLabels
+  });
   map.svg.attr('aria-describedby', 'migrationCaption');
-  map.img.attr('opacity', 0.76);
+  map.img.attr('opacity', .79);
   const tracks = map.g.append('g').attr('aria-hidden', 'true');
   const line = d3.line();
+  section.querySelector('[data-zoom="in"]').onclick = map.zoomIn;
+  section.querySelector('[data-zoom="out"]').onclick = map.zoomOut;
+  section.querySelector('[data-zoom="home"]').onclick = map.home;
 
-  for (const [id, group] of Object.entries(groups)) {
-    groupSelect.add(new Option(group.name, id));
-  }
-  timeline.innerHTML = events.map((event, index) => `<li><button type="button" data-event="${index}"
-    aria-controls="migrationSvg migrationDetail" aria-pressed="false">
-    <span class="num">${event.period}</span>${event.shortTitle}</button></li>`).join('');
+  for (const [id, group] of Object.entries(groups)) groupSelect.add(new Option(group.name, id));
+  timeline.innerHTML = Object.entries(events).map(([id, event]) => `<li>
+    <button type="button" data-event="${id}" aria-pressed="false" aria-controls="migrationSvg migrationDetail">
+      <span class="num">${event.date}</span>${event.chip}
+    </button></li>`).join('');
   const eventButtons = [...timeline.querySelectorAll('button')];
 
-  function pin(point) {
-    return map.pin(...point).classed('migration-pin', true).attr('aria-hidden', 'true');
+  let mode = 'routes';
+  let activeEvent = 'guo';
+  let activeRoute = null;
+  let listedRoutes = '';
+
+  function visibleRoutes() {
+    if (mode === 'events') return events[activeEvent].routes;
+    const group = groupSelect.value;
+    return group === 'all' ? routeIds : routeIds.filter(id => routes[id].group === group);
   }
 
-  function label(pinGroup, text, side, isSea = false) {
-    const position = {
-      left: [-11, 6, 'end'],
-      right: [11, 6, 'start'],
-      top: [0, -12, 'middle'],
-      bottom: [0, 23, 'middle'],
-      center: [0, 0, 'middle']
-    };
-    const [x, y, anchor] = position[side];
-    pinGroup.append('text')
-      .attr('x', x).attr('y', y).attr('text-anchor', anchor)
-      .classed('migration-sea', isSea).text(text);
-  }
-
-  function drawRoute(route) {
-    const color = directions[route.direction].color;
+  function routePoints(route) {
     const stops = route.stops.map(id => places[id].point);
-    const points = [...stops.slice(0, -1), ...(route.via ?? []), stops.at(-1)];
-    const path = line(points.map(point => map.P(...point)));
-    tracks.append('path').attr('class', 'migration-track').attr('stroke', '#fff')
-      .attr('stroke-width', 6).attr('d', path);
-    tracks.append('path').attr('class', 'migration-track').attr('stroke', color)
-      .attr('stroke-width', 3).attr('d', path);
-    for (let index = 1; index < points.length; index++) {
-      const from = points[index - 1];
-      const to = points[index];
-      const [x0, y0] = map.P(...from);
-      const [x1, y1] = map.P(...to);
-      const angle = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI;
-      const arrowPoint = from.map((value, axis) => value + (to[axis] - value) * 0.64);
-      pin(arrowPoint).append('path').attr('class', 'migration-arrow')
-        .attr('d', 'M-8,-5 L3,0 L-8,5 Z').attr('fill', color)
+    return [...stops.slice(0, -1), ...(route.via ?? []), stops.at(-1)];
+  }
+
+  function drawRoute(id, spread) {
+    const route = routes[id];
+    const points = routePoints(route).map(point => map.P(...point));
+    const bend = spread && points.length === 2 ? routeBends[id] : 0;
+    let path = line(points);
+    if (bend) {
+      const [[x1, y1], [x2, y2]] = points;
+      const length = Math.hypot(x2 - x1, y2 - y1);
+      const x = (x1 + x2) / 2 - bend * (y2 - y1) / length;
+      const y = (y1 + y2) / 2 + bend * (x2 - x1) / length;
+      path = `M${x1},${y1} Q${x},${y} ${x2},${y2}`;
+    }
+
+    const color = directions[route.direction].color;
+    const subdued = activeRoute && activeRoute !== id;
+    const group = tracks.append('g').attr('class', 'migration-track')
+      .attr('data-route', id).style('--route-color', color)
+      .classed('is-muted', Boolean(subdued)).classed('is-active', activeRoute === id);
+    group.append('path').attr('class', 'casing').attr('d', path);
+    const ink = group.append('path').attr('class', 'ink').attr('d', path).node();
+    const [origin, arrival] = endpoints(route);
+    group.append('path').attr('class', 'hit').attr('d', path);
+    group.append('title').text(`${groups[route.group].name}，${route.period}，${places[origin].label}往${places[arrival].label}`);
+    const length = ink.getTotalLength();
+    const arrowSpots = length > 260 ? [.35, .72] : [.62];
+    for (const t of arrowSpots) {
+      const point = ink.getPointAtLength(length * t);
+      const next = ink.getPointAtLength(length * t + 1);
+      const angle = Math.atan2(next.y - point.y, next.x - point.x) * 180 / Math.PI;
+      map.pinAt(point.x, point.y).classed('migration-arrow', true)
+        .classed('is-muted', Boolean(subdued)).style('--route-color', color)
+        .append('polygon').attr('points', '-8,-5 5,0 -8,5')
         .attr('transform', `rotate(${angle})`);
     }
-    return points;
   }
 
-  function drawPlace(site, text = site.label, event = false) {
-    const node = pin(site.point);
-    if (event) {
-      node.append('path').attr('class', 'migration-event-point')
-        .attr('d', 'M0,-9 L9,0 L0,9 L-9,0 Z').attr('fill', '#16343d');
-    } else if (site.side !== 'center') {
-      node.append('circle').attr('class', 'migration-place').attr('r', 4.5).attr('fill', '#16343d');
+  function drawPoint(site, kind, label = '') {
+    const node = map.pin(...site.point).classed('migration-pin', true);
+    if (kind === 'event') {
+      node.append('path').attr('d', 'M0,-9 9,0 0,9 -9,0Z').attr('fill', '#18373f')
+        .attr('stroke', '#fff').attr('stroke-width', 2);
+    } else if (kind !== 'label') {
+      const isStart = kind === 'start';
+      node.append('circle').attr('r', kind === 'stop' ? 3.5 : 4.5)
+        .attr('fill', isStart ? '#fff' : '#18373f')
+        .attr('stroke', isStart ? '#18373f' : '#fff').attr('stroke-width', 1.7);
     }
-    label(node, text, site.side, site.side === 'center');
+    if (label) {
+      const text = node.append('text').attr('visibility', 'hidden')
+        .classed('sea-label', site.side === 'center').text(label);
+      labels.push({node:text.node(), preferred:site.side});
+    }
   }
 
-  let selectedEvent = -1;
+  function placeNames(ids, event) {
+    const starts = new Set(ids.map(id => endpoints(routes[id])[0]));
+    const finishes = new Set(ids.map(id => endpoints(routes[id])[1]));
+    const named = new Set();
+    const add = (id, name, kind) => {
+      if (named.has(id)) return;
+      named.add(id);
+      drawPoint(places[id], kind, name);
+    };
+    if (event) add(event.place, places[event.place].label, 'event');
+    if (activeRoute) {
+      const route = routes[activeRoute];
+      const [from, to] = endpoints(route);
+      add(from, places[from].label, 'start');
+      add(to, places[to].label, 'finish');
+      for (const id of route.stops.slice(1, -1)) add(id, places[id].label, 'stop');
+    } else if (ids.length > 3 && mode === 'routes' && groupSelect.value === 'all') {
+      overviewLabels.forEach(([id, name]) => add(id, name, finishes.has(id) ? 'finish' : starts.has(id) ? 'start' : 'label'));
+    } else {
+      for (const id of finishes) add(id, places[id].label, 'finish');
+      for (const id of starts) add(id, places[id].label, 'start');
+    }
+    for (const id of starts) add(id, '', 'start');
+    for (const id of finishes) add(id, '', 'finish');
+    for (const site of seaLabels) drawPoint(site, 'label', site.label);
+  }
+
+  function renderMap(ids, event) {
+    tracks.selectAll('*').remove();
+    map.g.selectAll('.migration-pin,.migration-arrow').remove();
+    labels = [];
+    const drawn = activeRoute ? [...ids.filter(id => id !== activeRoute), activeRoute] : ids;
+    drawn.forEach(id => drawRoute(id, ids.length > 1));
+    placeNames(ids, event);
+
+    if (event) {
+      mapTitle.textContent = event.chip;
+      mapSummary.textContent = event.summary;
+    } else if (activeRoute) {
+      const route = routes[activeRoute];
+      const [from, to] = endpoints(route);
+      mapTitle.textContent = groups[route.group].name;
+      mapSummary.textContent = `${route.period}，${places[from].label} → ${places[to].label}`;
+    } else if (groupSelect.value !== 'all') {
+      mapTitle.textContent = groups[groupSelect.value].name + '的遷徙路線';
+      mapSummary.textContent = `圖上有 ${ids.length} 條路線`;
+    } else {
+      mapTitle.textContent = '遷徙路線總圖';
+      mapSummary.textContent = `全部 ${Object.keys(groups).length} 族，共 ${ids.length} 條路線`;
+    }
+    map.svg.attr('aria-label', mapTitle.textContent + '。' + mapSummary.textContent);
+    const directionsInView = [...new Set(ids.map(id => routes[id].direction))];
+    legend.innerHTML = directionsInView.map(id => `<li>${swatch(id)}${directions[id].title}</li>`).join('');
+
+    if (!event && groupSelect.value === 'all' && !activeRoute) {
+      map.home();
+    } else {
+      const focused = activeRoute ? [activeRoute] : ids;
+      const points = focused.flatMap(id => routePoints(routes[id]));
+      if (event) points.push(places[event.place].point);
+      map.fitPoints(points, points.length === 1 ? 2.4 : 3.35);
+    }
+    scheduleLabels();
+  }
+
+  const overview = investigation();
+
+  function renderReading(event) {
+    reading.hidden = !event && Boolean(activeRoute);
+    if (event) {
+      reading.innerHTML = `<span class="migration-period">${event.date} · ${event.relation}</span>
+        <h3>${event.title}</h3>
+        ${routeFlow(event.steps, 'migration-event-flow')}
+        <p>${event.text}</p>
+        ${event.link ? eventLink(...event.link) : ''}
+        ${sourcesHtml(event.sources)}`;
+    } else if (groupSelect.value === 'all') {
+      if (reading.dataset.view !== 'overview') reading.innerHTML = overview;
+    } else {
+      reading.innerHTML = `<h3>${groups[groupSelect.value].name}</h3><p>選一條路線看出發年代、遷徙背景和落腳地。</p>`;
+    }
+    reading.dataset.view = !event && groupSelect.value === 'all' ? 'overview' : '';
+    inspector.hidden = !activeRoute;
+    if (!activeRoute) return;
+
+    const route = routes[activeRoute];
+    const reason = routeReasons[activeRoute] ?? routeReasons[route.direction];
+    const [from, to] = endpoints(route);
+    const stops = route.stops.slice(1, -1);
+    const arrival = activeRoute === 'kavalanCoast' ? '花蓮豐濱新社、臺東長濱一帶' : places[to].name;
+    const pathTitle = places[from].label + ' → ' + (activeRoute === 'kavalanCoast' ? '豐濱、長濱' : places[to].label);
+    inspector.innerHTML = `<span class="migration-period">${route.period} · ${groups[route.group].name}</span>
+      <h3>${pathTitle}</h3>
+      ${routeFlow([
+        [reason.title, reason.text],
+        ['出發地', places[from].name],
+        ...(stops.length && activeRoute !== 'kavalanCoast' ? [['途中', stops.map(id => places[id].name).join(' → ')]] : []),
+        ['落腳地', arrival]
+      ], 'migration-route-flow')}
+      <p>${route.text}</p>
+      ${reason.event && reason.event !== (event && activeEvent) ? eventLink(reason.event, '到時間軸看相關事件') : ''}
+      ${event ? '' : '<button type="button" class="migration-link" data-show-all>回全部族群總圖</button>'}
+      ${sourcesHtml([...route.sources, ...reason.sources])}`;
+  }
+
+  function renderList(ids, event) {
+    const key = ids.join(',');
+    catalog.hidden = ids.length === 0;
+    get('migrationListTitle').textContent = event ? '這個時段的遷徙路線' : '選一條路線';
+    if (key !== listedRoutes) {
+      listedRoutes = key;
+      list.innerHTML = ids.map(id => {
+        const route = routes[id];
+        const [from, to] = endpoints(route);
+        const destination = id === 'kavalanCoast' ? '豐濱、長濱' : places[to].label;
+        return `<li><button type="button" data-pick-route="${id}" aria-pressed="false" aria-controls="migrationSvg migrationDetail">
+          ${swatch(route.direction)}
+          <span><strong class="migration-row-name">${groups[route.group].name}</strong><span class="migration-row-year">${route.period}</span></span>
+          <span class="migration-row-path">${places[from].label} → ${destination}</span>
+        </button></li>`;
+      }).join('');
+    }
+    list.querySelectorAll('button').forEach(button =>
+      button.setAttribute('aria-pressed', button.dataset.pickRoute === activeRoute));
+  }
 
   function render() {
-    const event = events[selectedEvent];
-    const group = groups[groupSelect.value];
-    const overview = !event && !group;
-    const visibleRoutes = event
-      ? event.routes.map(id => routes[id])
-      : group
-        ? Object.values(routes).filter(route => route.group === groupSelect.value)
-        : Object.values(directions).map(direction => routes[direction.representative]);
+    const event = mode === 'events' ? events[activeEvent] : null;
+    const ids = visibleRoutes();
+    picker.hidden = Boolean(event);
+    eventBar.hidden = !event;
+    modeButtons.forEach(button => button.setAttribute('aria-pressed', button.dataset.view === mode));
+    eventButtons.forEach(button => button.setAttribute('aria-pressed', button.dataset.event === activeEvent));
+    renderReading(event);
+    renderList(ids, event);
+    renderMap(ids, event);
+  }
 
-    eventButtons.forEach((button, index) => button.setAttribute('aria-pressed', index === selectedEvent));
-    tracks.selectAll('*').remove();
-    map.g.selectAll('.migration-pin').remove();
-    const coordinates = visibleRoutes.flatMap(drawRoute);
-
-    if (overview) {
-      for (const [site, text] of overviewLabels) drawPlace(site, text);
-      map.home();
-      map.svg.attr('aria-label', '平埔族群的五個代表遷徙方向');
-      detail.innerHTML = `<h3>族人往哪裡去？</h3>
-        <p>同一個地方可能住著從不同地方搬來的人。像是埔里盆地，就有族人從苗栗、臺中、彰化和南投其他地方搬來。</p>
-        <ul class="migration-key">${Object.values(directions).map(direction =>
-          `<li>${swatch(direction)}${direction.title}</li>`).join('')}</ul>
-        ${sourceLinks(['distribution'])}`;
-      return;
+  function showEvent(id, focusControl = false) {
+    mode = 'events';
+    activeEvent = id;
+    activeRoute = null;
+    render();
+    const button = eventButtons.find(item => item.dataset.event === id);
+    const box = timeline.getBoundingClientRect();
+    const target = button.getBoundingClientRect();
+    if (target.left < box.left || target.right > box.right) {
+      timeline.scrollLeft += target.left - box.left - 8;
     }
+    if (focusControl) button.focus();
+  }
 
-    const stopIds = new Set(visibleRoutes.flatMap(route => route.stops));
-    if (event) stopIds.delete(event.place);
-    for (const id of stopIds) drawPlace(places[id]);
-
-    if (event) {
-      const site = places[event.place];
-      drawPlace(site, site.label, true);
-      map.fitPoints([...coordinates, site.point], 2.8);
-      map.svg.attr('aria-label', `${event.title}，地點在${site.name}`);
-      detail.innerHTML = `<span class="migration-period">${event.period}</span>
-        <h3>${event.title}</h3>
-        <p class="meta">${site.name}</p>
-        <p>${event.text}</p>
-        ${sourceLinks(event.sources)}`;
-    } else {
-      map.fitPoints(coordinates);
-      map.svg.attr('aria-label', `${group.name}遷徙路線示意圖`);
-      detail.innerHTML = `<h3>${group.name}</h3><p class="meta">${group.localName}</p>
-        <ol class="migration-itineraries">${visibleRoutes.map(routeText).join('')}</ol>`;
+  function pickRoute(id, fromList = false) {
+    activeRoute = activeRoute === id ? null : id;
+    render();
+    if (fromList && narrow.matches && activeRoute) {
+      detail.scrollIntoView({block:'start', behavior:reduceMotion.matches ? 'auto' : 'smooth'});
     }
   }
 
-  groupSelect.addEventListener('change', () => {
-    selectedEvent = -1;
+  function showAllRoutes() {
+    mode = 'routes';
+    groupSelect.value = 'all';
+    activeRoute = null;
     render();
-  });
+  }
 
+  modeButtons.forEach(button => button.addEventListener('click', () => {
+    if (mode === button.dataset.view) return;
+    if (button.dataset.view === 'events') showEvent(activeEvent);
+    else showAllRoutes();
+  }));
   timeline.addEventListener('click', e => {
-    const button = e.target.closest('button[data-event]');
-    if (!button) return;
-    const index = Number(button.dataset.event);
-    selectedEvent = selectedEvent === index ? -1 : index;
-    groupSelect.value = selectedEvent < 0 ? 'all' : '';
+    const button = e.target.closest('[data-event]');
+    if (button) showEvent(button.dataset.event);
+  });
+  groupSelect.addEventListener('change', () => {
+    const ids = visibleRoutes();
+    activeRoute = ids.length === 1 ? ids[0] : null;
     render();
   });
+  list.addEventListener('click', e => {
+    const button = e.target.closest('[data-pick-route]');
+    if (button) pickRoute(button.dataset.pickRoute, true);
+  });
+  detail.addEventListener('click', e => {
+    const button = e.target.closest('[data-event-link]');
+    if (button) showEvent(button.dataset.eventLink, true);
+    if (e.target.closest('[data-show-all]')) {
+      showAllRoutes();
+      groupSelect.focus();
+    }
+  });
+  map.svg.on('click.migration', e => {
+    const track = e.target.closest('.migration-track');
+    if (track && !e.defaultPrevented) pickRoute(track.dataset.route);
+  });
+  tracks.on('mouseover.migration', e => {
+    if (e.target.classList.contains('hit')) d3.select(e.target.parentNode).classed('is-preview', true);
+  }).on('mouseout.migration', e => {
+    if (e.target.classList.contains('hit')) d3.select(e.target.parentNode).classed('is-preview', false);
+  });
 
-  section.querySelector('.migration-figure').hidden = false;
+  workbench.hidden = false;
   render();
-  section.querySelector('.migration-controls').hidden = false;
+  section.querySelector('.migration-fallback').hidden = true;
 }
 
-if (window.d3) initMigrationMap(reliefMap, zoomButtons);
+if (window.d3) initMigrationMap();
 })();
 </script>
