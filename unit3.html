@@ -1073,7 +1073,33 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-history p { margin-top:4px }
 .stories-history a { font-size:14px }
 .stories-science,.stories-culture { margin-top:20px }
+.blood-flow,.blood-studies { display:grid;gap:12px;margin-top:12px }
+.blood-flow {
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;
+  margin-bottom:0;padding:0;list-style:none;
+}
+.blood-flow li { position:relative;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2) }
+.blood-flow li+li::before {
+  content:"";position:absolute;inset:50% auto auto -16px;width:8px;height:8px;
+  border-top:2px solid var(--stories-accent);border-right:2px solid var(--stories-accent);
+  transform:translateY(-50%) rotate(45deg);
+}
+.blood-flow strong { display:block;margin-bottom:2px;color:var(--stories-accent);font-size:17px;line-height:1.4 }
+.blood-mechanism {
+  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px 18px;
+  margin-top:12px;padding:14px;border-radius:10px;background:var(--stories-wash);
+}
+.blood-mechanism-value { display:grid;gap:2px;color:var(--stories-accent);line-height:1.2 }
+.blood-mechanism-value strong { font-size:clamp(27px,3.6vw,44px);white-space:nowrap }
+.blood-mechanism-value span { font-size:15px;font-weight:700 }
+.blood-evidence { margin-top:20px }
+.blood-studies { grid-template-columns:repeat(2,minmax(0,1fr)) }
+.blood-studies article { padding:12px 14px;border:1px solid var(--line);border-radius:10px }
+.blood-studies h5 { margin:0 0 6px;font-size:17px;line-height:1.4 }
+.blood-question { margin-top:12px;padding:0 14px 4px;border-radius:10px;background:var(--surface-2) }
+.blood-question[open] { padding-bottom:12px }
 .blood-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start;gap:12px 24px;margin-top:10px }
+.blood-layout h4+p { margin-top:6px }
 .blood-samples { margin:0;padding:12px;border-radius:10px;background:var(--surface-2) }
 .blood-samples figcaption { font-size:15px;font-weight:700;line-height:1.5 }
 .blood-samples dl { display:grid;gap:8px;margin:10px 0 0 }
@@ -1087,7 +1113,10 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-culture-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px }
 .stories-culture-grid article { padding:14px;border:1px solid var(--line);border-top:3px solid var(--stories-accent);border-radius:10px;background:var(--surface) }
 @media (max-width:700px) {
-  .stories-history,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
+  .stories-history,.blood-flow,.blood-studies,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
+  .blood-flow { gap:16px }
+  .blood-flow li+li::before { inset:-14px auto auto 50%;transform:translateX(-50%) rotate(135deg) }
+  .blood-mechanism { grid-template-columns:minmax(0,1fr) }
   .baseball-table th,.baseball-table td { padding-inline:6px }
   .baseball-table th:first-child { width:3.1em }
   .lineup-controls button,.stories-nav a { padding-inline:8px }
@@ -1383,10 +1412,41 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       </div>
     </section>
     <section class="stories-card stories-science" id="miltenberger" aria-labelledby="miltenbergerTitle">
-      <h3 id="miltenbergerTitle">米田堡血型是什麼？</h3>
+      <h3 id="miltenbergerTitle">米田堡血型和運動有什麼關係？</h3>
+      <p>米田堡第三型（GP.Mur）的紅血球通常有較多 Band 3 蛋白，能幫忙運送二氧化碳。試著想像你跑上樓梯，肌肉產生的二氧化碳，怎麼從腿一路到肺？</p>
+      <ol class="blood-flow" aria-label="二氧化碳從肌肉到肺">
+        <li><strong>肌肉產生二氧化碳</strong><p>運動時，肌肉消耗更多能量，也會產生更多二氧化碳。</p></li>
+        <li><strong>血液運送碳酸氫根</strong><p>大部分二氧化碳會在紅血球內轉成碳酸氫根，再進到血液的液體部分，也就是血漿。</p></li>
+        <li><strong>肺把二氧化碳呼出去</strong><p>到了肺，碳酸氫根回到紅血球，變回二氧化碳，最後隨呼氣排出。</p></li>
+      </ol>
+      <div class="blood-mechanism">
+        <div class="blood-mechanism-value"><strong>約多 20%</strong><span>紅血球的 Band 3 蛋白</span></div>
+        <p>GP.Mur 是紅血球表面的一種蛋白質變體，有助於血球表面出現更多 Band 3。Band 3 負責交換碳酸氫根和氯離子，數量越多，紅血球能交換的碳酸氫根就越多。這個 20% 是跑步研究中兩組選手的 Band 3 蛋白量差異。</p>
+      </div>
+      <p class="stories-source"><a href="https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids" target="_blank" rel="noopener noreferrer">OpenStax｜血液如何運送二氧化碳</a> · <a href="https://ashpublications.org/blood/article-abstract/114/9/1919/103784" target="_blank" rel="noopener noreferrer"><i>Blood</i>｜紅血球蛋白研究</a></p>
+      <div class="blood-evidence">
+        <h4>運動實驗測到了什麼？</h4>
+        <div class="blood-studies">
+          <article>
+            <h5>2015 年｜188 名成人踩階梯</h5>
+            <p>踩了 3 分鐘階梯後，帶有 GP.Mur 的一組在剛停下來時呼吸較快，呼氣末的二氧化碳數值也降得較快。</p>
+            <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/26000803/" target="_blank" rel="noopener noreferrer">看踩階梯研究</a></p>
+          </article>
+          <article>
+            <h5>2023 年｜36 名男性選手跑步</h5>
+            <p>在跑步機上，帶有 GP.Mur 的一組呼吸較頻繁，每一口氣花在吐氣的比例也較高。<strong>兩組跑到跑不動為止的時間相近</strong>，帶有 GP.Mur 的一組平均跑了 19.1 分鐘，另一組 18.4 分鐘。</p>
+            <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">看跑步研究</a></p>
+          </article>
+        </div>
+        <details class="blood-question">
+          <summary>怎麼知道這個差異會不會影響棒球表現？</summary>
+          <p>可以比較帶有 GP.Mur 和未帶有 GP.Mur 的球員。讓兩組面對相同的球速和球數，記錄擊中率，也要考慮他們的年齡和訓練經驗。要是想研究跑壘，可以改量跑到一壘的時間。</p>
+        </details>
+      </div>
       <div class="blood-layout">
         <div>
-          <p>紅血球表面有許多標記，叫作抗原。除了分出 A、B、AB、O 的 ABO 系統，還有其他系統。米田堡（Miltenberger）屬於 MNS 血型系統，血庫會用相關標記來幫助輸血配對。</p>
+          <h4>血庫為什麼也在意？</h4>
+          <p>紅血球表面有許多標記，叫作抗原。米田堡（Miltenberger）屬於 MNS 血型系統，所以一個人可以同時是 O 型，也帶有 GP.Mur。台灣血液基金會自 2018 年起在血袋標示米田堡相關抗原，幫助血庫找出相容的血液。</p>
           <details>
             <summary>88.4% 怎麼讀？</summary>
             <p>把這項研究的阿美族樣本比例換成每 100 人來想，約有 88 人帶有 GP.Mur。要知道一個人的血型，得靠驗血。</p>
