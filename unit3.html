@@ -495,68 +495,86 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
 <style>
-#migration { padding-block:38px 52px }
+#migration { padding-block:36px 48px }
 #migration [hidden] { display:none!important }
-.migration-intro { margin-bottom:18px }
-.migration-intro h2 { font-size:clamp(26px,3.4vw,36px) }
-.migration-intro p { margin-top:6px; color:var(--muted);font-size:16px }
+.migration-intro { margin-bottom:16px }
+.migration-intro h2 { font-size:clamp(28px,3.8vw,42px);text-wrap:wrap }
+.migration-intro p { margin-top:8px;color:var(--muted);font-size:clamp(16px,2vw,20px);line-height:1.5 }
 .migration-toolbar {
   display:flex;
   flex-wrap:wrap;
   align-items:center;
-  justify-content:space-between;
-  gap:10px 16px;
-  margin-bottom:14px;
+  gap:8px 16px;
+  margin-bottom:12px;
 }
 .migration-tabs {
   display:inline-flex;
   gap:4px;
   padding:4px;
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:999px;
   background:var(--surface);
 }
 .migration-tabs button {
   min-height:44px;
   padding:0 16px;
-  border:0;
-  border-radius:8px;
+  border:1px solid transparent;
+  border-radius:999px;
   background:transparent;
   color:var(--muted);
   font-size:16px;
   font-weight:700;
   white-space:nowrap;
 }
-.migration-tabs button[aria-pressed="true"] { background:var(--ink);color:var(--paper) }
-.migration-picker { display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700 }
-#migrationGroup {
-  min-width:168px;
+.migration-tabs button[aria-pressed="true"] { background:var(--ink);color:var(--surface) }
+.migration-picker { display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700 }
+.migration-picker label { flex:none }
+.migration-picker select,#migrationTimeline {
   min-height:44px;
-  padding:0 12px;
+  padding:4px 8px;
   border:1px solid var(--line);
-  border-radius:9px;
+  border-radius:10px;
   background:var(--surface);
   color:var(--ink);
   font:inherit;
 }
+.migration-picker select { min-width:144px }
+.migration-jump,.migration-link,.migration-event-nav button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:44px;
+  padding:4px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--surface);
+  color:var(--ink);
+  font-size:14px;
+  font-weight:700;
+  line-height:1.4;
+  text-align:center;
+  text-decoration:none;
+}
+.migration-jump { margin-inline-start:auto;border-color:var(--ink);background:var(--ink);color:var(--surface);font-size:16px }
+.migration-jump svg { flex:none;width:16px;height:16px }
 .migration-layout {
   display:grid;
-  grid-template-columns:minmax(0,1.38fr) minmax(320px,1fr);
-  grid-template-areas:"map reading" "map routes";
+  grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
   align-items:start;
-  grid-template-rows:auto 1fr;
-  gap:14px 18px;
+  gap:16px;
 }
-.migration-map,.migration-reading,.migration-routes {
+.migration-map,.migration-reading {
   min-width:0;
   margin:0;
   border:1px solid var(--line);
   border-radius:16px;
   background:var(--surface);
 }
-.migration-map { grid-area:map;overflow:hidden }
-.migration-reading { grid-area:reading;padding:18px;scroll-margin-top:75px }
-.migration-routes { grid-area:routes;padding:16px 16px 12px }
+.migration-map { overflow:hidden }
+.migration-map:focus-visible { border-radius:16px }
+.migration-reading { padding:24px }
+.migration-map,.migration-reading,.migration-routes,#migrationEventBar,#migrationRouteInspector { scroll-margin-top:80px }
 .migration-map-head {
   display:flex;
   align-items:center;
@@ -565,8 +583,8 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   min-height:68px;
   padding:10px 14px;
 }
-.migration-map-head h3,.migration-reading h3 { font-size:clamp(20px,2vw,25px);text-wrap:wrap }
-#migrationMapSummary { margin-top:3px;color:var(--muted);font-size:14px;line-height:1.5 }
+.migration-map-head h3 { font-size:clamp(20px,2vw,25px);text-wrap:wrap }
+#migrationMapSummary { margin-top:4px;color:var(--muted);font-size:15px;line-height:1.5 }
 .migration-zoom { display:flex;align-items:center;gap:4px;flex:none }
 .migration-zoom button {
   min-width:44px;
@@ -579,7 +597,9 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   line-height:1;
   font-weight:700;
 }
-.migration-zoom button:hover,.migration-tabs button:hover,#migrationGroup:hover { border-color:var(--ink) }
+.migration-zoom button:hover,.migration-tabs button:hover,.migration-picker select:hover,
+.migration-link:hover,.migration-event-nav button:not(:disabled):hover,#migrationTimeline:hover { border-color:var(--ink) }
+.migration-jump:hover { background:color-mix(in srgb,var(--ink) 86%,var(--surface)) }
 #migrationMap {
   isolation:isolate;
   border:0;
@@ -588,7 +608,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   touch-action:pan-y;
 }
 #migrationSvg {
-  height:clamp(340px,53vh,585px);
+  height:clamp(344px,48vh,585px);
   max-height:none;
   touch-action:pan-y;
 }
@@ -643,7 +663,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .migration-key { color:var(--ink) }
 .migration-key li,.migration-directions li { display:inline-flex;align-items:center;gap:6px }
 .migration-key i { flex:none;color:var(--ink);font-size:15px;font-style:normal;font-weight:700 }
-.migration-directions { margin-top:6px }
+.migration-directions { margin-top:8px }
 .migration-swatch {
   display:inline-block;
   flex:none;
@@ -652,165 +672,188 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   border-radius:2px;
   background:var(--route-color);
 }
-#migrationCaption { margin-top:6px;font-size:13px }
+#migrationCaption { margin-top:8px;font-size:14px }
 #migrationEventBar { margin-bottom:12px }
-#migrationTimeline {
-  display:flex;
-  gap:6px;
-  margin:0;
-  padding:4px 4px 6px;
-  overflow-x:auto;
-  scroll-padding-inline:4px;
-  scrollbar-width:thin;
-  scrollbar-color:var(--muted) transparent;
-  list-style:none;
-}
-#migrationTimeline li { flex:1 0 auto }
-#migrationTimeline button {
-  display:block;
-  min-height:58px;
-  width:100%;
-  padding:6px 10px;
+.migration-event-nav {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:8px;
   border:1px solid var(--line);
-  border-radius:9px;
-  background:var(--surface);
-  text-align:left;
-  font-size:14px;
-  line-height:1.35;
+  border-radius:16px;
+  background:var(--surface-2);
 }
-#migrationTimeline button .num { display:block;font-size:15px;font-weight:700 }
-#migrationTimeline button[aria-pressed="true"] { border-color:var(--ink);background:var(--ink);color:var(--paper) }
-.migration-reading p { margin-top:7px;font-size:15px;line-height:1.65 }
+.migration-event-nav label { display:flex;align-items:center;gap:8px;min-width:0;font-size:16px }
+#migrationEventPosition { flex:none;font-size:14px;font-weight:700 }
+#migrationTimeline { flex:1;min-width:0 }
+.migration-event-nav button:disabled { opacity:.48;cursor:default }
+.migration-reading h3 { font-size:clamp(24px,2.35vw,30px);text-wrap:wrap }
+.migration-reading p { margin-top:12px;max-width:40em;font-size:16px;line-height:1.65 }
 .migration-reading .migration-period {
   display:block;
-  margin:0 0 4px;
+  margin:0 0 8px;
   color:var(--muted);
   font-size:14px;
   font-weight:700;
 }
-.migration-investigation { margin-top:12px;border-top:1px solid var(--line) }
+.migration-steps { margin:16px 0 0;padding-inline-start:1.35em;font-size:16px;line-height:1.55 }
+.migration-steps li { padding-inline-start:4px }
+.migration-steps li+li { margin-top:8px }
+.migration-steps li::marker { font-weight:700;color:var(--muted) }
+.migration-investigation { margin-top:20px;border-top:1px solid var(--line) }
 .migration-investigation summary {
-  display:list-item;
   min-height:44px;
-  padding:9px 0;
-  font-size:15px;
+  padding:12px 0 4px;
+  font-size:16px;
   font-weight:700;
   cursor:pointer;
 }
-.migration-comparison { margin:0 }
-.migration-comparison div {
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:8px;
-  margin-top:6px;
-  padding:6px 8px;
-  border-radius:7px;
-  background:var(--surface-2);
-  font-size:14px;
-}
-.migration-comparison dd { flex:none;margin:0;font-weight:700;font-size:17px }
-.migration-reading .migration-source { margin-top:10px;color:var(--muted);font-size:13px }
-.migration-source a { color:var(--ink);text-underline-offset:3px }
-.migration-source a:hover { color:var(--muted) }
-.migration-event-flow,.migration-route-flow {
+.migration-comparison { display:grid;gap:8px;margin:8px 0 0 }
+.migration-comparison div { display:grid;grid-template-columns:3em minmax(0,1fr);gap:8px;align-items:center }
+.migration-comparison dt { font-size:16px;font-weight:700 }
+.migration-comparison dd {
   display:grid;
-  gap:7px;
+  grid-template-columns:minmax(0,1fr) 3em;
+  align-items:center;
+  gap:8px;
+  margin:0;
+  font-size:14px;
+  text-align:right;
+}
+.migration-bar { display:block;height:6px;border-radius:999px;background:var(--line) }
+.migration-bar i { display:block;width:var(--share);height:100%;border-radius:inherit;background:var(--ink) }
+.migration-reading .migration-source { margin-top:12px;color:var(--muted);font-size:14px }
+.migration-source a { color:var(--muted);text-underline-offset:3px }
+.migration-source a:hover { color:var(--ink) }
+.migration-event-flow {
+  display:grid;
+  gap:0;
+  margin:16px 0 0 5px;
+  padding:0;
+  list-style:none;
+}
+.migration-event-flow li {
+  position:relative;
+  display:grid;
+  gap:4px;
+  padding:0 0 16px 16px;
+  border-inline-start:2px solid var(--line);
+  font-size:16px;
+  line-height:1.55;
+}
+.migration-event-flow li:last-child { padding-bottom:0;border-color:transparent }
+.migration-event-flow li::before {
+  content:"";
+  position:absolute;
+  inset:6px auto auto -6px;
+  width:10px;
+  height:10px;
+  border:2px solid var(--surface);
+  border-radius:50%;
+  background:var(--ink);
+  box-sizing:border-box;
+}
+.migration-event-flow strong { font-size:14px;color:var(--muted) }
+.migration-endpoints {
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:32px;
+  align-items:start;
+  margin:16px 0 0;
+  padding:12px;
+  border-radius:10px;
+  background:var(--surface-2);
+}
+.migration-endpoints dt { color:var(--muted);font-size:14px;font-weight:700 }
+.migration-endpoints dd { margin:4px 0 0;font-size:17px;font-weight:700;line-height:1.45 }
+.migration-endpoints svg {
+  position:absolute;
+  inset:50% auto auto 50%;
+  width:18px;
+  height:18px;
+  color:var(--muted);
+  transform:translate(-50%,-50%);
+}
+.migration-reading .migration-stops { color:var(--muted);font-size:14px }
+.migration-reading h4 { margin:16px 0 0;font-size:16px;line-height:1.4 }
+.migration-reading h4+p { margin-top:4px }
+.migration-card-actions { display:flex;flex-wrap:wrap;gap:8px;margin-top:16px }
+.migration-card-actions [data-map-link] { display:none }
+#migrationReading:not([hidden])+#migrationRouteInspector:not([hidden]) {
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+}
+.migration-routes {
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+}
+.migration-catalog-head { display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 16px }
+.migration-catalog-head h3 { font-size:28px }
+#migrationCatalogScope { color:var(--muted);font-size:16px;font-weight:700 }
+#migrationRouteList {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
   margin:12px 0 0;
   padding:0;
   list-style:none;
 }
-.migration-event-flow li,.migration-route-flow li {
-  display:grid;
-  grid-template-columns:96px minmax(0,1fr);
-  gap:8px;
-  align-items:baseline;
-  padding:7px 9px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--surface-2);
-  font-size:15px;
-  line-height:1.5;
-}
-.migration-event-flow strong,.migration-route-flow strong { font-size:13px;color:var(--muted) }
-.migration-reading .migration-path-summary { font-weight:700;font-size:16px }
-.migration-link {
-  min-height:44px;
-  padding:3px 10px;
-  margin-top:8px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--surface-2);
-  font-size:14px;
-  font-weight:700;
-}
-.migration-link:hover { border-color:var(--ink) }
-#migrationRouteInspector:not([hidden]):not(:first-child) { margin-top:12px }
-#migrationReading:not([hidden])+#migrationRouteInspector:not([hidden]) {
-  padding-top:12px;
-  border-top:1px solid var(--line);
-}
-.migration-routes h3 { font-size:19px }
-#migrationRouteList {
-  max-block-size:298px;
-  overflow:auto;
-  scrollbar-width:thin;
-  scrollbar-color:var(--muted) transparent;
-  margin:6px -4px 0;
-  padding:4px 4px 6px;
-  list-style:none;
-}
-#migrationRouteList li+li { margin-top:5px }
 #migrationRouteList button {
   display:grid;
-  grid-template-columns:auto minmax(0,1fr);
-  gap:1px 8px;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:4px 8px;
   align-items:center;
   width:100%;
-  min-height:56px;
-  padding:6px 9px;
+  height:100%;
+  min-height:82px;
+  padding:12px 16px;
   border:1px solid var(--line);
-  border-radius:8px;
+  border-radius:10px;
   background:var(--surface);
   text-align:left;
   line-height:1.4;
 }
-#migrationRouteList button:hover { border-color:var(--ink) }
+#migrationRouteList button:hover { border-color:var(--ink);background:var(--surface-2) }
 #migrationRouteList button[aria-pressed="true"] {
   border-color:var(--ink);
   background:var(--surface-2);
   box-shadow:inset 0 0 0 1px var(--ink);
 }
-.migration-row-name { font-size:15px }
-.migration-row-year { margin-left:6px;color:var(--muted);font-size:13px }
-.migration-row-path { grid-column:2;color:var(--muted);font-size:14px }
+.migration-row-meta { display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:14px }
+.migration-row-year { color:var(--muted) }
+.migration-row-path { grid-column:1;font-size:17px;font-weight:700 }
+.migration-row-open { grid-area:1 / 2 / 3 / 3;width:16px;height:16px;color:var(--muted) }
 @media (max-width:850px) {
-  .migration-layout {
-    grid-template-columns:minmax(0,1fr);
-    grid-template-areas:"map" "reading" "routes";
-    grid-template-rows:repeat(3,auto);
-  }
+  .migration-layout { grid-template-columns:minmax(0,1fr) }
+  .migration-card-actions [data-map-link] { display:inline-flex }
+  #migrationRouteList { grid-template-columns:repeat(2,minmax(0,1fr)) }
 }
-@media (max-width:540px) {
-  #migration { padding-block:25px 36px }
-  .migration-intro { margin-bottom:12px }
-  .migration-intro p { font-size:15px }
-  .migration-toolbar { gap:8px }
-  .migration-tabs { flex:1 0 auto }
-  .migration-tabs button { flex:1;padding-inline:11px }
-  .migration-picker { flex:1 0 auto }
+@media (max-width:600px) {
+  #migration { padding-block:24px 36px }
+  .migration-intro { margin-bottom:16px }
+  .migration-toolbar { display:grid;grid-template-columns:minmax(0,1fr) }
+  .migration-tabs button { flex:1;padding-inline:8px }
+  .migration-jump { margin:0 }
   #migrationGroup { flex:1;min-width:0 }
-  .migration-map-head { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 7px;padding:8px 10px }
+  .migration-event-nav { grid-template-columns:repeat(2,minmax(0,1fr)) }
+  .migration-event-nav label { display:grid;grid-area:1 / 1 / 2 / -1;gap:4px }
+  .migration-map-head { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:8px 12px }
   .migration-map-head>div:first-child { display:contents }
-  .migration-map-head h3 { font-size:18px }
+  .migration-map-head h3 { font-size:20px }
   #migrationMapSummary { grid-area:2 / 1 / 3 / -1;margin-top:0 }
   #migrationSvg { height:clamp(330px,51svh,455px) }
-  .migration-zoom { gap:3px }
-  .migration-map-foot { padding-inline:10px }
-  .migration-reading,.migration-routes { padding:13px }
+  .migration-map-foot { padding-inline:12px }
+  .migration-reading { padding:16px }
+  .migration-routes { margin-top:24px;padding-top:16px }
+  #migrationRouteList { grid-template-columns:minmax(0,1fr) }
 }
 @media (forced-colors:active) {
-  .migration-tabs button[aria-pressed="true"],#migrationTimeline button[aria-pressed="true"] { border:2px solid Highlight }
+  .migration-tabs button[aria-pressed="true"],#migrationRouteList button[aria-pressed="true"] { border-color:Highlight }
+  .migration-bar i,.migration-event-flow li::before { background:Highlight;forced-color-adjust:none }
   .migration-swatch { forced-color-adjust:none }
 }
 </style>
@@ -946,12 +989,12 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   <div class="wrap">
     <header class="migration-intro">
       <h2 id="migrationTitle">平埔族群的遷徙路線</h2>
-      <p>選一條路線，看族人何時出發、為何離開，以及在哪裡落腳。</p>
+      <p>這些遷徙路線，可以歸納出哪些方向？</p>
     </header>
     <div class="migration-workbench" hidden>
       <div class="migration-toolbar">
         <div class="migration-tabs" role="group" aria-label="地圖檢視">
-          <button type="button" data-view="routes" aria-pressed="true">遷徙路線</button>
+          <button type="button" data-view="routes" aria-pressed="true">路線總圖</button>
           <button type="button" data-view="events" aria-pressed="false">年代與事件</button>
         </div>
         <div class="migration-picker">
@@ -960,12 +1003,18 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
             <option value="all" selected>全部族群</option>
           </select>
         </div>
+        <a class="migration-jump" id="migrationIndexLink" href="#migrationCatalog" data-migration-jump>
+          <span></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15m-6-6 6 6 6-6"/></svg>
+        </a>
       </div>
-      <div id="migrationEventBar" hidden>
-        <ol id="migrationTimeline" aria-label="事件時間軸"></ol>
+      <div class="migration-event-nav" id="migrationEventBar" role="group" aria-label="事件時間軸" hidden>
+        <button type="button" id="migrationEventPrev">← 上一事件</button>
+        <label><span id="migrationEventPosition">事件</span><select id="migrationTimeline" aria-controls="migrationSvg migrationDetail"></select></label>
+        <button type="button" id="migrationEventNext">下一事件 →</button>
       </div>
       <div class="migration-layout">
-        <figure class="migration-map">
+        <figure class="migration-map" id="migrationMapPanel" tabindex="-1" aria-labelledby="migrationMapTitle">
           <header class="migration-map-head">
             <div>
               <h3 id="migrationMapTitle">遷徙路線總圖</h3>
@@ -987,7 +1036,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
           <figcaption class="migration-map-foot">
             <ul class="migration-key" aria-label="地圖符號">
               <li><i aria-hidden="true">○</i>出發地</li>
-              <li><i aria-hidden="true">●</i>到達地</li>
+              <li><i aria-hidden="true">●</i>落腳地</li>
               <li><i aria-hidden="true">→</i>遷徙方向</li>
               <li><i aria-hidden="true">◆</i>事件地點</li>
             </ul>
@@ -995,15 +1044,18 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
             <p id="migrationCaption">箭頭連接史料中的代表地點，表示大致方向。部分族人也留在原鄉。</p>
           </figcaption>
         </figure>
-        <article class="migration-reading" id="migrationDetail" aria-live="polite">
+        <article class="migration-reading" id="migrationDetail" aria-live="polite" aria-label="遷徙資訊" tabindex="-1">
           <div id="migrationReading"></div>
-          <div id="migrationRouteInspector" hidden></div>
+          <div id="migrationRouteInspector" tabindex="-1" hidden></div>
         </article>
-        <section class="migration-routes" id="migrationCatalog" aria-labelledby="migrationListTitle">
-          <h3 id="migrationListTitle">選一條路線</h3>
-          <ol id="migrationRouteList"></ol>
-        </section>
       </div>
+      <section class="migration-routes" id="migrationCatalog" aria-labelledby="migrationListTitle" tabindex="-1">
+        <header class="migration-catalog-head">
+          <h3 id="migrationListTitle">路線索引</h3>
+          <p id="migrationCatalogScope"></p>
+        </header>
+        <ol id="migrationRouteList"></ol>
+      </section>
     </div>
     <p class="migration-fallback">19 世紀，有些中部平埔族群遷到蘭陽平原或埔里盆地，有些西南部的族群遷入花東縱谷。噶瑪蘭族也有部落從宜蘭沿海遷到花蓮。<a href="https://www.cip.gov.tw/zh-tw/news/data-list/A9E092C6104ACAD5/0C3331F0EBD318C21343E658D0B5C9EF-info.html">原住民族委員會〈地理分佈〉</a></p>
   </div>
@@ -1874,31 +1926,42 @@ function eventLink(id, text) {
   return `<button type="button" class="migration-link" data-event-link="${id}">${text}</button>`;
 }
 
-function routeFlow(rows, className) {
-  return `<ol class="${className}">${rows.map(([label, text]) =>
+function eventFlow(rows) {
+  return `<ol class="migration-event-flow">${rows.map(([label, text]) =>
     `<li><strong>${label}</strong><span>${text}</span></li>`).join('')}</ol>`;
 }
 
 function investigation() {
-  const eastward = routeIds.filter(id => {
+  const compass = ['北', '東北', '東', '東南', '南', '西南', '西', '西北'];
+  const counts = Array(compass.length).fill(0);
+  let eastward = 0;
+  let acrossTaiwan = 0;
+  for (const id of routeIds) {
     const [origin, arrival] = endpoints(routes[id]);
-    return places[arrival].point[0] > places[origin].point[0];
-  }).length;
-  const acrossTaiwan = routeIds.filter(id => {
-    const [origin, arrival] = endpoints(routes[id]);
-    return !eastPlaces.has(origin) && eastPlaces.has(arrival);
-  }).length;
-  return `<h3>遷徙大多由西向東嗎？</h3>
-    <p>沿著箭頭看起點和終點。若終點比起點靠東，族人就一定搬到了臺灣東部嗎？</p>
+    const [lon1, lat1] = places[origin].point;
+    const [lon2, lat2] = places[arrival].point;
+    const east = (lon2 - lon1) * Math.cos((lat1 + lat2) * Math.PI / 360);
+    const angle = Math.atan2(east, lat2 - lat1) * 180 / Math.PI;
+    counts[(Math.round(angle / 45) + 8) % 8]++;
+    if (east > 0) eastward++;
+    if (!eastPlaces.has(origin) && eastPlaces.has(arrival)) acrossTaiwan++;
+  }
+  const largest = Math.max(...counts);
+  const bars = compass.map((name, i) => counts[i] ? `<div>
+    <dt>${name}</dt><dd><span class="migration-bar" aria-hidden="true"><i style="--share:${counts[i] / largest * 100}%"></i></span>${counts[i]} 條</dd>
+  </div>` : '').join('');
+  return `<h3>從起點跟著箭頭走</h3>
+    <ol class="migration-steps">
+      <li>找到空心圓標出的出發地。</li>
+      <li>沿箭頭走到實心圓標出的落腳地。</li>
+      <li>比較路線，把方向相近的分在一起。</li>
+    </ol>
     <details class="migration-investigation">
-      <summary>看完地圖，再核對統計</summary>
-      <dl class="migration-comparison">
-        <div><dt>終點比出發地更靠東</dt><dd>${eastward} / ${routeIds.length} 條</dd></div>
-        <div><dt>由西部遷到蘭陽或花東</dt><dd>${acrossTaiwan} / ${routeIds.length} 條</dd></div>
-      </dl>
-      <p>依圖上起點與終點的位置計算。苗栗到埔里的終點更東，但仍在臺灣中部。統計的單位是圖上路線，每條各算一次。</p>
-    </details>
-    ${sourcesHtml(['distribution'])}`;
+      <summary>看完地圖，再核對方向</summary>
+      <dl class="migration-comparison" aria-label="${routeIds.length} 條路線的方向統計">${bars}</dl>
+      <p>依出發地與落腳地的位置，每條路線算一次。遇到轉彎的路線，也可以分段觀察。</p>
+      <p>${eastward} 條路線的落腳地比出發地更靠東。${acrossTaiwan} 條是從西部遷到蘭陽或花東。</p>
+    </details>${sourcesHtml(['distribution'])}`;
 }
 
 function initMigrationMap() {
@@ -1910,11 +1973,18 @@ function initMigrationMap() {
   const modeButtons = [...section.querySelectorAll('[data-view]')];
   const eventBar = get('migrationEventBar');
   const timeline = get('migrationTimeline');
+  const eventIds = Object.keys(events);
+  const eventPosition = get('migrationEventPosition');
+  const prevEvent = get('migrationEventPrev');
+  const nextEvent = get('migrationEventNext');
   const catalog = get('migrationCatalog');
+  const catalogScope = get('migrationCatalogScope');
+  const indexLink = get('migrationIndexLink');
   const list = get('migrationRouteList');
   const reading = get('migrationReading');
   const inspector = get('migrationRouteInspector');
   const detail = get('migrationDetail');
+  const mapPanel = get('migrationMapPanel');
   const mapTitle = get('migrationMapTitle');
   const mapSummary = get('migrationMapSummary');
   const legend = section.querySelector('.migration-directions');
@@ -1979,11 +2049,7 @@ function initMigrationMap() {
   section.querySelector('[data-zoom="home"]').onclick = map.home;
 
   for (const [id, group] of Object.entries(groups)) groupSelect.add(new Option(group.name, id));
-  timeline.innerHTML = Object.entries(events).map(([id, event]) => `<li>
-    <button type="button" data-event="${id}" aria-pressed="false" aria-controls="migrationSvg migrationDetail">
-      <span class="num">${event.date}</span>${event.chip}
-    </button></li>`).join('');
-  const eventButtons = [...timeline.querySelectorAll('button')];
+  for (const [id, event] of Object.entries(events)) timeline.add(new Option(`${event.date} · ${event.chip}`, id));
 
   let mode = 'routes';
   let activeEvent = 'guo';
@@ -2090,14 +2156,15 @@ function initMigrationMap() {
     drawn.forEach(id => drawRoute(id, ids.length > 1));
     placeNames(ids, event);
 
-    if (event) {
-      mapTitle.textContent = event.chip;
-      mapSummary.textContent = event.summary;
-    } else if (activeRoute) {
+    if (activeRoute) {
       const route = routes[activeRoute];
       const [from, to] = endpoints(route);
       mapTitle.textContent = groups[route.group].name;
-      mapSummary.textContent = `${route.period}，${places[from].label} → ${places[to].label}`;
+      const destination = activeRoute === 'kavalanCoast' ? '豐濱、長濱' : places[to].label;
+      mapSummary.textContent = `${route.period}，${places[from].label} → ${destination}`;
+    } else if (event) {
+      mapTitle.textContent = event.chip;
+      mapSummary.textContent = event.summary;
     } else if (groupSelect.value !== 'all') {
       mapTitle.textContent = groups[groupSelect.value].name + '的遷徙路線';
       mapSummary.textContent = `圖上有 ${ids.length} 條路線`;
@@ -2127,14 +2194,16 @@ function initMigrationMap() {
     if (event) {
       reading.innerHTML = `<span class="migration-period">${event.date} · ${event.relation}</span>
         <h3>${event.title}</h3>
-        ${routeFlow(event.steps, 'migration-event-flow')}
+        ${eventFlow(event.steps)}
         <p>${event.text}</p>
         ${event.link ? eventLink(...event.link) : ''}
         ${sourcesHtml(event.sources)}`;
     } else if (groupSelect.value === 'all') {
       if (reading.dataset.view !== 'overview') reading.innerHTML = overview;
     } else {
-      reading.innerHTML = `<h3>${groups[groupSelect.value].name}</h3><p>選一條路線看出發年代、遷徙背景和落腳地。</p>`;
+      reading.innerHTML = `<h3>${groups[groupSelect.value].name}</h3>
+        <p>比較這個族群不同路線的出發年代和落腳地。</p>
+        <div class="migration-card-actions"><button type="button" class="migration-link" data-show-all>回全部族群總圖</button></div>`;
     }
     reading.dataset.view = !event && groupSelect.value === 'all' ? 'overview' : '';
     inspector.hidden = !activeRoute;
@@ -2145,25 +2214,36 @@ function initMigrationMap() {
     const [from, to] = endpoints(route);
     const stops = route.stops.slice(1, -1);
     const arrival = activeRoute === 'kavalanCoast' ? '花蓮豐濱新社、臺東長濱一帶' : places[to].name;
-    const pathTitle = places[from].label + ' → ' + (activeRoute === 'kavalanCoast' ? '豐濱、長濱' : places[to].label);
-    inspector.innerHTML = `<span class="migration-period">${route.period} · ${groups[route.group].name}</span>
-      <h3>${pathTitle}</h3>
-      ${routeFlow([
-        [reason.title, reason.text],
-        ['出發地', places[from].name],
-        ...(stops.length && activeRoute !== 'kavalanCoast' ? [['途中', stops.map(id => places[id].name).join(' → ')]] : []),
-        ['落腳地', arrival]
-      ], 'migration-route-flow')}
+    const via = stops.length && activeRoute !== 'kavalanCoast' ? stops.map(id => places[id].name).join(' → ') : '';
+    inspector.innerHTML = `<span class="migration-period">${route.period}</span>
+      <h3>${groups[route.group].name}</h3>
+      <dl class="migration-endpoints">
+        <div><dt>出發地</dt><dd>${places[from].name}</dd></div>
+        <div><dt>落腳地</dt><dd>${arrival}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
+        </dd></div>
+      </dl>
+      ${via ? `<p class="migration-stops"><b>途中經過</b>　${via}</p>` : ''}
+      <h4>遷徙背景 · ${reason.title}</h4>
+      <p>${reason.text}</p>
       <p>${route.text}</p>
-      ${reason.event && reason.event !== (event && activeEvent) ? eventLink(reason.event, '到時間軸看相關事件') : ''}
-      ${event ? '' : '<button type="button" class="migration-link" data-show-all>回全部族群總圖</button>'}
+      <div class="migration-card-actions">
+        <a class="migration-link" href="#migrationCatalog" data-migration-jump>回路線索引</a>
+        <a class="migration-link" href="#migrationMapPanel" data-migration-jump data-map-link>在地圖上看</a>
+        ${reason.event && reason.event !== (event && activeEvent) ? eventLink(reason.event, '看相關事件') : ''}
+        ${event ? '' : '<button type="button" class="migration-link" data-show-all>回全部族群總圖</button>'}
+      </div>
       ${sourcesHtml([...route.sources, ...reason.sources])}`;
   }
 
   function renderList(ids, event) {
     const key = ids.join(',');
+    const all = !event && groupSelect.value === 'all';
+    const scope = event ? event.chip : all ? '全部族群' : groups[groupSelect.value].name;
     catalog.hidden = ids.length === 0;
-    get('migrationListTitle').textContent = event ? '這個時段的遷徙路線' : '選一條路線';
+    indexLink.hidden = catalog.hidden;
+    indexLink.firstElementChild.textContent = `查看${all ? '全部 ' : ' '}${ids.length} 條路線`;
+    catalogScope.textContent = `${scope} · ${ids.length} 條路線`;
     if (key !== listedRoutes) {
       listedRoutes = key;
       list.innerHTML = ids.map(id => {
@@ -2171,9 +2251,9 @@ function initMigrationMap() {
         const [from, to] = endpoints(route);
         const destination = id === 'kavalanCoast' ? '豐濱、長濱' : places[to].label;
         return `<li><button type="button" data-pick-route="${id}" aria-pressed="false" aria-controls="migrationSvg migrationDetail">
-          ${swatch(route.direction)}
-          <span><strong class="migration-row-name">${groups[route.group].name}</strong><span class="migration-row-year">${route.period}</span></span>
+          <span class="migration-row-meta">${swatch(route.direction)}<strong>${groups[route.group].name}</strong><span class="migration-row-year">${route.period}</span></span>
           <span class="migration-row-path">${places[from].label} → ${destination}</span>
+          <svg class="migration-row-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
         </button></li>`;
       }).join('');
     }
@@ -2187,10 +2267,21 @@ function initMigrationMap() {
     picker.hidden = Boolean(event);
     eventBar.hidden = !event;
     modeButtons.forEach(button => button.setAttribute('aria-pressed', button.dataset.view === mode));
-    eventButtons.forEach(button => button.setAttribute('aria-pressed', button.dataset.event === activeEvent));
+    if (event) {
+      const index = eventIds.indexOf(activeEvent);
+      timeline.value = activeEvent;
+      eventPosition.textContent = `事件 ${index + 1} / ${eventIds.length}`;
+      prevEvent.disabled = index === 0;
+      nextEvent.disabled = index === eventIds.length - 1;
+    }
     renderReading(event);
     renderList(ids, event);
     renderMap(ids, event);
+  }
+
+  function moveTo(element) {
+    element.focus({preventScroll:true});
+    element.scrollIntoView({block:'start', behavior:reduceMotion.matches ? 'instant' : 'smooth'});
   }
 
   function showEvent(id, focusControl = false) {
@@ -2198,21 +2289,16 @@ function initMigrationMap() {
     activeEvent = id;
     activeRoute = null;
     render();
-    const button = eventButtons.find(item => item.dataset.event === id);
-    const box = timeline.getBoundingClientRect();
-    const target = button.getBoundingClientRect();
-    if (target.left < box.left || target.right > box.right) {
-      timeline.scrollLeft += target.left - box.left - 8;
+    if (focusControl) {
+      moveTo(eventBar);
+      timeline.focus({preventScroll:true});
     }
-    if (focusControl) button.focus();
   }
 
   function pickRoute(id, fromList = false) {
-    activeRoute = activeRoute === id ? null : id;
+    activeRoute = !fromList && activeRoute === id ? null : id;
     render();
-    if (fromList && narrow.matches && activeRoute) {
-      detail.scrollIntoView({block:'start', behavior:reduceMotion.matches ? 'auto' : 'smooth'});
-    }
+    if (fromList) moveTo(mode === 'events' && narrow.matches ? inspector : detail);
   }
 
   function showAllRoutes() {
@@ -2223,13 +2309,16 @@ function initMigrationMap() {
   }
 
   modeButtons.forEach(button => button.addEventListener('click', () => {
-    if (mode === button.dataset.view) return;
-    if (button.dataset.view === 'events') showEvent(activeEvent);
-    else showAllRoutes();
+    if (button.dataset.view === 'events') {
+      if (mode !== 'events') showEvent(activeEvent);
+    } else showAllRoutes();
   }));
-  timeline.addEventListener('click', e => {
-    const button = e.target.closest('[data-event]');
-    if (button) showEvent(button.dataset.event);
+  timeline.addEventListener('change', () => showEvent(timeline.value));
+  [prevEvent, nextEvent].forEach((button, i) => {
+    button.addEventListener('click', () => {
+      showEvent(eventIds[eventIds.indexOf(activeEvent) + (i === 0 ? -1 : 1)]);
+      if (button.disabled) timeline.focus({preventScroll:true});
+    });
   });
   groupSelect.addEventListener('change', () => {
     const ids = visibleRoutes();
@@ -2239,6 +2328,12 @@ function initMigrationMap() {
   list.addEventListener('click', e => {
     const button = e.target.closest('[data-pick-route]');
     if (button) pickRoute(button.dataset.pickRoute, true);
+  });
+  section.addEventListener('click', e => {
+    const link = e.target.closest('[data-migration-jump]');
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    moveTo(link.hasAttribute('data-map-link') ? mapPanel : catalog);
   });
   detail.addEventListener('click', e => {
     const button = e.target.closest('[data-event-link]');
