@@ -51,8 +51,8 @@
     "category": "slop",
     "file": "https://geo.twranger.com/unit3.html",
     "line": 0,
-    "snippet": "Card inside card",
-    "selector": "#co2Readout"
+    "snippet": "Card inside card (and 1 more)",
+    "selector": "div.mur-period:nth-of-type(1)"
   },
   {
     "antipattern": "nested-cards",
@@ -62,8 +62,8 @@
     "category": "slop",
     "file": "https://geo.twranger.com/unit3.html",
     "line": 0,
-    "snippet": "Card inside card",
-    "selector": "div.co2-cell"
+    "snippet": "Card inside card (and 1 more)",
+    "selector": "figure.mur-card:nth-of-type(1)"
   },
   {
     "antipattern": "nested-cards",
