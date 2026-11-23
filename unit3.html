@@ -1167,6 +1167,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
                 <li><i aria-hidden="true">○</i>出發地</li>
                 <li><i aria-hidden="true">●</i>落腳地</li>
                 <li id="migrationSharedPoint" hidden><i aria-hidden="true">⦿</i>起點也是落腳地</li>
+                <li id="migrationStopKey" hidden><i aria-hidden="true">·</i>途中代表地點</li>
                 <li><i aria-hidden="true">→</i>遷徙方向</li>
                 <li><i aria-hidden="true">◆</i>事件地點</li>
               </ul>
@@ -1774,8 +1775,11 @@ const places = {
   junda: place('南投信義郡大溪流域', 120.982, 23.661, '南投郡大溪', 'left'),
   dafen: place('花蓮卓溪拉庫拉庫溪上游大分', 121.098, 23.374, '花蓮大分', 'right'),
   taoyuanHill: place('高雄桃源荖濃溪上游', 120.762, 23.161, '高雄桃源', 'left'),
-  jingguan: place('南投仁愛靜觀部落一帶', 121.167, 24.071, '南投靜觀', 'left'),
-  browan: place('花蓮立霧溪布洛灣', 121.566, 24.168, '立霧溪布洛灣', 'right'),
+  jingguan: place('南投仁愛合作村靜觀一帶', 121.216, 24.086, '南投靜觀', 'left'),
+  qilai: place('中央山脈奇萊山區', 121.331, 24.102, '奇萊山區', 'bottom'),
+  browan: place('花蓮立霧溪布洛灣舊社', 121.573, 24.171, '立霧溪布洛灣', 'left'),
+  trukuFushi: place('今花蓮秀林鄉富世村山麓聚落', 121.630, 24.148, '富世村聚落', 'right'),
+  trukuXiulin: place('今花蓮秀林鄉秀林村山麓聚落', 121.633, 24.126, '秀林村聚落', 'right'),
   dali: place('花蓮秀林大禮部落', 121.591, 24.174, '山上大禮', 'left'),
   tarokoGate: place('花蓮秀林太魯閣口（富世一帶）', 121.621, 24.156, '太魯閣口', 'right'),
   pingjing: place('南投仁愛平靜山區', 121.167, 24.049, '南投平靜', 'left'),
@@ -1847,6 +1851,8 @@ const sources = {
   wusheDoc: ['國立臺灣歷史博物館〈霧社名簿〉', 'https://tcmb.culture.tw/zh-tw/detail?id=11000165471&indexCode=MOCCOLLECTIONS'],
   qingliu: ['臺灣學術期刊開放取用平台〈清流部落的土地與水田〉', 'https://toaj.stpi.niar.org.tw/index/journal/volume/article/4b1141f993cfc56f0193f29122ba0a46'],
   truku: ['太魯閣國家公園〈太魯閣族〉', 'https://www.taroko.gov.tw/ch/sglarticle/taroko-tribe'],
+  browan: ['國家文化記憶庫〈布洛灣〉', 'https://tcmb.culture.tw/zh-tw/detail?id=618898&indexCode=Culture_Place'],
+  trukuRelocation: ['國立臺灣圖書館〈日治時期太魯閣族的集團移住〉', 'https://www.ntl.edu.tw/public/Attachment/4711956426.pdf'],
   trukuEvent: ['文化部文資局〈太魯閣申遺之路〉', 'https://twh.boch.gov.tw/taiwan/learn_detail.aspx?id=19'],
   dali: ['國家公園季刊〈大禮、大同部落〉', 'https://www.taiwan.nps.gov.tw/home/zh-tw/quarterly/7969/7492'],
   tsou: ['原民會〈鄒族〉', 'https://www.cip.gov.tw/zh-tw/tribe/grid-list/AE6EE12F5F284D59D0636733C6861689/info.html?cumid=D0636733C6861689'],
@@ -2104,9 +2110,19 @@ const routes = {
     reason: { title: '人口成長與拓展生活空間' }, sources: ['seediq']
   },
   trukuLiwu: {
-    group: 'truku', direction: 'highland', period: '約 18 至 19 世紀', stops: ['jingguan', 'browan'],
-    text: '部分太魯閣族先民從南投仁愛一帶翻越中央山脈，在花蓮立霧溪、木瓜溪等流域定居。布洛灣是立霧溪流域的代表地點。',
-    reason: { title: '尋覓耕地與獵區', event: 'trukuCrossing' }, sources: ['seediq', 'truku']
+    group: 'truku', direction: 'highland', period: '約 18 世紀起', stops: ['jingguan', 'qilai', 'browan'],
+    text: '部分太魯閣族先民從南投仁愛一帶越過中央山脈，在立霧溪河谷陸續建立聚落。圖上以靜觀、奇萊山區與布洛灣示意越嶺方向。',
+    reason: { title: '尋覓耕地與獵區', event: 'trukuCrossing' }, sources: ['seediq', 'truku', 'browan']
+  },
+  trukuFushi: {
+    group: 'truku', community: '太魯閣族布洛灣舊社', direction: 'policy', period: '1914 年後陸續', stops: ['browan', 'trukuFushi'],
+    text: '太魯閣事件後，部分布洛灣族人遷到今富世村的山麓聚落。布洛灣舊社和落腳的聚落都在今日的富世村行政範圍內，圖上分別標示兩處代表地點。',
+    reason: { title: '日本殖民政府推動集團移住', event: 'trukuWar' }, sources: ['browan', 'trukuRelocation']
+  },
+  trukuXiulin: {
+    group: 'truku', community: '太魯閣族布洛灣舊社', direction: 'policy', period: '1914 年後陸續', stops: ['browan', 'trukuXiulin'],
+    text: '另有布洛灣族人遷到今秀林村。山區部落分批移住，1930 年霧社事件後，殖民政府加快執行移住政策。',
+    reason: { title: '日本殖民政府推動集團移住', event: 'trukuWar' }, sources: ['browan', 'trukuRelocation']
   },
   trukuDali: {
     group: 'truku', community: '太魯閣族大禮部落', direction: 'local', period: '1980 年', stops: ['dali', 'tarokoGate'],
@@ -2374,22 +2390,23 @@ const events = {
     sources: ['xiaolin', 'xiaolinRecovery']
   },
   trukuCrossing: {
-    scope: 'mountain', year: 1750, date: '約 18 至 19 世紀', chip: '越嶺到立霧溪', title: '太魯閣族先民跨越中央山脈',
+    scope: 'mountain', year: 1750, date: '約 18 世紀起', chip: '越嶺到立霧溪', title: '太魯閣族先民跨越中央山脈',
     place: 'browan', routes: ['trukuLiwu'], relation: '山區拓居',
-    summary: '南投仁愛 → 花蓮立霧溪一帶。',
+    summary: '南投仁愛靜觀一帶 → 越過奇萊山區 → 花蓮立霧溪布洛灣。',
     steps: [['原居區', '祖居地位於南投仁愛的濁水溪上游一帶。'],
-      ['約 18 至 19 世紀', '部分族人為尋找耕地與獵區，來到花蓮立霧溪、木瓜溪流域。']],
-    text: '布洛灣代表立霧溪流域。遷居是在不同時間陸續發生的。',
-    sources: ['truku', 'seediq']
+      ['約 18 世紀起', '部分族人為尋找耕地與獵區，翻越中央山脈，在立霧溪河谷陸續落腳。']],
+    text: '布洛灣是其中一處聚落。地圖用代表地點連出大致方向。',
+    sources: ['truku', 'seediq', 'browan']
   },
   trukuWar: {
     scope: 'mountain', date: '1914 年', chip: '太魯閣事件', title: '太魯閣事件與山區移住政策',
-    place: 'browan', routes: [], relation: '歷史背景',
-    summary: '1914 年太魯閣事件。後續日本政府在山區實行集團移住。',
+    place: 'browan', routes: ['trukuFushi', 'trukuXiulin'], relation: '戰後集團移住', zoom: 11,
+    summary: '1914 年事件後，布洛灣舊社族人陸續遷往富世村、秀林村的山麓聚落。',
     steps: [['1914 年', '日本殖民政府進攻立霧溪一帶，太魯閣族人抵抗。'],
-      ['日治時期', '殖民政府實施集團移住，使部分深山部落遷往秀林、萬榮、卓溪的淺山與平地。']],
-    text: '圖上的菱形代表立霧溪流域。各社移住年份和安置地點各有差異。',
-    link: ['trukuCrossing', '看更早的越嶺遷居'], sources: ['truku', 'trukuEvent']
+      ['事件後數年間', '日本殖民政府開始分批遷移山區部落，布洛灣族人有不同的落腳地。'],
+      ['1930 年後', '霧社事件後，殖民政府加速執行集團移住。']],
+    text: '兩支箭頭從布洛灣舊社出發，分別指向今富世村、秀林村的山麓聚落。各批移住的時間不同。',
+    link: ['trukuCrossing', '看更早的越嶺遷居'], sources: ['browan', 'trukuRelocation', 'trukuEvent']
   },
   wushe: {
     scope: 'mountain', date: '1930–1931 年', chip: '霧社事件與川中島', title: '霧社事件後，倖存者被迫移住清流',
@@ -2482,7 +2499,7 @@ const routeBends = {
   taokasYilan: -24, taokasPuli: -10, pazehPuli: 21, kaxabuPuli: -12,
   taokasDajiaYilan: 16, babuzaYilan: 13, babuzaAshuYilan: -14, hoanyaYilan: 33,
   paporaPuli: -17, babuzaPuli: 7, hoanyaPuli: 13, sirayaEast: 26, taivoanEast: -18,
-  kavalanCoast: 12, kavalanChangbin: -16
+  kavalanCoast: 12, kavalanChangbin: -16, trukuFushi: -5, trukuXiulin: 4
 };
 
 function endpoints(route) {
@@ -2582,6 +2599,7 @@ function initMigrationMap() {
   const mapSummary = get('migrationMapSummary');
   const mapDetails = get('migrationMapDetails');
   const sharedPoint = get('migrationSharedPoint');
+  const stopKey = get('migrationStopKey');
   const legend = section.querySelector('.migration-directions');
   const narrow = matchMedia('(max-width:850px)');
   const reduceMotion = matchMedia('(prefers-reduced-motion:reduce)');
@@ -2633,7 +2651,7 @@ function initMigrationMap() {
 
   const map = reliefMap('#migrationSvg', {
     crop: [119.48, 122.09, 21.89, 25.36],
-    scrollZoom: false, respectReducedMotion: true, onZoom: scheduleLabels
+    maxZoom: 12, scrollZoom: false, respectReducedMotion: true, onZoom: scheduleLabels
   });
   map.svg.attr('aria-describedby', 'migrationCaption');
   map.img.attr('opacity', .79);
@@ -2706,12 +2724,14 @@ function initMigrationMap() {
     }
   }
 
-  function drawPoint(site, kind, label = '') {
+  function drawPoint(site, kind, label = '', eventHere = false) {
     const node = map.pin(...site.point).classed('migration-pin', true);
-    if (kind === 'event') {
-      node.append('path').attr('d', 'M0,-9 9,0 0,9 -9,0Z').attr('fill', '#18373f')
-        .attr('stroke', '#fff').attr('stroke-width', 2);
-    } else if (kind !== 'label') {
+    if (eventHere) {
+      const endpoint = kind !== 'label';
+      node.append('path').attr('d', 'M0,-9 9,0 0,9 -9,0Z')
+        .attr('fill', endpoint ? '#fff' : '#18373f').attr('stroke', endpoint ? '#18373f' : '#fff').attr('stroke-width', 1.7);
+    }
+    if (kind !== 'label') {
       const isStart = kind === 'start' || kind === 'both';
       node.append('circle').attr('r', kind === 'stop' ? 3.5 : 4.5)
         .attr('fill', isStart ? '#fff' : '#18373f')
@@ -2729,21 +2749,17 @@ function initMigrationMap() {
     const starts = new Set(ids.map(id => endpoints(routes[id])[0]));
     const finishes = new Set(ids.map(id => endpoints(routes[id])[1]));
     const kindOf = id => starts.has(id) ? finishes.has(id) ? 'both' : 'start' : finishes.has(id) ? 'finish' : 'label';
-    sharedPoint.hidden = ![...starts].some(id => finishes.has(id) && id !== event?.place);
+    const stops = ids.length === 1 ? routes[ids[0]].stops.slice(1, -1) : [];
+    sharedPoint.hidden = ![...starts].some(id => finishes.has(id));
+    stopKey.hidden = stops.length === 0;
     const named = new Set();
     const add = (id, name, kind) => {
       if (named.has(id)) return;
       named.add(id);
-      drawPoint(places[id], kind, name);
+      drawPoint(places[id], kind, name, id === event?.place);
     };
-    if (event) add(event.place, places[event.place].label, 'event');
-    if (activeRoute) {
-      const route = routes[activeRoute];
-      const [from, to] = endpoints(route);
-      add(from, places[from].label, 'start');
-      add(to, places[to].label, 'finish');
-      for (const id of route.stops.slice(1, -1)) add(id, places[id].label, 'stop');
-    } else if (ids.length > 3 && mode === 'routes' && groupSelect.value === 'all') {
+    if (event) add(event.place, places[event.place].label, kindOf(event.place));
+    if (ids.length > 3 && mode === 'routes' && groupSelect.value === 'all') {
       scopes[scope].labels.forEach(([id, name]) => add(id, name, kindOf(id)));
     } else {
       for (const id of finishes) add(id, places[id].label, kindOf(id));
@@ -2751,6 +2767,7 @@ function initMigrationMap() {
     }
     for (const id of starts) add(id, '', kindOf(id));
     for (const id of finishes) add(id, '', 'finish');
+    for (const id of stops) add(id, places[id].label, 'stop');
     for (const site of seaLabels) drawPoint(site, 'label', site.label);
   }
 
@@ -2788,7 +2805,8 @@ function initMigrationMap() {
       const focused = activeRoute ? [activeRoute] : ids;
       const points = focused.flatMap(id => routePoints(routes[id]));
       if (event) points.push(places[event.place].point);
-      map.fitPoints(points, points.length === 1 ? 2.4 : activeRoute ? 7 : 4.6);
+      const maxScale = event?.zoom ?? (activeRoute ? 7 : 4.6);
+      map.fitPoints(points, points.length === 1 ? 2.4 : maxScale);
     }
     scheduleLabels();
   }
@@ -2981,8 +2999,11 @@ function initMigrationMap() {
   });
 
   workbench.hidden = false;
-  const initialScope = new URLSearchParams(location.search).get('migration');
+  const query = new URLSearchParams(location.search);
+  const initialScope = query.get('migration');
   openScope(initialScope === 'mountain' ? initialScope : 'plains');
+  const initialEvent = query.get('migrationEvent');
+  if (eventIds.includes(initialEvent)) showEvent(initialEvent);
   section.querySelector('.migration-fallback').hidden = true;
 }
 
