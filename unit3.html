@@ -1030,6 +1030,72 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   .migration-bar i,.migration-event-flow li::before { background:Highlight;forced-color-adjust:none }
   .migration-swatch { forced-color-adjust:none }
 }
+#indigenous-stories {
+  --stories-accent:color-mix(in srgb,var(--ink) 68%,#338457);
+  --stories-wash:color-mix(in srgb,var(--surface) 91%,var(--stories-accent));
+}
+#indigenous-stories [hidden] { display:none!important }
+#indigenous-stories h2 { font-size:clamp(27px,3.2vw,38px);text-wrap:wrap }
+#indigenous-stories h3 { font-size:clamp(23px,2.6vw,30px);text-wrap:wrap }
+#indigenous-stories h4 { margin:0;font-size:18px;line-height:1.4 }
+#indigenous-stories p { font-size:16px;line-height:1.65 }
+#indigenous-stories a { color:var(--stories-accent);text-underline-offset:3px }
+#indigenous-stories section { scroll-margin-top:80px }
+.stories-nav,.lineup-controls { display:flex;flex-wrap:wrap;gap:6px }
+.stories-nav { margin:12px 0 18px }
+.stories-nav a,.lineup-controls button {
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  padding:5px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  font-size:16px;font-weight:700;line-height:1.4;text-decoration:none;
+}
+.stories-nav a:hover,.lineup-controls button:hover { border-color:var(--stories-accent) }
+.lineup-controls { margin:12px 0 }
+.lineup-controls button[aria-pressed="true"] { background:var(--stories-accent);border-color:var(--stories-accent);color:var(--surface) }
+.stories-card { padding:clamp(12px,2.5vw,26px);border:1px solid var(--line);border-radius:16px;background:var(--surface) }
+.stories-card h3+p { margin-top:6px;max-width:43em }
+.baseball-board { border-top:4px solid var(--stories-accent) }
+.baseball-table { width:100%;margin-top:12px;table-layout:fixed;border-collapse:collapse;font-size:16px;line-height:1.4 }
+.baseball-table th,.baseball-table td { padding:6px 10px;text-align:start;vertical-align:top;border-bottom:1px solid var(--line) }
+.baseball-table thead { background:var(--stories-accent);color:var(--surface) }
+.baseball-table th:first-child { width:4em }
+.baseball-table tbody th { color:var(--muted);font-variant-numeric:tabular-nums }
+.baseball-table tbody tr:nth-child(odd) { background:var(--surface-2) }
+.baseball-table .baseball-pitcher { background:var(--stories-wash) }
+.baseball-player { display:flex;align-items:baseline;gap:0 8px;flex-wrap:wrap }
+.baseball-player a { font-weight:700;text-decoration-color:color-mix(in srgb,var(--stories-accent) 45%,transparent) }
+.baseball-player a:hover { text-decoration-color:currentColor }
+.baseball-position { color:var(--muted);font-size:14px }
+.baseball-achievement { display:block;font-size:14px;line-height:1.4 }
+.baseball-huddle { margin-top:16px;padding:12px 14px;border-radius:10px;background:var(--stories-wash) }
+.baseball-huddle p,.stories-card summary+p { margin-top:4px }
+.stories-history { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px }
+.stories-history article { padding-top:10px;border-top:1px solid var(--line) }
+.stories-history p { margin-top:4px }
+.stories-history a { font-size:14px }
+.stories-science,.stories-culture { margin-top:20px }
+.blood-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start;gap:12px 24px;margin-top:10px }
+.blood-samples { margin:0;padding:12px;border-radius:10px;background:var(--surface-2) }
+.blood-samples figcaption { font-size:15px;font-weight:700;line-height:1.5 }
+.blood-samples dl { display:grid;gap:8px;margin:10px 0 0 }
+.blood-samples dl div { display:grid;grid-template-columns:4.25em minmax(0,1fr);gap:6px;align-items:center;font-size:15px }
+.blood-samples dd { display:grid;grid-template-columns:minmax(0,1fr) 3.7em;align-items:center;gap:6px;margin:0 }
+.blood-samples strong { text-align:end;font-variant-numeric:tabular-nums }
+.blood-track { height:10px;border-radius:5px;background:var(--line) }
+.blood-track span { display:block;width:var(--sample-share);height:100%;border-radius:inherit;background:var(--stories-accent) }
+#indigenous-stories .stories-source { margin-top:8px;color:var(--muted);font-size:14px }
+.stories-card summary { min-height:44px;padding-block:8px;font-size:16px;font-weight:700;line-height:1.5;cursor:pointer }
+.stories-culture-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px }
+.stories-culture-grid article { padding:14px;border:1px solid var(--line);border-top:3px solid var(--stories-accent);border-radius:10px;background:var(--surface) }
+@media (max-width:700px) {
+  .stories-history,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
+  .baseball-table th,.baseball-table td { padding-inline:6px }
+  .baseball-table th:first-child { width:3.1em }
+  .lineup-controls button,.stories-nav a { padding-inline:8px }
+}
+@media (forced-colors:active) {
+  .lineup-controls button[aria-pressed="true"] { color:HighlightText;background:Highlight;forced-color-adjust:none }
+  .blood-track span { background:Highlight;forced-color-adjust:none }
+}
 </style>
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
 <script src="assets/site-nav.js?v=5" defer></script>
@@ -1049,6 +1115,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <a href="#sites"><span class="dot" style="background:var(--typhoon)"></span>選地方住</a>
     <a href="#jade"><span class="dot" style="background:var(--leaf)"></span>臺灣玉之路</a>
     <a href="#tribes"><span class="dot" style="background:var(--wind)"></span>原住民族分布</a>
+    <a href="#indigenous-stories"><span class="dot" style="background:var(--leaf)"></span>原民延伸</a>
     <a href="#migration"><span class="dot" style="background:#6b4f91"></span>族群遷徙</a>
     <a href="#wisdom"><span class="dot" style="background:var(--div)"></span>與自然共存</a>
     <a href="#legend"><span class="dot" style="background:#7a5cc0"></span>鬼湖傳說</a>
@@ -1144,6 +1211,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       <div class="badge" style="background:var(--wind)">族</div>
       <h2>原住民族的分布 <span class="page-ref">課本 p.76–77</span></h2>
       <p class="sub">這張地圖標出課本介紹的十六族。點地圖上的族名看介紹，也可以只看最早認定的九族，或後來陸續正名的族群。</p>
+      <a class="heritage-jump" href="#indigenous-stories">看棒球夢幻隊、米田堡血型與部落技藝 <span aria-hidden="true">↓</span></a>
     </div>
     <div class="chips" id="tribeF" role="group" aria-label="篩選">
       <button class="chip" data-f="all" aria-pressed="true">全部十六族</button>
@@ -1158,6 +1226,232 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     </div>
   </div>
 </section>
+
+<section class="unit" id="indigenous-stories" aria-labelledby="indigenousStoriesTitle">
+  <div class="wrap">
+    <h2 id="indigenousStoriesTitle">原住民族延伸探索</h2>
+    <nav class="stories-nav" aria-label="原住民族延伸主題">
+      <a href="#amis-baseball">棒球夢幻隊</a>
+      <a href="#miltenberger">米田堡血型</a>
+      <a href="#indigenous-craft">部落技藝</a>
+    </nav>
+    <section class="stories-card baseball-board" id="amis-baseball" aria-labelledby="amisBaseballTitle">
+      <h3 id="amisBaseballTitle">阿美族棒球夢幻隊</h3>
+      <p>把不同年代的阿美族球星放在一起，能排出兩套爭冠先發嗎？每套排九名打者和一名先發投手。點球員名字可以看他的事蹟。</p>
+      <div class="lineup-controls" id="amisLineupControls" role="group" aria-label="選擇要看的先發陣容" hidden>
+        <button type="button" data-lineup-view="both" aria-controls="amisLineups" aria-pressed="true">並排比較</button>
+        <button type="button" data-lineup-view="first" aria-controls="amisLineups" aria-pressed="false">只看一軍</button>
+        <button type="button" data-lineup-view="second" aria-controls="amisLineups" aria-pressed="false">只看二軍</button>
+      </div>
+      <table class="baseball-table" id="amisLineups" aria-label="一軍與二軍的夢幻先發投手、打序和守位">
+        <thead>
+          <tr><th scope="col">棒次</th><th scope="col" data-team="first">一軍先發</th><th scope="col" data-team="second">二軍先發</th></tr>
+        </thead>
+        <tbody>
+        <tr class="baseball-pitcher">
+          <th scope="row">先發投手</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://npb.jp/bis/players/81383863.html" target="_blank" rel="noopener noreferrer">郭源治</a></div>
+            <span class="baseball-achievement">日職 106 勝、116 次救援成功</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/201902160121.aspx" target="_blank" rel="noopener noreferrer">陳義信</a></div>
+            <span class="baseball-achievement">中職生涯 92 勝、84 場完投</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">1 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/201611080304.aspx" target="_blank" rel="noopener noreferrer">陽岱鋼</a><span class="baseball-position">中外野</span></div>
+            <span class="baseball-achievement">日職 4 座外野金手套</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202311210273.aspx" target="_blank" rel="noopener noreferrer">陳晨威</a><span class="baseball-position">右外野</span></div>
+            <span class="baseball-achievement">2023 中職盜壘王</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://cpbl.com.tw/team/person?Acnt=0000002286" target="_blank" rel="noopener noreferrer">林立</a><span class="baseball-position">二壘</span></div>
+            <span class="baseball-achievement">2022 中職年度 MVP</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202510060200.aspx" target="_blank" rel="noopener noreferrer">李凱威</a><span class="baseball-position">二壘</span></div>
+            <span class="baseball-achievement">2025 中職安打王、盜壘王</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">3 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202303120232.aspx" target="_blank" rel="noopener noreferrer">張育成</a><span class="baseball-position">游擊</span></div>
+            <span class="baseball-achievement">2023 經典賽預賽 A 組 MVP</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/201811130392.aspx" target="_blank" rel="noopener noreferrer">陳俊秀</a><span class="baseball-position">一壘</span></div>
+            <span class="baseball-achievement">2018 中職年度 MVP</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">4 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0N106848635248154958" target="_blank" rel="noopener noreferrer">林智勝</a><span class="baseball-position">一壘</span></div>
+            <span class="baseball-achievement">中職首位生涯 300 轟</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202403125002.aspx" target="_blank" rel="noopener noreferrer">周思齊</a><span class="baseball-position">指定打擊</span></div>
+            <span class="baseball-achievement">2012 中職年度 MVP</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">5 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/ahel/202405065002.aspx" target="_blank" rel="noopener noreferrer">張泰山</a><span class="baseball-position">指定打擊</span></div>
+            <span class="baseball-achievement">中職生涯 289 轟</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0L132507631078517065" target="_blank" rel="noopener noreferrer">張志豪</a><span class="baseball-position">中外野</span></div>
+            <span class="baseball-achievement">曾刷新中職生涯三壘安打紀錄</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">6 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-tw/News/Detail?newsId=23090521031879988" target="_blank" rel="noopener noreferrer">高國輝</a><span class="baseball-position">左外野</span></div>
+            <span class="baseball-achievement">中職 3 屆全壘打王</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.peopo.org/news/111617" target="_blank" rel="noopener noreferrer">陳鏞基</a><span class="baseball-position">三壘</span></div>
+            <span class="baseball-achievement">2006 經典賽擊出滿貫砲</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">7 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/202001070045.aspx" target="_blank" rel="noopener noreferrer">張建銘</a><span class="baseball-position">右外野</span></div>
+            <span class="baseball-achievement">中職 5 座外野金手套</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202410250393.aspx" target="_blank" rel="noopener noreferrer">曾頌恩</a><span class="baseball-position">左外野</span></div>
+            <span class="baseball-achievement">2024 台灣大賽 MVP</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">8 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://news.ipcf.org.tw/12862" target="_blank" rel="noopener noreferrer">鄭達鴻</a><span class="baseball-position">捕手</span></div>
+            <span class="baseball-achievement">2010 中職盜壘王</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0M301620343791220345" target="_blank" rel="noopener noreferrer">王勝偉</a><span class="baseball-position">游擊</span></div>
+            <span class="baseball-achievement">中職 9 座游擊金手套</span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">9 棒</th>
+          <td data-team="first">
+            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">王威晨</a><span class="baseball-position">三壘</span></div>
+            <span class="baseball-achievement">2023 經典賽台灣隊長</span>
+          </td>
+          <td data-team="second">
+            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">高宇杰</a><span class="baseball-position">捕手</span></div>
+            <span class="baseball-achievement">2023 經典賽國手</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <p class="stories-source">依球員曾守過的位置和代表成績組隊，打序是活動設定。MVP 是最有價值球員，指定打擊專責打擊。</p>
+      <div class="baseball-huddle">
+        <h4>二軍也能拚台灣大賽冠軍嗎？</h4>
+        <p>這套先發有 92 勝的投手、拿過 9 座金手套的游擊手，還有拿過年度 MVP 的打者。打完整季，還要安排多位先發投手輪流上場，也需要救援投手和替補。你會先補哪一個位置？</p>
+        <details>
+          <summary>多給你三位球員，怎麼調度？</summary>
+          <p><a href="https://www.cna.com.tw/news/aspt/202411240159.aspx" target="_blank" rel="noopener noreferrer">林昱珉</a>可以先發，<a href="https://tsna.com/article/205289" target="_blank" rel="noopener noreferrer">宋家豪</a>可以後援，<a href="https://www.cna.com.tw/news/aspt/202007200253.aspx" target="_blank" rel="noopener noreferrer">張進德</a>可以接替捕手。先發投手退場後，你想怎麼安排？</p>
+        </details>
+      </div>
+      <div class="stories-history">
+        <article>
+          <h4>1925 年，花蓮能高團赴日</h4>
+          <p>以阿美族少年為主力的能高團到日本打友誼賽，拿下 4 勝、4 負、1 和。</p>
+          <a href="https://indigenapedia-alcd.nccu.edu.tw/detail?cat=0&amp;id=11899&amp;race=0&amp;search=&amp;writer=" target="_blank" rel="noopener noreferrer">臺灣原住民族事典｜能高團球員西村嘉造</a>
+        </article>
+        <article>
+          <h4>2024 年，臺灣隊拿下世界 12 強冠軍</h4>
+          <p>阿美族投手林昱珉在冠軍戰先發，臺灣隊靠投打接力，以 4 比 0 擊敗日本。</p>
+          <a href="https://cpbl.com.tw/xmdoc/cont?SId=0O330141282618372304" target="_blank" rel="noopener noreferrer">中華職棒｜冠軍戰紀錄</a>
+        </article>
+      </div>
+    </section>
+    <section class="stories-card stories-science" id="miltenberger" aria-labelledby="miltenbergerTitle">
+      <h3 id="miltenbergerTitle">米田堡血型是什麼？</h3>
+      <div class="blood-layout">
+        <div>
+          <p>紅血球表面有許多標記，叫作抗原。除了分出 A、B、AB、O 的 ABO 系統，還有其他系統。米田堡（Miltenberger）屬於 MNS 血型系統，血庫會用相關標記來幫助輸血配對。</p>
+          <details>
+            <summary>88.4% 怎麼讀？</summary>
+            <p>把這項研究的阿美族樣本比例換成每 100 人來想，約有 88 人帶有 GP.Mur。要知道一個人的血型，得靠驗血。</p>
+          </details>
+        </div>
+        <figure class="blood-samples">
+          <figcaption>1996 年研究樣本中，米田堡第三型（GP.Mur）的比例</figcaption>
+          <dl>
+            <div><dt>阿美族</dt><dd><span class="blood-track" aria-hidden="true"><span style="--sample-share:88.4%"></span></span><strong>88.4%</strong></dd></div>
+            <div><dt>達悟族</dt><dd><span class="blood-track" aria-hidden="true"><span style="--sample-share:34.3%"></span></span><strong>34.3%</strong></dd></div>
+            <div><dt>卑南族</dt><dd><span class="blood-track" aria-hidden="true"><span style="--sample-share:21.2%"></span></span><strong>21.2%</strong></dd></div>
+          </dl>
+        </figure>
+      </div>
+      <p class="stories-source"><a href="https://doi.org/10.1046/j.1365-3148.1996.d01-64.x" target="_blank" rel="noopener noreferrer">1996 年原始研究</a> · <a href="https://www.blood.org.tw/xmdoc/cont?sid=0P065377682720993533&amp;xsmsid=0P064579039827470907" target="_blank" rel="noopener noreferrer">台灣血液基金會｜精準輸血</a></p>
+    </section>
+    <section class="stories-culture" id="indigenous-craft" aria-labelledby="indigenousCraftTitle">
+      <h3 id="indigenousCraftTitle">部落技藝猜一猜</h3>
+      <div class="stories-culture-grid">
+        <article>
+          <h4>噶瑪蘭族的香蕉絲</h4>
+          <details>
+            <summary>香蕉的哪個部位能抽出絲？</summary>
+            <p>從看起來像樹幹的假莖取出纖維。花蓮新社部落的族人把這門技藝重新帶回生活，將香蕉絲接成線，再織成布。</p>
+            <p class="stories-source"><a href="https://nchdb.boch.gov.tw/assets/overview/traditionalCraft/20210521000002" target="_blank" rel="noopener noreferrer">文化資產局｜香蕉絲織布</a></p>
+          </details>
+        </article>
+        <article>
+          <h4>達悟族的拼板舟</h4>
+          <details>
+            <summary>一塊塊木板是怎麼接成船的？</summary>
+            <p>工匠用木釘接合木板，還會依船身不同部位選用木材。臺史博典藏的一艘單人拼板舟，就用了大約 21 塊木板。</p>
+            <p class="stories-source"><a href="https://collections.culture.tw/Object?RNO=MjAwMy4wMTIuMDA3NA%3D%3D&amp;SYSUID=11" target="_blank" rel="noopener noreferrer">國立臺灣歷史博物館｜看單人拼板舟</a></p>
+          </details>
+        </article>
+        <article>
+          <h4>布農族的八部合音</h4>
+          <details>
+            <summary>歌聲在祈求哪種作物豐收？</summary>
+            <p>小米。布農族的郡社群和巒社群有祈求小米豐收的祭歌 <i>pasibutbut</i>。歌者互相聆聽，讓不同高低的聲音疊出和聲。</p>
+            <p class="stories-source"><a href="https://www.hccc.gov.tw/zh-tw/CulturalHeritage/Detail/203" target="_blank" rel="noopener noreferrer">花蓮縣文化局｜認識小米豐收歌</a></p>
+          </details>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script>
+(() => {
+  const controls = document.querySelector('#amisLineupControls');
+  const buttons = [...controls.querySelectorAll('button')];
+  const columns = [...document.querySelectorAll('#amisLineups [data-team]')];
+
+  controls.addEventListener('click', event => {
+    const selected = event.target.closest('button[data-lineup-view]');
+    if (!selected) return;
+
+    const view = selected.dataset.lineupView;
+    for (const button of buttons) button.setAttribute('aria-pressed', button === selected);
+    for (const cell of columns) cell.hidden = view !== 'both' && cell.dataset.team !== view;
+  });
+  controls.hidden = false;
+})();
+</script>
 
 <section class="unit" id="migration" aria-labelledby="migrationTitle">
   <div class="wrap">
