@@ -1073,29 +1073,90 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-history p { margin-top:4px }
 .stories-history a { font-size:14px }
 .stories-science,.stories-culture { margin-top:20px }
-.blood-flow,.blood-studies { display:grid;gap:12px;margin-top:12px }
-.blood-flow {
-  grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;
-  margin-bottom:0;padding:0;list-style:none;
+.co2-tabs,.co2-actions { display:flex;flex-wrap:wrap;gap:6px }
+.co2-tabs { margin:12px 0 }
+.co2-tabs button,.co2-actions button,.co2-answers button {
+  min-height:44px;padding:6px 12px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);font-size:16px;font-weight:700;line-height:1.35;
 }
-.blood-flow li { position:relative;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2) }
-.blood-flow li+li::before {
-  content:"";position:absolute;inset:50% auto auto -16px;width:8px;height:8px;
-  border-top:2px solid var(--stories-accent);border-right:2px solid var(--stories-accent);
-  transform:translateY(-50%) rotate(45deg);
+.co2-tabs button:hover,.co2-actions button:hover,.co2-answers button:hover { border-color:var(--stories-accent) }
+.co2-tabs button[aria-pressed="true"],.co2-actions .co2-primary {
+  border-color:var(--stories-accent);background:var(--stories-accent);color:var(--surface);
 }
-.blood-flow strong { display:block;margin-bottom:2px;color:var(--stories-accent);font-size:17px;line-height:1.4 }
-.blood-mechanism {
-  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px 18px;
-  margin-top:12px;padding:14px;border-radius:10px;background:var(--stories-wash);
+.co2-main-tabs { padding-bottom:10px;border-bottom:1px solid var(--line) }
+.co2-lab { display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:12px }
+.co2-canvas {
+  --co2-gold:#ffd897;
+  padding:clamp(12px,2vw,20px);border-radius:12px;background:#14343c;color:#f3faf7;
 }
-.blood-mechanism-value { display:grid;gap:2px;color:var(--stories-accent);line-height:1.2 }
-.blood-mechanism-value strong { font-size:clamp(27px,3.6vw,44px);white-space:nowrap }
-.blood-mechanism-value span { font-size:15px;font-weight:700 }
-.blood-evidence { margin-top:20px }
-.blood-studies { grid-template-columns:repeat(2,minmax(0,1fr)) }
-.blood-studies article { padding:12px 14px;border:1px solid var(--line);border-radius:10px }
-.blood-studies h5 { margin:0 0 6px;font-size:17px;line-height:1.4 }
+.co2-canvas h4 { color:inherit }
+.co2-canvas .co2-actions { margin-top:10px }
+.co2-canvas .co2-actions button { border-color:#74969a;background:#224a51;color:#f3faf7 }
+.co2-canvas .co2-actions .co2-primary { border-color:var(--co2-gold);background:var(--co2-gold);color:#263027 }
+.co2-canvas button:focus-visible { outline-color:var(--co2-gold) }
+.co2-route {
+  --co2-node-y:67px;--co2-progress:0%;
+  position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  margin:12px 0;padding:0;list-style:none;
+}
+.co2-route[data-step="1"] { --co2-progress:50% }
+.co2-route[data-step="2"] { --co2-progress:100% }
+.co2-route::before,.co2-particle {
+  position:absolute;inset:var(--co2-node-y) 16.6667% auto;height:2px;pointer-events:none;
+}
+.co2-route::before { content:"";background:#759c9d }
+.co2-particle { z-index:1;opacity:1 }
+.co2-route[data-step="-1"] .co2-particle { opacity:0 }
+.co2-particle::after {
+  content:"";position:absolute;top:50%;left:var(--co2-progress);width:14px;height:14px;
+  border:2px solid #14343c;border-radius:50%;background:var(--co2-gold);
+  outline:2px solid var(--co2-gold);transform:translate(-50%,-50%);transition:left .45s ease;
+}
+.co2-route button {
+  position:relative;display:grid;justify-items:center;gap:7px;width:100%;
+  padding:4px 2px;border:1px solid transparent;border-radius:8px;background:none;
+  font-size:16px;line-height:1.35;
+}
+.co2-route button:hover { border-color:#74969a }
+.co2-route button[aria-pressed="true"] { color:var(--co2-gold);font-weight:700 }
+.co2-organ { position:relative;display:grid;place-items:center;width:62px;height:49px }
+.co2-muscle::before {
+  content:"";width:43px;height:21px;border-radius:50% 32%;transform:rotate(-27deg);
+  border:2px solid #ffcf9a;background:repeating-linear-gradient(0deg,#e88e6c 0 3px,#ffc294 3px 5px);
+}
+.co2-red-cell::before {
+  content:"";width:43px;height:27px;border-radius:50%;transform:rotate(-16deg);
+  border:2px solid #ffb5ab;background:radial-gradient(ellipse,#773d48 23%,#e8827f 44%,#f9a395 70%);
+}
+.co2-lung::before,.co2-lung::after {
+  content:"";position:absolute;top:12px;width:17px;height:30px;background:#90d5c3;
+}
+.co2-lung::before { left:11px;border-radius:85% 45% 42% 52% }
+.co2-lung::after { right:11px;border-radius:45% 85% 52% 42% }
+.co2-lung i { position:absolute;top:6px;width:4px;height:22px;border-radius:2px;background:#bde8db }
+.co2-node-dot { width:11px;height:11px;border:2px solid #b2d2d0;border-radius:50%;background:#14343c }
+.co2-readout {
+  display:grid;grid-template-columns:6.6em minmax(0,1fr);align-items:center;gap:10px;
+  min-height:104px;padding:10px 12px;border:1px solid #547579;border-radius:8px;background:#1b4048;
+}
+.co2-readout strong { display:block;font-size:17px;line-height:1.4 }
+.co2-form { color:var(--co2-gold);font-size:32px;font-weight:700;line-height:1;text-align:center }
+.co2-cell,.co2-study,.co2-quiz { padding:clamp(12px,2vw,18px);border:1px solid var(--line);border-radius:12px;background:var(--surface-2) }
+.co2-cell .co2-tabs { margin:8px 0 }
+.co2-cell h4+p,.co2-study h5+p { margin-top:4px }
+.co2-protein { margin:10px 0 8px;padding:10px 12px;border-radius:8px;background:var(--stories-wash) }
+.co2-protein figcaption { font-size:15px;font-weight:700 }
+.co2-protein output { display:block;color:var(--stories-accent);font-size:36px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums }
+.co2-protein-bars { display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px }
+.co2-protein-bars span { height:12px;border-radius:4px;background:var(--stories-accent) }
+.co2-protein-bars span:last-child { background:var(--line);outline:1px dashed var(--muted);outline-offset:-1px }
+.co2-protein[data-variant="present"] .co2-protein-bars span:last-child { background:var(--stories-accent);outline:0 }
+.co2-study h5,.co2-quiz h5 { margin:0;font-size:18px;line-height:1.4 }
+.co2-study + .co2-study,.co2-quiz { margin-top:10px }
+.co2-answers { display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 }
+.co2-answers button[aria-pressed="true"] { border-color:var(--stories-accent);box-shadow:inset 0 0 0 1px var(--stories-accent) }
+.co2-quiz [role="status"] { min-height:1.65em }
+.co2-fallback { margin-block:12px }
 .blood-question { margin-top:12px;padding:0 14px 4px;border-radius:10px;background:var(--surface-2) }
 .blood-question[open] { padding-bottom:12px }
 .blood-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start;gap:12px 24px;margin-top:10px }
@@ -1108,22 +1169,36 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .blood-samples strong { text-align:end;font-variant-numeric:tabular-nums }
 .blood-track { height:10px;border-radius:5px;background:var(--line) }
 .blood-track span { display:block;width:var(--sample-share);height:100%;border-radius:inherit;background:var(--stories-accent) }
+.co2-times { max-width:585px;margin-top:10px }
+.co2-times dl div { grid-template-columns:6.4em minmax(0,1fr) }
+.co2-times dd { grid-template-columns:minmax(0,1fr) 5.6em }
 #indigenous-stories .stories-source { margin-top:8px;color:var(--muted);font-size:14px }
 .stories-card summary { min-height:44px;padding-block:8px;font-size:16px;font-weight:700;line-height:1.5;cursor:pointer }
 .stories-culture-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px }
 .stories-culture-grid article { padding:14px;border:1px solid var(--line);border-top:3px solid var(--stories-accent);border-radius:10px;background:var(--surface) }
+@media (max-width:800px) {
+  .co2-lab { grid-template-columns:minmax(0,1fr) }
+}
 @media (max-width:700px) {
-  .stories-history,.blood-flow,.blood-studies,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
-  .blood-flow { gap:16px }
-  .blood-flow li+li::before { inset:-14px auto auto 50%;transform:translateX(-50%) rotate(135deg) }
-  .blood-mechanism { grid-template-columns:minmax(0,1fr) }
+  .stories-history,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
+  .co2-readout { grid-template-columns:4.15em minmax(0,1fr);padding:8px;gap:8px }
+  .co2-form { font-size:25px }
+  .co2-times dl div { grid-template-columns:5.25em minmax(0,1fr) }
+  .co2-times dd { grid-template-columns:minmax(0,1fr) 4.8em }
+  .co2-tabs button { padding-inline:8px }
   .baseball-table th,.baseball-table td { padding-inline:6px }
   .baseball-table th:first-child { width:3.1em }
   .lineup-controls button,.stories-nav a { padding-inline:8px }
 }
 @media (forced-colors:active) {
-  .lineup-controls button[aria-pressed="true"] { color:HighlightText;background:Highlight;forced-color-adjust:none }
+  .lineup-controls button[aria-pressed="true"],.co2-tabs button[aria-pressed="true"],.co2-answers button[aria-pressed="true"] { color:HighlightText;background:Highlight;forced-color-adjust:none }
   .blood-track span { background:Highlight;forced-color-adjust:none }
+  .co2-route::before,.co2-node-dot,.co2-particle::after,.co2-protein-bars span { forced-color-adjust:none;background:Highlight }
+  .co2-protein-bars span:last-child { background:Canvas }
+  .co2-protein[data-variant="present"] .co2-protein-bars span:last-child { background:Highlight }
+}
+@media (prefers-reduced-motion:reduce) {
+  .co2-particle::after { transition:none }
 }
 </style>
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
@@ -1412,31 +1487,86 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       </div>
     </section>
     <section class="stories-card stories-science" id="miltenberger" aria-labelledby="miltenbergerTitle">
-      <h3 id="miltenbergerTitle">米田堡血型和運動有什麼關係？</h3>
-      <p>米田堡第三型（GP.Mur）的紅血球通常有較多 Band 3 蛋白，能幫忙運送二氧化碳。試著想像你跑上樓梯，肌肉產生的二氧化碳，怎麼從腿一路到肺？</p>
-      <ol class="blood-flow" aria-label="二氧化碳從肌肉到肺">
-        <li><strong>肌肉產生二氧化碳</strong><p>運動時，肌肉消耗更多能量，也會產生更多二氧化碳。</p></li>
-        <li><strong>血液運送碳酸氫根</strong><p>大部分二氧化碳會在紅血球內轉成碳酸氫根，再進到血液的液體部分，也就是血漿。</p></li>
-        <li><strong>肺把二氧化碳呼出去</strong><p>到了肺，碳酸氫根回到紅血球，變回二氧化碳，最後隨呼氣排出。</p></li>
-      </ol>
-      <div class="blood-mechanism">
-        <div class="blood-mechanism-value"><strong>約多 20%</strong><span>紅血球的 Band 3 蛋白</span></div>
-        <p>GP.Mur 是紅血球表面的一種蛋白質變體，有助於血球表面出現更多 Band 3。Band 3 負責交換碳酸氫根和氯離子，數量越多，紅血球能交換的碳酸氫根就越多。這個 20% 是跑步研究中兩組選手的 Band 3 蛋白量差異。</p>
+      <h3 id="miltenbergerTitle">米田堡血型與運動</h3>
+      <p>跑步時，腿裡產生的二氧化碳怎麼到肺？跟著它移動，再切換血型看看紅血球有什麼差別。</p>
+      <div class="co2-tabs co2-main-tabs" id="co2LessonModes" role="group" aria-label="米田堡課程" hidden>
+        <button type="button" aria-pressed="true" aria-controls="co2Transport">追蹤二氧化碳</button>
+        <button type="button" aria-pressed="false" aria-controls="co2Evidence">比較實驗結果</button>
       </div>
-      <p class="stories-source"><a href="https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids" target="_blank" rel="noopener noreferrer">OpenStax｜血液如何運送二氧化碳</a> · <a href="https://ashpublications.org/blood/article-abstract/114/9/1919/103784" target="_blank" rel="noopener noreferrer"><i>Blood</i>｜紅血球蛋白研究</a></p>
-      <div class="blood-evidence">
+      <div id="co2Transport">
+        <div class="co2-lab" id="co2Lab" hidden>
+          <div class="co2-canvas">
+            <h4>二氧化碳從肌肉到肺</h4>
+            <div class="co2-actions">
+              <button class="co2-primary" id="co2Advance" type="button">開始運動</button>
+              <button id="co2Reset" type="button" hidden>從頭開始</button>
+            </div>
+            <ol class="co2-route" id="co2Route" data-step="-1" role="list" aria-label="二氧化碳的三站路線">
+              <li>
+                <button type="button" data-co2-step="0" aria-pressed="false" aria-controls="co2Readout"><span class="co2-organ co2-muscle" aria-hidden="true"></span><span class="co2-node-dot" aria-hidden="true"></span>肌肉</button>
+                <span class="co2-particle" aria-hidden="true"></span>
+              </li>
+              <li><button type="button" data-co2-step="1" aria-pressed="false" aria-controls="co2Readout"><span class="co2-organ co2-red-cell" aria-hidden="true"></span><span class="co2-node-dot" aria-hidden="true"></span>血液</button></li>
+              <li><button type="button" data-co2-step="2" aria-pressed="false" aria-controls="co2Readout"><span class="co2-organ co2-lung" aria-hidden="true"><i></i></span><span class="co2-node-dot" aria-hidden="true"></span>肺</button></li>
+            </ol>
+            <div class="co2-readout" id="co2Readout" role="status" aria-atomic="true">
+              <span class="co2-form" aria-hidden="true">CO₂</span>
+              <div><strong>從腿部肌肉出發</strong><p>按「開始運動」，或直接點圖上的一站。</p></div>
+            </div>
+          </div>
+          <div class="co2-cell">
+            <h4>切換血型，看看紅血球</h4>
+            <div class="co2-tabs" id="co2BloodGroups" role="group" aria-label="紅血球比較">
+              <button type="button" data-co2-group="absent" aria-pressed="true" aria-controls="co2Protein">未帶 GP.Mur</button>
+              <button type="button" data-co2-group="present" aria-pressed="false" aria-controls="co2Protein">米田堡第三型</button>
+            </div>
+            <figure class="co2-protein" id="co2Protein" data-variant="absent">
+              <figcaption id="co2ProteinLabel">Band 3 蛋白相對量</figcaption>
+              <output aria-labelledby="co2ProteinLabel">100</output>
+              <div class="co2-protein-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              <p class="stories-source">每格 20 單位。研究以未帶 GP.Mur 的一組為 100。</p>
+            </figure>
+            <p>米田堡第三型（GP.Mur）的紅血球通常有較多 Band 3。它讓碳酸氫根進出紅血球，幫助血液運送二氧化碳。</p>
+            <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年研究｜蛋白量比較</a></p>
+          </div>
+        </div>
+        <div class="co2-fallback" id="co2Fallback">
+          <p>運動時，肌肉產生的二氧化碳大多會在紅血球中轉成碳酸氫根，靠 Band 3 進到血漿。血液到了肺，碳酸氫根回到紅血球，變回二氧化碳，再隨吐氣排出。</p>
+          <p>跑步研究中，帶有米田堡第三型（GP.Mur）的一組，紅血球的 Band 3 蛋白量平均多約 20%。</p>
+        </div>
+        <p class="stories-source"><a href="https://openstax.org/books/biology-2e/pages/39-4-transport-of-gases-in-human-bodily-fluids" target="_blank" rel="noopener noreferrer">OpenStax｜二氧化碳的運送</a> · <a href="https://ashpublications.org/blood/article-abstract/114/9/1919/103784" target="_blank" rel="noopener noreferrer"><i>Blood</i>｜紅血球蛋白研究</a></p>
+      </div>
+      <div id="co2Evidence">
         <h4>運動實驗測到了什麼？</h4>
-        <div class="blood-studies">
-          <article>
-            <h5>2015 年｜188 名成人踩階梯</h5>
-            <p>踩了 3 分鐘階梯後，帶有 GP.Mur 的一組在剛停下來時呼吸較快，呼氣末的二氧化碳數值也降得較快。</p>
-            <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/26000803/" target="_blank" rel="noopener noreferrer">看踩階梯研究</a></p>
-          </article>
-          <article>
-            <h5>2023 年｜36 名男性選手跑步</h5>
-            <p>在跑步機上，帶有 GP.Mur 的一組呼吸較頻繁，每一口氣花在吐氣的比例也較高。<strong>兩組跑到跑不動為止的時間相近</strong>，帶有 GP.Mur 的一組平均跑了 19.1 分鐘，另一組 18.4 分鐘。</p>
-            <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">看跑步研究</a></p>
-          </article>
+        <div class="co2-tabs" id="co2StudyModes" role="group" aria-label="選擇運動研究" hidden>
+          <button type="button" aria-pressed="true" aria-controls="co2StepStudy">踩階梯</button>
+          <button type="button" aria-pressed="false" aria-controls="co2RunStudy">跑步機</button>
+        </div>
+        <article class="co2-study" id="co2StepStudy">
+          <h5>2015 年｜188 名成人踩階梯</h5>
+          <p>研究人員讓受試者踩 3 分鐘階梯，再量每一口氣。剛停下來時，帶有 GP.Mur 的一組<strong>呼吸較頻繁，呼氣末的二氧化碳數值也降得較快</strong>。</p>
+          <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/26000803/" target="_blank" rel="noopener noreferrer">看踩階梯研究</a></p>
+        </article>
+        <article class="co2-study" id="co2RunStudy">
+          <h5>2023 年｜36 名男性選手跑步</h5>
+          <p>帶有 GP.Mur 的一組呼吸較頻繁，每一口氣花在吐氣的比例較高。<strong>兩組跑到跑不動為止的時間相近。</strong></p>
+          <figure class="blood-samples co2-times">
+            <figcaption>跑到跑不動為止的平均時間</figcaption>
+            <dl>
+              <div><dt>未帶 GP.Mur</dt><dd><span class="blood-track" aria-hidden="true"><span style="--sample-share:73.6%"></span></span><strong>18.4 分鐘</strong></dd></div>
+              <div><dt>米田堡第三型</dt><dd><span class="blood-track" aria-hidden="true"><span style="--sample-share:76.4%"></span></span><strong>19.1 分鐘</strong></dd></div>
+            </dl>
+          </figure>
+          <p class="stories-source"><a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">看跑步研究</a></p>
+        </article>
+        <div class="co2-quiz" id="co2Quiz" hidden>
+          <h5 id="co2QuizTitle">這兩個實驗支持哪一句話？</h5>
+          <div class="co2-answers" role="group" aria-labelledby="co2QuizTitle">
+            <button type="button" aria-pressed="false" data-co2-answer="breathing">運動時的呼吸方式有差異</button>
+            <button type="button" aria-pressed="false" data-co2-answer="endurance">有 GP.Mur 就一定跑得更久</button>
+            <button type="button" aria-pressed="false" data-co2-answer="baseball">有 GP.Mur 就一定打得更準</button>
+          </div>
+          <p id="co2Feedback" role="status"></p>
         </div>
         <details class="blood-question">
           <summary>怎麼知道這個差異會不會影響棒球表現？</summary>
@@ -1510,6 +1640,109 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     for (const cell of columns) cell.hidden = view !== 'both' && cell.dataset.team !== view;
   });
   controls.hidden = false;
+})();
+
+(() => {
+  const lesson = document.querySelector('#miltenberger');
+  const find = id => lesson.querySelector('#' + id);
+  const lessonModes = find('co2LessonModes');
+  const studyModes = find('co2StudyModes');
+  const evidenceButton = lessonModes.querySelector('[aria-controls="co2Evidence"]');
+  const route = find('co2Route');
+  const stations = [...route.querySelectorAll('button')];
+  const readout = find('co2Readout');
+  const form = readout.querySelector('.co2-form');
+  const title = readout.querySelector('strong');
+  const description = readout.querySelector('p');
+  const advance = find('co2Advance');
+  const reset = find('co2Reset');
+  const bloodGroups = find('co2BloodGroups');
+  const protein = find('co2Protein');
+  const amount = protein.querySelector('output');
+  const quiz = find('co2Quiz');
+  const feedback = find('co2Feedback');
+  const stages = [
+    ['CO₂', '從腿部肌肉出發', '按「開始運動」，或直接點圖上的一站。', '開始運動'],
+    ['CO₂', '肌肉產生二氧化碳', '跑步時，腿部肌肉使用更多能量，也會產生更多二氧化碳。', '送進血液 →'],
+    ['HCO₃⁻', '在血液中換個形式', '多數二氧化碳在紅血球裡變成碳酸氫根，再經 Band 3 進入血漿，跟著血液往肺移動。', '送到肺 →'],
+    ['CO₂', '到肺，呼出去', '碳酸氫根回到紅血球，變回二氧化碳，最後隨著你吐氣離開身體。', '看實驗結果 →']
+  ];
+  const answers = {
+    breathing: '答對了。研究量到呼吸頻率和吐氣方式的差異。',
+    endurance: '再看跑步機資料。兩組跑到跑不動為止的時間相近。',
+    baseball: '這兩個實驗量的是呼吸和跑步。要知道打擊準不準，需要另外量擊球表現。'
+  };
+  let step = -1;
+
+  function selectButton(group, selected) {
+    for (const button of group.querySelectorAll('button')) {
+      button.setAttribute('aria-pressed', String(button === selected));
+    }
+  }
+
+  function bindPanels(group) {
+    const buttons = [...group.querySelectorAll('button')];
+    const panels = buttons.map(button => find(button.getAttribute('aria-controls')));
+    function select(button) {
+      selectButton(group, button);
+      const index = buttons.indexOf(button);
+      panels.forEach((panel, i) => { panel.hidden = index !== i; });
+    }
+    group.addEventListener('click', event => {
+      const button = event.target.closest('button');
+      if (button) select(button);
+    });
+    select(buttons[0]);
+    group.hidden = false;
+    return select;
+  }
+
+  function goToStation(next) {
+    step = next;
+    const [formula, heading, text, nextLabel] = stages[step + 1];
+    route.dataset.step = step;
+    selectButton(route, stations[step]);
+    form.textContent = formula;
+    title.textContent = heading;
+    description.textContent = text;
+    advance.textContent = nextLabel;
+    reset.hidden = step < 0;
+  }
+
+  const showLessonMode = bindPanels(lessonModes);
+  bindPanels(studyModes);
+  route.addEventListener('click', event => {
+    const station = event.target.closest('[data-co2-step]');
+    if (station) goToStation(Number(station.dataset.co2Step));
+  });
+  advance.addEventListener('click', () => {
+    if (step === stations.length - 1) {
+      showLessonMode(evidenceButton);
+      evidenceButton.focus();
+    } else {
+      goToStation(step + 1);
+    }
+  });
+  reset.addEventListener('click', () => {
+    goToStation(-1);
+    advance.focus();
+  });
+  bloodGroups.addEventListener('click', event => {
+    const button = event.target.closest('[data-co2-group]');
+    if (!button) return;
+    selectButton(bloodGroups, button);
+    protein.dataset.variant = button.dataset.co2Group;
+    amount.value = protein.dataset.variant === 'present' ? '約 120' : '100';
+  });
+  quiz.addEventListener('click', event => {
+    const button = event.target.closest('[data-co2-answer]');
+    if (!button) return;
+    selectButton(quiz, button);
+    feedback.textContent = answers[button.dataset.co2Answer];
+  });
+  find('co2Fallback').hidden = true;
+  find('co2Lab').hidden = false;
+  quiz.hidden = false;
 })();
 </script>
 
