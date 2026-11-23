@@ -495,38 +495,74 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site-nav.css?v=1">
 <link rel="stylesheet" href="assets/site.css?v=5">
 <style>
-#migration { padding-block:36px 48px }
+#migration {
+  --atlas-accent:color-mix(in srgb,var(--ink) 72%,#008d80);
+  --atlas-wash:color-mix(in srgb,var(--surface) 93%,var(--atlas-accent));
+  padding-block:32px 48px;
+}
 #migration [hidden] { display:none!important }
-.migration-intro { margin-bottom:16px }
-.migration-intro h2 { font-size:clamp(28px,3.8vw,42px);text-wrap:wrap }
-.migration-intro p { margin-top:8px;color:var(--muted);font-size:clamp(16px,2vw,20px);line-height:1.5 }
+.migration-track.is-oral .ink,.migration-track.is-oral .casing { stroke-dasharray:6 4 }
+.migration-swatch.is-oral { height:0;border-radius:0;border-top:3px dashed var(--route-color);background:transparent }
+.migration-intro { display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 24px;margin-bottom:16px }
+.migration-intro h2 { font-size:clamp(26px,3.1vw,38px);text-wrap:wrap }
+.migration-intro p { margin:0;color:var(--muted);font-size:clamp(16px,1.45vw,19px);line-height:1.5 }
+.migration-scope-tabs {
+  display:flex;
+  gap:4px;
+  align-items:stretch;
+  border-bottom:1px solid var(--line);
+}
+.migration-scope-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:48px;
+  margin-bottom:-1px;
+  padding:8px 20px;
+  border:1px solid var(--line);
+  border-bottom:3px solid transparent;
+  border-radius:10px 10px 0 0;
+  background:var(--surface-2);
+  color:var(--muted);
+  font-size:18px;
+  font-weight:700;
+  line-height:1.25;
+}
+.migration-scope-button[aria-selected="true"] {
+  border-color:var(--atlas-accent);
+  background:var(--atlas-accent);
+  color:var(--surface);
+}
+.migration-scope-button:not([aria-selected="true"]):hover { border-bottom-color:var(--atlas-accent);color:var(--ink) }
+.migration-scope-count { font-size:14px;font-weight:500;white-space:nowrap }
 .migration-toolbar {
   display:flex;
   flex-wrap:wrap;
   align-items:center;
   gap:8px 16px;
-  margin-bottom:12px;
+  margin-block:12px;
 }
 .migration-tabs {
   display:inline-flex;
   gap:4px;
-  padding:4px;
+  padding:0;
   border:1px solid var(--line);
-  border-radius:999px;
+  border-radius:10px;
   background:var(--surface);
 }
 .migration-tabs button {
   min-height:44px;
-  padding:0 16px;
+  padding:0 14px;
   border:1px solid transparent;
-  border-radius:999px;
+  border-radius:9px;
   background:transparent;
   color:var(--muted);
   font-size:16px;
   font-weight:700;
   white-space:nowrap;
 }
-.migration-tabs button[aria-pressed="true"] { background:var(--ink);color:var(--surface) }
+.migration-tabs button[aria-pressed="true"] { border-color:var(--ink);background:var(--ink);color:var(--surface) }
 .migration-picker { display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700 }
 .migration-picker label { flex:none }
 .migration-picker select,#migrationTimeline {
@@ -556,11 +592,16 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   text-align:center;
   text-decoration:none;
 }
-.migration-jump { margin-inline-start:auto;border-color:var(--ink);background:var(--ink);color:var(--surface);font-size:16px }
+.migration-jump {
+  margin-inline-start:auto;
+  border-color:var(--atlas-accent);
+  color:var(--atlas-accent);
+  font-size:16px;
+}
 .migration-jump svg { flex:none;width:16px;height:16px }
 .migration-layout {
   display:grid;
-  grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  grid-template-columns:minmax(0,1.48fr) minmax(0,1fr);
   align-items:start;
   gap:16px;
 }
@@ -573,7 +614,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 }
 .migration-map { overflow:hidden }
 .migration-map:focus-visible { border-radius:16px }
-.migration-reading { padding:24px }
+.migration-reading { padding:20px 24px }
 .migration-map,.migration-reading,.migration-routes,#migrationEventBar,#migrationRouteInspector { scroll-margin-top:80px }
 .migration-map-head {
   display:flex;
@@ -581,25 +622,36 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   justify-content:space-between;
   gap:8px 12px;
   min-height:68px;
-  padding:10px 14px;
+  padding:10px 16px;
 }
 .migration-map-head h3 { font-size:clamp(20px,2vw,25px);text-wrap:wrap }
-#migrationMapSummary { margin-top:4px;color:var(--muted);font-size:15px;line-height:1.5 }
-.migration-zoom { display:flex;align-items:center;gap:4px;flex:none }
+#migrationMapSummary { margin-top:4px;color:var(--muted);font-size:16px;line-height:1.4 }
+.migration-map-details { display:none }
+.migration-zoom {
+  display:flex;
+  align-items:center;
+  flex:none;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:10px;
+}
 .migration-zoom button {
   min-width:44px;
   min-height:44px;
   padding:0 5px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--surface-2);
+  border:0;
+  border-radius:0;
+  background:var(--surface);
   font-size:16px;
   line-height:1;
   font-weight:700;
 }
-.migration-zoom button:hover,.migration-tabs button:hover,.migration-picker select:hover,
+.migration-zoom button+button { border-inline-start:1px solid var(--line) }
+.migration-zoom button:hover { background:var(--atlas-wash) }
+.migration-zoom button:focus-visible { outline-offset:-3px }
+.migration-tabs button:hover,.migration-picker select:hover,
 .migration-link:hover,.migration-event-nav button:not(:disabled):hover,#migrationTimeline:hover { border-color:var(--ink) }
-.migration-jump:hover { background:color-mix(in srgb,var(--ink) 86%,var(--surface)) }
+.migration-jump:hover { background:var(--atlas-accent);color:var(--surface) }
 #migrationMap {
   isolation:isolate;
   border:0;
@@ -608,7 +660,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   touch-action:pan-y;
 }
 #migrationSvg {
-  height:clamp(344px,48vh,585px);
+  height:clamp(338px,48vh,578px);
   max-height:none;
   touch-action:pan-y;
 }
@@ -642,7 +694,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .migration-track .hit { stroke:transparent;stroke-width:12px;cursor:pointer }
 .migration-track.is-preview .ink,.migration-track.is-active .ink { stroke-width:4.5px }
 .migration-track.is-preview .casing,.migration-track.is-active .casing { stroke-width:7px }
-.migration-track.is-muted,.migration-arrow.is-muted { opacity:.38 }
+.migration-track.is-muted,.migration-arrow.is-muted { opacity:.24 }
 .migration-arrow polygon { fill:var(--route-color);stroke:#fff;stroke-width:1.7px;stroke-linejoin:round }
 .migration-arrow,.migration-pin { pointer-events:none }
 .migration-map-foot {
@@ -688,20 +740,45 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 #migrationEventPosition { flex:none;font-size:14px;font-weight:700 }
 #migrationTimeline { flex:1;min-width:0 }
 .migration-event-nav button:disabled { opacity:.48;cursor:default }
-.migration-reading h3 { font-size:clamp(24px,2.35vw,30px);text-wrap:wrap }
+.migration-reading h3 { font-size:clamp(22px,2.2vw,28px);text-wrap:wrap }
 .migration-reading p { margin-top:12px;max-width:40em;font-size:16px;line-height:1.65 }
 .migration-reading .migration-period {
   display:block;
   margin:0 0 8px;
-  color:var(--muted);
-  font-size:14px;
+  color:var(--atlas-accent);
+  font-size:16px;
   font-weight:700;
 }
 .migration-steps { margin:16px 0 0;padding-inline-start:1.35em;font-size:16px;line-height:1.55 }
 .migration-steps li { padding-inline-start:4px }
 .migration-steps li+li { margin-top:8px }
 .migration-steps li::marker { font-weight:700;color:var(--muted) }
-.migration-investigation { margin-top:20px;border-top:1px solid var(--line) }
+.migration-feature-list {
+  display:grid;
+  margin:12px 0 0;
+  padding:0;
+  border-block:1px solid var(--line);
+  list-style:none;
+}
+.migration-feature-list li+li { border-top:1px solid var(--line) }
+.migration-feature {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 20px;
+  align-items:center;
+  gap:3px 8px;
+  width:100%;
+  padding:12px 4px;
+  border:0;
+  background:transparent;
+  text-align:left;
+  line-height:1.45;
+}
+.migration-feature:hover,.migration-feature:focus-visible { border-radius:6px;background:var(--atlas-wash) }
+.migration-feature .migration-row-open { grid-row:1 / span 3 }
+.migration-feature .migration-row-path { color:var(--atlas-accent);font-size:clamp(18px,1.45vw,21px) }
+.migration-feature-reason { grid-column:1;color:var(--muted);font-size:15px }
+.migration-investigation { margin-top:16px;border-top:1px solid var(--line) }
+.migration-feature-list+.migration-investigation { margin-top:0;border-top:0 }
 .migration-investigation summary {
   min-height:44px;
   padding:12px 0 4px;
@@ -723,7 +800,14 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 }
 .migration-bar { display:block;height:6px;border-radius:999px;background:var(--line) }
 .migration-bar i { display:block;width:var(--share);height:100%;border-radius:inherit;background:var(--ink) }
-.migration-reading .migration-source { margin-top:12px;color:var(--muted);font-size:14px }
+.migration-reading .migration-source,.migration-reading .migration-coverage {
+  margin-top:10px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.55;
+  overflow-wrap:anywhere;
+}
+.migration-coverage a { color:var(--atlas-accent);text-underline-offset:3px }
 .migration-source a { color:var(--muted);text-underline-offset:3px }
 .migration-source a:hover { color:var(--ink) }
 .migration-event-flow {
@@ -754,7 +838,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   background:var(--ink);
   box-sizing:border-box;
 }
-.migration-event-flow strong { font-size:14px;color:var(--muted) }
+.migration-event-flow strong { font-size:16px;color:var(--atlas-accent) }
 .migration-endpoints {
   position:relative;
   display:grid;
@@ -764,7 +848,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   margin:16px 0 0;
   padding:12px;
   border-radius:10px;
-  background:var(--surface-2);
+  background:var(--atlas-wash);
 }
 .migration-endpoints dt { color:var(--muted);font-size:14px;font-weight:700 }
 .migration-endpoints dd { margin:4px 0 0;font-size:17px;font-weight:700;line-height:1.45 }
@@ -789,15 +873,17 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .migration-routes {
   margin-top:32px;
   padding-top:24px;
-  border-top:1px solid var(--line);
+  border-top:2px solid var(--atlas-accent);
 }
+.migration-routes:focus-visible { outline:0 }
+.migration-routes:focus-visible .migration-catalog-head h3 { outline:3px solid var(--wind);outline-offset:4px;border-radius:4px }
 .migration-catalog-head { display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 16px }
 .migration-catalog-head h3 { font-size:28px }
 #migrationCatalogScope { color:var(--muted);font-size:16px;font-weight:700 }
 #migrationRouteList {
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
+  gap:8px 12px;
   margin:12px 0 0;
   padding:0;
   list-style:none;
@@ -818,41 +904,78 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   line-height:1.4;
 }
 #migrationRouteList button:hover { border-color:var(--ink);background:var(--surface-2) }
+#migrationRouteList .migration-row-open { grid-row:1 / span 3 }
+#migrationRouteList .migration-feature-reason { font-size:14px }
 #migrationRouteList button[aria-pressed="true"] {
   border-color:var(--ink);
   background:var(--surface-2);
   box-shadow:inset 0 0 0 1px var(--ink);
 }
-.migration-row-meta { display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:14px }
-.migration-row-year { color:var(--muted) }
+.migration-row-meta { display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px;font-size:15px }
+.migration-row-year { color:var(--muted);font-variant-numeric:tabular-nums }
 .migration-row-path { grid-column:1;font-size:17px;font-weight:700 }
 .migration-row-open { grid-area:1 / 2 / 3 / 3;width:16px;height:16px;color:var(--muted) }
 @media (max-width:850px) {
   .migration-layout { grid-template-columns:minmax(0,1fr) }
   .migration-card-actions [data-map-link] { display:inline-flex }
+  .migration-map-details {
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    color:var(--atlas-accent);
+    font-size:16px;
+    font-weight:700;
+    text-underline-offset:3px;
+  }
   #migrationRouteList { grid-template-columns:repeat(2,minmax(0,1fr)) }
 }
 @media (max-width:600px) {
-  #migration { padding-block:24px 36px }
-  .migration-intro { margin-bottom:16px }
-  .migration-toolbar { display:grid;grid-template-columns:minmax(0,1fr) }
-  .migration-tabs button { flex:1;padding-inline:8px }
-  .migration-jump { margin:0 }
-  #migrationGroup { flex:1;min-width:0 }
+  #migration { padding-block:16px 32px }
+  .migration-intro { display:grid;gap:4px;margin-bottom:12px }
+  .migration-scope-tabs { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px }
+  .migration-scope-button { flex-direction:column;gap:2px;padding:6px;font-size:17px }
+  .migration-toolbar {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:stretch;
+    gap:6px 8px;
+    margin-block:8px;
+  }
+  .migration-tabs { grid-column:1 / -1;gap:0 }
+  .migration-tabs button { flex:1;min-width:0;padding-inline:8px }
+  .migration-picker { min-width:0;gap:4px;font-size:14px }
+  #migrationGroup { flex:1;min-width:0;width:100%;padding-inline:4px }
+  .migration-jump { gap:4px;margin:0;padding:4px 8px;font-size:14px;white-space:nowrap }
+  .migration-toolbar:has(.migration-picker[hidden]) .migration-jump { grid-column:1 / -1 }
   .migration-event-nav { grid-template-columns:repeat(2,minmax(0,1fr)) }
   .migration-event-nav label { display:grid;grid-area:1 / 1 / 2 / -1;gap:4px }
   .migration-map-head { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:8px 12px }
   .migration-map-head>div:first-child { display:contents }
-  .migration-map-head h3 { font-size:20px }
-  #migrationMapSummary { grid-area:2 / 1 / 3 / -1;margin-top:0 }
-  #migrationSvg { height:clamp(330px,51svh,455px) }
+  .migration-map-head h3 { grid-area:1 / 1;font-size:19px }
+  .migration-zoom { grid-area:1 / 2 }
+  #migrationMapSummary { grid-area:2 / 1 / 3 / -1;margin-top:0;font-size:15px }
+  .migration-map-details { grid-column:1 / -1;justify-self:start }
+  #migrationSvg { height:clamp(300px,48svh,445px) }
   .migration-map-foot { padding-inline:12px }
   .migration-reading { padding:16px }
   .migration-routes { margin-top:24px;padding-top:16px }
   #migrationRouteList { grid-template-columns:minmax(0,1fr) }
 }
+@media (max-width:360px) {
+  .migration-map-head { padding-inline:8px;column-gap:4px }
+  .migration-map-head h3 { font-size:18px }
+  .migration-jump svg { display:none }
+  .migration-picker label {
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip-path:inset(50%);
+    white-space:nowrap;
+  }
+}
 @media (forced-colors:active) {
-  .migration-tabs button[aria-pressed="true"],#migrationRouteList button[aria-pressed="true"] { border-color:Highlight }
+  .migration-scope-button[aria-selected="true"],.migration-tabs button[aria-pressed="true"],#migrationRouteList button[aria-pressed="true"] { border-color:Highlight }
   .migration-bar i,.migration-event-flow li::before { background:Highlight;forced-color-adjust:none }
   .migration-swatch { forced-color-adjust:none }
 }
@@ -875,7 +998,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <a href="#sites"><span class="dot" style="background:var(--typhoon)"></span>選地方住</a>
     <a href="#jade"><span class="dot" style="background:var(--leaf)"></span>臺灣玉之路</a>
     <a href="#tribes"><span class="dot" style="background:var(--wind)"></span>原住民族分布</a>
-    <a href="#migration"><span class="dot" style="background:#6b4f91"></span>平埔族群遷徙</a>
+    <a href="#migration"><span class="dot" style="background:#6b4f91"></span>族群遷徙</a>
     <a href="#wisdom"><span class="dot" style="background:var(--div)"></span>與自然共存</a>
     <a href="#legend"><span class="dot" style="background:#7a5cc0"></span>鬼湖傳說</a>
     <a href="#quiz"><span class="dot" style="background:var(--ink)"></span>小測驗</a>
@@ -988,76 +1111,84 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <section class="unit" id="migration" aria-labelledby="migrationTitle">
   <div class="wrap">
     <header class="migration-intro">
-      <h2 id="migrationTitle">平埔族群的遷徙路線</h2>
-      <p>這些遷徙路線，可以歸納出哪些方向？</p>
+      <h2 id="migrationTitle">臺灣原住民族的遷徙</h2>
+      <p id="migrationQuestion">這些遷徙路線，可以歸納出哪些方向？</p>
     </header>
     <div class="migration-workbench" hidden>
-      <div class="migration-toolbar">
-        <div class="migration-tabs" role="group" aria-label="地圖檢視">
-          <button type="button" data-view="routes" aria-pressed="true">路線總圖</button>
-          <button type="button" data-view="events" aria-pressed="false">年代與事件</button>
-        </div>
-        <div class="migration-picker">
-          <label for="migrationGroup">族群</label>
-          <select id="migrationGroup" aria-controls="migrationSvg migrationDetail migrationRouteList">
-            <option value="all" selected>全部族群</option>
-          </select>
-        </div>
-        <a class="migration-jump" id="migrationIndexLink" href="#migrationCatalog" data-migration-jump>
-          <span></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15m-6-6 6 6 6-6"/></svg>
-        </a>
+      <div class="migration-scope-tabs" role="tablist" aria-label="遷徙主題">
+        <button class="migration-scope-button" type="button" role="tab" id="migrationPlainsTab" data-scope="plains" aria-controls="migrationScopePanel" aria-selected="true"><span>平埔族群</span><span class="migration-scope-count"></span></button>
+        <button class="migration-scope-button" type="button" role="tab" id="migrationMountainTab" data-scope="mountain" aria-controls="migrationScopePanel" aria-selected="false" tabindex="-1"><span>山地原住民族</span><span class="migration-scope-count"></span></button>
       </div>
-      <div class="migration-event-nav" id="migrationEventBar" role="group" aria-label="事件時間軸" hidden>
-        <button type="button" id="migrationEventPrev">← 上一事件</button>
-        <label><span id="migrationEventPosition">事件</span><select id="migrationTimeline" aria-controls="migrationSvg migrationDetail"></select></label>
-        <button type="button" id="migrationEventNext">下一事件 →</button>
-      </div>
-      <div class="migration-layout">
-        <figure class="migration-map" id="migrationMapPanel" tabindex="-1" aria-labelledby="migrationMapTitle">
-          <header class="migration-map-head">
-            <div>
-              <h3 id="migrationMapTitle">遷徙路線總圖</h3>
-              <p id="migrationMapSummary"></p>
-            </div>
-            <div class="migration-zoom" role="group" aria-label="地圖縮放">
-              <button type="button" data-zoom="out" aria-label="縮小">−</button>
-              <button type="button" data-zoom="in" aria-label="放大">＋</button>
-              <button type="button" data-zoom="home" aria-label="回到全臺範圍">全臺</button>
-            </div>
-          </header>
-          <div class="mapbox" id="migrationMap">
-            <svg id="migrationSvg" role="img" aria-label="臺灣平埔族群遷徙示意圖"></svg>
-            <svg class="migration-north" viewBox="0 0 30 42" aria-hidden="true">
-              <text x="15" y="16" text-anchor="middle">北</text>
-              <path d="M15 21 7 38l8-5 8 5Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
+      <div id="migrationScopePanel" role="tabpanel" aria-labelledby="migrationPlainsTab" tabindex="0">
+        <div class="migration-toolbar">
+          <div class="migration-tabs" role="group" aria-label="地圖檢視">
+            <button type="button" data-view="routes" aria-pressed="true">路線總圖</button>
+            <button type="button" data-view="events" aria-pressed="false">年代與事件</button>
           </div>
-          <figcaption class="migration-map-foot">
-            <ul class="migration-key" aria-label="地圖符號">
-              <li><i aria-hidden="true">○</i>出發地</li>
-              <li><i aria-hidden="true">●</i>落腳地</li>
-              <li><i aria-hidden="true">→</i>遷徙方向</li>
-              <li><i aria-hidden="true">◆</i>事件地點</li>
-            </ul>
-            <ul class="migration-directions" aria-label="路線顏色"></ul>
-            <p id="migrationCaption">箭頭連接史料中的代表地點，表示大致方向。部分族人也留在原鄉。</p>
-          </figcaption>
-        </figure>
-        <article class="migration-reading" id="migrationDetail" aria-live="polite" aria-label="遷徙資訊" tabindex="-1">
-          <div id="migrationReading"></div>
-          <div id="migrationRouteInspector" tabindex="-1" hidden></div>
-        </article>
+          <div class="migration-picker">
+            <label for="migrationGroup">族群</label>
+            <select id="migrationGroup" aria-controls="migrationSvg migrationDetail migrationRouteList">
+              <option value="all" selected>全部族群</option>
+            </select>
+          </div>
+          <a class="migration-jump" id="migrationIndexLink" href="#migrationCatalog" data-migration-jump>
+            <span></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15m-6-6 6 6 6-6"/></svg>
+          </a>
+        </div>
+        <div class="migration-event-nav" id="migrationEventBar" role="group" aria-label="事件時間軸" hidden>
+          <button type="button" id="migrationEventPrev">← 上一事件</button>
+          <label><span id="migrationEventPosition">事件</span><select id="migrationTimeline" aria-controls="migrationSvg migrationDetail"></select></label>
+          <button type="button" id="migrationEventNext">下一事件 →</button>
+        </div>
+        <div class="migration-layout">
+          <figure class="migration-map" id="migrationMapPanel" tabindex="-1" aria-labelledby="migrationMapTitle">
+            <header class="migration-map-head">
+              <div>
+                <h3 id="migrationMapTitle">遷徙路線總圖</h3>
+                <p id="migrationMapSummary"></p>
+                <a class="migration-map-details" id="migrationMapDetails" href="#migrationRouteInspector" data-migration-jump hidden>看遷徙經過 <span aria-hidden="true">↓</span></a>
+              </div>
+              <div class="migration-zoom" role="group" aria-label="地圖縮放">
+                <button type="button" data-zoom="out" aria-label="縮小">−</button>
+                <button type="button" data-zoom="in" aria-label="放大">＋</button>
+                <button type="button" data-zoom="home" aria-label="回到全臺範圍">全臺</button>
+              </div>
+            </header>
+            <div class="mapbox" id="migrationMap">
+              <svg id="migrationSvg" role="img" aria-label="臺灣平埔族群遷徙示意圖"></svg>
+              <svg class="migration-north" viewBox="0 0 30 42" aria-hidden="true">
+                <text x="15" y="16" text-anchor="middle">北</text>
+                <path d="M15 21 7 38l8-5 8 5Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <figcaption class="migration-map-foot">
+              <ul class="migration-key" aria-label="地圖符號">
+                <li><i aria-hidden="true">○</i>出發地</li>
+                <li><i aria-hidden="true">●</i>落腳地</li>
+                <li id="migrationSharedPoint" hidden><i aria-hidden="true">⦿</i>起點也是落腳地</li>
+                <li><i aria-hidden="true">→</i>遷徙方向</li>
+                <li><i aria-hidden="true">◆</i>事件地點</li>
+              </ul>
+              <ul class="migration-directions" aria-label="路線顏色"></ul>
+              <p id="migrationCaption">箭頭連接史料中的代表地點，表示大致方向。部分族人也留在原鄉。</p>
+            </figcaption>
+          </figure>
+          <article class="migration-reading" id="migrationDetail" aria-live="polite" aria-label="遷徙資訊" tabindex="-1">
+            <div id="migrationReading"></div>
+            <div id="migrationRouteInspector" tabindex="-1" hidden></div>
+          </article>
+        </div>
+        <section class="migration-routes" id="migrationCatalog" aria-labelledby="migrationListTitle" tabindex="-1">
+          <header class="migration-catalog-head">
+            <h3 id="migrationListTitle">路線索引</h3>
+            <p id="migrationCatalogScope"></p>
+          </header>
+          <ol id="migrationRouteList"></ol>
+        </section>
       </div>
-      <section class="migration-routes" id="migrationCatalog" aria-labelledby="migrationListTitle" tabindex="-1">
-        <header class="migration-catalog-head">
-          <h3 id="migrationListTitle">路線索引</h3>
-          <p id="migrationCatalogScope"></p>
-        </header>
-        <ol id="migrationRouteList"></ol>
-      </section>
     </div>
-    <p class="migration-fallback">19 世紀，有些中部平埔族群遷到蘭陽平原或埔里盆地，有些西南部的族群遷入花東縱谷。噶瑪蘭族也有部落從宜蘭沿海遷到花蓮。<a href="https://www.cip.gov.tw/zh-tw/news/data-list/A9E092C6104ACAD5/0C3331F0EBD318C21343E658D0B5C9EF-info.html">原住民族委員會〈地理分佈〉</a></p>
+    <p class="migration-fallback">19 世紀，有些中部平埔族群遷到蘭陽平原或埔里盆地，有些西南部的族群遷入花東縱谷。噶瑪蘭族也有部落從宜蘭沿海遷到花蓮。山區部落也有遷徙史，例如 1931 年霧社事件過後，部分賽德克族人被迫移住川中島（今清流）。<a href="https://www.cip.gov.tw/zh-tw/news/data-list/A9E092C6104ACAD5/0C3331F0EBD318C21343E658D0B5C9EF-info.html">原住民族委員會〈地理分佈〉</a></p>
   </div>
 </section>
 
@@ -1611,7 +1742,64 @@ const places = {
   wujie: place('宜蘭五結加禮宛社', 121.831, 24.685, '五結加禮宛', 'left'),
   xincheng: place('花蓮新城嘉里（加禮宛）', 121.607, 24.025, '花蓮嘉里', 'right'),
   xinshe: place('花蓮豐濱新社', 121.536, 23.652, '豐濱新社', 'right'),
-  changbin: place('臺東長濱樟原一帶', 121.484, 23.419, '臺東長濱', 'right')
+  changbin: place('臺東長濱樟原一帶', 121.484, 23.419, '臺東長濱', 'right'),
+  hsinchu: place('新竹竹塹城一帶', 120.965, 24.805, '新竹竹塹城', 'left'),
+  hsinchuOld: place('新竹北門城外舊社一帶', 120.975, 24.821, '竹塹舊社', 'left'),
+  zhubei: place('新竹竹北新社（采田福地一帶）', 120.993, 24.837, '竹北新社', 'right'),
+  dajiaInland: place('臺中大甲社一帶', 120.624, 24.348, '臺中大甲社', 'left'),
+  luodong: place('宜蘭羅東一帶', 121.771, 24.677, '宜蘭羅東', 'right'),
+  suaomasai: place('宜蘭蘇澳馬賽一帶', 121.830, 24.631, '蘇澳馬賽', 'right'),
+  dongluo: place('彰化北斗、溪州一帶（東螺社域）', 120.521, 23.864, '東螺社', 'left'),
+  ashu: place('彰化和美頭前寮一帶（阿束社）', 120.501, 24.112, '和美阿束社', 'left'),
+  gomach: place('臺中清水牛罵頭一帶', 120.582, 24.268, '清水牛罵頭', 'left'),
+  gongliao: place('新北貢寮一帶', 121.921, 25.020, '新北貢寮', 'left'),
+  zhuangwei: place('宜蘭壯圍大福一帶（社頭）', 121.821, 24.802, '壯圍社頭', 'right'),
+  xinshi: place('臺南新市新港社一帶', 120.295, 23.076, '新市新港社', 'left'),
+  zuozhen: place('臺南左鎮岡仔林一帶', 120.413, 23.047, '左鎮岡仔林', 'right'),
+  xiaolin: place('高雄甲仙小林舊聚落', 120.653, 23.162, '小林舊聚落', 'right'),
+  wulipu: place('高雄甲仙五里埔小林社區', 120.623, 23.132, '五里埔小林', 'left'),
+  shanlin: place('高雄杉林月眉小林社區', 120.522, 22.980, '杉林月眉', 'left'),
+  checheng: place('屏東恆春半島四重溪一帶', 120.735, 22.092, '恆春四重溪', 'left'),
+  chishang: place('臺東池上一帶', 121.218, 23.123, '臺東池上', 'right'),
+  wanjin: place('屏東萬巒萬金、赤山一帶', 120.610, 22.603, '萬金、赤山', 'left'),
+  jiazouwan: place('臺東長濱加走灣一帶', 121.458, 23.318, '長濱加走灣', 'right'),
+  ruiyan: place('南投仁愛發祥村瑞岩一帶', 121.147, 24.120, '南投瑞岩', 'left'),
+  lishan: place('臺中梨山斯拉茂一帶', 121.254, 24.255, '臺中梨山', 'left'),
+  huanshan: place('臺中環山（Sqoyaw）', 121.313, 24.328, '臺中環山', 'right'),
+  siyuan: place('雪山山脈思源埡口一帶', 121.351, 24.396, '思源埡口', 'right'),
+  dahan: place('桃園復興角板山一帶（大漢溪）', 121.350, 24.813, '角板山', 'left'),
+  datongYilan: place('宜蘭大同鄉山區', 121.459, 24.540, '宜蘭大同', 'right'),
+  donghe: place('苗栗南庄大東河流域', 121.026, 24.590, '南庄大東河', 'left'),
+  daai: place('新竹五峰大隘部落', 121.118, 24.630, '五峰大隘', 'right'),
+  junda: place('南投信義郡大溪流域', 120.982, 23.661, '南投郡大溪', 'left'),
+  dafen: place('花蓮卓溪拉庫拉庫溪上游大分', 121.098, 23.374, '花蓮大分', 'right'),
+  taoyuanHill: place('高雄桃源荖濃溪上游', 120.762, 23.161, '高雄桃源', 'left'),
+  jingguan: place('南投仁愛靜觀部落一帶', 121.167, 24.071, '南投靜觀', 'left'),
+  browan: place('花蓮立霧溪布洛灣', 121.566, 24.168, '立霧溪布洛灣', 'right'),
+  dali: place('花蓮秀林大禮部落', 121.591, 24.174, '山上大禮', 'left'),
+  tarokoGate: place('花蓮秀林太魯閣口（富世一帶）', 121.621, 24.156, '太魯閣口', 'right'),
+  pingjing: place('南投仁愛平靜山區', 121.167, 24.049, '南投平靜', 'left'),
+  taosai: place('花蓮陶賽溪上、中游山區', 121.420, 24.260, '花蓮陶賽溪', 'right'),
+  wushe: place('南投仁愛霧社一帶', 121.132, 24.023, '仁愛霧社', 'right'),
+  qingliu: place('南投仁愛川中島（今清流部落）', 120.943, 24.067, '清流部落', 'left'),
+  mugua: place('花蓮木瓜溪流域', 121.486, 23.947, '花蓮木瓜溪', 'left'),
+  xikou: place('花蓮壽豐溪口村一帶', 121.480, 23.819, '壽豐溪口', 'right'),
+  yushan: place('玉山一帶', 120.959, 23.470, '玉山', 'right'),
+  tefuye: place('嘉義阿里山特富野部落', 120.762, 23.446, '阿里山特富野', 'left'),
+  heshe: place('南投信義同富村和社一帶', 120.890, 23.587, '信義和社', 'right'),
+  jiumei: place('南投信義楠仔腳萬（今久美部落）', 120.858, 23.585, '信義久美', 'left'),
+  oldHaocha: place('屏東霧臺山區舊好茶 Kucapungane', 120.725, 22.740, '霧臺舊好茶', 'right'),
+  newHaocha: place('屏東隘寮南溪北岸新好茶 Tulalekelre', 120.695, 22.728, '新好茶', 'right'),
+  rinari: place('屏東瑪家農場禮納里 Rinari', 120.642, 22.705, '屏東禮納里', 'left'),
+  dashe: place('屏東三地門大社部落', 120.704, 22.833, '三地門大社', 'top'),
+  majia: place('屏東瑪家原部落', 120.683, 22.678, '瑪家原部落', 'right'),
+  oldQijia: place('屏東春日老七佳 Tjuvecekadan', 120.688, 22.437, '老七佳', 'right'),
+  middleQijia: place('屏東春日舊七佳 Tjukarangan 一帶', 120.657, 22.414, '舊七佳', 'right'),
+  newQijia: place('屏東春日加禮寮 Tjuadresir（今七佳）', 120.627, 22.406, '今七佳', 'left'),
+  shiyin: place('南投日月潭南岸石印社一帶', 120.911, 23.850, '日月潭石印社', 'left'),
+  itathao: place('南投魚池卜吉社（今伊達邵）', 120.932, 23.849, '伊達邵', 'right'),
+  nanxi: place('臺南楠西一帶', 120.483, 23.176, '臺南楠西', 'left'),
+  tengbao: place('高雄那瑪夏藤苞山周邊', 120.726, 23.250, '那瑪夏藤苞山', 'right')
 };
 
 const sources = {
@@ -1634,7 +1822,43 @@ const sources = {
   wujie: ['宜蘭縣文化局〈加禮宛〉', 'https://tcmb.culture.tw/zh-tw/detail?id=284658&indexCode=Culture_Place'],
   dajia: ['《臺灣原住民族事典》〈大甲西社事件〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?cat=0&id=11738&race=0&search=&writer='],
   kavalanBattle: ['原民會《原住民族文獻》〈自加禮宛戰役／達固湖灣戰役後談噶瑪蘭族文化復振運動的緣起〉', 'https://ihc.cip.gov.tw/EJournal/EJournalCat/225'],
-  dazhuangEvent: ['《臺灣原住民族事典》〈大庄事件〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?cat=0&id=10108&race=0&search=&writer=']
+  dazhuangEvent: ['《臺灣原住民族事典》〈大庄事件〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?cat=0&id=10108&race=0&search=&writer='],
+  zhuchien: ['原民會《原住民族文獻》〈竹塹七姓的由來與簡介〉', 'https://ihc.cip.gov.tw/EJournal/EJournalCat/145'],
+  lanyangSouth: ['蘭陽博物館〈蘇澳的原住民〉', 'https://www.lym.gov.tw/ch/collection/epaper/epaper-detail/Page1760000712707/'],
+  lanyangBefore: ['蘭陽博物館〈宜蘭的日本時代：日治之前〉', 'https://www.lym.gov.tw/ch/collection/epaper/epaper-detail/cf526847-5374-11ee-93d9-2760f1289ae7/'],
+  easternLanyang: ['宜蘭縣政府〈噶瑪蘭族與舊社〉', 'https://www.e-land.gov.tw/cp.aspx?n=14745'],
+  luodongBeitou: ['國家文化記憶庫〈羅東北投社〉', 'https://tcmb.culture.tw/zh-tw/detail?id=603405&indexCode=Culture_Place'],
+  ashu: ['《臺灣原住民族事典》〈臺灣（阿束社土官）〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?id=8026'],
+  dongluo: ['《臺灣原住民族事典》〈東螺社〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?id=11889'],
+  lotong: ['《羅東鎮志》〈住民篇〉', 'https://www.lotong.gov.tw/TW/羅東鎮志/03_第三篇住民篇.pdf'],
+  gomach: ['臺中市清水區公所〈歷史沿革〉', 'https://www.qingshui.taichung.gov.tw/982244/982248/982256/982260/1116371'],
+  northHistory: ['中研院《臺灣史研究》〈清乾隆年間霧里薛溪與秀朗溪上游土地關係〉', 'https://www.ith.sinica.edu.tw/quarterly_download.php?filename=143997263512.pdf'],
+  sinkan: ['臺南研究資料庫〈新港卓猴及大傑顛社的事蹟〉', 'https://trd.tnc.gov.tw/detail/7fca967780eddce52c3d2a47023be66c/'],
+  fourVillages: ['《臺灣原住民族事典》〈四社熟番〉', 'https://indigenapedia-alcd.nccu.edu.tw/detail?id=11906'],
+  liugui: ['長榮大學典藏〈大武壟芒仔芒社與荖濃溪流域的拓墾〉', 'https://dweb.cjcu.edu.tw/ShepherdFiles/C0203/File/20180130102653831.pdf'],
+  xiaolin: ['小林平埔族群文物館〈大武壠人的遷徙〉', 'https://xiaolin.kcg.gov.tw/index.php?lang=cht&temp=exhibition'],
+  xiaolinRecovery: ['莫拉克災後重建會〈日光小林永久屋落成〉', 'https://exhibition.nstm.gov.tw/morakot/webhistory/88flood/committee_news_detailf625f625.html?cn_id=797'],
+  eastNmp: ['國立臺灣史前文化博物館〈平埔族群移居花東〉', 'https://icloud.nmp.gov.tw/Library/EPaperContent?a=212&id=50&nid=173'],
+  atayalDahan: ['桃園市政府《大漢溪流域泰雅族傳統知識》調查', 'https://ws.tycg.gov.tw/001/Upload/1/relfile/7882/1609995/e0ef0b7b-5281-4cd6-8898-72d793d4a3fc.pdf'],
+  saisiyatGenealogy: ['內政部《賽夏族族譜之編彙》', 'https://ws.moi.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvT2xkRmlsZV9TUE5QL1Jlc3VsdFJlcG9ydC85OTEw6LO95aSP5peP5peP6K2c5LmL57eo5b2ZLeWOu%2BmZpOelluitnF9NLnBkZg%3D%3D&n=OTkxMOizveWkj%2BaXj%2BaXj%2BitnOS5i%2Be3qOW9mS3ljrvpmaTnpZborZxfTS5wZGY%3D&icon=.pdf'],
+  bunun: ['原民會〈布農族〉', 'https://www.cip.gov.tw/zh-tw/tribe/grid-list/F39C8394699DD2D6D0636733C6861689/info.html?cumid=8F19BF08AE220D65'],
+  dafen: ['原民會《布農族：縱橫山巒的巨人》', 'https://www.cip.gov.tw/data/news/document/201910/1570514202184-1.pdf?c=C92E292F6B03A507684586829013D40E&fn=A40D3318D5540C789118A89F28EB89F5594F4406E24BCB3C&s=E4A9955CE3AEE97E'],
+  seediq: ['原民會〈賽德克族〉', 'https://www.cip.gov.tw/zh-tw/tribe/grid-list/F35F3EBC7CE2E1BCD0636733C6861689/info.html?cumid=D0636733C6861689'],
+  wusheDoc: ['國立臺灣歷史博物館〈霧社名簿〉', 'https://tcmb.culture.tw/zh-tw/detail?id=11000165471&indexCode=MOCCOLLECTIONS'],
+  qingliu: ['臺灣學術期刊開放取用平台〈清流部落的土地與水田〉', 'https://toaj.stpi.niar.org.tw/index/journal/volume/article/4b1141f993cfc56f0193f29122ba0a46'],
+  truku: ['太魯閣國家公園〈太魯閣族〉', 'https://www.taroko.gov.tw/ch/sglarticle/taroko-tribe'],
+  trukuEvent: ['文化部文資局〈太魯閣申遺之路〉', 'https://twh.boch.gov.tw/taiwan/learn_detail.aspx?id=19'],
+  dali: ['國家公園季刊〈大禮、大同部落〉', 'https://www.taiwan.nps.gov.tw/home/zh-tw/quarterly/7969/7492'],
+  tsou: ['原民會〈鄒族〉', 'https://www.cip.gov.tw/zh-tw/tribe/grid-list/AE6EE12F5F284D59D0636733C6861689/info.html?cumid=D0636733C6861689'],
+  tsouTerritory: ['原民會《鄒族傳統領域調查》', 'https://www.cip.gov.tw/data/news/document/201910/1570004557644-1.pdf?c=CA1F4C420970C014C652433F7037B157&fn=36878991E178F5F6D0636733C6861689&s=264D3AC95EE0D6D7'],
+  haocha: ['國史館臺灣文獻館〈魯凱族好茶部落歷史之研究〉', 'https://www.th.gov.tw/News_Content/35/6090/'],
+  haochaMap: ['中研院〈好茶部落遷移簡史〉', 'https://gis.rchss.sinica.edu.tw/mapdap/archives/7116/?page_id=188'],
+  rinari: ['原住民族古道資訊網〈霧臺、好茶古道〉', 'https://trail.tacp.gov.tw/zh-hant/ExploringHistoricTrails/WutaiHaochaHistoricTrail'],
+  rinariHistory: ['莫拉克災後重建會〈瑪家農場永久屋〉', 'https://exhibition.nstm.gov.tw/morakot/webhistory/88flood/news_content_detailea57ea57.html?nc_id=5023'],
+  qijia: ['原住民族古道資訊網〈七佳部落〉', 'https://trail.tacp.gov.tw/zh-hant/ExploringHistoricTrails/jinshuiying/Attractions/447'],
+  shiyin: ['原住民族古道資訊網〈伊達邵（卜吉社）〉', 'https://trail.tacp.gov.tw/zh-hant/ExploringHistoricTrails/shuishalianhistorictrail/Attractions/290'],
+  itathao: ['國立臺灣歷史博物館〈日月潭卜吉社邵族部落〉', 'https://collections.nmth.gov.tw/CollectionContent.aspx?RNO=2002.007.0886&a=132'],
+  kanakanavu: ['孔岳中〈卡那卡那富族〉，《原住民族文獻》', 'https://ihc.cip.gov.tw/EJournal/EJournalCat/185']
 };
 
 const groups = {
@@ -1647,15 +1871,32 @@ const groups = {
   siraya: { name: '西拉雅族', localName: 'Siraya' },
   taivoan: { name: '大武壠族', localName: 'Taivoan' },
   makatao: { name: '馬卡道族', localName: 'Makatao' },
-  kavalan: { name: '噶瑪蘭族', localName: 'Kavalan' }
+  kavalan: { name: '噶瑪蘭族', localName: 'Kavalan' },
+  dorobiawan: { name: '哆囉美遠人' },
+  atayal: { name: '泰雅族', scope: 'mountain' },
+  saisiyat: { name: '賽夏族', scope: 'mountain' },
+  bunun: { name: '布農族', scope: 'mountain' },
+  seediq: { name: '賽德克族', scope: 'mountain' },
+  truku: { name: '太魯閣族', scope: 'mountain' },
+  tsou: { name: '鄒族', scope: 'mountain' },
+  rukai: { name: '魯凱族', scope: 'mountain' },
+  paiwan: { name: '排灣族', scope: 'mountain' },
+  thao: { name: '邵族', scope: 'mountain' },
+  kanakanavu: { name: '卡那卡那富族', scope: 'mountain' }
 };
 
 const directions = {
-  yilan: { title: '中部 → 蘭陽平原', color: '#006b9c' },
+  yilan: { title: '入蘭與蘭陽溪南', color: '#006b9c' },
   puli: { title: '中部 → 埔里盆地', color: '#955600' },
   southwest: { title: '臺南 → 西南丘陵', color: '#a03d54' },
-  rift: { title: '西南部 → 花東縱谷', color: '#00705d' },
-  coast: { title: '蘭陽 → 花東海岸', color: '#684d91' }
+  rift: { title: '花東縱谷路線', color: '#00705d' },
+  coast: { title: '北部與東部沿海', color: '#684d91' },
+  north: { title: '竹塹社搬遷', color: '#34495f' },
+  highland: { title: '山區拓居', color: '#006b9c' },
+  policy: { title: '政策與工程移住', color: '#a03d54' },
+  local: { title: '生活與就學遷居', color: '#00705d' },
+  rebuild: { title: '災後重建', color: '#8a5700' },
+  oral: { title: '口述路線', color: '#415f86' }
 };
 
 const routes = {
@@ -1731,9 +1972,206 @@ const routes = {
     sources: ['wujie', 'kavalan']
   },
   kavalanCoast: {
-    group: 'kavalan', direction: 'coast', period: '1878 年戰役後', stops: ['xincheng', 'xinshe', 'changbin'],
-    text: '加禮宛戰役後，部分族人遷往豐濱新社、立德或臺東長濱一帶。今日宜蘭和花東都有噶瑪蘭族的部落。',
+    group: 'kavalan', direction: 'coast', period: '1878 年戰役後', stops: ['xincheng', 'xinshe'],
+    text: '加禮宛戰役後，部分族人從嘉里一帶遷往花蓮豐濱新社。另有族人往臺東長濱等地移居，兩處是不同的落腳地。',
     sources: ['kavalanBattle', 'kavalan']
+  },
+  taokasCity: {
+    group: 'taokas', direction: 'north', period: '1733 年', stops: ['hsinchu', 'hsinchuOld'],
+    text: '清廷在竹塹種植刺竹築城，諭令原居城址一帶的竹塹社族人搬到北門城外，後來這裡稱為舊社。',
+    reason: { title: '清廷築城與命令遷居', event: 'zhuchien' }, sources: ['zhuchien']
+  },
+  taokasZhubei: {
+    group: 'taokas', direction: 'north', period: '1749 年', stops: ['hsinchuOld', 'zhubei'],
+    text: '竹塹舊社遭頭前溪洪水後，部分社人往北搬到今竹北新社一帶。今天的采田福地仍見竹塹社族人的祭祀傳承。',
+    reason: { title: '頭前溪洪水', event: 'zhuchien' }, sources: ['zhuchien']
+  },
+  taokasDajiaYilan: {
+    group: 'taokas', direction: 'yilan', period: '1804 年', stops: ['dajiaInland', 'yilan'],
+    text: '蘭陽博物館記載，大甲社與通霄社等社的部分族人響應跨社入蘭的行動。五圍是這一波遷徙的落腳處。',
+    reason: { title: '中部諸社集體入蘭', event: 'intoYilan' }, sources: ['lanyangSouth', 'pan']
+  },
+  taokasMasai: {
+    group: 'taokas', direction: 'yilan', period: '1806 年械鬥之後', stops: ['yilan', 'suaomasai'],
+    text: '大甲、通霄兩社有族人離開五圍，跨到蘭陽溪南，在蘇澳馬賽一帶開墾。另一支由阿里史等五社組成，落腳羅東。',
+    reason: { title: '械鬥後分支移居', event: 'lanyangSplit' }, sources: ['lanyangSouth']
+  },
+  pazehLuodong: {
+    group: 'pazeh', alsoGroups: ['babuza', 'hoanya'], community: '巴宰族等五社', direction: 'yilan',
+    period: '1806 年械鬥之後', stops: ['yilan', 'luodong'],
+    text: '阿里史、岸裡、阿束、東螺及北投等社的部分族人渡過蘭陽溪，到羅東一帶再建聚落。羅東北投社的名稱保存了遷徙線索。',
+    reason: { title: '械鬥後渡溪重建', event: 'lanyangSplit' }, sources: ['lanyangSouth', 'luodongBeitou']
+  },
+  babuzaYilan: {
+    group: 'babuza', direction: 'yilan', period: '1804 年', stops: ['dongluo', 'yilan'],
+    text: '東螺社的社域包括今彰化北斗、溪州等地。部分社民隨各社族人遷到五圍，後來亦有到羅東開墾的人。',
+    reason: { title: '中部諸社集體入蘭', event: 'intoYilan' }, sources: ['dongluo', 'lanyangSouth']
+  },
+  paporaYilan: {
+    group: 'papora', direction: 'yilan', period: '1804 年', stops: ['gomach', 'yilan'],
+    text: '《羅東鎮志》把牛罵頭社列為參與入蘭的社之一。牛罵頭是拍瀑拉族社域，約在今臺中清水。地圖以五圍表示早期的落腳地。',
+    reason: { title: '中部諸社集體入蘭', event: 'intoYilan' }, sources: ['lotong', 'gomach', 'lanyangBefore']
+  },
+  babuzaAshuYilan: {
+    group: 'babuza', direction: 'yilan', period: '1804 年', stops: ['ashu', 'yilan'],
+    text: '阿束社位於今彰化和美頭前寮一帶，也有族人加入越山入蘭的行動。地圖以出發社域和五圍作為代表地點。',
+    reason: { title: '中部諸社集體入蘭', event: 'intoYilan' }, sources: ['ashu', 'lanyangSouth']
+  },
+  hoanyaYilan: {
+    group: 'hoanya', direction: 'yilan', period: '1804 年', stops: ['caotun', 'yilan'],
+    text: '原住在草屯一帶的北投社有社民參與入蘭，先到五圍，之後部分人轉往羅東。草屯與羅東都留下「北投」的地名。',
+    reason: { title: '中部諸社集體入蘭', event: 'intoYilan' }, sources: ['luodongBeitou', 'lanyangSouth']
+  },
+  dorobiawanYilan: {
+    group: 'dorobiawan', direction: 'coast', period: '約 17 世紀', stops: ['gongliao', 'zhuangwei'], evidence: '遷徙重建',
+    text: '蘭陽博物館的整理指出，貢寮一帶的哆囉美遠人約在四百年前遷入蘭陽沿海。壯圍社頭與冬山里腦是文獻提到的聚落，地圖選社頭作為代表。不同研究對這個社群的分類用語有所差異。',
+    reason: { title: '北海岸社群遷居蘭陽', text: '史料留下社群與聚落的線索，遷居的確切年份和動機仍待釐清。' }, sources: ['lanyangBefore', 'easternLanyang']
+  },
+  sirayaSinkanZuozhen: {
+    group: 'siraya', direction: 'southwest', period: '清治時期', stops: ['xinshi', 'zuozhen'],
+    text: '新港社是早期西拉雅重要部落。部分族人從今新市一帶遷到左鎮岡仔林。在同一時期，新化和內門一帶也有新港社人移居。',
+    reason: { title: '原鄉開墾壓力增加', text: '明鄭結束後，漢人移墾增加，臺南平原的原住民族社群向丘陵分散。' }, sources: ['sinkan', 'central']
+  },
+  taivoanLiugui: {
+    group: 'taivoan', community: '大武壠族芒仔芒社', direction: 'southwest', period: '約 18 世紀後期', stops: ['yujing', 'liugui'],
+    text: '玉井盆地芒仔芒社的族人逐步在六龜荖濃溪流域開墾。研究用契約與部落地名追查移居過程，時間只能估為一段時期。',
+    reason: { title: '原鄉壓力及流域開墾' }, sources: ['liugui', 'fourVillages']
+  },
+  taivoanXiaolin: {
+    group: 'taivoan', direction: 'southwest', period: '清末至日治初期', stops: ['yujing', 'xiaolin'],
+    text: '甲仙小林部分居民的祖先來自大武壠頭社。楠梓仙溪流域的阿里關、甲仙和小林，都是後來族人居住的地方。',
+    reason: { title: '部落在楠梓仙溪流域拓居', text: '不同社的族人陸續在山區落腳。小林文物館指出，1915 年噍吧哖事件後官方安置與配地又改變聚落的位置和樣貌。' },
+    sources: ['xiaolin', 'fourVillages']
+  },
+  taivoanRebuild: {
+    group: 'taivoan', community: '大武壠族小林居民', direction: 'rebuild', period: '2011 年 1 月', stops: ['xiaolin', 'wulipu'],
+    text: '2009 年莫拉克風災重創甲仙小林。到 2011 年 1 月，部分居民入住甲仙五里埔小林社區；另有居民選擇其他重建據點。',
+    reason: { title: '莫拉克風災後重建', event: 'xiaolinMorakot' }, sources: ['xiaolin', 'xiaolinRecovery']
+  },
+  taivoanShanlin: {
+    group: 'taivoan', community: '大武壠族小林居民', direction: 'rebuild', period: '2010 年 3 月', stops: ['xiaolin', 'shanlin'],
+    text: '風災後，部分小林居民遷入杉林月眉的大愛園區小林專區。甲仙五里埔也另建小林社區，分批入住。',
+    reason: { title: '莫拉克風災後分處安置', event: 'xiaolinMorakot' }, sources: ['xiaolin', 'xiaolinRecovery']
+  },
+  makataoWanjinCoast: {
+    group: 'makatao', direction: 'coast', period: '約 1850 年代', stops: ['wanjin', 'beinan', 'jiazouwan'],
+    text: '約 1851 年，萬金、赤山一帶的部分族人到卑南。文獻記錄停居數年後分隊，一隊渡過卑南溪移居加走灣等海岸區域。',
+    reason: { title: '遷入卑南後再分隊北移', event: 'wanjinBranches' }, sources: ['eastLand']
+  },
+  makataoWanjinFuli: {
+    group: 'makatao', direction: 'rift', period: '約 1850 年代', stops: ['wanjin', 'beinan', 'dazhuang'],
+    text: '和渡溪往海岸的一隊同源，另一隊由卑南北上，沿縱谷到富里大庄等地。兩條線各表示同一批移民後來的一支。',
+    reason: { title: '遷入卑南後沿縱谷北移', event: 'wanjinBranches' }, sources: ['eastLand']
+  },
+  makataoChishang: {
+    group: 'makatao', direction: 'rift', period: '1891–1892 年', stops: ['checheng', 'chishang'],
+    text: '已在恆春半島生活的部分馬卡道族人遇上四重溪洪水，原有田地受損，後來遷到臺東池上一帶，與早先到花東的族人會合。',
+    reason: { title: '四重溪洪水後再移居', event: 'makataoFlood' }, sources: ['eastNmp']
+  },
+  kavalanChangbin: {
+    group: 'kavalan', direction: 'coast', period: '1878 年戰役後', stops: ['xincheng', 'changbin'],
+    text: '加禮宛戰役後，一部分噶瑪蘭族人從花蓮嘉里分散到長濱一帶。另有人在豐濱新社等地重建聚落。',
+    reason: { title: '戰役後分散遷居', event: 'kavalanBattle' }, sources: ['kavalanBattle', 'kavalan']
+  },
+  atayalDahan: {
+    group: 'atayal', direction: 'oral', period: '約 12 至 13 代前', stops: ['ruiyan', 'lishan', 'huanshan', 'siyuan', 'dahan'], evidence: '口述傳統',
+    text: '大漢溪流域的泰雅族耆老記得，先輩從瑞岩一帶出發，經梨山、環山與思源埡口北移。族人在大漢溪上游多處落腳，角板山一帶是其中一處。',
+    reason: { title: '沿山稜與溪谷尋找居地', text: '桃園市的調查記下不同群體的遷移和落腳地，年代以部落記得的世代標示。' }, sources: ['atayalDahan']
+  },
+  atayalYilan: {
+    group: 'atayal', direction: 'highland', period: '約 18 世紀', stops: ['ruiyan', 'datongYilan'], evidence: '遷徙重建',
+    text: '蘭陽博物館整理的地方史描述，從南投發祥村一帶遷出的泰雅族人有部分來到宜蘭大同、南澳的山區。圖上以大同代表其中一個落腳區域。',
+    reason: { title: '山區部落向北、向東分布' }, sources: ['lanyangBefore', 'atayalDahan']
+  },
+  saisiyatDaai: {
+    group: 'saisiyat', community: '賽夏族朱姓一支', direction: 'oral', period: '早期，口傳未記年', stops: ['donghe', 'daai'], evidence: '口述傳統',
+    text: '內政部族譜研究引述早期訪談，朱姓族人一度住在南庄大東河流域，一支後來在五峰大隘定居。地圖示意這一支的移居。',
+    reason: { title: '家族分支建立聚落' }, sources: ['saisiyatGenealogy']
+  },
+  bununDafen: {
+    group: 'bunun', community: '布農族郡社群', direction: 'highland', period: '18 世紀起', stops: ['junda', 'dafen'],
+    text: '來自南投信義山區的郡社群族人往東拓居，大分曾是許多族人暫住或定居的地方，也是之後前往各地的重要據點。',
+    reason: { title: '越過中央山脈開拓居地' }, sources: ['bunun', 'dafen']
+  },
+  bununTaoyuan: {
+    group: 'bunun', community: '布農族郡社群', direction: 'highland', period: '18 世紀起', stops: ['junda', 'taoyuanHill'],
+    text: '布農族的移居有多條支線。郡社群部分族人後來在南方的荖濃溪、楠梓仙溪流域居住，圖上高雄桃源代表荖濃溪流域的落腳區域。',
+    reason: { title: '沿中央山脈向南拓居' }, sources: ['bunun', 'dafen']
+  },
+  seediqToda: {
+    group: 'seediq', community: '賽德克族都達群', direction: 'highland', period: '約 18 世紀', stops: ['pingjing', 'taosai'],
+    text: '一支早期住在南投平靜山區的族人翻越合歡山北峰，到花蓮陶賽溪上、中游生活，形成都達群的歷史居住範圍。',
+    reason: { title: '人口成長與拓展生活空間' }, sources: ['seediq']
+  },
+  trukuLiwu: {
+    group: 'truku', direction: 'highland', period: '約 18 至 19 世紀', stops: ['jingguan', 'browan'],
+    text: '部分太魯閣族先民從南投仁愛一帶翻越中央山脈，在花蓮立霧溪、木瓜溪等流域定居。布洛灣是立霧溪流域的代表地點。',
+    reason: { title: '尋覓耕地與獵區', event: 'trukuCrossing' }, sources: ['seediq', 'truku']
+  },
+  trukuDali: {
+    group: 'truku', community: '太魯閣族大禮部落', direction: 'local', period: '1980 年', stops: ['dali', 'tarokoGate'],
+    text: '大禮部分居民下山遷到太魯閣口，教會也遷下山。有些族人仍持續回大禮耕作，家園與山上的土地保有往來。',
+    reason: { title: '生活與就學需要', event: 'daliMove' }, sources: ['dali']
+  },
+  seediqQingliu: {
+    group: 'seediq', community: '賽德克族德克達雅群', direction: 'policy', period: '1931 年', stops: ['wushe', 'qingliu'],
+    text: '霧社事件過後，殖民政府把參與起事的六社倖存者強制遷往川中島集中居住，這裡是今天南投仁愛鄉的清流部落。霧社在圖上代表起事各社所在區域。',
+    reason: { title: '霧社事件後強制移住', event: 'wushe' }, sources: ['wusheDoc', 'qingliu']
+  },
+  seediqXikou: {
+    group: 'seediq', community: '賽德克族德克達雅群', direction: 'highland', period: '清治末期', stops: ['mugua', 'xikou'],
+    text: '原民會的族群史整理記下，原居花蓮木瓜溪流域的德克達雅族人，在清治末期有人搬到壽豐溪口，也有人遷到萬榮明利。圖上選錄溪口這一支。',
+    reason: { title: '東部山區族群的領域變動' }, sources: ['seediq']
+  },
+  tsouTefuye: {
+    group: 'tsou', direction: 'oral', period: '早期，口傳未記年', stops: ['yushan', 'tefuye'], evidence: '口述傳統',
+    text: '鄒族口傳將族群早期移動與玉山相連。特富野是今日嘉義阿里山的鄒族大社之一，圖以它代表口述傳統中的移居範圍。',
+    reason: { title: '玉山起源與部落口傳' }, sources: ['tsou', 'tsouTerritory']
+  },
+  tsouJiumei: {
+    group: 'tsou', community: '鄒族魯富都社', direction: 'policy', period: '日治時期', stops: ['heshe', 'jiumei'],
+    text: '魯富都社原來在信義鄉同富村一帶，以和社為大社。因疾病造成人口減少，殖民政府後來把相關聚落併入楠仔腳萬，也就是現在的久美部落。',
+    reason: { title: '人口減少後官方合併部落' }, sources: ['tsouTerritory']
+  },
+  rukaiNewHaocha: {
+    group: 'rukai', community: '魯凱族好茶部落', direction: 'local', period: '1977–1979 年', stops: ['oldHaocha', 'newHaocha'],
+    text: '1977 年省政府核定遷村，族人從舊好茶搬到隘寮南溪北岸的河階地，建立新好茶。舊好茶的石板屋留下以前的生活線索。',
+    reason: { title: '改善生活環境的遷村案', event: 'haochaMove' }, sources: ['haocha', 'haochaMap']
+  },
+  rukaiRinari: {
+    group: 'rukai', community: '魯凱族好茶部落', direction: 'rebuild', period: '2010 年 12 月', stops: ['newHaocha', 'rinari'],
+    text: '2007 年聖帕颱風後，部分住戶先撤到隘寮營區。兩年後，莫拉克風災掩埋新好茶的家屋。2010 年底，住戶陸續在禮納里的永久屋重建家園。',
+    reason: { title: '莫拉克風災後安置', event: 'rinariMorakot' }, sources: ['haocha', 'rinariHistory']
+  },
+  paiwanQijia: {
+    group: 'paiwan', community: '排灣族七佳部落', direction: 'policy', period: '1961 年', stops: ['oldQijia', 'middleQijia'],
+    text: '老七佳位於春日鄉山區。政府推行原住民住屋改善計畫時，部落從山上遷到後來稱為「舊七佳」的地方。',
+    reason: { title: '住屋改善計畫', event: 'qijiaMove' }, sources: ['qijia']
+  },
+  paiwanQijiaStorm: {
+    group: 'paiwan', community: '排灣族七佳部落', direction: 'rebuild', period: '1972 年', stops: ['middleQijia', 'newQijia'],
+    text: '莉泰颱風造成災害，舊七佳、歸崇與力里等地部分住戶搬到加禮寮。這些家戶後來所在的聚落，統稱七佳社區。',
+    reason: { title: '莉泰颱風後再遷村', event: 'qijiaStorm' }, sources: ['qijia']
+  },
+  paiwanDashe: {
+    group: 'paiwan', community: '排灣族大社部落', direction: 'rebuild', period: '2010 年 12 月', stops: ['dashe', 'rinari'],
+    text: '莫拉克風災後，大社部分住戶從屏東三地門山區遷到禮納里。新聚落與由瑪家、好茶搬來的住戶共同建成。',
+    reason: { title: '莫拉克風災後安置', event: 'rinariMorakot' }, sources: ['rinari', 'rinariHistory']
+  },
+  paiwanMajia: {
+    group: 'paiwan', community: '排灣族瑪家部落', direction: 'rebuild', period: '2010 年 12 月', stops: ['majia', 'rinari'],
+    text: '部分原居瑪家村的住戶，在風災後遷入瑪家農場興建的禮納里。從山上到臺地的移動與大社、好茶的遷村在同一時期。',
+    reason: { title: '莫拉克風災後安置', event: 'rinariMorakot' }, sources: ['rinari', 'rinariHistory']
+  },
+  thaoIta: {
+    group: 'thao', direction: 'policy', period: '1934 年', stops: ['shiyin', 'itathao'],
+    text: '日月潭水力發電工程使水位升高。住在石印等舊社的邵族人被迫離開原居地，部分居民遷到卜吉社，也就是今日的伊達邵。',
+    reason: { title: '日月潭水力發電工程', event: 'sunmoonDam' }, sources: ['shiyin', 'itathao']
+  },
+  kanakanavuTengbao: {
+    group: 'kanakanavu', direction: 'oral', period: '早期，口傳未記年', stops: ['nanxi', 'tengbao'], evidence: '口述傳統',
+    text: '其中一種部落口述記得，先民經臺南楠西一帶，再往楠梓仙溪流域遷到藤苞山。另一種口述則說祖居地在東方。圖示西來說中可定位的一段。',
+    reason: { title: '族人對祖居地的不同口述' }, sources: ['kanakanavu']
   }
 };
 
@@ -1789,7 +2227,7 @@ const routeReasons = {
   },
   kavalanCoast: {
     title: '戰役後分散遷居',
-    text: '1878 年加禮宛戰役後，清軍強令遷移，部分噶瑪蘭族人沿東岸南下，分別在豐濱、長濱等地生活。',
+    text: '1878 年加禮宛戰役後，清軍強令遷移。部分噶瑪蘭族人沿東岸南下，在豐濱新社重建聚落。',
     event: 'kavalanBattle', sources: ['kavalanBattle']
   }
 };
@@ -1814,13 +2252,13 @@ const events = {
   },
   intoYilan: {
     date: '1804 年', chip: '中部族群入蘭', title: '中部各社翻山到蘭陽',
-    place: 'yilan', routes: ['taokasYilan', 'pazehYilan'], relation: '遷徙行動',
+    place: 'yilan', routes: ['taokasYilan', 'taokasDajiaYilan', 'pazehYilan', 'paporaYilan', 'babuzaYilan', 'babuzaAshuYilan', 'hoanyaYilan'], relation: '遷徙行動',
     summary: '1804 年，潭子阿里史社、通霄社等 → 蘭陽平原。',
     steps: [['遷徙前', '阿里史社和岸裡大社有社務紛爭，各社的遷居動機也有不同解讀。'],
       ['1804 年', '巴宰族潘賢文集結中部多個部落的部分族人。'],
       ['抵達後', '族人翻山抵達蘭陽平原的五圍，約在今天的宜蘭市一帶。']],
-    text: '地圖選錄巴宰族阿里史社與道卡斯族通霄社的代表路線。',
-    sources: ['pan', 'taokas']
+    text: '不同社的出發地各異，五圍是共同的落腳地。部分族人後來從五圍再遷羅東或蘇澳。',
+    link: ['lanyangSplit', '接著看五圍族人渡溪遷居'], sources: ['pan', 'lanyangSouth', 'luodongBeitou', 'lotong']
   },
   guo: {
     date: '1815 年', chip: '郭百年事件', title: '郭百年事件與埔里移居',
@@ -1871,8 +2309,8 @@ const events = {
   },
   kavalanBattle: {
     date: '1878 年', chip: '加禮宛戰役', title: '加禮宛戰役／達固湖灣戰役',
-    place: 'xincheng', routes: ['kavalanCoast'], relation: '戰役後遷徙',
-    summary: '1878 年戰役後，花蓮嘉里 → 豐濱、臺東長濱等東海岸聚落。',
+    place: 'xincheng', routes: ['kavalanCoast', 'kavalanChangbin'], relation: '戰役後遷徙',
+    summary: '1878 年戰役後，嘉里 → 豐濱新社或臺東長濱等聚落。',
     steps: [['約 1840 年代起', '部分噶瑪蘭族人先從宜蘭遷到花蓮新城的加禮宛。'],
       ['1878 年', '噶瑪蘭族與撒奇萊雅族聯合反抗清軍。'],
       ['戰役後', '部分噶瑪蘭族人離開嘉里一帶，分散到豐濱新社、臺東長濱等地。']],
@@ -1887,15 +2325,154 @@ const events = {
       ['1888 年', '土地丈量、收費與官吏的作為引起當地居民反抗。']],
     text: '事件涉及大武壠族、馬卡道族、阿美族、卑南族與客家居民等。菱形標在事件相關的富里大庄。',
     link: ['settleDazhuang', '回看族人遷入大庄的路線'], sources: ['dazhuangEvent', 'dazhuang']
+  },
+  zhuchien: {
+    date: '1733、1749 年', chip: '竹塹社兩次北移', title: '先因築城搬家，再因洪水北移',
+    place: 'hsinchuOld', routes: ['taokasCity', 'taokasZhubei'], relation: '政策與洪水',
+    summary: '1733 年搬到竹塹城外，1749 年遇頭前溪洪水再遷竹北。',
+    steps: [['1733 年', '清廷築竹塹城，命令竹塹社族人移居北門城外。'],
+      ['1749 年', '頭前溪溪水氾濫，族人再往北來到今竹北新社一帶。']],
+    text: '同一個社群兩次搬家，兩次的原因不同。第一段起點是竹塹城一帶，第二段從北門城外舊社出發。',
+    sources: ['zhuchien']
+  },
+  lanyangSplit: {
+    date: '1806 年械鬥後', chip: '渡過蘭陽溪', title: '五圍族人分往羅東與蘇澳',
+    place: 'yilan', routes: ['pazehLuodong', 'taokasMasai'], relation: '衝突後分支遷徙',
+    summary: '五圍的部分族人渡過蘭陽溪，落腳羅東或蘇澳馬賽。',
+    steps: [['1804 年', '從中部來到蘭陽的各社先在五圍落腳。'],
+      ['1806 年起', '漳、泉移民之間的械鬥延燒到宜蘭，也牽動當地部落。'],
+      ['械鬥過後', '阿里史等五社部分族人到羅東。大甲、通霄兩社部分族人到蘇澳馬賽。']],
+    text: '在圖上找兩條從五圍開始的路線，再比較兩支的落腳地點。',
+    sources: ['lanyangSouth', 'luodongBeitou']
+  },
+  wanjinBranches: {
+    date: '約 1851 年', chip: '萬金族人分隊北移', title: '從卑南分往海岸與縱谷',
+    place: 'beinan', routes: ['makataoWanjinCoast', 'makataoWanjinFuli'], relation: '分段遷徙',
+    summary: '萬金、赤山到卑南。族人停居數年後分往加走灣、富里大庄。',
+    steps: [['約 1851 年', '來自屏東萬金、赤山一帶的部分族人翻山到卑南。'],
+      ['約八年後', '有一隊往東部海岸，另一隊沿縱谷北移。']],
+    text: '這兩支由同一處分開，分別前往不同地區。年代來自對早期調查的整理。',
+    sources: ['eastLand']
+  },
+  makataoFlood: {
+    date: '1891–1892 年', chip: '四重溪洪水', title: '恆春半島的馬卡道族人移居池上',
+    place: 'checheng', routes: ['makataoChishang'], relation: '水災後遷徙',
+    summary: '四重溪洪水｜恆春半島 → 臺東池上。',
+    steps: [['水災前', '部分族人已在恆春半島生活。'],
+      ['1891–1892 年', '四重溪洪水淹沒田地，族人再到臺東池上一帶落腳。']],
+    text: '池上在花東縱谷。這次遷移使搬來的族人與早先移居花東的人會合。',
+    sources: ['eastNmp']
+  },
+  xiaolinMorakot: {
+    date: '2009 年', chip: '小林災後重建', title: '小林居民重建家園',
+    place: 'xiaolin', routes: ['taivoanShanlin', 'taivoanRebuild'], relation: '風災後遷徙',
+    summary: '莫拉克風災後，住戶分批搬到杉林及甲仙的新聚落。',
+    steps: [['2009 年 8 月', '莫拉克風災重創小林聚落。'],
+      ['2010 年 3 月', '部分住戶搬進杉林月眉的小林專區。'],
+      ['2011 年', '五里埔小林社區、日光小林社區陸續安置住戶。']],
+    text: '地圖選錄杉林月眉與五里埔小林社區兩處。住戶在新聚落持續傳承小林的文化與生活記憶。',
+    sources: ['xiaolin', 'xiaolinRecovery']
+  },
+  trukuCrossing: {
+    scope: 'mountain', year: 1750, date: '約 18 至 19 世紀', chip: '越嶺到立霧溪', title: '太魯閣族先民跨越中央山脈',
+    place: 'browan', routes: ['trukuLiwu'], relation: '山區拓居',
+    summary: '南投仁愛 → 花蓮立霧溪一帶。',
+    steps: [['原居區', '祖居地位於南投仁愛的濁水溪上游一帶。'],
+      ['約 18 至 19 世紀', '部分族人為尋找耕地與獵區，來到花蓮立霧溪、木瓜溪流域。']],
+    text: '布洛灣代表立霧溪流域。遷居是在不同時間陸續發生的。',
+    sources: ['truku', 'seediq']
+  },
+  trukuWar: {
+    scope: 'mountain', date: '1914 年', chip: '太魯閣事件', title: '太魯閣事件與山區移住政策',
+    place: 'browan', routes: [], relation: '歷史背景',
+    summary: '1914 年太魯閣事件。後續日本政府在山區實行集團移住。',
+    steps: [['1914 年', '日本殖民政府進攻立霧溪一帶，太魯閣族人抵抗。'],
+      ['日治時期', '殖民政府實施集團移住，使部分深山部落遷往秀林、萬榮、卓溪的淺山與平地。']],
+    text: '圖上的菱形代表立霧溪流域。各社移住年份和安置地點各有差異。',
+    link: ['trukuCrossing', '看更早的越嶺遷居'], sources: ['truku', 'trukuEvent']
+  },
+  wushe: {
+    scope: 'mountain', date: '1930–1931 年', chip: '霧社事件與川中島', title: '霧社事件後，倖存者被迫移住清流',
+    place: 'wushe', routes: ['seediqQingliu'], relation: '事件後強制移住',
+    summary: '1930 年霧社事件 → 1931 年六社倖存者遷到川中島。',
+    steps: [['1930 年', '賽德克族德克達雅群的六個部落參與霧社事件。'],
+      ['1931 年', '日本殖民政府把六社的倖存者集中移往川中島。'],
+      ['今日', '川中島成為清流部落，族人延續社群生活與文化。']],
+    text: '箭頭由霧社一帶指向清流，呈現移住的起訖區域。',
+    sources: ['wusheDoc', 'qingliu']
+  },
+  sunmoonDam: {
+    scope: 'mountain', date: '1934 年', chip: '日月潭水力發電', title: '日月潭水位上升，邵族人遷居卜吉社',
+    place: 'itathao', routes: ['thaoIta'], relation: '工程造成的遷居',
+    summary: '日月潭水力發電工程｜石印等舊社 → 卜吉社（伊達邵）。',
+    steps: [['工程以前', '邵族部落散布在日月潭周邊，石印社是其中一處。'],
+      ['1934 年', '水力發電工程建成，潭面上升。部分族人在卜吉社重建家園。']],
+    text: '石印舊社的地點在圖上以日月潭南岸一帶表示。',
+    sources: ['shiyin', 'itathao']
+  },
+  qijiaMove: {
+    scope: 'mountain', date: '1961 年', chip: '七佳住屋改善', title: '排灣族七佳部落首次遷村',
+    place: 'middleQijia', routes: ['paiwanQijia'], relation: '住屋政策',
+    summary: '政府推動住屋改善｜老七佳 → 舊七佳。',
+    steps: [['1961 年', '住屋改善計畫推動七佳部落從山區遷出。']],
+    text: '沿著七佳部落的下一次遷居，可以比較兩次搬家的原因。',
+    link: ['qijiaStorm', '看 1972 年再遷村'], sources: ['qijia']
+  },
+  qijiaStorm: {
+    scope: 'mountain', date: '1972 年', chip: '莉泰颱風遷七佳', title: '莉泰颱風後，七佳族人再度遷村',
+    place: 'middleQijia', routes: ['paiwanQijiaStorm'], relation: '風災後遷徙',
+    summary: '莉泰颱風｜舊七佳 → 加禮寮。',
+    steps: [['1972 年', '舊七佳及其他聚落受到颱風侵襲。'],
+      ['災後', '部分受災族人到加禮寮定居，形成今日七佳社區。']],
+    text: '今日七佳聚落也包含來自歸崇、力里的部分居民。',
+    sources: ['qijia']
+  },
+  haochaMove: {
+    scope: 'mountain', date: '1977–1979 年', chip: '舊好茶遷下山', title: '魯凱族好茶部落遷到河階地',
+    place: 'oldHaocha', routes: ['rukaiNewHaocha'], relation: '遷村計畫',
+    summary: '遷村計畫｜霧臺舊好茶 → 隘寮南溪北岸新好茶。',
+    steps: [['1977 年', '省政府核定好茶遷村案。'],
+      ['1977–1979 年', '族人從原來山麓搬到隘寮南溪北岸，形成新好茶。']],
+    text: '多年後，莫拉克颱風又改變部落的居住地。',
+    link: ['rinariMorakot', '看莫拉克風災後的移居'], sources: ['haocha', 'haochaMap']
+  },
+  daliMove: {
+    scope: 'mountain', date: '1980 年', chip: '大禮部落下山', title: '太魯閣族大禮部落遷居山下',
+    place: 'dali', routes: ['trukuDali'], relation: '生活與就學',
+    summary: '1980 年，山上大禮 → 山下太魯閣口。',
+    steps: [['1980 年', '為方便生活與就學，部落遷居太魯閣口。'],
+      ['遷居後', '住在山下的族人仍有人回到山上務農。']],
+    text: '從立霧溪山上到河口附近，移動距離短，也能改變就學與生活。',
+    sources: ['dali']
+  },
+  rinariMorakot: {
+    scope: 'mountain', date: '2009–2010 年', chip: '風災後遷禮納里', title: '好茶、大社、瑪家在禮納里重建',
+    place: 'rinari', routes: ['rukaiRinari', 'paiwanDashe', 'paiwanMajia'], relation: '風災後遷徙',
+    summary: '2009 年莫拉克風災 → 2010 年入住禮納里。',
+    steps: [['2009 年', '莫拉克風災重創屏東山區，新好茶遭洪水與土石流掩埋。'],
+      ['2010 年 12 月', '三個部落的部分住戶遷入原瑪家農場興建的永久屋。']],
+    text: '禮納里是三個部落的新家。地圖分別保留好茶、大社、瑪家的起點。',
+    sources: ['haocha', 'rinari', 'rinariHistory']
   }
 };
 
-const eastPlaces = new Set(['yilan', 'wujie', 'xincheng', 'xinshe', 'changbin', 'dazhuang', 'dawu', 'beinan', 'changliang']);
-const overviewLabels = [
-  ['yilan', '蘭陽平原'], ['puli', '埔里盆地'], ['xincheng', '花蓮嘉里'],
-  ['dazhuang', '富里大庄'], ['changhua', '彰化平原'], ['jiali', '臺南'],
-  ['fangliao', '屏東'], ['changbin', '長濱']
-];
+const scopes = {
+  plains: {
+    name: '平埔族群', firstEvent: 'guo', featured: ['taokasZhubei', 'pazehPuli'],
+    labels: [['yilan','蘭陽平原'], ['puli','埔里盆地'], ['hsinchuOld','新竹'], ['xincheng','花蓮嘉里'],
+      ['dazhuang','富里大庄'], ['changhua','彰化平原'], ['jiali','臺南'], ['fangliao','屏東'], ['changbin','長濱']],
+    coverage: '地圖收錄可辨識起點與落腳地的案例。北臺灣的秀朗、雷里等社也有歷史記載，部分遷居說法仍待考證。',
+    sources: ['distribution', 'central', 'northHistory']
+  },
+  mountain: {
+    name: '山地原住民族', firstEvent: 'wushe', featured: ['atayalDahan', 'seediqQingliu'],
+    labels: [['dahan','大漢溪'], ['daai','五峰'], ['datongYilan','宜蘭大同'], ['browan','立霧溪'],
+      ['wushe','霧社'], ['dafen','花蓮大分'], ['tefuye','阿里山'], ['rinari','禮納里'], ['newQijia','七佳']],
+    coverage: '收錄原居山區部落的遷徙，也包含日月潭周邊邵族的遷居。虛線表示部落口述的遷徙，年代依各史料的記法標示。',
+    sources: ['atayalDahan', 'tsouTerritory', 'itathao']
+  }
+};
+const belongsTo = (record, scope) => (record.scope ?? 'plains') === scope;
 const seaLabels = [
   place('臺灣海峽', 119.84, 24.05, '臺灣海峽', 'center'),
   place('太平洋', 121.82, 22.84, '太平洋', 'center')
@@ -1903,11 +2480,22 @@ const seaLabels = [
 // Small bends spread nearby schematic tracks while keeping their endpoints fixed.
 const routeBends = {
   taokasYilan: -24, taokasPuli: -10, pazehPuli: 21, kaxabuPuli: -12,
-  paporaPuli: -17, babuzaPuli: 7, hoanyaPuli: 13, sirayaEast: 26, taivoanEast: -18
+  taokasDajiaYilan: 16, babuzaYilan: 13, babuzaAshuYilan: -14, hoanyaYilan: 33,
+  paporaPuli: -17, babuzaPuli: 7, hoanyaPuli: 13, sirayaEast: 26, taivoanEast: -18,
+  kavalanCoast: 12, kavalanChangbin: -16
 };
 
 function endpoints(route) {
   return [route.stops[0], route.stops.at(-1)];
+}
+
+function reasonFor(id) {
+  const route = routes[id];
+  return route.reason ?? routeReasons[id] ?? routeReasons[route.direction];
+}
+
+function routeName(route) {
+  return route.community ?? groups[route.group].name;
 }
 
 function sourcesHtml(keys) {
@@ -1919,7 +2507,7 @@ function sourcesHtml(keys) {
 }
 
 function swatch(direction) {
-  return `<span class="migration-swatch" style="--route-color:${directions[direction].color}" aria-hidden="true"></span>`;
+  return `<span class="migration-swatch${direction === 'oral' ? ' is-oral' : ''}" style="--route-color:${directions[direction].color}" aria-hidden="true"></span>`;
 }
 
 function eventLink(id, text) {
@@ -1931,49 +2519,55 @@ function eventFlow(rows) {
     `<li><strong>${label}</strong><span>${text}</span></li>`).join('')}</ol>`;
 }
 
-function investigation() {
+function routeCard(id, featured = false) {
+  const route = routes[id];
+  const [from, to] = endpoints(route);
+  const attributes = featured ? 'class="migration-feature" data-feature-route' : 'aria-pressed="false" data-pick-route';
+  return `<li><button type="button" ${attributes}="${id}" aria-controls="migrationSvg migrationDetail">
+    <span class="migration-row-meta">${swatch(route.direction)}<strong>${routeName(route)}</strong><span class="migration-row-year">${route.period}${route.evidence === '口述傳統' ? ' · 口述' : ''}</span></span>
+    <span class="migration-row-path">${places[from].label} → ${places[to].label}</span>
+    <span class="migration-feature-reason">${reasonFor(id).title}</span>
+    <svg class="migration-row-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+  </button></li>`;
+}
+
+function investigation(scope, ids) {
   const compass = ['北', '東北', '東', '東南', '南', '西南', '西', '西北'];
   const counts = Array(compass.length).fill(0);
-  let eastward = 0;
-  let acrossTaiwan = 0;
-  for (const id of routeIds) {
+  for (const id of ids) {
     const [origin, arrival] = endpoints(routes[id]);
     const [lon1, lat1] = places[origin].point;
     const [lon2, lat2] = places[arrival].point;
     const east = (lon2 - lon1) * Math.cos((lat1 + lat2) * Math.PI / 360);
     const angle = Math.atan2(east, lat2 - lat1) * 180 / Math.PI;
     counts[(Math.round(angle / 45) + 8) % 8]++;
-    if (east > 0) eastward++;
-    if (!eastPlaces.has(origin) && eastPlaces.has(arrival)) acrossTaiwan++;
   }
   const largest = Math.max(...counts);
   const bars = compass.map((name, i) => counts[i] ? `<div>
     <dt>${name}</dt><dd><span class="migration-bar" aria-hidden="true"><i style="--share:${counts[i] / largest * 100}%"></i></span>${counts[i]} 條</dd>
   </div>` : '').join('');
-  return `<h3>從起點跟著箭頭走</h3>
-    <ol class="migration-steps">
-      <li>找到空心圓標出的出發地。</li>
-      <li>沿箭頭走到實心圓標出的落腳地。</li>
-      <li>比較路線，把方向相近的分在一起。</li>
-    </ol>
+  return `<h3>先比較這兩條路線</h3>
+    <ul class="migration-feature-list">${scope.featured.map(id => routeCard(id, true)).join('')}</ul>
     <details class="migration-investigation">
       <summary>看完地圖，再核對方向</summary>
-      <dl class="migration-comparison" aria-label="${routeIds.length} 條路線的方向統計">${bars}</dl>
-      <p>依出發地與落腳地的位置，每條路線算一次。遇到轉彎的路線，也可以分段觀察。</p>
-      <p>${eastward} 條路線的落腳地比出發地更靠東。${acrossTaiwan} 條是從西部遷到蘭陽或花東。</p>
-    </details>${sourcesHtml(['distribution'])}`;
+      <dl class="migration-comparison" aria-label="${ids.length} 條收錄路線的方向統計">${bars}</dl>
+      <p>依本分頁畫出的 ${ids.length} 條路線，以起點和落腳地的位置分組。轉彎的路線也可以分段觀察。</p>
+    </details>
+    <p class="migration-coverage">${scope.coverage}</p>
+    ${sourcesHtml(scope.sources)}`;
 }
 
 function initMigrationMap() {
   const section = document.querySelector('#migration');
   const get = id => section.querySelector('#' + id);
   const workbench = section.querySelector('.migration-workbench');
+  const scopeTabs = [...section.querySelectorAll('[data-scope]')];
+  const scopePanel = get('migrationScopePanel');
   const groupSelect = get('migrationGroup');
   const picker = section.querySelector('.migration-picker');
   const modeButtons = [...section.querySelectorAll('[data-view]')];
   const eventBar = get('migrationEventBar');
   const timeline = get('migrationTimeline');
-  const eventIds = Object.keys(events);
   const eventPosition = get('migrationEventPosition');
   const prevEvent = get('migrationEventPrev');
   const nextEvent = get('migrationEventNext');
@@ -1984,9 +2578,10 @@ function initMigrationMap() {
   const reading = get('migrationReading');
   const inspector = get('migrationRouteInspector');
   const detail = get('migrationDetail');
-  const mapPanel = get('migrationMapPanel');
   const mapTitle = get('migrationMapTitle');
   const mapSummary = get('migrationMapSummary');
+  const mapDetails = get('migrationMapDetails');
+  const sharedPoint = get('migrationSharedPoint');
   const legend = section.querySelector('.migration-directions');
   const narrow = matchMedia('(max-width:850px)');
   const reduceMotion = matchMedia('(prefers-reduced-motion:reduce)');
@@ -2048,18 +2643,25 @@ function initMigrationMap() {
   section.querySelector('[data-zoom="out"]').onclick = map.zoomOut;
   section.querySelector('[data-zoom="home"]').onclick = map.home;
 
-  for (const [id, group] of Object.entries(groups)) groupSelect.add(new Option(group.name, id));
-  for (const [id, event] of Object.entries(events)) timeline.add(new Option(`${event.date} · ${event.chip}`, id));
+  const catalogs = Object.fromEntries(Object.keys(scopes).map(id => [id,
+    Object.keys(groups).filter(group => belongsTo(groups[group], id))
+      .flatMap(group => routeIds.filter(route => routes[route].group === group))
+  ]));
+  for (const tab of scopeTabs) tab.querySelector('.migration-scope-count').textContent = `${catalogs[tab.dataset.scope].length} 條路線`;
+  const eventYear = id => events[id].year ?? Number(events[id].date.match(/\d{4}/)?.[0]);
 
+  let scope = 'plains';
+  let eventIds = [];
   let mode = 'routes';
-  let activeEvent = 'guo';
+  let activeEvent = null;
   let activeRoute = null;
   let listedRoutes = '';
 
   function visibleRoutes() {
     if (mode === 'events') return events[activeEvent].routes;
     const group = groupSelect.value;
-    return group === 'all' ? routeIds : routeIds.filter(id => routes[id].group === group);
+    const ids = catalogs[scope];
+    return group === 'all' ? ids : ids.filter(id => routes[id].group === group || routes[id].alsoGroups?.includes(group));
   }
 
   function routePoints(route) {
@@ -2083,13 +2685,14 @@ function initMigrationMap() {
     const color = directions[route.direction].color;
     const subdued = activeRoute && activeRoute !== id;
     const group = tracks.append('g').attr('class', 'migration-track')
+      .classed('is-oral', route.evidence === '口述傳統')
       .attr('data-route', id).style('--route-color', color)
       .classed('is-muted', Boolean(subdued)).classed('is-active', activeRoute === id);
     group.append('path').attr('class', 'casing').attr('d', path);
     const ink = group.append('path').attr('class', 'ink').attr('d', path).node();
     const [origin, arrival] = endpoints(route);
     group.append('path').attr('class', 'hit').attr('d', path);
-    group.append('title').text(`${groups[route.group].name}，${route.period}，${places[origin].label}往${places[arrival].label}`);
+    group.append('title').text(`${routeName(route)}，${route.period}，${places[origin].label}往${places[arrival].label}`);
     const length = ink.getTotalLength();
     const arrowSpots = length > 260 ? [.35, .72] : [.62];
     for (const t of arrowSpots) {
@@ -2109,10 +2712,11 @@ function initMigrationMap() {
       node.append('path').attr('d', 'M0,-9 9,0 0,9 -9,0Z').attr('fill', '#18373f')
         .attr('stroke', '#fff').attr('stroke-width', 2);
     } else if (kind !== 'label') {
-      const isStart = kind === 'start';
+      const isStart = kind === 'start' || kind === 'both';
       node.append('circle').attr('r', kind === 'stop' ? 3.5 : 4.5)
         .attr('fill', isStart ? '#fff' : '#18373f')
         .attr('stroke', isStart ? '#18373f' : '#fff').attr('stroke-width', 1.7);
+      if (kind === 'both') node.append('circle').attr('r', 2).attr('fill', '#18373f');
     }
     if (label) {
       const text = node.append('text').attr('visibility', 'hidden')
@@ -2124,6 +2728,8 @@ function initMigrationMap() {
   function placeNames(ids, event) {
     const starts = new Set(ids.map(id => endpoints(routes[id])[0]));
     const finishes = new Set(ids.map(id => endpoints(routes[id])[1]));
+    const kindOf = id => starts.has(id) ? finishes.has(id) ? 'both' : 'start' : finishes.has(id) ? 'finish' : 'label';
+    sharedPoint.hidden = ![...starts].some(id => finishes.has(id) && id !== event?.place);
     const named = new Set();
     const add = (id, name, kind) => {
       if (named.has(id)) return;
@@ -2138,12 +2744,12 @@ function initMigrationMap() {
       add(to, places[to].label, 'finish');
       for (const id of route.stops.slice(1, -1)) add(id, places[id].label, 'stop');
     } else if (ids.length > 3 && mode === 'routes' && groupSelect.value === 'all') {
-      overviewLabels.forEach(([id, name]) => add(id, name, finishes.has(id) ? 'finish' : starts.has(id) ? 'start' : 'label'));
+      scopes[scope].labels.forEach(([id, name]) => add(id, name, kindOf(id)));
     } else {
-      for (const id of finishes) add(id, places[id].label, 'finish');
-      for (const id of starts) add(id, places[id].label, 'start');
+      for (const id of finishes) add(id, places[id].label, kindOf(id));
+      for (const id of starts) add(id, places[id].label, kindOf(id));
     }
-    for (const id of starts) add(id, '', 'start');
+    for (const id of starts) add(id, '', kindOf(id));
     for (const id of finishes) add(id, '', 'finish');
     for (const site of seaLabels) drawPoint(site, 'label', site.label);
   }
@@ -2154,14 +2760,14 @@ function initMigrationMap() {
     labels = [];
     const drawn = activeRoute ? [...ids.filter(id => id !== activeRoute), activeRoute] : ids;
     drawn.forEach(id => drawRoute(id, ids.length > 1));
-    placeNames(ids, event);
+    placeNames(activeRoute ? [activeRoute] : ids, event);
+    mapDetails.hidden = !activeRoute;
 
     if (activeRoute) {
       const route = routes[activeRoute];
       const [from, to] = endpoints(route);
-      mapTitle.textContent = groups[route.group].name;
-      const destination = activeRoute === 'kavalanCoast' ? '豐濱、長濱' : places[to].label;
-      mapSummary.textContent = `${route.period}，${places[from].label} → ${destination}`;
+      mapTitle.textContent = routeName(route);
+      mapSummary.textContent = `${route.period}｜${places[from].label} → ${places[to].label}。${reasonFor(activeRoute).title}。`;
     } else if (event) {
       mapTitle.textContent = event.chip;
       mapSummary.textContent = event.summary;
@@ -2169,8 +2775,8 @@ function initMigrationMap() {
       mapTitle.textContent = groups[groupSelect.value].name + '的遷徙路線';
       mapSummary.textContent = `圖上有 ${ids.length} 條路線`;
     } else {
-      mapTitle.textContent = '遷徙路線總圖';
-      mapSummary.textContent = `全部 ${Object.keys(groups).length} 族，共 ${ids.length} 條路線`;
+      mapTitle.textContent = `${scopes[scope].name}遷徙總圖`;
+      mapSummary.textContent = `地圖收錄 ${ids.length} 條路線`;
     }
     map.svg.attr('aria-label', mapTitle.textContent + '。' + mapSummary.textContent);
     const directionsInView = [...new Set(ids.map(id => routes[id].direction))];
@@ -2182,12 +2788,12 @@ function initMigrationMap() {
       const focused = activeRoute ? [activeRoute] : ids;
       const points = focused.flatMap(id => routePoints(routes[id]));
       if (event) points.push(places[event.place].point);
-      map.fitPoints(points, points.length === 1 ? 2.4 : 3.35);
+      map.fitPoints(points, points.length === 1 ? 2.4 : activeRoute ? 7 : 4.6);
     }
     scheduleLabels();
   }
 
-  const overview = investigation();
+  const overviews = Object.fromEntries(Object.entries(scopes).map(([id, data]) => [id, investigation(data, catalogs[id])]));
 
   function renderReading(event) {
     reading.hidden = !event && Boolean(activeRoute);
@@ -2199,33 +2805,32 @@ function initMigrationMap() {
         ${event.link ? eventLink(...event.link) : ''}
         ${sourcesHtml(event.sources)}`;
     } else if (groupSelect.value === 'all') {
-      if (reading.dataset.view !== 'overview') reading.innerHTML = overview;
+      if (reading.dataset.view !== scope) reading.innerHTML = overviews[scope];
     } else {
       reading.innerHTML = `<h3>${groups[groupSelect.value].name}</h3>
         <p>比較這個族群不同路線的出發年代和落腳地。</p>
         <div class="migration-card-actions"><button type="button" class="migration-link" data-show-all>回全部族群總圖</button></div>`;
     }
-    reading.dataset.view = !event && groupSelect.value === 'all' ? 'overview' : '';
+    reading.dataset.view = !event && groupSelect.value === 'all' ? scope : '';
     inspector.hidden = !activeRoute;
     if (!activeRoute) return;
 
     const route = routes[activeRoute];
-    const reason = routeReasons[activeRoute] ?? routeReasons[route.direction];
+    const reason = reasonFor(activeRoute);
     const [from, to] = endpoints(route);
     const stops = route.stops.slice(1, -1);
-    const arrival = activeRoute === 'kavalanCoast' ? '花蓮豐濱新社、臺東長濱一帶' : places[to].name;
-    const via = stops.length && activeRoute !== 'kavalanCoast' ? stops.map(id => places[id].name).join(' → ') : '';
-    inspector.innerHTML = `<span class="migration-period">${route.period}</span>
-      <h3>${groups[route.group].name}</h3>
+    const via = stops.map(id => places[id].name).join(' → ');
+    inspector.innerHTML = `<span class="migration-period">${route.period}${route.evidence ? ' · ' + route.evidence : ''}</span>
+      <h3>${routeName(route)}</h3>
       <dl class="migration-endpoints">
         <div><dt>出發地</dt><dd>${places[from].name}</dd></div>
-        <div><dt>落腳地</dt><dd>${arrival}
+        <div><dt>落腳地</dt><dd>${places[to].name}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
         </dd></div>
       </dl>
       ${via ? `<p class="migration-stops"><b>途中經過</b>　${via}</p>` : ''}
       <h4>遷徙背景 · ${reason.title}</h4>
-      <p>${reason.text}</p>
+      ${reason.text ? `<p>${reason.text}</p>` : ''}
       <p>${route.text}</p>
       <div class="migration-card-actions">
         <a class="migration-link" href="#migrationCatalog" data-migration-jump>回路線索引</a>
@@ -2233,29 +2838,20 @@ function initMigrationMap() {
         ${reason.event && reason.event !== (event && activeEvent) ? eventLink(reason.event, '看相關事件') : ''}
         ${event ? '' : '<button type="button" class="migration-link" data-show-all>回全部族群總圖</button>'}
       </div>
-      ${sourcesHtml([...route.sources, ...reason.sources])}`;
+      ${sourcesHtml([...route.sources, ...(reason.sources ?? [])])}`;
   }
 
   function renderList(ids, event) {
     const key = ids.join(',');
     const all = !event && groupSelect.value === 'all';
-    const scope = event ? event.chip : all ? '全部族群' : groups[groupSelect.value].name;
+    const label = event ? event.chip : all ? scopes[scope].name : groups[groupSelect.value].name;
     catalog.hidden = ids.length === 0;
     indexLink.hidden = catalog.hidden;
     indexLink.firstElementChild.textContent = `查看${all ? '全部 ' : ' '}${ids.length} 條路線`;
-    catalogScope.textContent = `${scope} · ${ids.length} 條路線`;
+    catalogScope.textContent = `${label} · ${ids.length} 條路線`;
     if (key !== listedRoutes) {
       listedRoutes = key;
-      list.innerHTML = ids.map(id => {
-        const route = routes[id];
-        const [from, to] = endpoints(route);
-        const destination = id === 'kavalanCoast' ? '豐濱、長濱' : places[to].label;
-        return `<li><button type="button" data-pick-route="${id}" aria-pressed="false" aria-controls="migrationSvg migrationDetail">
-          <span class="migration-row-meta">${swatch(route.direction)}<strong>${groups[route.group].name}</strong><span class="migration-row-year">${route.period}</span></span>
-          <span class="migration-row-path">${places[from].label} → ${destination}</span>
-          <svg class="migration-row-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-        </button></li>`;
-      }).join('');
+      list.innerHTML = ids.map(id => routeCard(id)).join('');
     }
     list.querySelectorAll('button').forEach(button =>
       button.setAttribute('aria-pressed', button.dataset.pickRoute === activeRoute));
@@ -2308,6 +2904,35 @@ function initMigrationMap() {
     render();
   }
 
+  function openScope(id) {
+    scope = id;
+    activeEvent = scopes[id].firstEvent;
+    activeRoute = null;
+    groupSelect.replaceChildren(new Option('全部族群', 'all'), ...Object.entries(groups)
+      .filter(([, group]) => belongsTo(group, scope)).map(([key, group]) => new Option(group.name, key)));
+    eventIds = Object.keys(events).filter(key => belongsTo(events[key], scope)).sort((a, b) => eventYear(a) - eventYear(b));
+    timeline.replaceChildren(...eventIds.map(key => new Option(`${events[key].date} · ${events[key].chip}`, key)));
+    scopeTabs.forEach(tab => {
+      const selected = tab.dataset.scope === scope;
+      tab.setAttribute('aria-selected', selected);
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected) scopePanel.setAttribute('aria-labelledby', tab.id);
+    });
+    render();
+  }
+
+  scopeTabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => {
+      if (tab.dataset.scope !== scope) openScope(tab.dataset.scope);
+    });
+    tab.addEventListener('keydown', e => {
+      if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+      e.preventDefault();
+      const next = scopeTabs[e.key === 'Home' ? 0 : e.key === 'End' ? scopeTabs.length - 1 : 1 - i];
+      openScope(next.dataset.scope);
+      next.focus();
+    });
+  });
   modeButtons.forEach(button => button.addEventListener('click', () => {
     if (button.dataset.view === 'events') {
       if (mode !== 'events') showEvent(activeEvent);
@@ -2333,9 +2958,11 @@ function initMigrationMap() {
     const link = e.target.closest('[data-migration-jump]');
     if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
-    moveTo(link.hasAttribute('data-map-link') ? mapPanel : catalog);
+    moveTo(get(link.hash.slice(1)));
   });
   detail.addEventListener('click', e => {
+    const featured = e.target.closest('[data-feature-route]');
+    if (featured) pickRoute(featured.dataset.featureRoute, true);
     const button = e.target.closest('[data-event-link]');
     if (button) showEvent(button.dataset.eventLink, true);
     if (e.target.closest('[data-show-all]')) {
@@ -2354,7 +2981,8 @@ function initMigrationMap() {
   });
 
   workbench.hidden = false;
-  render();
+  const initialScope = new URLSearchParams(location.search).get('migration');
+  openScope(initialScope === 'mountain' ? initialScope : 'plains');
   section.querySelector('.migration-fallback').hidden = true;
 }
 
