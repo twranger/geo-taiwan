@@ -426,6 +426,41 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .story-dots{display:flex;gap:6px}
 .story-dots i{width:10px;height:10px;border-radius:50%;background:var(--line);display:inline-block}
 .story-dots i.on{background:var(--ink)}
+.heritage-jump,.heritage-watch {
+  display:inline-flex;align-items:center;min-height:44px;color:var(--ink);font-size:16px;
+  font-weight:700;text-underline-offset:4px;
+}
+.heritage-jump { grid-column:2;justify-self:start;gap:6px }
+.wisdom-heritage {
+  margin-top:32px;padding:clamp(16px,3vw,32px);scroll-margin-top:80px;
+  border:1px solid var(--line);border-radius:16px;background:var(--surface);
+}
+.wisdom-heritage h3 { font-size:clamp(26px,3vw,34px) }
+.wisdom-heritage h4 { margin:0;font-size:20px;line-height:1.4 }
+.wisdom-heritage p,.wisdom-heritage dd { font-size:16px;line-height:1.65 }
+.heritage-intro { margin-top:8px;color:var(--muted);max-width:40em }
+.heritage-layout {
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:24px;
+}
+.heritage-terms { margin:10px 0 0 }
+.heritage-terms div {
+  display:grid;grid-template-columns:4.25em minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);
+}
+.heritage-terms dt { font-size:18px;font-weight:700 }
+.heritage-terms dd { margin:0 }
+.wisdom-heritage .heritage-source { margin-top:10px;font-size:14px;color:var(--muted) }
+.heritage-source a { color:inherit;text-underline-offset:3px }
+.heritage-video iframe {
+  display:block;width:100%;aspect-ratio:16 / 9;min-height:200px;margin:12px 0;border:0;border-radius:10px;background:var(--paper);
+}
+.heritage-media-meta { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0 12px }
+.wisdom-heritage .heritage-credit { color:var(--muted);font-size:14px }
+.heritage-question { margin-top:24px;padding:16px;border-radius:10px;background:var(--surface-2) }
+.heritage-question p { margin-top:4px;max-width:40em }
+@media (max-width:760px) {
+  .heritage-layout { grid-template-columns:minmax(0,1fr) }
+  .heritage-terms div { grid-template-columns:3em minmax(0,1fr);gap:8px }
+}
 </style>
 <style>
 #clockSvg{width:100%;max-width:600px;height:auto;display:block;margin:0 auto}
@@ -1199,6 +1234,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       <div class="badge" style="background:var(--div)">智</div>
       <h2>與自然共存的智慧 <span class="page-ref">課本 p.79</span></h2>
       <p class="sub">阿美族的「巴拉告」讓小魚有地方長大；賽德克族規定春、夏季動物繁殖時不打獵，也只能在自己的獵區打獵。這些規矩為什麼能讓動物一直抓不完？用下面的模擬器試試看。</p>
+      <a class="heritage-jump" href="#ancestral-teachings">看祖訓、告誡與傳承 <span aria-hidden="true">↓</span></a>
     </div>
     <div class="duo">
       <div class="panel pad">
@@ -1220,6 +1256,35 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         <p class="note" style="margin-top:10px">這是幫助理解的簡化模擬，數字不是真實的調查資料。</p>
       </div>
     </div>
+    <section class="wisdom-heritage" id="ancestral-teachings" aria-labelledby="heritageTitle">
+      <h3 id="heritageTitle">祖訓、告誡與傳承</h3>
+      <p class="heritage-intro">長輩怎麼把從山林和生活中學到的事，傳給下一代？</p>
+      <div class="heritage-layout">
+        <div>
+          <h4>賽德克族的 <i>gaya</i></h4>
+          <dl class="heritage-terms">
+            <div><dt>祖訓</dt><dd><i>gaya</i> 是賽德克族從祖先傳下來的生活準則，包含族人怎麼相處、農耕、狩獵，也和對祖靈的敬意相連。</dd></div>
+            <div><dt>告誡</dt><dd>族中長輩把生活經驗化成具體的提醒。以狩獵為例，族人要留意時節、遵守獵區規矩，也會把獵物和族人分享。</dd></div>
+            <div><dt>傳承</dt><dd>長輩用口述把這些規矩和理由傳給下一代。族人也透過農事、狩獵和祭儀，把祖訓用在生活中。</dd></div>
+          </dl>
+          <p class="heritage-source"><a href="https://www.cip.gov.tw/zh-tw/tribe/grid-list/F35F3EBC7CE2E1BCD0636733C6861689/info.html?cumid=D0636733C6861689" target="_blank" rel="noopener noreferrer">原住民族委員會〈賽德克族〉</a> · <a href="https://www.ntepb.gov.tw/df_ufiles/g/%E7%92%B0%E5%A2%83%E6%95%99%E8%82%B2%E5%AE%A3%E5%B0%8E%E6%95%99%E6%9D%90_%E3%80%8E%E7%9C%9F%E6%AD%A3%E7%9A%84%E3%80%8F%E8%B3%BD%E5%BE%B7%E5%85%8B%E7%92%B0%E5%A2%83%E6%99%BA%E6%85%A7.pdf" target="_blank" rel="noopener noreferrer">南投縣政府《賽德克環境智慧》</a></p>
+        </div>
+        <div class="heritage-video">
+          <h4>延伸影片 · 日本三陸的海嘯防災</h4>
+          <iframe src="https://www.youtube-nocookie.com/embed/hM4fjWcOqLw?hl=zh-TW" title="日本三陸的海嘯防災｜自說自話的總裁" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+          <div class="heritage-media-meta">
+            <p class="heritage-credit">自說自話的總裁 · 約 34 分鐘</p>
+            <a class="heritage-watch" href="https://www.youtube.com/watch?v=hM4fjWcOqLw" target="_blank" rel="noopener noreferrer">在 YouTube 開啟影片</a>
+          </div>
+          <p>日本宮古市姊吉的居民把海嘯教訓刻在石碑上，提醒下一代把房子蓋在碑所在的高度以上。</p>
+          <p class="heritage-source"><a href="https://www.gsi.go.jp/bousaichiri/bousaichiri41080.html" target="_blank" rel="noopener noreferrer">日本國土地理院〈姊吉海嘯紀念碑〉</a></p>
+        </div>
+      </div>
+      <div class="heritage-question">
+        <h4>想一想</h4>
+        <p>賽德克族的長輩和日本姊吉的居民，各留下什麼提醒？口述和石碑怎麼幫下一代記住這些經驗？</p>
+      </div>
+    </section>
   </div>
 </section>
 
