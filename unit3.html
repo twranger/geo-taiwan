@@ -450,11 +450,16 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .heritage-terms dd { margin:0 }
 .wisdom-heritage .heritage-source { margin-top:10px;font-size:14px;color:var(--muted) }
 .heritage-source a { color:inherit;text-underline-offset:3px }
-.heritage-video iframe {
-  display:block;width:100%;aspect-ratio:16 / 9;min-height:200px;margin:12px 0;border:0;border-radius:10px;background:var(--paper);
+.heritage-video iframe,.heritage-streetview iframe {
+  display:block;width:100%;margin:12px 0;border:0;border-radius:10px;background:var(--paper);
 }
+.heritage-video iframe { aspect-ratio:16 / 9;min-height:200px }
 .heritage-media-meta { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0 12px }
 .wisdom-heritage .heritage-credit { color:var(--muted);font-size:14px }
+.heritage-streetview { margin-top:24px;padding-top:20px;border-top:1px solid var(--line) }
+.heritage-streetview .heritage-media-meta { gap:8px 16px }
+.heritage-streetview .bigbtn { min-height:44px;text-decoration:none;line-height:1.4 }
+.heritage-streetview iframe { height:clamp(250px,36vw,400px) }
 .heritage-question { margin-top:24px;padding:16px;border-radius:10px;background:var(--surface-2) }
 .heritage-question p { margin-top:4px;max-width:40em }
 @media (max-width:760px) {
@@ -1271,18 +1276,29 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         </div>
         <div class="heritage-video">
           <h4>延伸影片 · 日本三陸的海嘯防災</h4>
-          <iframe src="https://www.youtube-nocookie.com/embed/hM4fjWcOqLw?hl=zh-TW" title="日本三陸的海嘯防災｜自說自話的總裁" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+          <iframe src="https://www.youtube-nocookie.com/embed/hM4fjWcOqLw?hl=zh-TW&amp;start=1786" title="日本三陸的海嘯防災｜自說自話的總裁" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
           <div class="heritage-media-meta">
-            <p class="heritage-credit">自說自話的總裁 · 約 34 分鐘</p>
-            <a class="heritage-watch" href="https://www.youtube.com/watch?v=hM4fjWcOqLw" target="_blank" rel="noopener noreferrer">在 YouTube 開啟影片</a>
+            <p class="heritage-credit">自說自話的總裁 · 從 29:46 開始</p>
+            <a class="heritage-watch" href="https://www.youtube.com/watch?v=hM4fjWcOqLw&amp;t=1786s" target="_blank" rel="noopener noreferrer">在 YouTube 開啟影片</a>
           </div>
-          <p>日本宮古市姊吉的居民把海嘯教訓刻在石碑上，提醒下一代把房子蓋在碑所在的高度以上。</p>
-          <p class="heritage-source"><a href="https://www.gsi.go.jp/bousaichiri/bousaichiri41080.html" target="_blank" rel="noopener noreferrer">日本國土地理院〈姊吉海嘯紀念碑〉</a></p>
+          <p>日本宮古市姉吉的居民把海嘯教訓刻在石碑上，提醒下一代把房子蓋在碑所在的高度以上。</p>
+          <p class="heritage-source"><a href="https://takuhon.lab.irides.tohoku.ac.jp/hibun/detail/iwate77/" target="_blank" rel="noopener noreferrer">東北大學〈姉吉大津浪記念碑〉</a></p>
         </div>
       </div>
+      <section class="heritage-streetview" aria-labelledby="heritageStreetviewTitle">
+        <div class="heritage-media-meta">
+          <div>
+            <h4 id="heritageStreetviewTitle">姉吉海嘯紀念碑街景</h4>
+            <p class="heritage-credit"><time datetime="2011-11">2011 年 11 月</time>拍攝</p>
+          </div>
+          <a class="bigbtn alt" href="https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;pano=yd32nC9dhKPGY8GGuv8zbQ&amp;hl=zh-TW" target="_blank" rel="noopener noreferrer">在 Google 地圖看歷年街景 <span aria-hidden="true">↗</span></a>
+        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!4v1795436872653!6m8!1m7!1syd32nC9dhKPGY8GGuv8zbQ!2m2!1d39.53423594672868!2d142.0452764162734!3f0!4f0!5f0.7820865974627469&amp;hl=zh-TW" title="姉吉海嘯紀念碑周邊的 Google 街景（2011 年 11 月）" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <p class="heritage-credit">在 Google 地圖點「查看更多日期」，就能切換年份。</p>
+      </section>
       <div class="heritage-question">
         <h4>想一想</h4>
-        <p>賽德克族的長輩和日本姊吉的居民，各留下什麼提醒？口述和石碑怎麼幫下一代記住這些經驗？</p>
+        <p>賽德克族的長輩和日本姉吉的居民，各留下什麼提醒？口述和石碑怎麼幫下一代記住這些經驗？</p>
       </div>
     </section>
   </div>
