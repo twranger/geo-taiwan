@@ -1028,7 +1028,7 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
-    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 56 more)"
+    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 53 more)"
   },
   {
     "antipattern": "low-contrast",
@@ -1058,7 +1058,7 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
-    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #0e2026 (and 27 more)"
+    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #0e2026 (and 35 more)"
   },
   {
     "antipattern": "low-contrast",
@@ -1068,7 +1068,7 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
-    "snippet": "1.6:1 (need 4.5:1) — text #000000 on #1f3439 (and 3 more)"
+    "snippet": "1.6:1 (need 4.5:1) — text #000000 on #1f3439 (and 2 more)"
   },
   {
     "antipattern": "low-contrast",
@@ -1178,6 +1178,26 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
+    "snippet": "<section> \"stories-card\": children flush against border+bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": "<div> \"co2-quiz\": children flush against border+bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1239,6 +1259,16 @@
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "dark-glow",
+    "name": "Glowing shadow accents",
+    "description": "Colored glow shadows — a zero-offset chromatic halo (box- or text-shadow) on any background, or any colored blurred shadow on a dark background — are the default \"cool\" look of AI-generated UIs. Use neutral elevation shadows and subtle, purposeful lighting instead.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": "Colored box-shadow glow (#10313b) on dark page"
   },
   {
     "antipattern": "repeating-stripes-gradient",
