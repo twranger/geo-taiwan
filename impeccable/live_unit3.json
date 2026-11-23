@@ -1,5 +1,16 @@
 [
   {
+    "antipattern": "nested-cards",
+    "name": "Nested cards",
+    "description": "Cards inside cards create visual noise and excessive depth. Flatten the hierarchy — use spacing, typography, and dividers instead of nesting containers.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit3.html",
+    "line": 0,
+    "snippet": "Card inside card",
+    "selector": "#aneyoshi-inscription"
+  },
+  {
     "antipattern": "repeating-stripes-gradient",
     "name": "Repeating-gradient stripes",
     "description": "Repeating-gradient stripes used as surface decoration are a recurring generated-UI signature. Reach for a deliberate texture or leave the surface plain.",
