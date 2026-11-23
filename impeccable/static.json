@@ -1001,6 +1001,16 @@
     "snippet": "1.7:1 (need 4.5:1) — text #000000 on #31382f (and 1 more)"
   },
   {
+    "antipattern": "low-contrast",
+    "name": "Low contrast text",
+    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": ":hover state 1.5:1 (need 4.5:1) — text #000000 on #1b3138 (and 2 more)"
+  },
+  {
     "antipattern": "cramped-padding",
     "name": "Cramped padding",
     "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
@@ -1019,6 +1029,26 @@
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
     "antipattern": "cramped-padding",
@@ -1078,17 +1108,7 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
-    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 0,
-    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+    "snippet": "<div> \"migration-tabs\": children flush against border+bg on top/bottom (no inset)"
   },
   {
     "antipattern": "cramped-padding",
