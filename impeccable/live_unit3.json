@@ -1,5 +1,49 @@
 [
   {
+    "antipattern": "border-accent-on-rounded",
+    "name": "Border accent on rounded element",
+    "description": "Thick accent border on a rounded card — the border clashes with the rounded corners. Remove the border or the border-radius.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit3.html",
+    "line": 0,
+    "snippet": "border-top: 4px + border-radius: 16px",
+    "selector": "#amis-baseball"
+  },
+  {
+    "antipattern": "border-accent-on-rounded",
+    "name": "Border accent on rounded element",
+    "description": "Thick accent border on a rounded card — the border clashes with the rounded corners. Remove the border or the border-radius.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit3.html",
+    "line": 0,
+    "snippet": "border-top: 3px + border-radius: 10px",
+    "selector": "div.stories-culture-grid > article:nth-of-type(1)"
+  },
+  {
+    "antipattern": "border-accent-on-rounded",
+    "name": "Border accent on rounded element",
+    "description": "Thick accent border on a rounded card — the border clashes with the rounded corners. Remove the border or the border-radius.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit3.html",
+    "line": 0,
+    "snippet": "border-top: 3px + border-radius: 10px",
+    "selector": "div.stories-culture-grid > article:nth-of-type(2)"
+  },
+  {
+    "antipattern": "border-accent-on-rounded",
+    "name": "Border accent on rounded element",
+    "description": "Thick accent border on a rounded card — the border clashes with the rounded corners. Remove the border or the border-radius.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit3.html",
+    "line": 0,
+    "snippet": "border-top: 3px + border-radius: 10px",
+    "selector": "article:nth-of-type(3)"
+  },
+  {
     "antipattern": "nested-cards",
     "name": "Nested cards",
     "description": "Cards inside cards create visual noise and excessive depth. Flatten the hierarchy — use spacing, typography, and dividers instead of nesting containers.",
