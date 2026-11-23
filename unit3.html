@@ -459,11 +459,22 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .heritage-streetview { margin-top:24px;padding-top:20px;border-top:1px solid var(--line) }
 .heritage-streetview .heritage-media-meta { gap:8px 16px }
 .heritage-streetview .bigbtn { min-height:44px;text-decoration:none;line-height:1.4 }
-.heritage-streetview iframe { height:clamp(250px,36vw,400px) }
+.heritage-streetview .heritage-layout { grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;margin-top:14px }
+.heritage-streetview iframe { height:clamp(250px,36vw,400px);margin:0 0 8px }
+.heritage-inscription {
+  padding:clamp(14px,2vw,22px);scroll-margin-top:80px;
+  border:1px solid var(--line);border-radius:10px;background:var(--surface-2);
+}
+.heritage-inscription h5 { margin:0;font-size:19px;line-height:1.4 }
+.heritage-inscription blockquote { margin:10px 0 0 }
+.wisdom-heritage .heritage-inscription blockquote p { font-size:17px }
+.heritage-inscription blockquote p+p { margin-top:10px }
+.heritage-inscription details { margin-top:12px;border-top:1px solid var(--line) }
+.heritage-inscription summary { min-height:44px;padding-block:7px;font-weight:700;cursor:pointer }
 .heritage-question { margin-top:24px;padding:16px;border-radius:10px;background:var(--surface-2) }
 .heritage-question p { margin-top:4px;max-width:40em }
 @media (max-width:760px) {
-  .heritage-layout { grid-template-columns:minmax(0,1fr) }
+  .heritage-layout,.heritage-streetview .heritage-layout { grid-template-columns:minmax(0,1fr) }
   .heritage-terms div { grid-template-columns:3em minmax(0,1fr);gap:8px }
 }
 </style>
@@ -1282,19 +1293,34 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
             <a class="heritage-watch" href="https://www.youtube.com/watch?v=hM4fjWcOqLw&amp;t=1786s" target="_blank" rel="noopener noreferrer">在 YouTube 開啟影片</a>
           </div>
           <p>日本宮古市姉吉的居民把海嘯教訓刻在石碑上，提醒下一代把房子蓋在碑所在的高度以上。</p>
-          <p class="heritage-source"><a href="https://takuhon.lab.irides.tohoku.ac.jp/hibun/detail/iwate77/" target="_blank" rel="noopener noreferrer">東北大學〈姉吉大津浪記念碑〉</a></p>
         </div>
       </div>
       <section class="heritage-streetview" aria-labelledby="heritageStreetviewTitle">
         <div class="heritage-media-meta">
           <div>
-            <h4 id="heritageStreetviewTitle">姉吉海嘯紀念碑街景</h4>
-            <p class="heritage-credit"><time datetime="2011-11">2011 年 11 月</time>拍攝</p>
+            <h4 id="heritageStreetviewTitle">姉吉海嘯紀念碑</h4>
+            <p class="heritage-credit">街景拍攝於 <time datetime="2011-11">2011 年 11 月</time></p>
           </div>
           <a class="bigbtn alt" href="https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;pano=yd32nC9dhKPGY8GGuv8zbQ&amp;hl=zh-TW" target="_blank" rel="noopener noreferrer">在 Google 地圖看歷年街景 <span aria-hidden="true">↗</span></a>
         </div>
-        <iframe src="https://www.google.com/maps/embed?pb=!4v1795436872653!6m8!1m7!1syd32nC9dhKPGY8GGuv8zbQ!2m2!1d39.53423594672868!2d142.0452764162734!3f0!4f0!5f0.7820865974627469&amp;hl=zh-TW" title="姉吉海嘯紀念碑周邊的 Google 街景（2011 年 11 月）" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <p class="heritage-credit">在 Google 地圖點「查看更多日期」，就能切換年份。</p>
+        <div class="heritage-layout">
+          <section class="heritage-inscription" id="aneyoshi-inscription" aria-labelledby="heritageInscriptionTitle">
+            <h5 id="heritageInscriptionTitle">大海嘯紀念碑｜碑文中譯</h5>
+            <blockquote cite="https://takuhon.lab.irides.tohoku.ac.jp/hibun/detail/iwate77/">
+              <p>住在高處，子孫就能平安過日子。要記住大海嘯帶來的災難。<strong>不要在比這塊石碑低的地方蓋房子。</strong></p>
+              <p>1896 年和 1933 年，海嘯兩次淹到這裡，村子都被摧毀。第一次只有 2 人活下來，第二次只有 4 人。無論過了多少年，都要小心。</p>
+            </blockquote>
+            <details>
+              <summary>石碑另一面寫了什麼？</summary>
+              <p>1933 年海嘯後，《東京朝日新聞》報社把讀者的捐款分給各地的城鎮和村莊，剩下的款項用來立這塊石碑。</p>
+            </details>
+            <p class="heritage-source"><a href="https://takuhon.lab.irides.tohoku.ac.jp/hibun/detail/iwate77/" target="_blank" rel="noopener noreferrer">東北大學｜看日文碑文與拓片</a></p>
+          </section>
+          <div>
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1795436872653!6m8!1m7!1syd32nC9dhKPGY8GGuv8zbQ!2m2!1d39.53423594672868!2d142.0452764162734!3f0!4f0!5f0.7820865974627469&amp;hl=zh-TW" title="姉吉海嘯紀念碑周邊的 Google 街景（2011 年 11 月）" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <p class="heritage-credit">在 Google 地圖點「查看更多日期」，就能切換年份。</p>
+          </div>
+        </div>
       </section>
       <div class="heritage-question">
         <h4>想一想</h4>
