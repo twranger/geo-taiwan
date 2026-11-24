@@ -1054,18 +1054,45 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-card { padding:clamp(12px,2.5vw,26px);border:1px solid var(--line);border-radius:16px;background:var(--surface) }
 .stories-card h3+p { margin-top:6px;max-width:43em }
 .baseball-board { border-top:4px solid var(--stories-accent) }
-.baseball-table { width:100%;margin-top:12px;table-layout:fixed;border-collapse:collapse;font-size:16px;line-height:1.4 }
-.baseball-table th,.baseball-table td { padding:6px 10px;text-align:start;vertical-align:top;border-bottom:1px solid var(--line) }
-.baseball-table thead { background:var(--stories-accent);color:var(--surface) }
-.baseball-table th:first-child { width:4em }
-.baseball-table tbody th { color:var(--muted);font-variant-numeric:tabular-nums }
-.baseball-table tbody tr:nth-child(odd) { background:var(--surface-2) }
-.baseball-table .baseball-pitcher { background:var(--stories-wash) }
-.baseball-player { display:flex;align-items:baseline;gap:0 8px;flex-wrap:wrap }
-.baseball-player a { font-weight:700;text-decoration-color:color-mix(in srgb,var(--stories-accent) 45%,transparent) }
-.baseball-player a:hover { text-decoration-color:currentColor }
-.baseball-position { color:var(--muted);font-size:14px }
-.baseball-achievement { display:block;font-size:14px;line-height:1.4 }
+.baseball-table {
+  width:100%;margin-top:6px;table-layout:fixed;border-collapse:separate;border-spacing:0 8px;
+  font-size:16px;line-height:1.4;
+}
+.baseball-table th,.baseball-table td { padding:0 0 0 8px;text-align:start;vertical-align:top }
+.baseball-table th:first-child { width:3.7em;padding-left:0 }
+.baseball-table thead th { padding-block:6px;color:var(--stories-accent);border-bottom:2px solid var(--line) }
+.baseball-table tbody th { padding-block:12px;color:var(--muted);font-variant-numeric:tabular-nums }
+.baseball-athlete { min-width:0;padding:clamp(8px,1.4vw,16px);border:1px solid var(--line);border-radius:12px;background:var(--surface-2) }
+.baseball-pitcher .baseball-athlete { background:var(--stories-wash) }
+.baseball-profile { display:grid;grid-template-columns:clamp(58px,7vw,80px) minmax(0,1fr);align-items:center;gap:12px }
+#indigenous-stories .baseball-portrait {
+  display:block;aspect-ratio:1;min-width:0;overflow:hidden;border:1px solid var(--line);
+  border-radius:11px;background:var(--surface);text-decoration:none;
+}
+.baseball-portrait img { display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%;color:var(--muted);font-size:12px }
+.baseball-player { display:flex;align-items:center;gap:4px 8px;flex-wrap:wrap }
+.baseball-player h5 { margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(19px,2vw,25px);line-height:1.2 }
+.baseball-wiki {
+  display:inline-flex;min-height:32px;align-items:center;padding:2px 7px;border:1px solid var(--line);
+  border-radius:6px;background:var(--surface);font-size:13px;font-weight:700;text-decoration:none;
+}
+.baseball-wiki:is(:hover,:focus-visible) { border-color:var(--stories-accent);text-decoration:underline }
+.baseball-position,.baseball-achievement { display:block;margin-top:2px;font-size:14px;line-height:1.4 }
+.baseball-position { font-weight:700;color:var(--muted) }
+.baseball-achievement a { text-decoration-color:color-mix(in srgb,var(--stories-accent) 50%,transparent) }
+.baseball-career { margin-top:10px;padding-top:8px;border-top:1px solid var(--line) }
+#indigenous-stories .baseball-league { display:flex;align-items:baseline;gap:0 7px;flex-wrap:wrap;font-size:14px;line-height:1.45 }
+.baseball-league span { color:var(--muted);font-variant-numeric:tabular-nums }
+.baseball-league a { margin-inline-start:auto;font-size:13px }
+.baseball-numbers { display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,56px),1fr));gap:5px;margin:6px 0 0 }
+.baseball-numbers div { min-width:0;padding:4px 2px;border-radius:6px;background:var(--surface);text-align:center;line-height:1.3 }
+.baseball-numbers dt { color:var(--muted);font-size:12px }
+.baseball-numbers dd { margin:2px 0 0;font-size:clamp(14px,1.55vw,18px);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap }
+.baseball-more-career summary,.baseball-credits summary { color:var(--stories-accent) }
+.baseball-bench { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px }
+.baseball-credits { margin-top:8px }
+.baseball-credits ul { margin:0;padding-inline-start:1.4em;columns:2;font-size:14px;line-height:1.6 }
+.baseball-credits li { break-inside:avoid;margin-bottom:4px }
 .baseball-huddle { margin-top:16px;padding:12px 14px;border-radius:10px;background:var(--stories-wash) }
 .baseball-huddle p,.stories-card summary+p { margin-top:4px }
 .stories-history { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px }
@@ -1107,24 +1134,42 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .mur-protein figcaption b { font-family:var(--f-num);font-size:clamp(30px,3.4vw,47px);line-height:1.04;letter-spacing:-.04em }
 .mur-protein figcaption span { font-size:15px }
 #indigenous-stories .mur-protein .mur-guide { margin-top:8px }
-.mur-run .mur-bars { max-width:520px }
 @media (min-width:940px) {
   .mur-example { grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px }
 }
 .mur-main figcaption { font-size:clamp(18px,2.2vw,24px);font-weight:700;line-height:1.4 }
 .mur-card figcaption { font-size:19px;font-weight:700;line-height:1.4 }
 #indigenous-stories .mur-guide { margin:4px 0 0;color:var(--muted);font-size:15px;line-height:1.5 }
-.mur-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px }
-.mur-period { min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface) }
-#indigenous-stories .mur-period h4 { margin:0 0 2px;font-size:17px;line-height:1.4 }
+#miltenberger .mur-studies {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));
+  align-items:stretch;gap:12px;margin-top:14px;
+}
+#miltenberger .mur-study { margin:0;min-width:0 }
+#miltenberger .mur-study figcaption { font-size:clamp(19px,2.2vw,24px);font-weight:700;line-height:1.4;text-wrap:pretty }
+#miltenberger .mur-study-year { display:block;margin-bottom:5px;color:var(--muted);font-size:14px;font-weight:600 }
+#miltenberger .mur-study figcaption strong { display:block;color:var(--mur-variant) }
+#miltenberger .mur-study .mur-guide { margin-top:8px;color:var(--ink) }
+#miltenberger .mur-step-table {
+  width:100%;margin-top:12px;border-collapse:collapse;table-layout:fixed;
+  text-align:center;font-size:15px;line-height:1.4;
+}
+#miltenberger .mur-step-table th,#miltenberger .mur-step-table td { border-bottom:1px solid var(--line);padding:6px 3px }
+#miltenberger .mur-step-table thead th { color:var(--muted);font-size:14px }
+#miltenberger .mur-step-table th:first-child { width:32%;text-align:start }
+#miltenberger .mur-step-table tbody th { font-size:15px;font-weight:600 }
+#miltenberger .mur-step-table td { font-family:var(--f-num);font-size:20px;font-variant-numeric:tabular-nums }
+#miltenberger .mur-step-table .mur-larger { background:var(--mur-wash);color:var(--mur-variant);font-weight:700 }
+#miltenberger .mur-step-table .mur-larger span { display:block;font:600 13px/1.35 var(--f-body) }
+#miltenberger .mur-run .mur-bars { margin:14px 0;gap:8px;--mur-value-width:3.3rem }
+#miltenberger .mur-run .mur-bar-track { height:18px }
+#miltenberger .mur-run .mur-bars strong { font-size:21px }
+#miltenberger .mur-endurance { padding-top:10px;border-top:1px solid var(--line);font-size:15px;line-height:1.5 }
 .mur-bars { display:grid;gap:4px;margin:8px 0 0 }
 .mur-bars div { display:grid;grid-template-columns:4.75rem minmax(0,1fr);gap:6px;align-items:center;line-height:1.5 }
 .mur-bars dt { font-size:15px }
 .mur-bars dd { display:grid;grid-template-columns:minmax(0,1fr) var(--mur-value-width,3rem);gap:6px;align-items:center;margin:0 }
 .mur-card .mur-bars { --mur-value-width:4.75rem }
 .mur-bars strong { text-align:end;font-family:var(--f-num);font-size:clamp(17px,2vw,21px);line-height:1.25;white-space:nowrap }
-.mur-bars .mur-time-value { font-family:var(--f-body);font-size:18px;font-variant-numeric:tabular-nums }
-.mur-bars .mur-time-value span { font-size:12px }
 .mur-bar-track { height:14px;border-radius:3px;background:var(--line) }
 .mur-bar-track span {
   display:block;width:calc(var(--mur-value) / var(--mur-scale) * 100%);height:100%;
@@ -1132,7 +1177,6 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 }
 .mur-variant .mur-bar-track span { background:var(--mur-variant) }
 .mur-variant dt,.mur-variant strong { color:var(--mur-variant);font-weight:700 }
-#indigenous-stories .mur-reading { margin-top:10px;font-weight:700 }
 .blood-question { margin-top:12px;padding:0 14px 4px;border-radius:10px;background:var(--surface-2) }
 .blood-question[open] { padding-bottom:12px }
 .blood-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start;gap:12px 24px;margin-top:10px }
@@ -1151,9 +1195,21 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .stories-culture-grid article { padding:14px;border:1px solid var(--line);border-top:3px solid var(--stories-accent);border-radius:10px;background:var(--surface) }
 @media (max-width:700px) {
   .stories-history,.blood-layout,.stories-culture-grid { grid-template-columns:minmax(0,1fr) }
-  .mur-grid,.mur-overview { grid-template-columns:minmax(0,1fr);gap:8px }
-  .baseball-table th,.baseball-table td { padding-inline:6px }
-  .baseball-table th:first-child { width:3.1em }
+  .mur-overview { grid-template-columns:minmax(0,1fr);gap:8px }
+  .baseball-table th,.baseball-table td { padding-left:4px }
+  .baseball-table th:first-child { width:2.7em }
+  .baseball-bench { grid-template-columns:minmax(0,1fr) }
+  .baseball-credits ul { columns:1 }
+  .baseball-table:is([data-lineup="both"],:not([data-lineup])) .baseball-profile {
+    grid-template-columns:minmax(0,1fr);gap:6px;
+  }
+  .baseball-table:is([data-lineup="both"],:not([data-lineup])) .baseball-portrait { width:min(100%,70px) }
+  .baseball-table:is([data-lineup="both"],:not([data-lineup])) .baseball-numbers {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .baseball-table:is([data-lineup="both"],:not([data-lineup])) .baseball-numbers dd {
+    white-space:normal;overflow-wrap:anywhere;
+  }
   .lineup-controls button,.stories-nav a { padding-inline:8px }
 }
 @media (forced-colors:active) {
@@ -1304,7 +1360,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     </nav>
     <section class="stories-card baseball-board" id="amis-baseball" aria-labelledby="amisBaseballTitle">
       <h3 id="amisBaseballTitle">阿美族棒球夢幻隊</h3>
-      <p>把不同年代的阿美族球星放在一起，能排出兩套爭冠先發嗎？每套排九名打者和一名先發投手。點球員名字可以看他的事蹟。</p>
+      <p>把不同年代的阿美族球星排成兩套先發。每隊有一名投手、九名打者，球員旁的「維基百科」可以看完整經歷。</p>
       <div class="lineup-controls" id="amisLineupControls" role="group" aria-label="選擇要看的先發陣容" hidden>
         <button type="button" data-lineup-view="both" aria-controls="amisLineups" aria-pressed="true">並排比較</button>
         <button type="button" data-lineup-view="first" aria-controls="amisLineups" aria-pressed="false">只看一軍</button>
@@ -1315,127 +1371,698 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
           <tr><th scope="col">棒次</th><th scope="col" data-team="first">一軍先發</th><th scope="col" data-team="second">二軍先發</th></tr>
         </thead>
         <tbody>
-        <tr class="baseball-pitcher">
-          <th scope="row">先發投手</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://npb.jp/bis/players/81383863.html" target="_blank" rel="noopener noreferrer">郭源治</a></div>
-            <span class="baseball-achievement">日職 106 勝、116 次救援成功</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/201902160121.aspx" target="_blank" rel="noopener noreferrer">陳義信</a></div>
-            <span class="baseball-achievement">中職生涯 92 勝、84 場完投</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">1 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/201611080304.aspx" target="_blank" rel="noopener noreferrer">陽岱鋼</a><span class="baseball-position">中外野</span></div>
-            <span class="baseball-achievement">日職 4 座外野金手套</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202311210273.aspx" target="_blank" rel="noopener noreferrer">陳晨威</a><span class="baseball-position">右外野</span></div>
-            <span class="baseball-achievement">2023 中職盜壘王</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">2 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://cpbl.com.tw/team/person?Acnt=0000002286" target="_blank" rel="noopener noreferrer">林立</a><span class="baseball-position">二壘</span></div>
-            <span class="baseball-achievement">2022 中職年度 MVP</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202510060200.aspx" target="_blank" rel="noopener noreferrer">李凱威</a><span class="baseball-position">二壘</span></div>
-            <span class="baseball-achievement">2025 中職安打王、盜壘王</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">3 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202303120232.aspx" target="_blank" rel="noopener noreferrer">張育成</a><span class="baseball-position">游擊</span></div>
-            <span class="baseball-achievement">2023 經典賽預賽 A 組 MVP</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/201811130392.aspx" target="_blank" rel="noopener noreferrer">陳俊秀</a><span class="baseball-position">一壘</span></div>
-            <span class="baseball-achievement">2018 中職年度 MVP</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">4 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0N106848635248154958" target="_blank" rel="noopener noreferrer">林智勝</a><span class="baseball-position">一壘</span></div>
-            <span class="baseball-achievement">中職首位生涯 300 轟</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202403125002.aspx" target="_blank" rel="noopener noreferrer">周思齊</a><span class="baseball-position">指定打擊</span></div>
-            <span class="baseball-achievement">2012 中職年度 MVP</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">5 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/ahel/202405065002.aspx" target="_blank" rel="noopener noreferrer">張泰山</a><span class="baseball-position">指定打擊</span></div>
-            <span class="baseball-achievement">中職生涯 289 轟</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0L132507631078517065" target="_blank" rel="noopener noreferrer">張志豪</a><span class="baseball-position">中外野</span></div>
-            <span class="baseball-achievement">曾刷新中職生涯三壘安打紀錄</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">6 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-tw/News/Detail?newsId=23090521031879988" target="_blank" rel="noopener noreferrer">高國輝</a><span class="baseball-position">左外野</span></div>
-            <span class="baseball-achievement">中職 3 屆全壘打王</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.peopo.org/news/111617" target="_blank" rel="noopener noreferrer">陳鏞基</a><span class="baseball-position">三壘</span></div>
-            <span class="baseball-achievement">2006 經典賽擊出滿貫砲</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">7 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/firstnews/202001070045.aspx" target="_blank" rel="noopener noreferrer">張建銘</a><span class="baseball-position">右外野</span></div>
-            <span class="baseball-achievement">中職 5 座外野金手套</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.cna.com.tw/news/aspt/202410250393.aspx" target="_blank" rel="noopener noreferrer">曾頌恩</a><span class="baseball-position">左外野</span></div>
-            <span class="baseball-achievement">2024 台灣大賽 MVP</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">8 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://news.ipcf.org.tw/12862" target="_blank" rel="noopener noreferrer">鄭達鴻</a><span class="baseball-position">捕手</span></div>
-            <span class="baseball-achievement">2010 中職盜壘王</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0M301620343791220345" target="_blank" rel="noopener noreferrer">王勝偉</a><span class="baseball-position">游擊</span></div>
-            <span class="baseball-achievement">中職 9 座游擊金手套</span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">9 棒</th>
-          <td data-team="first">
-            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">王威晨</a><span class="baseball-position">三壘</span></div>
-            <span class="baseball-achievement">2023 經典賽台灣隊長</span>
-          </td>
-          <td data-team="second">
-            <div class="baseball-player"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">高宇杰</a><span class="baseball-position">捕手</span></div>
-            <span class="baseball-achievement">2023 經典賽國手</span>
-          </td>
-        </tr>
+          <tr class="baseball-pitcher">
+            <th scope="row">投手</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="郭源治">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://dir.sp.baseball.findfriends.jp/yakyumatome/detail.html?no=3288" target="_blank" rel="noopener noreferrer" aria-label="郭源治的照片來源與署名">
+                    <img src="https://cdn.findfriends.jp/img.dir.sp/yakyumatome/image.php?id=6973" alt="郭源治的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>郭源治</h5><a href="https://zh.wikipedia.org/wiki/郭源治" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="郭源治的維基百科">維基百科</a></div>
+                    <span class="baseball-position">先發投手</span>
+                    <span class="baseball-achievement"><a href="https://npb.jp/bis/players/81383863.html" target="_blank" rel="noopener noreferrer">日職 106 勝、116 次救援成功</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>日職一軍</strong> <span>1981–1996</span> <a href="https://npb.jp/bis/players/81383863.html" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                  <dl class="baseball-numbers" aria-label="日職一軍累計成績">
+                    <div><dt>出賽</dt><dd>496</dd></div>
+                    <div><dt>勝–敗</dt><dd>106–106</dd></div>
+                    <div><dt>防禦率</dt><dd>3.22</dd></div>
+                    <div><dt>投球局數</dt><dd>1,971</dd></div>
+                    <div><dt>三振</dt><dd>1,415</dd></div>
+                    <div><dt>救援成功</dt><dd>116</dd></div>
+                  </dl>
+                </div>
+                <details class="baseball-more-career">
+                  <summary>其他聯盟成績</summary>
+                  <div class="baseball-career">
+                    <p class="baseball-league"><strong>中職一軍</strong> <span>1997–1999</span></p>
+                    <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                      <div><dt>出賽</dt><dd>52</dd></div>
+                      <div><dt>勝–敗</dt><dd>28–11</dd></div>
+                      <div><dt>防禦率</dt><dd>2.67</dd></div>
+                      <div><dt>投球局數</dt><dd>293⅓</dd></div>
+                      <div><dt>三振</dt><dd>204</dd></div>
+                      <div><dt>完投</dt><dd>4</dd></div>
+                    </dl>
+                  </div>
+                </details>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="陳義信">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A%E9%99%B3%E7%BE%A9%E4%BF%A1%E5%89%AF%E4%B8%BB%E4%BB%BB%E5%A7%94%E5%93%A1.jpg" target="_blank" rel="noopener noreferrer" aria-label="陳義信的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/%E9%99%B3%E7%BE%A9%E4%BF%A1%E5%89%AF%E4%B8%BB%E4%BB%BB%E5%A7%94%E5%93%A1.jpg/250px-%E9%99%B3%E7%BE%A9%E4%BF%A1%E5%89%AF%E4%B8%BB%E4%BB%BB%E5%A7%94%E5%93%A1.jpg" alt="陳義信的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>陳義信</h5><a href="https://zh.wikipedia.org/wiki/陳義信" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="陳義信的維基百科">維基百科</a></div>
+                    <span class="baseball-position">先發投手</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/201902160121.aspx" target="_blank" rel="noopener noreferrer">中職生涯 92 勝、84 場完投</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>1991–1996</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>187</dd></div>
+                    <div><dt>勝–敗</dt><dd>92–52</dd></div>
+                    <div><dt>防禦率</dt><dd>2.82</dd></div>
+                    <div><dt>投球局數</dt><dd>1,275⅔</dd></div>
+                    <div><dt>三振</dt><dd>748</dd></div>
+                    <div><dt>完投</dt><dd>84</dd></div>
+                  </dl>
+                </div>
+                <details class="baseball-more-career">
+                  <summary>其他聯盟成績</summary>
+                  <div class="baseball-career">
+                    <p class="baseball-league"><strong>日職一軍</strong> <span>1989–1990</span></p>
+                    <dl class="baseball-numbers" aria-label="日職一軍累計成績">
+                      <div><dt>出賽</dt><dd>21</dd></div>
+                      <div><dt>勝–敗</dt><dd>3–1</dd></div>
+                      <div><dt>防禦率</dt><dd>5.90</dd></div>
+                      <div><dt>投球局數</dt><dd>39⅔</dd></div>
+                      <div><dt>三振</dt><dd>21</dd></div>
+                      <div><dt>救援成功</dt><dd>0</dd></div>
+                    </dl>
+                  </div>
+                  <div class="baseball-career">
+                    <p class="baseball-league"><strong>台灣大聯盟</strong> <span>1997–2000</span></p>
+                    <dl class="baseball-numbers" aria-label="台灣大聯盟累計成績">
+                      <div><dt>出賽</dt><dd>118</dd></div>
+                      <div><dt>勝–敗</dt><dd>49–49</dd></div>
+                      <div><dt>防禦率</dt><dd>3.45</dd></div>
+                      <div><dt>投球局數</dt><dd>767⅔</dd></div>
+                      <div><dt>三振</dt><dd>459</dd></div>
+                      <div><dt>完投</dt><dd>26</dd></div>
+                    </dl>
+                  </div>
+                </details>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">1 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="陽岱鋼">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3ANF-Yang-Dai-Kang20120310.jpg" target="_blank" rel="noopener noreferrer" aria-label="陽岱鋼的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/NF-Yang-Dai-Kang20120310.jpg/330px-NF-Yang-Dai-Kang20120310.jpg" alt="陽岱鋼的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>陽岱鋼</h5><a href="https://zh.wikipedia.org/wiki/陽岱鋼" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="陽岱鋼的維基百科">維基百科</a></div>
+                    <span class="baseball-position">中外野</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/firstnews/201611080304.aspx" target="_blank" rel="noopener noreferrer">日職 4 座外野金手套</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>日職一軍</strong> <span>2007–2021</span> <a href="https://npb.jp/bis/players/21825112.html" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                  <dl class="baseball-numbers" aria-label="日職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,322</dd></div>
+                    <div><dt>安打</dt><dd>1,164</dd></div>
+                    <div><dt>全壘打</dt><dd>105</dd></div>
+                    <div><dt>打點</dt><dd>482</dd></div>
+                    <div><dt>盜壘</dt><dd>141</dd></div>
+                    <div><dt>打擊率</dt><dd>0.270</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="陳晨威">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2026.03.26_Chen_Chen-wei_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="陳晨威的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/2026.03.26_Chen_Chen-wei_%28cropped%29.jpg/500px-2026.03.26_Chen_Chen-wei_%28cropped%29.jpg" alt="陳晨威的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>陳晨威</h5><a href="https://zh.wikipedia.org/wiki/陳晨威" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="陳晨威的維基百科">維基百科</a></div>
+                    <span class="baseball-position">右外野</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202311210273.aspx" target="_blank" rel="noopener noreferrer">2023 中職盜壘王</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2018–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>829</dd></div>
+                    <div><dt>安打</dt><dd>926</dd></div>
+                    <div><dt>全壘打</dt><dd>37</dd></div>
+                    <div><dt>打點</dt><dd>301</dd></div>
+                    <div><dt>盜壘</dt><dd>222</dd></div>
+                    <div><dt>打擊率</dt><dd>0.293</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="林立">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9E%97%E7%AB%8B%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="林立的照片來源與署名">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9E%97%E7%AB%8B%29.jpg" alt="林立的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>林立</h5><a href="https://zh.wikipedia.org/wiki/林立_(棒球員)" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="林立的維基百科">維基百科</a></div>
+                    <span class="baseball-position">二壘</span>
+                    <span class="baseball-achievement"><a href="https://cpbl.com.tw/team/person?Acnt=0000002286" target="_blank" rel="noopener noreferrer">2022 中職年度 MVP</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2017–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>796</dd></div>
+                    <div><dt>安打</dt><dd>989</dd></div>
+                    <div><dt>全壘打</dt><dd>94</dd></div>
+                    <div><dt>打點</dt><dd>473</dd></div>
+                    <div><dt>盜壘</dt><dd>142</dd></div>
+                    <div><dt>打擊率</dt><dd>0.337</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="李凱威">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9D%8E%E5%87%B1%E5%A8%81%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="李凱威的照片來源與署名">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9D%8E%E5%87%B1%E5%A8%81%29.jpg" alt="李凱威的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>李凱威</h5><a href="https://zh.wikipedia.org/wiki/李凱威" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="李凱威的維基百科">維基百科</a></div>
+                    <span class="baseball-position">二壘</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202510060200.aspx" target="_blank" rel="noopener noreferrer">2025 中職安打王、盜壘王</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2021–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>687</dd></div>
+                    <div><dt>安打</dt><dd>724</dd></div>
+                    <div><dt>全壘打</dt><dd>14</dd></div>
+                    <div><dt>打點</dt><dd>232</dd></div>
+                    <div><dt>盜壘</dt><dd>114</dd></div>
+                    <div><dt>打擊率</dt><dd>0.288</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="張育成">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AYu_Chang_%2852103060016%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="張育成的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Yu_Chang_%2852103060016%29_%28cropped%29.jpg/250px-Yu_Chang_%2852103060016%29_%28cropped%29.jpg" alt="張育成的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>張育成</h5><a href="https://zh.wikipedia.org/wiki/張育成" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="張育成的維基百科">維基百科</a></div>
+                    <span class="baseball-position">游擊</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202303120232.aspx" target="_blank" rel="noopener noreferrer">2023 經典賽預賽 A 組 MVP</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2024–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>216</dd></div>
+                    <div><dt>安打</dt><dd>208</dd></div>
+                    <div><dt>全壘打</dt><dd>40</dd></div>
+                    <div><dt>打點</dt><dd>113</dd></div>
+                    <div><dt>盜壘</dt><dd>20</dd></div>
+                    <div><dt>打擊率</dt><dd>0.284</dd></div>
+                  </dl>
+                </div>
+                <details class="baseball-more-career">
+                  <summary>其他聯盟成績</summary>
+                  <div class="baseball-career">
+                    <p class="baseball-league"><strong>美職大聯盟</strong> <span>2019–2023</span> <a href="https://www.mlb.com/player/yu-chang-644374" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                    <dl class="baseball-numbers" aria-label="美職大聯盟累計成績">
+                      <div><dt>出賽</dt><dd>235</dd></div>
+                      <div><dt>安打</dt><dd>121</dd></div>
+                      <div><dt>全壘打</dt><dd>20</dd></div>
+                      <div><dt>打點</dt><dd>79</dd></div>
+                      <div><dt>盜壘</dt><dd>5</dd></div>
+                      <div><dt>打擊率</dt><dd>0.204</dd></div>
+                    </dl>
+                  </div>
+                </details>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="陳俊秀">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AChun-Hsiu_Chen.jpg" target="_blank" rel="noopener noreferrer" aria-label="陳俊秀的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Chun-Hsiu_Chen.jpg/330px-Chun-Hsiu_Chen.jpg" alt="陳俊秀的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>陳俊秀</h5><a href="https://zh.wikipedia.org/wiki/陳俊秀" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="陳俊秀的維基百科">維基百科</a></div>
+                    <span class="baseball-position">一壘</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/firstnews/201811130392.aspx" target="_blank" rel="noopener noreferrer">2018 中職年度 MVP</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2014–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,134</dd></div>
+                    <div><dt>安打</dt><dd>1,228</dd></div>
+                    <div><dt>全壘打</dt><dd>149</dd></div>
+                    <div><dt>打點</dt><dd>731</dd></div>
+                    <div><dt>盜壘</dt><dd>75</dd></div>
+                    <div><dt>打擊率</dt><dd>0.314</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">4 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="林智勝">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A%E6%9E%97%E6%99%BA%E5%8B%9D202112.jpg" target="_blank" rel="noopener noreferrer" aria-label="林智勝的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/%E6%9E%97%E6%99%BA%E5%8B%9D202112.jpg/500px-%E6%9E%97%E6%99%BA%E5%8B%9D202112.jpg" alt="林智勝的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>林智勝</h5><a href="https://zh.wikipedia.org/wiki/林智勝" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="林智勝的維基百科">維基百科</a></div>
+                    <span class="baseball-position">一壘</span>
+                    <span class="baseball-achievement"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0N106848635248154958" target="_blank" rel="noopener noreferrer">中職首位生涯 300 轟</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2004–2025</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,719</dd></div>
+                    <div><dt>安打</dt><dd>1,860</dd></div>
+                    <div><dt>全壘打</dt><dd>305</dd></div>
+                    <div><dt>打點</dt><dd>1,237</dd></div>
+                    <div><dt>盜壘</dt><dd>161</dd></div>
+                    <div><dt>打擊率</dt><dd>0.308</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="周思齊">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AChou_Ssu-Chi_by_%E5%BC%B5%E6%80%9D%E5%BC%A6_%281%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="周思齊的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Chou_Ssu-Chi_by_%E5%BC%B5%E6%80%9D%E5%BC%A6_%281%29.jpg/500px-Chou_Ssu-Chi_by_%E5%BC%B5%E6%80%9D%E5%BC%A6_%281%29.jpg" alt="周思齊的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>周思齊</h5><a href="https://zh.wikipedia.org/wiki/周思齊" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="周思齊的維基百科">維基百科</a></div>
+                    <span class="baseball-position">指定打擊</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202403125002.aspx" target="_blank" rel="noopener noreferrer">2012 中職年度 MVP</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2005–2024</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,762</dd></div>
+                    <div><dt>安打</dt><dd>1,805</dd></div>
+                    <div><dt>全壘打</dt><dd>144</dd></div>
+                    <div><dt>打點</dt><dd>948</dd></div>
+                    <div><dt>盜壘</dt><dd>100</dd></div>
+                    <div><dt>打擊率</dt><dd>0.307</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">5 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="張泰山">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AChang_Tai-shan.jpg" target="_blank" rel="noopener noreferrer" aria-label="張泰山的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Chang_Tai-shan.jpg/250px-Chang_Tai-shan.jpg" alt="張泰山的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>張泰山</h5><a href="https://zh.wikipedia.org/wiki/張泰山" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="張泰山的維基百科">維基百科</a></div>
+                    <span class="baseball-position">指定打擊</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/ahel/202405065002.aspx" target="_blank" rel="noopener noreferrer">中職生涯 289 轟</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>1996–2015</span> <a href="https://www.cna.com.tw/news/ahel/202405065002.aspx" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,863</dd></div>
+                    <div><dt>安打</dt><dd>2,134</dd></div>
+                    <div><dt>全壘打</dt><dd>289</dd></div>
+                    <div><dt>打點</dt><dd>1,338</dd></div>
+                    <div><dt>盜壘</dt><dd>158</dd></div>
+                    <div><dt>打擊率</dt><dd>0.307</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="張志豪">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://stats.cpbl.com.tw/players/0000003183" target="_blank" rel="noopener noreferrer" aria-label="張志豪的照片來源與署名">
+                    <img src="https://www.cpbl.com.tw/files/atts/0L087782116275412714/7_%E5%BC%B5%E5%BF%97%E8%B1%AA.png" alt="張志豪的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>張志豪</h5><a href="https://zh.wikipedia.org/wiki/張志豪_(棒球運動員)" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="張志豪的維基百科">維基百科</a></div>
+                    <span class="baseball-position">中外野</span>
+                    <span class="baseball-achievement"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0L132507631078517065" target="_blank" rel="noopener noreferrer">曾刷新中職生涯三壘安打紀錄</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2010–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,378</dd></div>
+                    <div><dt>安打</dt><dd>1,265</dd></div>
+                    <div><dt>全壘打</dt><dd>180</dd></div>
+                    <div><dt>打點</dt><dd>746</dd></div>
+                    <div><dt>盜壘</dt><dd>151</dd></div>
+                    <div><dt>打擊率</dt><dd>0.271</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">6 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="高國輝">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AKuo_Hui_Kao_20140824.jpg" target="_blank" rel="noopener noreferrer" aria-label="高國輝的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Kuo_Hui_Kao_20140824.jpg/330px-Kuo_Hui_Kao_20140824.jpg" alt="高國輝的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>高國輝</h5><a href="https://zh.wikipedia.org/wiki/高國輝" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="高國輝的維基百科">維基百科</a></div>
+                    <span class="baseball-position">左外野</span>
+                    <span class="baseball-achievement"><a href="https://www.ipcf.org.tw/zh-tw/News/Detail?newsId=23090521031879988" target="_blank" rel="noopener noreferrer">中職 3 屆全壘打王</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2013–2023</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>767</dd></div>
+                    <div><dt>安打</dt><dd>772</dd></div>
+                    <div><dt>全壘打</dt><dd>171</dd></div>
+                    <div><dt>打點</dt><dd>555</dd></div>
+                    <div><dt>盜壘</dt><dd>33</dd></div>
+                    <div><dt>打擊率</dt><dd>0.290</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="陳鏞基">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AChen_Yung-Chi%282013%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="陳鏞基的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Chen_Yung-Chi%282013%29.jpg/330px-Chen_Yung-Chi%282013%29.jpg" alt="陳鏞基的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>陳鏞基</h5><a href="https://zh.wikipedia.org/wiki/陳鏞基" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="陳鏞基的維基百科">維基百科</a></div>
+                    <span class="baseball-position">三壘</span>
+                    <span class="baseball-achievement"><a href="https://www.peopo.org/news/111617" target="_blank" rel="noopener noreferrer">2006 經典賽擊出滿貫砲</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2011–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,372</dd></div>
+                    <div><dt>安打</dt><dd>1,356</dd></div>
+                    <div><dt>全壘打</dt><dd>137</dd></div>
+                    <div><dt>打點</dt><dd>751</dd></div>
+                    <div><dt>盜壘</dt><dd>121</dd></div>
+                    <div><dt>打擊率</dt><dd>0.303</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">7 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="張建銘">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AChien-Ming_Chang.jpg" target="_blank" rel="noopener noreferrer" aria-label="張建銘的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Chien-Ming_Chang.jpg/250px-Chien-Ming_Chang.jpg" alt="張建銘的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>張建銘</h5><a href="https://zh.wikipedia.org/wiki/張建銘" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="張建銘的維基百科">維基百科</a></div>
+                    <span class="baseball-position">右外野</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/firstnews/202001070045.aspx" target="_blank" rel="noopener noreferrer">中職 5 座外野金手套</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2004–2018</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,214</dd></div>
+                    <div><dt>安打</dt><dd>1,401</dd></div>
+                    <div><dt>全壘打</dt><dd>43</dd></div>
+                    <div><dt>打點</dt><dd>533</dd></div>
+                    <div><dt>盜壘</dt><dd>57</dd></div>
+                    <div><dt>打擊率</dt><dd>0.301</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="曾頌恩">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2025.03.18_Tseng_Song-En_in_Office_of_the_President_%28ROC%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="曾頌恩的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/2025.03.18_Tseng_Song-En_in_Office_of_the_President_%28ROC%29_%28cropped%29.jpg/500px-2025.03.18_Tseng_Song-En_in_Office_of_the_President_%28ROC%29_%28cropped%29.jpg" alt="曾頌恩的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>曾頌恩</h5><a href="https://zh.wikipedia.org/wiki/曾頌恩" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="曾頌恩的維基百科">維基百科</a></div>
+                    <span class="baseball-position">左外野</span>
+                    <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202410250393.aspx" target="_blank" rel="noopener noreferrer">2024 台灣大賽 MVP</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2022–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>327</dd></div>
+                    <div><dt>安打</dt><dd>283</dd></div>
+                    <div><dt>全壘打</dt><dd>20</dd></div>
+                    <div><dt>打點</dt><dd>123</dd></div>
+                    <div><dt>盜壘</dt><dd>6</dd></div>
+                    <div><dt>打擊率</dt><dd>0.280</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">8 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="鄭達鴻">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A%E9%84%AD%E9%81%94%E9%B4%BB_July_6%2C_2014_%2814893583507%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="鄭達鴻的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/%E9%84%AD%E9%81%94%E9%B4%BB_July_6%2C_2014_%2814893583507%29_%28cropped%29.jpg/500px-%E9%84%AD%E9%81%94%E9%B4%BB_July_6%2C_2014_%2814893583507%29_%28cropped%29.jpg" alt="鄭達鴻的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>鄭達鴻</h5><a href="https://zh.wikipedia.org/wiki/鄭達鴻_(臺灣)" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="鄭達鴻的維基百科">維基百科</a></div>
+                    <span class="baseball-position">捕手</span>
+                    <span class="baseball-achievement"><a href="https://news.ipcf.org.tw/12862" target="_blank" rel="noopener noreferrer">2010 中職盜壘王</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2005–2017</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,137</dd></div>
+                    <div><dt>安打</dt><dd>1,044</dd></div>
+                    <div><dt>全壘打</dt><dd>23</dd></div>
+                    <div><dt>打點</dt><dd>440</dd></div>
+                    <div><dt>盜壘</dt><dd>132</dd></div>
+                    <div><dt>打擊率</dt><dd>0.297</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="王勝偉">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://stats.cpbl.com.tw/players/0000003211" target="_blank" rel="noopener noreferrer" aria-label="王勝偉的照片來源與署名">
+                    <img src="https://www.cpbl.com.tw/files/atts/0L087782119710866768/3%E7%8E%8B%E5%8B%9D%E5%81%892026.jpg" alt="王勝偉的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>王勝偉</h5><a href="https://zh.wikipedia.org/wiki/王勝偉" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="王勝偉的維基百科">維基百科</a></div>
+                    <span class="baseball-position">游擊</span>
+                    <span class="baseball-achievement"><a href="https://cpbl.com.tw/xmdoc/cont?sid=0M301620343791220345" target="_blank" rel="noopener noreferrer">中職 9 座游擊金手套</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2008–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>1,539</dd></div>
+                    <div><dt>安打</dt><dd>1,413</dd></div>
+                    <div><dt>全壘打</dt><dd>61</dd></div>
+                    <div><dt>打點</dt><dd>592</dd></div>
+                    <div><dt>盜壘</dt><dd>241</dd></div>
+                    <div><dt>打擊率</dt><dd>0.271</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">9 棒</th>
+            <td data-team="first">
+              <article class="baseball-athlete" aria-label="王威晨">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2025.03.18_Wang_Wei-chen_in_Office_of_the_President_%28ROC%29_01.jpg" target="_blank" rel="noopener noreferrer" aria-label="王威晨的照片來源與署名">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/2025.03.18_Wang_Wei-chen_in_Office_of_the_President_%28ROC%29_01.jpg/330px-2025.03.18_Wang_Wei-chen_in_Office_of_the_President_%28ROC%29_01.jpg" alt="王威晨的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>王威晨</h5><a href="https://zh.wikipedia.org/wiki/王威晨" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="王威晨的維基百科">維基百科</a></div>
+                    <span class="baseball-position">三壘</span>
+                    <span class="baseball-achievement"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">2023 經典賽台灣隊長</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2016–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>978</dd></div>
+                    <div><dt>安打</dt><dd>1,195</dd></div>
+                    <div><dt>全壘打</dt><dd>13</dd></div>
+                    <div><dt>打點</dt><dd>388</dd></div>
+                    <div><dt>盜壘</dt><dd>158</dd></div>
+                    <div><dt>打擊率</dt><dd>0.310</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+            <td data-team="second">
+              <article class="baseball-athlete" aria-label="高宇杰">
+                <div class="baseball-profile">
+                  <a class="baseball-portrait" href="https://stats.cpbl.com.tw/players/0000002285" target="_blank" rel="noopener noreferrer" aria-label="高宇杰的照片來源與署名">
+                    <img src="https://www.cpbl.com.tw/files/atts/0L087782030445441249/%E9%AB%98%E5%AE%87%E6%9D%B02024.png" alt="高宇杰的照片" width="80" height="80" loading="lazy" decoding="async">
+                  </a>
+                  <div>
+                    <div class="baseball-player"><h5>高宇杰</h5><a href="https://zh.wikipedia.org/wiki/高宇杰" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="高宇杰的維基百科">維基百科</a></div>
+                    <span class="baseball-position">捕手</span>
+                    <span class="baseball-achievement"><a href="https://www.ipcf.org.tw/zh-W/News/Detail?newsId=23020714424879737" target="_blank" rel="noopener noreferrer">2023 經典賽國手</a></span>
+                  </div>
+                </div>
+                <div class="baseball-career">
+                  <p class="baseball-league"><strong>中職一軍</strong> <span>2019–2026</span></p>
+                  <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                    <div><dt>出賽</dt><dd>651</dd></div>
+                    <div><dt>安打</dt><dd>416</dd></div>
+                    <div><dt>全壘打</dt><dd>18</dd></div>
+                    <div><dt>打點</dt><dd>175</dd></div>
+                    <div><dt>盜壘</dt><dd>7</dd></div>
+                    <div><dt>打擊率</dt><dd>0.246</dd></div>
+                  </dl>
+                </div>
+              </article>
+            </td>
+          </tr>
         </tbody>
       </table>
-      <p class="stories-source">依球員曾守過的位置和代表成績組隊，打序是活動設定。MVP 是最有價值球員，指定打擊專責打擊。</p>
+      <p class="stories-source">球員卡列各聯盟例行賽生涯累計。現役紀錄採計至 2026 球季。中職生涯數字可在球員的維基百科條目核對。</p>
       <div class="baseball-huddle">
         <h4>二軍也能拚台灣大賽冠軍嗎？</h4>
         <p>這套先發有 92 勝的投手、拿過 9 座金手套的游擊手，還有拿過年度 MVP 的打者。打完整季，還要安排多位先發投手輪流上場，也需要救援投手和替補。你會先補哪一個位置？</p>
         <details>
           <summary>多給你三位球員，怎麼調度？</summary>
-          <p><a href="https://www.cna.com.tw/news/aspt/202411240159.aspx" target="_blank" rel="noopener noreferrer">林昱珉</a>可以先發，<a href="https://tsna.com/article/205289" target="_blank" rel="noopener noreferrer">宋家豪</a>可以後援，<a href="https://www.cna.com.tw/news/aspt/202007200253.aspx" target="_blank" rel="noopener noreferrer">張進德</a>可以接替捕手。先發投手退場後，你想怎麼安排？</p>
+          <div class="baseball-bench">
+            <article class="baseball-athlete" aria-label="林昱珉">
+              <div class="baseball-profile">
+                <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3A2026.10.06_Yu-Min_Lin_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer" aria-label="林昱珉的照片來源與署名">
+                  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/2026.10.06_Yu-Min_Lin_%28cropped%29.jpg/250px-2026.10.06_Yu-Min_Lin_%28cropped%29.jpg" alt="林昱珉的照片" width="80" height="80" loading="lazy" decoding="async">
+                </a>
+                <div>
+                  <div class="baseball-player"><h5>林昱珉</h5><a href="https://zh.wikipedia.org/wiki/林昱珉" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="林昱珉的維基百科">維基百科</a></div>
+                  <span class="baseball-position">先發投手</span>
+                  <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202411240159.aspx" target="_blank" rel="noopener noreferrer">2024 世界 12 強冠軍戰先發</a></span>
+                </div>
+              </div>
+              <div class="baseball-career">
+                <p class="baseball-league"><strong>美職小聯盟</strong> <span>2022–2026</span> <a href="https://www.milb.com/player/yu-min-lin-801179" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                <dl class="baseball-numbers" aria-label="美職小聯盟累計成績">
+                  <div><dt>出賽</dt><dd>110</dd></div>
+                  <div><dt>勝–敗</dt><dd>25–29</dd></div>
+                  <div><dt>防禦率</dt><dd>4.65</dd></div>
+                  <div><dt>投球局數</dt><dd>512⅔</dd></div>
+                  <div><dt>三振</dt><dd>514</dd></div>
+                  <div><dt>先發</dt><dd>108</dd></div>
+                </dl>
+              </div>
+            </article>
+            <article class="baseball-athlete" aria-label="宋家豪">
+              <div class="baseball-profile">
+                <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AC_H_Sung20160304.jpg" target="_blank" rel="noopener noreferrer" aria-label="宋家豪的照片來源與署名">
+                  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/C_H_Sung20160304.jpg/500px-C_H_Sung20160304.jpg" alt="宋家豪的照片" width="80" height="80" loading="lazy" decoding="async">
+                </a>
+                <div>
+                  <div class="baseball-player"><h5>宋家豪</h5><a href="https://zh.wikipedia.org/wiki/宋家豪" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="宋家豪的維基百科">維基百科</a></div>
+                  <span class="baseball-position">後援投手</span>
+                  <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202611030060.aspx" target="_blank" rel="noopener noreferrer">首位達成日職百中繼的臺灣投手</a></span>
+                </div>
+              </div>
+              <div class="baseball-career">
+                <p class="baseball-league"><strong>日職一軍</strong> <span>2017–2026</span> <a href="https://npb.jp/bis/players/73575132.html" target="_blank" rel="noopener noreferrer">數據來源</a></p>
+                <dl class="baseball-numbers" aria-label="日職一軍累計成績">
+                  <div><dt>出賽</dt><dd>366</dd></div>
+                  <div><dt>勝–敗</dt><dd>22–15</dd></div>
+                  <div><dt>防禦率</dt><dd>3.00</dd></div>
+                  <div><dt>投球局數</dt><dd>351</dd></div>
+                  <div><dt>三振</dt><dd>270</dd></div>
+                  <div><dt>中繼成功</dt><dd>124</dd></div>
+                </dl>
+              </div>
+            </article>
+            <article class="baseball-athlete" aria-label="張進德">
+              <div class="baseball-profile">
+                <a class="baseball-portrait" href="https://commons.wikimedia.org/wiki/File%3AJin-De_Jhang_2015.jpg" target="_blank" rel="noopener noreferrer" aria-label="張進德的照片來源與署名">
+                  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Jin-De_Jhang_2015.jpg/330px-Jin-De_Jhang_2015.jpg" alt="張進德的照片" width="80" height="80" loading="lazy" decoding="async">
+                </a>
+                <div>
+                  <div class="baseball-player"><h5>張進德</h5><a href="https://zh.wikipedia.org/wiki/張進德" target="_blank" rel="noopener noreferrer" class="baseball-wiki" aria-label="張進德的維基百科">維基百科</a></div>
+                  <span class="baseball-position">捕手</span>
+                  <span class="baseball-achievement"><a href="https://www.cna.com.tw/news/aspt/202007200253.aspx" target="_blank" rel="noopener noreferrer">曾在美職小聯盟打到 3A</a></span>
+                </div>
+              </div>
+              <div class="baseball-career">
+                <p class="baseball-league"><strong>中職一軍</strong> <span>2020–2026</span></p>
+                <dl class="baseball-numbers" aria-label="中職一軍累計成績">
+                  <div><dt>出賽</dt><dd>299</dd></div>
+                  <div><dt>安打</dt><dd>258</dd></div>
+                  <div><dt>全壘打</dt><dd>18</dd></div>
+                  <div><dt>打點</dt><dd>101</dd></div>
+                  <div><dt>盜壘</dt><dd>1</dd></div>
+                  <div><dt>打擊率</dt><dd>0.294</dd></div>
+                </dl>
+              </div>
+            </article>
+          </div>
         </details>
       </div>
+      <details class="baseball-credits">
+        <summary>球員照片來源與授權</summary>
+        <ul>
+          <li><a href="https://dir.sp.baseball.findfriends.jp/yakyumatome/detail.html?no=3288" target="_blank" rel="noopener noreferrer">郭源治</a> · 週刊ベースボールONLINE · 媒體球員照片，權利由原權利人保留</li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A%E9%99%B3%E7%BE%A9%E4%BF%A1%E5%89%AF%E4%B8%BB%E4%BB%BB%E5%A7%94%E5%93%A1.jpg" target="_blank" rel="noopener noreferrer">陳義信</a> · 原住民族委員會 · 署名後可自由使用</li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3ANF-Yang-Dai-Kang20120310.jpg" target="_blank" rel="noopener noreferrer">陽岱鋼</a> · Cake6 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2026.03.26_Chen_Chen-wei_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer">陳晨威</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9E%97%E7%AB%8B%29.jpg" target="_blank" rel="noopener noreferrer">林立</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2024.11.26_%E4%B8%AD%E8%8F%AF%E6%B0%91%E5%9C%8B%E7%B8%BD%E7%B5%B1%E6%8E%A5%E8%A6%8B%E3%80%8C2024%E5%B9%B4%E4%B8%96%E7%95%8C%E6%A3%92%E7%90%8312%E5%BC%B7%E8%B3%BD%E4%BB%A3%E8%A1%A8%E9%9A%8A%E3%80%8D_%28%E6%9D%8E%E5%87%B1%E5%A8%81%29.jpg" target="_blank" rel="noopener noreferrer">李凱威</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AYu_Chang_%2852103060016%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer">張育成</a> · Erik Drost · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AChun-Hsiu_Chen.jpg" target="_blank" rel="noopener noreferrer">陳俊秀</a> · 桃猿王 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A%E6%9E%97%E6%99%BA%E5%8B%9D202112.jpg" target="_blank" rel="noopener noreferrer">林智勝</a> · TOMO0208 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AChou_Ssu-Chi_by_%E5%BC%B5%E6%80%9D%E5%BC%A6_%281%29.jpg" target="_blank" rel="noopener noreferrer">周思齊</a> · 張思弦 · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AChang_Tai-shan.jpg" target="_blank" rel="noopener noreferrer">張泰山</a> · P5693852 · 公眾領域</li>
+          <li><a href="https://stats.cpbl.com.tw/players/0000003183" target="_blank" rel="noopener noreferrer">張志豪</a> · 中華職業棒球大聯盟 · 官方球員照片，權利由原權利人保留</li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AKuo_Hui_Kao_20140824.jpg" target="_blank" rel="noopener noreferrer">高國輝</a> · Gene Wang · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AChen_Yung-Chi%282013%29.jpg" target="_blank" rel="noopener noreferrer">陳鏞基</a> · P5693852 · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AChien-Ming_Chang.jpg" target="_blank" rel="noopener noreferrer">張建銘</a> · P5693852 · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2025.03.18_Tseng_Song-En_in_Office_of_the_President_%28ROC%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer">曾頌恩</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A%E9%84%AD%E9%81%94%E9%B4%BB_July_6%2C_2014_%2814893583507%29_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer">鄭達鴻</a> · Ming-Chu Chu · <a href="https://creativecommons.org/licenses/by-sa/2.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 2.0</a></li>
+          <li><a href="https://stats.cpbl.com.tw/players/0000003211" target="_blank" rel="noopener noreferrer">王勝偉</a> · 中華職業棒球大聯盟 · 官方球員照片，權利由原權利人保留</li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2025.03.18_Wang_Wei-chen_in_Office_of_the_President_%28ROC%29_01.jpg" target="_blank" rel="noopener noreferrer">王威晨</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+          <li><a href="https://stats.cpbl.com.tw/players/0000002285" target="_blank" rel="noopener noreferrer">高宇杰</a> · 中華職業棒球大聯盟 · 官方球員照片，權利由原權利人保留</li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3A2026.10.06_Yu-Min_Lin_%28cropped%29.jpg" target="_blank" rel="noopener noreferrer">林昱珉</a> · 中華民國總統府 · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AC_H_Sung20160304.jpg" target="_blank" rel="noopener noreferrer">宋家豪</a> · Eargus · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File%3AJin-De_Jhang_2015.jpg" target="_blank" rel="noopener noreferrer">張進德</a> · Buck Davidson · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></li>
+        </ul>
+      </details>
       <div class="stories-history">
         <article>
           <h4>1925 年，花蓮能高團赴日</h4>
@@ -1490,56 +2117,37 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         </article>
       </div>
 
-      <figure class="mur-main">
-        <figcaption>踩完 3 分鐘階梯後，二氧化碳讀數降了多少？</figcaption>
-        <p class="mur-guide">長條越長，這段時間吐氣的二氧化碳讀數降得越多。</p>
-        <div class="mur-grid" style="--mur-scale:6">
-          <div class="mur-period">
-            <h4>停下後 30 秒到 1 分鐘</h4>
-            <dl class="mur-bars">
-              <div class="mur-variant">
-                <dt>有第三型</dt>
-                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:4.0"></span></span><strong>4.0</strong></dd>
-              </div>
-              <div>
-                <dt>未帶第三型</dt>
-                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:2.6"></span></span><strong>2.6</strong></dd>
-              </div>
-            </dl>
-          </div>
-          <div class="mur-period">
-            <h4>停下後 1 到 2 分鐘</h4>
-            <dl class="mur-bars">
-              <div class="mur-variant">
-                <dt>有第三型</dt>
-                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:2.8"></span></span><strong>2.8</strong></dd>
-              </div>
-              <div>
-                <dt>未帶第三型</dt>
-                <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:5.0"></span></span><strong>5.0</strong></dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-        <p class="mur-reading">第一段，有第三型的一組降得更多。到了第二段，換成未帶第三型的一組降得更多。</p>
-        <p class="stories-source">米田堡第三型也叫 GP.Mur。圖中為男性受試者的平均讀數降幅（mmHg）。<a href="https://www.nature.com/articles/srep10327.pdf#page=3" target="_blank" rel="noopener noreferrer">2015 年階梯研究圖 2</a></p>
-      </figure>
+      <div class="mur-studies">
+        <figure class="mur-main mur-study">
+          <figcaption><span class="mur-study-year">2015 年階梯實驗</span>踩完階梯，有第三型的一組<strong>較早排出二氧化碳</strong></figcaption>
+          <p class="mur-guide">大家跟著同樣的節奏上下踩 3 分鐘。停下來後，研究人員量每一口氣快吐完時，二氧化碳的讀數降了多少。</p>
+          <table class="mur-step-table" aria-label="每段時間吐氣末二氧化碳讀數的平均降幅，單位為毫米汞柱">
+            <thead><tr><th scope="col">停下後</th><th scope="col">有第三型</th><th scope="col">未帶第三型</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">30 秒到<br>1 分鐘</th><td class="mur-larger">4.0<span>降得較多</span></td><td>2.6</td></tr>
+              <tr><th scope="row">1 分鐘到<br>2 分鐘</th><td>2.8</td><td class="mur-larger">5.0<span>降得較多</span></td></tr>
+            </tbody>
+          </table>
+          <p class="stories-source">表中是男性兩組的平均降幅，單位為毫米汞柱（mmHg）。<a href="https://www.nature.com/articles/srep10327.pdf#page=3" target="_blank" rel="noopener noreferrer">看原研究圖 2</a></p>
+        </figure>
 
-      <figure class="mur-card mur-run">
-        <figcaption>跑比較久嗎？兩組時間相近</figcaption>
-        <p class="mur-guide">跑步機逐漸加速，記錄選手平均跑了多久。</p>
-        <dl class="mur-bars" style="--mur-scale:20">
-          <div class="mur-variant">
-            <dt>有第三型</dt>
-            <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:19.1"></span></span><strong class="mur-time-value">19.1<span> 分鐘</span></strong></dd>
-          </div>
-          <div>
-            <dt>未帶第三型</dt>
-            <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:18.4"></span></span><strong class="mur-time-value">18.4<span> 分鐘</span></strong></dd>
-          </div>
-        </dl>
-        <p class="stories-source">36 名男性選手 · <a href="https://pubmed.ncbi.nlm.nih.gov/37014821/" target="_blank" rel="noopener noreferrer">2023 年跑步機研究</a></p>
-      </figure>
+        <figure class="mur-card mur-study mur-run">
+          <figcaption><span class="mur-study-year">2023 年跑步機實驗</span>暖身時，有第三型的一組<strong>每分鐘多呼吸 9 次</strong></figcaption>
+          <p class="mur-guide">兩組用同樣的速度慢跑。帶有第三型的一組換氣更頻繁，吐氣末的二氧化碳讀數也較低。</p>
+          <dl class="mur-bars" style="--mur-scale:40" aria-label="暖身時每分鐘平均呼吸次數">
+            <div class="mur-variant">
+              <dt>有第三型</dt>
+              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:39.4"></span></span><strong>39.4</strong></dd>
+            </div>
+            <div>
+              <dt>未帶第三型</dt>
+              <dd><span class="mur-bar-track" aria-hidden="true"><span style="--mur-value:30.4"></span></span><strong>30.4</strong></dd>
+            </div>
+          </dl>
+          <p class="mur-endurance"><strong>兩組跑步總時間相近。</strong> 從暖身到跑不動，有第三型的一組平均跑了 19.1 分鐘，未帶的一組跑了 18.4 分鐘。</p>
+          <p class="stories-source">36 名男性選手中，13 人帶有第三型，23 人未帶。<a href="https://journals.physiology.org/doi/full/10.1152/ajplung.00036.2022#T2" target="_blank" rel="noopener noreferrer">看原研究表 2</a></p>
+        </figure>
+      </div>
 
       <details class="blood-question">
         <summary>怎麼知道這個差異會不會影響棒球表現？</summary>
@@ -1600,17 +2208,23 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <script>
 (() => {
   const controls = document.querySelector('#amisLineupControls');
+  const table = document.querySelector('#amisLineups');
   const buttons = [...controls.querySelectorAll('button')];
-  const columns = [...document.querySelectorAll('#amisLineups [data-team]')];
+  const columns = [...table.querySelectorAll('[data-team]')];
+
+  function showLineup(view) {
+    table.dataset.lineup = view;
+    for (const button of buttons) {
+      button.setAttribute('aria-pressed', String(button.dataset.lineupView === view));
+    }
+    for (const cell of columns) cell.hidden = view !== 'both' && cell.dataset.team !== view;
+  }
 
   controls.addEventListener('click', event => {
     const selected = event.target.closest('button[data-lineup-view]');
-    if (!selected) return;
-
-    const view = selected.dataset.lineupView;
-    for (const button of buttons) button.setAttribute('aria-pressed', button === selected);
-    for (const cell of columns) cell.hidden = view !== 'both' && cell.dataset.team !== view;
+    if (selected) showLineup(selected.dataset.lineupView);
   });
+  showLineup(matchMedia('(max-width: 700px)').matches ? 'first' : 'both');
   controls.hidden = false;
 })();
 </script>
