@@ -21,15 +21,5 @@
     "snippet": "repeating-gradient decorative stripes",
     "advisory": true,
     "selector": "body"
-  },
-  {
-    "antipattern": "script-error",
-    "name": "Uncaught script error on load",
-    "description": "A script threw an uncaught exception or failed to parse while the page loaded. Broken JavaScript silently kills reveals, interactions, and dynamic content, and can leave most of a page invisible. Fix the error before judging anything else.",
-    "severity": "error",
-    "category": "quality",
-    "file": "https://geo.twranger.com/sealevel.html",
-    "line": 0,
-    "snippet": "Uncaught TypeError: Cannot read properties of undefined (reading '20951') (at gColors, https://geo.twranger.com/sealevel.html:1007:94)"
   }
 ]
