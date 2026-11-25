@@ -337,6 +337,89 @@ footer p+p{margin-top:6px}
 .home-link{display:block;color:inherit;text-decoration:none;border-radius:12px}
 .home-link .kicker::before{content:"⌂ 海佃地圖首頁 › ";color:var(--ink);font-weight:700}
 .home-link:hover h1,.home-link:focus-visible h1{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+/* trade game */
+.tr-season{position:absolute;left:10px;top:10px;background:#10313be6;color:#fff;font-weight:700;font-size:15px;border-radius:10px;padding:4px 12px;pointer-events:none}
+.tr-panel h3{font-size:22px;margin-bottom:6px}
+.tr-bank{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tr-bank span{flex:1 1 auto;background:var(--surface-2,#f4f8f7);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-size:15px;color:var(--muted)}
+.tr-bank b{font:700 24px "IBM Plex Mono",ui-monospace,monospace;color:var(--ink);margin:0 2px}
+.tr-steps{display:flex;gap:4px;list-style:none;margin:0 0 14px;padding:0;counter-reset:s}
+.tr-steps li{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--muted);border-bottom:4px solid var(--line);padding:2px 0 6px}
+.tr-steps li.on{color:var(--ink);border-color:#0072B2}.tr-steps li.done{border-color:#7fb8d9}
+.tr-list{margin:6px 0 8px;padding-left:1.2em}.tr-list li{margin:4px 0}
+.tr-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.tr-g{flex:1;min-width:0}.tr-g b{display:block;font-size:17px}.tr-g small{display:block;color:var(--muted);font-size:14px;line-height:1.45}
+.tr-step{display:flex;align-items:center;gap:6px}
+.tr-step button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:22px;font-weight:700;line-height:1;cursor:pointer}
+.tr-step button:disabled{opacity:.35;cursor:default}
+.tr-step output{min-width:34px;text-align:center;font:700 22px "IBM Plex Mono",ui-monospace,monospace}
+.tr-price{margin-top:12px;font-size:14px}.tr-price b{display:block;color:var(--muted);margin-bottom:4px}
+.tr-price table{width:100%;border-collapse:collapse;text-align:center}.tr-price th,.tr-price td{border:1px solid var(--line);padding:4px 2px}.tr-price td:first-child{font-weight:700;text-align:left;padding-left:8px}
+.tr-go{margin-top:14px;width:100%;min-height:48px;border:0;border-radius:14px;background:var(--ink);color:var(--paper);font-size:17px;font-weight:700;cursor:pointer}
+.tr-go:disabled{opacity:.4;cursor:default}.tr-go.alt{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.tr-sum{margin-top:10px;font-size:15px}.tr-news{background:#e8f3fa;border-radius:10px;padding:6px 12px;margin-bottom:8px}
+.tr-pep{margin-top:10px;background:#eef7f2;border-radius:12px;padding:0 10px}
+.tr-big{font-size:20px;margin:4px 0 10px}.tr-big b{font:700 30px "IBM Plex Mono",ui-monospace,monospace}
+.tr-bars{display:grid;gap:6px;margin:6px 0 10px}
+.tr-bars div{display:grid;grid-template-columns:9.5em 1fr 3em;align-items:center;gap:8px;font-size:15px}
+.tr-bars i{display:block;height:14px;border-radius:7px}.tr-bars b{font-family:"IBM Plex Mono",ui-monospace,monospace;text-align:right}
+.tr-q{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tr-q button{flex:1 1 14em;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;padding:6px 12px;cursor:pointer;text-align:left}
+.tr-q button.sel{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.tr-q button:disabled{cursor:default}
+.ok{color:var(--leaf)}.no{color:var(--typhoon)}
+.qbox #trQfb b,.qbox #trQfb strong,.sd-q p b{display:inline;font-size:inherit;color:inherit;letter-spacing:0}
+.qbox #trQfb b.ok,.sd-q p b.ok{color:var(--leaf)}.qbox #trQfb b.no,.sd-q p b.no{color:var(--typhoon)}
+.sd-q .sd-three b{color:#fff;font-size:14px}
+.tr-warn{margin-top:10px;background:#fbf1e3;border-radius:10px;padding:8px 12px}
+/* source detective */
+.sd-claim{border-left:5px solid #7a3f8f;background:color-mix(in srgb,#7a3f8f 8%,var(--surface));border-radius:0 12px 12px 0;padding:10px 16px}
+.sd-claim p{font-size:19px;font-weight:700;margin:4px 0 0;line-height:1.6}
+.sd-tag{font-size:14px;font-weight:700;color:#7a3f8f}
+.sd-legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 8px;font-size:14px;color:var(--muted)}
+.sd-legend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:6px;vertical-align:-2px}
+.sd-t1,.sd-b1.sel{background:#0072B2}.sd-t2,.sd-b2.sel{background:#009E73}.sd-t3,.sd-b3.sel{background:#D55E00}
+.sd-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.sd-card{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column}
+.sd-card.ok{border-color:var(--leaf);box-shadow:inset 0 0 0 1px var(--leaf)}.sd-card.bad{border-color:var(--typhoon)}
+.sd-card header{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.sd-card header b{font-size:16px}.sd-card header span{font:600 14px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);white-space:nowrap}
+.sd-txt{margin:8px 0 10px;font-size:16px;line-height:1.7;flex:1}
+.sd-pick{display:grid;gap:6px}
+.sd-pick button{min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2,#f4f8f7);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;text-align:left;padding:4px 10px}
+.sd-pick button.sel{color:#fff;border-color:transparent}
+.sd-pick button:disabled:not(.sel){opacity:.45;cursor:default}
+.sd-why{margin-top:8px;font-size:15px;line-height:1.65;background:var(--surface-2,#f4f8f7);border-radius:10px;padding:8px 10px}
+.sd-q{margin-top:16px}.sd-q p{margin-top:8px}
+.sd-three{margin-top:8px;font-size:15px}.sd-three b{display:inline-block;background:#7a3f8f;color:#fff;border-radius:999px;padding:0 10px;margin:2px 4px 2px 0}
+.sd-left{margin-top:12px}
+@media(max-width:560px){.tr-bars div{grid-template-columns:7.5em 1fr 2.6em;font-size:14px}.sd-claim p{font-size:17px}}
+
+/* before */
+.bf-sub{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font-size:14px;color:var(--muted)}
+.bf-k i{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bf-chain{list-style:none;margin:10px 0;padding:0;display:grid;gap:4px;counter-reset:c}
+.bf-chain li{position:relative;padding:4px 0 4px 34px;color:var(--muted);counter-increment:c}
+.bf-chain li::before{content:counter(c);position:absolute;left:0;top:4px;width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--ink);font:700 13px/24px "IBM Plex Mono",ui-monospace,monospace;text-align:center}
+.bf-chain li.done{color:var(--ink)}.bf-chain li.done::before{background:#0072B2;color:#fff}
+.bf-chain li.on{color:var(--ink)}.bf-chain li.on::before{background:#D55E00;color:#fff}
+.bf-chain li b{display:block}.bf-chain li span{font-size:15px;color:var(--muted)}
+.bf-price{background:#fbf1e3;border-radius:12px;padding:8px 12px;margin-top:6px}
+.bf-price span{display:block;font-size:15px}.bf-price b{font:700 28px "IBM Plex Mono",ui-monospace,monospace;color:#D55E00}.bf-price small{display:block;font-size:13px;color:var(--muted)}
+.bf-why{display:grid;gap:8px;margin:8px 0}.bf-why p{margin:0;background:var(--surface-2,#f4f8f7);border-radius:12px;padding:8px 12px;line-height:1.65}.bf-why b{display:block;font-size:17px}
+.bf-voy{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:6px}
+.bf-voy button{min-height:46px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;text-align:left;padding:4px 10px;display:flex;align-items:center;gap:6px}
+.bf-voy button i{width:14px;height:14px;border-radius:50%;flex:none}.bf-voy button b{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.bf-voy button.sel{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.bf-voytxt{margin-top:10px;line-height:1.7}
+.bf-list{margin:8px 0;padding-left:1.2em}.bf-list li{margin:6px 0;line-height:1.65}
+.bf-food{display:grid;gap:6px;margin-top:8px}
+.bf-f{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px 8px}
+.bf-f>b{font-size:17px;display:inline!important;color:var(--ink)!important;letter-spacing:0!important}
+.bf-f span{display:flex;gap:4px}.bf-f button{min-height:38px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2,#f4f8f7);color:var(--ink);font-size:14px;font-weight:700;padding:2px 8px;cursor:pointer}
+.bf-f.ok{border-color:var(--leaf)}.bf-f.ok button.sel{background:var(--leaf);color:#fff}.bf-f.bad{border-color:var(--typhoon)}.bf-f.bad button.sel{background:var(--typhoon);color:#fff}
+.bf-f button:disabled{cursor:default}
+.qbox strong{display:inline;font-weight:800}
 </style>
 <style>
 .top .unit-link{font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:15.5px;white-space:nowrap}
@@ -639,6 +722,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 
 <nav class="rail" aria-label="段落">
   <div class="wrap" id="rail">
+    <a href="#before"><span class="dot" style="background:#5E5E5E"></span>前情提要</a>
     <a href="#voyage"><span class="dot" style="background:var(--wind)"></span>歐亞新航路</a>
     <a href="#hub"><span class="dot" style="background:var(--plate)"></span>東亞十字路口</a>
     <a href="#rulers"><span class="dot" style="background:var(--typhoon)"></span>誰在經營臺灣</a>
@@ -647,11 +731,35 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <a href="#legend"><span class="dot" style="background:#b5446e"></span>鄭成功傳說</a>
     <a href="#deer"><span class="dot" style="background:var(--leaf)"></span>部落獵人</a>
     <a href="#names"><span class="dot" style="background:#7a5cc0"></span>地名的祕密</a>
+    <a href="#trade"><span class="dot" style="background:#0072B2"></span>大員商館</a>
+    <a href="#sources"><span class="dot" style="background:#7a3f8f"></span>史料偵探</a>
     <a href="#quiz"><span class="dot" style="background:var(--ink)"></span>小測驗</a>
   </div>
 </nav>
 
 <main>
+<section class="unit" id="before">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#5E5E5E">前</div>
+      <h2>前情提要：大航海時代是怎麼開始的？</h2>
+      <p class="sub">荷蘭人為什麼會跑到臺灣來？要先知道 500 多年前，世界是怎麼做生意的。照著三個步驟看下去。</p>
+    </div>
+    <div class="tabs" id="bfTabs" role="tablist">
+      <button role="tab" data-b="old" aria-selected="true">① 以前怎麼做生意</button>
+      <button role="tab" data-b="why" aria-selected="false">② 為什麼要出海</button>
+      <button role="tab" data-b="change" aria-selected="false">③ 世界改變了什麼</button>
+    </div>
+    <div class="duo" style="margin-top:14px">
+      <div>
+        <div class="mapbox" id="bfBox"><svg id="bfSvg" data-w="760" data-h="420" role="img" aria-label="大航海時代以前與以後的世界貿易路線"></svg><div class="mhint">滾輪或兩指縮放 · 拖曳移動</div></div>
+        <div class="bf-sub" id="bfSub"></div>
+      </div>
+      <div class="panel pad card" id="bfCard" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
 <section class="unit" id="voyage">
   <div class="wrap">
     <div class="unit-head">
@@ -818,6 +926,44 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         <div class="nm-chips" id="nmChips"></div>
         <div id="nmDetail" aria-live="polite"></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="unit" id="trade">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#0072B2">商</div>
+      <h2>大員商館的一年：當一次荷蘭商務員</h2>
+      <p class="sub">1640 年，你是荷蘭東印度公司在大員（今臺南安平）的商務員。中國商人帶來生絲和瓷器，附近的蔗農和部落送來蔗糖和鹿皮。帆船要等季風才能出發，你要決定買什麼、送去哪裡賣，一年後看看公司賺了多少。</p>
+    </div>
+    <div class="duo">
+      <div><div class="mapbox" id="trBox"><svg id="trSvg" data-w="640" data-h="600" role="img" aria-label="大員商館的貿易航線圖"></svg><div class="tr-season" id="trSeason">1640 年 春</div><div class="mhint">滾輪或兩指縮放 · 拖曳移動</div></div></div>
+      <div class="panel pad tr-panel">
+        <div class="tr-bank" aria-live="polite"><span>公司的白銀 <b id="trSilver">100</b> 兩</span><span>倉庫 <b id="trStock">0</b> 箱</span></div>
+        <ol class="tr-steps" id="trSteps" aria-label="進度"><li>春 採購</li><li>夏 去日本</li><li>冬 去巴達維亞</li><li>結算</li></ol>
+        <div id="trCard" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="unit" id="sources">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#7a3f8f">證</div>
+      <h2>史料偵探：這句話有證據嗎？</h2>
+      <p class="sub">課本、網路、老師講的故事，是從哪裡知道的？歷史學家會先問三件事：<b>誰寫的？什麼時候寫的？他怎麼知道的？</b>選一個案件，把每一張資料卡分類，再判斷那句話到底有沒有證據。</p>
+    </div>
+    <div class="tabs" id="sdTabs" role="tablist">
+      <button role="tab" data-c="formosa" aria-selected="true">「福爾摩沙」是誰取的？</button>
+      <button role="tab" data-c="kuo" aria-selected="false">郭懷一為什麼起事？</button>
+    </div>
+    <div class="panel pad sd-wrap" style="margin-top:14px">
+      <div class="sd-claim" id="sdClaim"></div>
+      <div class="sd-legend"><span><i class="sd-t1"></i>當時的人留下的紀錄</span><span><i class="sd-t2"></i>後來的人研究整理</span><span><i class="sd-t3"></i>沒寫出處的說法</span></div>
+      <div class="sd-cards" id="sdCards"></div>
+      <div id="sdVerdict" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -1451,6 +1597,192 @@ const QZ=[
  {q:'臺灣最早的孔子廟在哪裡？是誰興建的？',o:['臺南孔廟，鄭經與陳永華','臺北孔廟，荷蘭人','高雄孔廟，西班牙人'],a:0,e:'鄭經接受陳永華的建議，興建孔廟、設立學校，傳播漢人文化。'},
  {q:'梅花鹿在臺灣西部瀕臨絕跡，下列哪一個不是原因？',o:['荷蘭人大量收購鹿皮','漢人開墾使棲地減少','颱風把鹿吹走了'],a:2,e:'鹿皮貿易、陷阱捕鹿和開墾農田，讓梅花鹿越來越少。'}];
 const qr=quiz($('#quizBox'),$('#qScore'),QZ);$('#qReset').onclick=qr;
+
+/* =========================================================
+   大員商館的一年 — trade game
+   ========================================================= */
+(()=>{
+const tproj=d3.geoMercator().fitExtent([[14,14],[626,586]],{type:'MultiPoint',coordinates:[[103,-8],[133,35]]});
+const tm=flatMap('#trSvg',LANDS.ea,tproj);zoomButtons($('#trBox'),tm);
+[['中國',112,29],['日本',137.5,36],['菲律賓',122.6,12.5],['東南亞',104,9]].forEach(([t,lo,la])=>{const p=tm.pin(lo,la);p.append('text').attr('class','mlabel soft').attr('text-anchor','middle').text(t);});
+const TP={an:[120.16,23.0],nag:[129.87,32.75],bat:[106.8,-6.2],fuj:[118.1,24.47]};
+const tl=tm.g.append('g');const td=tm.svg.append('defs');
+[['tr-a1','#0072B2'],['tr-a2','#D55E00'],['tr-a3','#009E73']].forEach(([id,c])=>td.append('marker').attr('id',id).attr('viewBox','0 0 10 10').attr('refX',8).attr('refY',5).attr('markerWidth',5).attr('markerHeight',5).attr('orient','auto').append('path').attr('d','M0,0L10,5L0,10z').attr('fill',c));
+const crv=(a,b,bend=0.15)=>{const p=tproj(a),q=tproj(b),mx=(p[0]+q[0])/2+(q[1]-p[1])*bend,my=(p[1]+q[1])/2-(q[0]-p[0])*bend;return `M${p[0]},${p[1]}Q${mx},${my} ${q[0]},${q[1]}`;};
+const route=(a,b,c,id,bend)=>{const p=tl.append('path').attr('class','route').attr('stroke',c).attr('d',crv(a,b,bend)).attr('marker-end',`url(#${id})`);const L=p.node().getTotalLength();p.attr('stroke-dasharray',`${L} ${L}`).attr('stroke-dashoffset',L).transition().duration(900).attr('stroke-dashoffset',0);};
+[['大員',TP.an,'b','#0072B2'],['長崎（日本）',TP.nag,'r','#D55E00'],['巴達維亞',TP.bat,'r','#009E73'],['中國商人（福建）',TP.fuj,'l','#5E5E5E']].forEach(([n,p,s,c])=>marker(tm,p[0],p[1],{label:n,color:c,r:7,side:s}));
+route(TP.fuj,TP.an,'#5E5E5E','tr-a1',0.2);
+
+const G=[
+ {k:'silk',n:'生絲',ic:'🧵',from:'中國商人',buy:10,jp:20,bt:12},
+ {k:'china',n:'瓷器',ic:'🏺',from:'中國商人',buy:5,jp:6,bt:11},
+ {k:'sugar',n:'蔗糖',ic:'🍬',from:'赤崁附近的蔗農',buy:3,jp:6,bt:8},
+ {k:'hide',n:'鹿皮',ic:'🦌',from:'部落和收購商',buy:2,jp:6,bt:2}];
+const PEP={buy:4,sell:8},CAP=10,START=100;
+let S;const reset=()=>{S={step:0,silver:START,inv:{silk:0,china:0,sugar:0,hide:0},jp:{silk:0,china:0,sugar:0,hide:0},bt:{silk:0,china:0,sugar:0,hide:0},pep:0,bought:{silk:0,china:0,sugar:0,hide:0},earn:{},jpRev:0,btRev:0,pepRev:0};tl.selectAll('path').filter((d,i)=>i>0).remove();};
+const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
+const bank=()=>{$('#trSilver').textContent=S.silver;$('#trStock').textContent=sum(S.inv);$$('#trSteps li').forEach((li,i)=>{li.classList.toggle('on',i===S.step-1);li.classList.toggle('done',i<S.step-1);});};
+const season=t=>$('#trSeason').textContent=t;
+const stepper=(key,val,max,label,sub)=>`<div class="tr-row"><div class="tr-g"><b>${label}</b><small>${sub}</small></div><div class="tr-step"><button type="button" data-d="-1" data-k="${key}" aria-label="${label}少一箱" ${val<=0?'disabled':''}>－</button><output>${val}</output><button type="button" data-d="1" data-k="${key}" aria-label="${label}多一箱" ${max?'':'disabled'}>＋</button></div></div>`;
+
+function card(){bank();const c=$('#trCard');
+ if(S.step===0){season('1640 年 春');c.innerHTML=`<h3>準備開張</h3><p>公司給你 <b>${START} 兩白銀</b>。一年裡會有兩艘船從大員出發，每艘最多裝 <b>${CAP} 箱</b>：</p>
+  <ul class="tr-list"><li><b>夏天</b>吹西南季風，船往北開到<b>日本長崎</b>。</li><li><b>冬天</b>吹東北季風，船往南開到公司在亞洲的總部<b>巴達維亞</b>（今印尼雅加達）。</li></ul>
+  <p>同樣一箱貨，賣到不同地方，價錢不一樣。先想好再買！</p><p class="note">遊戲裡的價錢是簡化過的，用來比較哪種貨比較賺錢；貨物種類和航線是真的。</p>
+  <button class="tr-go" id="trGo" type="button">開始採購 →</button>`;$('#trGo').onclick=()=>{S.step=1;card();};return;}
+ if(S.step===1){season('1640 年 春：中國商船來到大員');
+  c.innerHTML=`<h3>春天：在大員採購</h3><p>一箱的價錢寫在名字下面。最多買 ${CAP*2} 箱（兩艘船裝得下的量）。</p>
+  ${G.map(g=>stepper(g.k,S.inv[g.k],S.silver>=g.buy&&sum(S.inv)<CAP*2,`${g.ic} ${g.n}`,`${g.buy} 兩／箱・向${g.from}買`)).join('')}
+  <div class="tr-price"><b>各地收購價（一箱）</b><table><tr><th></th>${G.map(g=>`<th>${g.n}</th>`).join('')}</tr><tr><td>日本</td>${G.map(g=>`<td>${g.jp}</td>`).join('')}</tr><tr><td>巴達維亞</td>${G.map(g=>`<td>${g.bt}</td>`).join('')}</tr></table></div>
+  <button class="tr-go" id="trGo" type="button" ${sum(S.inv)?'':'disabled'}>採購完成，等夏天的季風 →</button>`;
+  c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.k===b.dataset.k),d=+b.dataset.d;if(d>0&&S.silver>=g.buy&&sum(S.inv)<CAP*2){S.inv[g.k]++;S.bought[g.k]++;S.silver-=g.buy;}if(d<0&&S.inv[g.k]>0){S.inv[g.k]--;S.bought[g.k]--;S.silver+=g.buy;}card();});
+  $('#trGo').onclick=()=>{S.step=2;card();};return;}
+ if(S.step===2){season('1640 年 夏：西南季風吹起');
+  c.innerHTML=`<h3>夏天：裝船去日本</h3><p>西南季風把帆船往北推。選出要送去<b>日本長崎</b>的貨，最多 ${CAP} 箱。日本人用<b>白銀</b>付錢。</p>
+  ${G.filter(g=>S.inv[g.k]+S.jp[g.k]>0).map(g=>stepper(g.k,S.jp[g.k],S.inv[g.k]>0&&sum(S.jp)<CAP,`${g.ic} ${g.n}`,`日本收購 ${g.jp} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')}
+  <p class="tr-sum">這艘船：${sum(S.jp)} / ${CAP} 箱，賣完可以拿到 <b>${G.reduce((a,g)=>a+S.jp[g.k]*g.jp,0)} 兩</b></p>
+  <button class="tr-go" id="trGo" type="button">開船去日本 →</button>`;
+  c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,d=+b.dataset.d;if(d>0&&S.inv[k]>0&&sum(S.jp)<CAP){S.inv[k]--;S.jp[k]++;}if(d<0&&S.jp[k]>0){S.jp[k]--;S.inv[k]++;}card();});
+  $('#trGo').onclick=()=>{S.jpRev=G.reduce((a,g)=>a+S.jp[g.k]*g.jp,0);S.silver+=S.jpRev;route(TP.an,TP.nag,'#D55E00','tr-a2',0.12);S.step=3;card();};return;}
+ if(S.step===3){season('1640 年 冬：東北季風吹起');
+  const pepMax=Math.min(CAP,Math.floor(S.silver/PEP.buy));if(S.pep>pepMax)S.pep=pepMax;
+  c.innerHTML=`<p class="tr-news">🚢 日本的船回來了，帶回 <b>${S.jpRev} 兩白銀</b>。</p><h3>冬天：裝船去巴達維亞</h3><p>東北季風把帆船往南推。選出要送去<b>巴達維亞</b>的貨，最多 ${CAP} 箱；沒賣掉的會一直放在倉庫。</p>
+  ${G.filter(g=>S.inv[g.k]+S.bt[g.k]>0).map(g=>stepper(g.k,S.bt[g.k],S.inv[g.k]>0&&sum(S.bt)<CAP,`${g.ic} ${g.n}`,`巴達維亞收購 ${g.bt} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')||'<p class="note">倉庫已經空了。</p>'}
+  <div class="tr-pep">${stepper('pep',S.pep,S.pep<pepMax,'🌶️ 回程買胡椒',`巴達維亞 ${PEP.buy} 兩／箱，明年春天賣給中國商人 ${PEP.sell} 兩／箱`)}</div>
+  <button class="tr-go" id="trGo" type="button">開船去巴達維亞 →</button>`;
+  c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,d=+b.dataset.d;if(k==='pep'){S.pep=Math.max(0,Math.min(pepMax,S.pep+d));card();return;}if(d>0&&S.inv[k]>0&&sum(S.bt)<CAP){S.inv[k]--;S.bt[k]++;}if(d<0&&S.bt[k]>0){S.bt[k]--;S.inv[k]++;}card();});
+  $('#trGo').onclick=()=>{S.btRev=G.reduce((a,g)=>a+S.bt[g.k]*g.bt,0);S.silver+=S.btRev-S.pep*PEP.buy;S.pepRev=S.pep*PEP.sell;S.silver+=S.pepRev;route(TP.an,TP.bat,'#009E73','tr-a3',0.1);setTimeout(()=>route(TP.bat,TP.an,'#009E73','tr-a3',0.1),700);S.step=4;card();};return;}
+ if(S.step===4){season('1641 年 春：結算');const left=sum(S.inv),gain=S.silver-START;
+  const per=G.map(g=>({g,n:S.jp[g.k]+S.bt[g.k],p:S.jp[g.k]*(g.jp-g.buy)+S.bt[g.k]*(g.bt-g.buy)})).filter(x=>x.n);
+  const best=per.slice().sort((a,b)=>b.p-a.p)[0];const hides=S.bought.hide;
+  c.innerHTML=`<h3>一年過去了</h3><p class="tr-big">${gain>=0?'公司賺了':'公司虧了'} <b>${Math.abs(gain)} 兩</b>白銀${left?`，倉庫還剩 ${left} 箱沒賣掉`:''}</p>
+  <div class="tr-bars">${per.map(x=>`<div><span>${x.g.ic} ${x.g.n}（${x.n} 箱）</span><i style="width:${Math.max(4,Math.min(100,Math.abs(x.p)*3))}%;background:${x.p>=0?'#0072B2':'#D55E00'}"></i><b>${x.p>=0?'+':''}${x.p}</b></div>`).join('')}${S.pep?`<div><span>🌶️ 胡椒（${S.pep} 箱）</span><i style="width:${Math.min(100,S.pep*(PEP.sell-PEP.buy)*3)}%;background:#009E73"></i><b>+${S.pep*(PEP.sell-PEP.buy)}</b></div>`:''}</div>
+  ${best?`<p>最賺錢的是 <b>${best.g.n}</b>。</p>`:''}
+  <div class="qbox"><b>想一想，選一個並說出理由</b>大員商館賺的錢，大部分來自哪裡？
+   <div class="tr-q" id="trQ"><button type="button" data-a="0">臺灣自己生產的東西</button><button type="button" data-a="1">把別的地方的東西買進來、再轉賣出去</button></div><div id="trQfb"></div></div>
+  ${hides>=5?`<p class="tr-warn">🦌 你這一年收購了約 ${hides*1000} 張鹿皮。1638 年，臺灣真的輸出了大約 14 萬張鹿皮。這麼多鹿皮從哪裡來？去<a href="#deer">「部落的獵人」</a>看看梅花鹿後來怎麼了。</p>`:''}
+  <button class="tr-go alt" id="trAgain" type="button">再玩一次，換個買法</button>`;
+  $('#trAgain').onclick=()=>{reset();S.step=1;card();};
+  $('#trQ').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;$$('#trQ button').forEach(x=>x.classList.toggle('sel',x===b));
+   $('#trQfb').innerHTML=(b.dataset.a==='1'?'<b class="ok">說得好！</b>':'<b class="no">再看看你的帳本。</b>')+` 生絲和瓷器都是向中國商人買的，日本人付的是白銀，胡椒來自南洋。大員自己生產的蔗糖和鹿皮也賣得出去，但最賺錢的是<b>把中國的生絲轉賣到日本</b>。像大員這樣，靠著位置把貨物買進、再轉運賣出的港口，就叫做<b>轉運站</b>。<p class="note" style="margin-top:6px">真實的大員：1640 年，荷蘭人從大員運到日本的生絲，價值大約 75 萬荷盾；臺灣的糖運到波斯，比運到日本更賺錢。（吳聰敏，2016，〈從貿易與產業發展看荷治時期台灣殖民地經營之績效〉）</p>`;};
+ }}
+reset();card();
+})();
+
+/* =========================================================
+   史料偵探
+   ========================================================= */
+(()=>{
+const T={1:'當時的人留下的紀錄',2:'後來的人研究整理',3:'沒寫出處的說法'};
+const CASES={
+ formosa:{claim:'「16 世紀，葡萄牙水手經過臺灣，看到高山綠樹，大喊 Ilha Formosa（美麗之島），臺灣就被叫做福爾摩沙。」',
+  cards:[
+   {t:3,who:'網路文章、旅遊介紹',when:'年代不明',txt:'葡萄牙水手驚呼「Ilha Formosa！」，從此臺灣有了福爾摩沙這個名字。',why:'沒有寫出這件事是誰記錄的、記在哪裡。很多文章互相抄，說的人多，不代表有證據。'},
+   {t:1,who:'葡萄牙製圖師 Lopo Homem 畫的地圖',when:'1554 年',txt:'在北回歸線以北畫了一座小島，旁邊寫著「I. Fremosa」。',why:'這是當時留下的資料，可是只有一個名字，沒有說是誰取的。學者也懷疑地圖上那座島是不是臺灣。'},
+   {t:1,who:'西班牙人 Francisco Gali 的航海紀錄',when:'1580 年代',txt:'用「As Ilhas Fermosas」來指臺灣本島。',why:'這是當時的人寫的，而且清楚指的是臺灣。研究者認為，到了 1580 年代，西班牙人才比較明確地用福爾摩沙稱呼臺灣。'},
+   {t:2,who:'中研院臺灣史研究所 翁佳音研究員',when:'2006 年',txt:'找遍各種語言出版的文獻，到現在還找不到葡萄牙船長或水手航經臺灣時，驚呼本島為 Ilha Formosa 的直接紀錄。葡萄牙人的可靠文件，大多把臺灣叫做 Lequeo pequeno（小琉球）。',why:'這是後來的研究，但研究者讀過很多當時的史料，還說清楚他查了哪些、沒查到什麼。'}],
+  q:'那麼，「葡萄牙水手驚呼取名」這句話是……',opts:['已經被證實了','證據不夠，只是流傳很廣的說法','已經被證明是假的'],a:1,
+  fb:'沒有任何一份當時的紀錄寫到水手驚呼這件事，所以不能說「已經證實」；可是也沒有證據證明它一定沒發生，所以也不能說「是假的」。最準確的說法是：<b>這是流傳很廣、但找不到證據的說法</b>。福爾摩沙這個名字確實出現在 16 世紀的葡萄牙和西班牙地圖、紀錄上。',
+  src:'<a href="https://archives.ith.sinica.edu.tw/collections_con.php?no=25" target="_blank" rel="noopener">中研院臺史所檔案館〈福爾摩沙〉（翁佳音，2006）</a>'},
+ kuo:{claim:'1652 年，住在大員附近油村（今臺南永康）的郭懷一，帶領數千名漢人農民起來反抗荷蘭人。他們為什麼要這樣做？',
+  cards:[
+   {t:1,who:'荷蘭東印度公司的稅務紀錄',when:'1640 年起',txt:'公司開始向漢人收「人頭稅」，派士兵檢查。漢人抱怨士兵故意沒收稅單、拿走家當，還在半夜闖進家裡檢查。',why:'這是荷蘭人自己留下的紀錄，連他們都記下了漢人的抱怨，可信度高。'},
+   {t:1,who:'一位來臺灣巡查的荷蘭公司官員',when:'1651 年',txt:'「臺灣可以看到漢人很貧窮……向地主借錢，每個月要付 10–12% 的利息。」',why:'這是當時親眼看到的人寫的報告。寫的人是荷蘭官員，卻承認漢人過得很苦。'},
+   {t:1,who:'荷蘭東印度公司的紀錄',when:'1650 年代',txt:'記下郭懷一曾經多次在承包和部落交易的權利（叫做「贌社」）時，出價有不當的地方。',why:'這也是當時的紀錄，但寫的人是郭懷一的敵人。敵人寫的事不一定是假的，但讀的時候要想一想：他為什麼要這樣寫？'},
+   {t:2,who:'後來的歷史課本與研究',when:'現代',txt:'郭懷一事件是漢人農民反抗荷蘭人重稅和士兵欺壓的行動，最後被荷蘭軍隊和協助他們的原住民部落打敗。事件後，荷蘭人在赤崁蓋了普羅民遮城（今赤崁樓）。',why:'這是後人整理很多資料寫成的，比較完整。但要記得，它用的資料幾乎都是荷蘭人寫的。'}],
+  q:'下面哪一個原因，連荷蘭人自己的紀錄都承認？',opts:['漢人農民生活很苦，稅又重','郭懷一只是想搶荷蘭人的錢','原住民逼漢人起來反抗'],a:0,
+  fb:'人頭稅、士兵欺壓、借錢利息很高，都寫在荷蘭人自己的紀錄裡，所以可信度很高。還要想一想：<b>這個事件的資料幾乎都是荷蘭人寫的</b>，起事的漢人農民沒有留下自己的紀錄。少了他們的聲音，我們看到的故事就可能不完整。',
+  src:'<a href="https://zh.wikipedia.org/zh-tw/%E9%83%AD%E6%87%B7%E4%B8%80%E4%BA%8B%E4%BB%B6" target="_blank" rel="noopener">維基百科〈郭懷一事件〉（整理自荷蘭東印度公司檔案與學者研究）</a>'}};
+let cur='formosa';const st={};
+const draw=()=>{const C=CASES[cur];st[cur]=st[cur]||{};const s=st[cur];
+ $('#sdClaim').innerHTML=`<span class="sd-tag">要查證的說法</span><p>${C.claim}</p>`;
+ $('#sdCards').innerHTML=C.cards.map((c,i)=>{const pick=s[i];const done=pick!=null;return `<article class="sd-card ${done?(pick==c.t?'ok':'bad'):''}" data-i="${i}">
+  <header><b>${c.who}</b><span>${c.when}</span></header><p class="sd-txt">${c.txt}</p>
+  <div class="sd-pick" role="group" aria-label="這張資料是哪一種？">${[1,2,3].map(t=>`<button type="button" data-t="${t}" class="sd-b${t}${pick==t?' sel':''}" ${done?'disabled':''}>${T[t]}</button>`).join('')}</div>
+  ${done?`<p class="sd-why"><b>${pick==c.t?'分對了。':`這張是「${T[c.t]}」。`}</b>${c.why}</p>`:''}</article>`;}).join('');
+ const all=C.cards.every((c,i)=>s[i]!=null);
+ $('#sdVerdict').innerHTML=all?`<div class="qbox sd-q"><b>判斷</b>${C.q}<div class="tr-q">${C.opts.map((o,j)=>`<button type="button" data-v="${j}" class="${s.v===j?'sel':''}" ${s.v!=null?'disabled':''}>${o}</button>`).join('')}</div>
+  ${s.v!=null?`<p>${s.v===C.a?'<b class="ok">答對了！</b>':'<b class="no">再想想。</b>'} ${C.fb}</p><p class="note">資料來源：${C.src}</p><p class="sd-three">查證三問：<b>誰寫的？</b><b>什麼時候寫的？</b><b>他怎麼知道的？</b> 在<a href="explore.html#check">主題探究的「景點現況查證站」</a>也用得到。</p>`:''}</div>`:`<p class="note sd-left">還有 ${C.cards.filter((c,i)=>s[i]==null).length} 張卡沒分類。全部分完，就可以下判斷。</p>`;};
+$('#sdCards').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const i=+b.closest('.sd-card').dataset.i;st[cur][i]=+b.dataset.t;draw();});
+$('#sdVerdict').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;st[cur].v=+b.dataset.v;draw();});
+$('#sdTabs').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;cur=b.dataset.c;$$('#sdTabs [data-c]').forEach(x=>x.setAttribute('aria-selected',x===b));draw();});
+draw();
+})();
+
+
+/* =========================================================
+   0. 前情提要：大航海時代以前與以後
+   ========================================================= */
+(()=>{
+const bproj=d3.geoNaturalEarth1().rotate([-30,0]).fitExtent([[6,6],[754,414]],{type:'MultiPoint',coordinates:[[-150,62],[205,62],[-150,-52],[205,-52]]});
+const bm=flatMap('#bfSvg',LANDS.world,bproj);zoomButtons($('#bfBox'),bm);
+const bl=bm.g.append('g');const bd=bm.svg.append('defs');
+const COL={silk:'#E69F00',sea:'#0072B2',dias:'#CC79A7',col:'#D55E00',gama:'#009E73',mag:'#7a3f8f',am:'#D55E00',eu:'#0072B2',af:'#5E5E5E',ag:'#8a8a8a'};
+Object.entries(COL).forEach(([k,c])=>bd.append('marker').attr('id','bf-'+k).attr('viewBox','0 0 10 10').attr('refX',8).attr('refY',5).attr('markerWidth',4.5).attr('markerHeight',4.5).attr('orient','auto').append('path').attr('d','M0,0L10,5L0,10z').attr('fill',c));
+const line=(pts,k,dash,delay=0)=>{const p=bl.append('path').attr('class','route'+(dash?' dash':'')).attr('stroke',COL[k]).attr('d',bm.path({type:'LineString',coordinates:pts})).attr('marker-end',`url(#bf-${k})`);const L=p.node().getTotalLength();if(!dash){p.attr('stroke-dasharray',`${L} ${L}`).attr('stroke-dashoffset',L).transition().delay(delay).duration(1400).attr('stroke-dashoffset',0);}return p;};
+const pin=(lon,lat,label,c,side)=>marker(bm,lon,lat,{label,color:c,r:5,side}).classed('bfmk',true);
+const P={xian:[108.9,34.3],dun:[94.7,40.1],sam:[66.97,39.65],bag:[44.4,33.3],con:[28.98,41.0],ven:[12.3,45.4],mol:[127.5,-0.8],mal:[102.25,2.2],cal:[75.8,11.25],aden:[45.0,12.8],alex:[29.9,31.2],lis:[-9.14,38.7],cape:[18.5,-34.4],sev:[-6,37.4],bah:[-74.5,24.1],man:[120.98,14.6],aca:[-99.9,16.85],potosi:[-65.75,-19.6]};
+const ROUTE={
+ silk:[P.xian,P.dun,P.sam,P.bag,P.con,P.ven],
+ sea:[P.mol,P.mal,[90,5],P.cal,[60,14],P.aden,[38.5,20],[33.5,28],P.alex,[20,35],P.ven],
+ dias:[P.lis,[-18,28],[-22,10],[-5,-2],[6,-16],[14,-30],P.cape],
+ gama:[P.lis,[-18,28],[-24,8],[-22,-18],[10,-38],[30,-36],[40.6,-15.1],[40.1,-3.2],[58,6],P.cal],
+ col:[[-6.9,37.2],[-15.5,28.1],[-40,26],P.bah],
+ mag:[P.sev,[-20,10],[-35,-10],[-43,-23],[-58,-40],[-68,-53],[-78,-45],[-100,-25],[-140,-10],[175,8],[144.8,13.4],[123.9,10.3],P.mol,[110,-10],[80,-25],[40,-36],P.cape,[-5,-10],[-20,10],P.sev]};
+const clear=()=>{bl.selectAll('*').remove();bm.svg.selectAll('.bfmk').remove();};
+
+const CHAIN=[['摩鹿加群島的農民',P.mol,'採下丁香，曬乾。'],['麻六甲的商人',P.mal,'用船運到麻六甲海峽的大港口。'],['印度的商人',P.cal,'在印度西岸轉手。'],['阿拉伯商人',P.aden,'渡過阿拉伯海，進入紅海。'],['埃及的商人',P.alex,'用駱駝運到地中海邊的亞歷山卓。'],['威尼斯商人',P.ven,'運過地中海，賣給歐洲各地。']];
+let ci=0;
+const T={
+ old:{draw(){line(ROUTE.silk,'silk',false);line(ROUTE.sea,'sea',false,300);
+   [['長安',P.xian,'r'],['撒馬爾罕',P.sam,'t'],['君士坦丁堡',P.con,'t'],['威尼斯',P.ven,'l']].forEach(([n,p,s])=>pin(p[0],p[1],n,COL.silk,s));
+   [['摩鹿加群島',P.mol,'r'],['麻六甲',P.mal,'b'],['卡利卡特',P.cal,'b'],['亞丁',P.aden,'b'],['亞歷山卓',P.alex,'l']].forEach(([n,p,s])=>pin(p[0],p[1],n,COL.sea,s));
+   $('#bfSub').innerHTML=`<span class="bf-k"><i style="background:${COL.silk}"></i>絲路（陸路）</span><span class="bf-k"><i style="background:${COL.sea}"></i>香料之路（海路）</span>`;},
+  card(){const step=CHAIN[ci];return `<h3>一包丁香的長途旅行</h3>
+   <p>500 多年前，歐洲人想要亞洲的<b>香料</b>（胡椒、丁香、肉豆蔻）、<b>絲綢</b>和<b>瓷器</b>。這些東西要靠陸上的<b>絲路</b>，或海上的<b>香料之路</b>，一站一站轉手運到歐洲。</p>
+   <ol class="bf-chain">${CHAIN.map((c,i)=>`<li class="${i<ci?'done':i===ci?'on':''}"><b>${c[0]}</b>${i<=ci?`<span>${c[2]}</span>`:''}</li>`).join('')}</ol>
+   <div class="bf-price"><span>同一包丁香，到這一站的價錢大約是一開始的</span><b>${[1,2,4,8,16,30][ci]} 倍</b><small>（示意：每轉手一次，就要多付運費、稅金和商人的利潤）</small></div>
+   <button class="tr-go" id="bfNext" type="button">${ci<CHAIN.length-1?'交給下一站 →':'再看一次'}</button>
+   ${ci===CHAIN.length-1?`<div class="qbox"><b>想一想</b>如果你是歐洲的商人，不想讓這麼多人賺走價差，你會怎麼做？按上面的「② 為什麼要出海」看看答案。</div>`:''}`;},
+  after(){bm.svg.selectAll('.bf-cur').remove();const p=CHAIN[ci][1];const m=bm.pin(p[0],p[1]).attr('class','zs bf-cur bfmk');m.append('circle').attr('r',13).attr('fill','none').attr('stroke','#D55E00').attr('stroke-width',3);
+   $('#bfNext').onclick=()=>{ci=ci<CHAIN.length-1?ci+1:0;$('#bfCard').innerHTML=T.old.card();T.old.after();};}},
+ why:{draw(){pin(P.con[0],P.con[1],'君士坦丁堡（1453）','#5E5E5E','t');pin(P.lis[0],P.lis[1],'里斯本（葡萄牙）','#5E5E5E','l');pin(P.sev[0],P.sev[1],'塞維亞（西班牙）','#5E5E5E','b');$('#bfSub').innerHTML='';},
+  card(){return `<h3>為什麼要冒險出海？</h3>
+   <div class="bf-why"><p><b>💰 香料太貴了</b>經過一層又一層的商人，香料到了歐洲貴得不得了。</p>
+   <p><b>🏰 東邊的路被擋住</b>1453 年，鄂圖曼帝國攻下君士坦丁堡，控制了東地中海的要道，歐洲人很難自己往東走。</p>
+   <p><b>⛵ 有了新的船和工具</b>更適合遠洋的帆船、指南針（羅盤）和測量星星位置的儀器，讓船可以離開海岸，開到大海中間。</p>
+   <p><b>🌍 想找黃金、香料，也想傳教</b>國王和商人想賺錢，教會想把天主教傳到世界各地。</p></div>
+   <p>最先出發的是<b>葡萄牙</b>和<b>西班牙</b>。按下面的航線看看他們怎麼走：</p>
+   <div class="bf-voy" id="bfVoy">${[['dias','1488','迪亞士'],['col','1492','哥倫布'],['gama','1498','達伽馬'],['mag','1519–1522','麥哲倫船隊']].map(([k,y,n])=>`<button type="button" data-v="${k}"><i style="background:${COL[k]}"></i><b>${y}</b>${n}</button>`).join('')}</div>
+   <div id="bfVoyTxt" class="bf-voytxt"></div>`;},
+  after(){const TXT={dias:'葡萄牙的<b>迪亞士</b>沿著非洲西岸一路往南，繞過非洲最南端的<b>好望角</b>，證明可以從大西洋開進印度洋。',
+    col:'替西班牙出航的<b>哥倫布</b>以為往西開就能到亞洲，結果抵達了<b>美洲</b>旁邊的島嶼。歐洲人從此知道有一塊「新大陸」。',
+    gama:'葡萄牙的<b>達伽馬</b>繞過好望角，在非洲東岸找到領航員，橫越印度洋，抵達<b>印度的卡利卡特</b>。歐洲人終於可以自己開船到亞洲買香料。',
+    mag:'<b>麥哲倫</b>帶著西班牙船隊往西出發，穿過南美洲南端的海峽，橫越太平洋到菲律賓。麥哲倫在菲律賓戰死，剩下的船員在 1522 年回到西班牙，完成第一次<b>環繞地球一圈</b>的航行。'};
+   $('#bfVoy').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;$$('#bfVoy button').forEach(x=>x.classList.toggle('sel',x===b));bl.selectAll('*').remove();line(ROUTE[b.dataset.v],b.dataset.v,false);$('#bfVoyTxt').innerHTML=TXT[b.dataset.v]+(b.dataset.v==='gama'?' <span class="note">之後，荷蘭人和英國人也跟著這條路來到亞洲，1624 年荷蘭人來到臺灣。</span>':'');};
+   $('#bfVoy [data-v="gama"]').click();}},
+ change:{draw(){line([P.potosi,[-80,-8],P.aca,[-140,15],[165,13],P.man],'ag',false);line([P.man,[117,20],[118.1,24.5]],'ag',false,900);
+   line([[-70,10],[-40,30],[-10,40]],'am',false,200);line([[-10,35],[-40,22],[-65,12]],'eu',false,500);line([[5,4],[-30,-5],[-38,-10]],'af',false,800);
+   [['波托西銀礦',P.potosi,'l'],['阿卡普科',P.aca,'l'],['馬尼拉',P.man,'r']].forEach(([n,p,s])=>pin(p[0],p[1],n,'#8a6d00',s));
+   $('#bfSub').innerHTML=`<span class="bf-k"><i style="background:${COL.ag}"></i>美洲白銀經馬尼拉到中國</span><span class="bf-k"><i style="background:${COL.am}"></i>美洲的作物到舊大陸</span><span class="bf-k"><i style="background:${COL.eu}"></i>歐洲的牲畜、作物和疾病到美洲</span><span class="bf-k"><i style="background:${COL.af}"></i>非洲人被賣到美洲當奴隸</span>`;},
+  card(){return `<h3>世界連在一起了</h3>
+   <p>大航海以後，各大洲的人、物產和疾病開始大量交流，這叫做<b>哥倫布大交換</b>：</p>
+   <ul class="bf-list"><li>🌽 美洲的<b>番薯、玉米、辣椒、番茄、花生</b>傳到歐洲和亞洲。1593 年，福建商人陳振龍從菲律賓帶回番薯藤，後來番薯也成了臺灣人的重要糧食。</li>
+   <li>🪙 1565 年起，西班牙的<b>大帆船</b>把美洲挖到的<b>白銀</b>運到馬尼拉，換中國的絲綢和瓷器，白銀大量流進中國。</li>
+   <li>🐎 歐洲人把馬、牛、小麥帶到美洲，也帶去了<b>天花</b>等傳染病，美洲原住民因此大量死亡。</li>
+   <li>⛓️ 歐洲人在美洲開墾大農場，從非洲抓了很多人，<b>賣到美洲當奴隸</b>。</li></ul>
+   <div class="qbox"><b>小活動：餐桌上的大航海</b>下面這些食物，哪些原本是<strong>美洲</strong>才有的？點一下分類。
+    <div class="bf-food" id="bfFood"></div><div id="bfFoodFb"></div></div>`;},
+  after(){const F=[['番薯',1],['稻米',0],['玉米',1],['茶',0],['辣椒',1],['甘蔗',0],['番茄',1],['香蕉',0],['花生',1],['胡椒',0]];const st={};
+   const draw=()=>{$('#bfFood').innerHTML=F.map(([n,a],i)=>{const s=st[i];return `<div class="bf-f ${s==null?'':(s===a?'ok':'bad')}"><b>${n}</b><span><button type="button" data-i="${i}" data-a="1" ${s!=null?'disabled':''} class="${s===1?'sel':''}">美洲來的</button><button type="button" data-i="${i}" data-a="0" ${s!=null?'disabled':''} class="${s===0?'sel':''}">本來就在亞洲</button></span></div>`;}).join('');
+    const n=Object.keys(st).length;if(n===F.length){const c=F.filter(([x,a],i)=>st[i]===a).length;$('#bfFoodFb').innerHTML=`<p style="margin-top:8px">答對 ${c} / ${F.length}。番薯、玉米、辣椒、番茄、花生原本都只長在美洲。臺灣話把番薯叫「番薯」、玉米叫「番麥」，名字裡的<strong>「番」</strong>，常常是「從外地來的」意思。</p>`;}};
+   $('#bfFood').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;st[b.dataset.i]=+b.dataset.a;draw();};draw();}}};
+let bt='old';
+const show=()=>{clear();T[bt].draw();$('#bfCard').innerHTML=T[bt].card();T[bt].after&&T[bt].after();$$('#bfTabs [data-b]').forEach(b=>b.setAttribute('aria-selected',b.dataset.b===bt));};
+$('#bfTabs').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){bt=b.dataset.b;show();}});
+show();
+})();
+
 railSpy();
 document.body.dataset.ready='1';
 })();

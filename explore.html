@@ -337,6 +337,52 @@ footer p+p{margin-top:6px}
 .home-link{display:block;color:inherit;text-decoration:none;border-radius:12px}
 .home-link .kicker::before{content:"⌂ 海佃地圖首頁 › ";color:var(--ink);font-weight:700}
 .home-link:hover h1,.home-link:focus-visible h1{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+/* crowd */
+.cr-pair{padding:10px 0;border-bottom:1px dashed var(--line)}.cr-pair>b{font-size:14px;color:var(--muted)}
+.cr-opts{display:flex;align-items:stretch;gap:8px;margin-top:6px}.cr-opts>span{align-self:center;color:var(--muted);font-size:14px}
+.cr-opts button{flex:1;min-height:52px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer;padding:6px 10px}
+.cr-opts button small{display:block;font:600 14px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);margin-top:2px}
+.cr-opts button.right{border-color:#009E73;box-shadow:inset 0 0 0 2px #009E73}.cr-opts button.wrong{border-color:#D55E00;box-shadow:inset 0 0 0 2px #D55E00}.cr-opts button.right2{border-color:#009E73}
+.cr-opts button:disabled{cursor:default}
+.cr-h{font-size:20px;margin:16px 0 6px}
+.cr-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;color:var(--muted);margin-bottom:8px}.cr-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px}.cr-leg i.h{background:#0072B2}.cr-leg i.n{background:#009E73}
+.cr-bars{display:grid;gap:5px}
+.cr-row{display:grid;grid-template-columns:minmax(0,13em) 1fr 4.6em;gap:8px;align-items:center;font-size:15px}
+.cr-n{line-height:1.3}.cr-n small{display:block;font-size:13px;color:var(--muted)}
+.cr-row.h .cr-n{color:#0a4f80}.cr-row.n .cr-n{color:#00694d}
+.cr-b{height:16px;background:var(--surface-2,#f4f8f7);border-radius:8px;overflow:hidden}.cr-b i{display:block;height:100%;border-radius:8px}
+.cr-row.h .cr-b i{background:#0072B2}.cr-row.n .cr-b i{background:#009E73}
+.cr-row>b{font:700 14px "IBM Plex Mono",ui-monospace,monospace;text-align:right}
+/* cap */
+.cap-intro{display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:1.7}.cap-intro span{font-size:34px;line-height:1}
+.cap-slider{display:block;margin:14px 0 8px}.cap-slider span{display:block;font-size:18px;font-weight:700;margin-bottom:6px}.cap-slider output{font:700 26px "IBM Plex Mono",ui-monospace,monospace;color:#D55E00}
+.cap-slider input{width:100%;height:36px;accent-color:#D55E00}
+.cap-meters{display:grid;gap:8px;margin:8px 0}
+.cap-m{display:grid;grid-template-columns:11em 1fr 3em;gap:8px;align-items:center;font-size:15px}
+.cap-bar{height:18px;background:var(--surface-2,#f4f8f7);border-radius:9px;overflow:hidden}.cap-bar i{display:block;height:100%;border-radius:9px;transition:width .15s}
+.cap-m b{font-size:15px;text-align:right}
+.cap-why{display:block;margin-top:10px}.cap-why span{display:block;font-weight:700;margin-bottom:6px}
+.cap-why textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:10px;font:16px/1.6 inherit;background:var(--surface);color:var(--ink);resize:vertical}
+.cap-mine{background:var(--surface-2,#f4f8f7);border-radius:10px;padding:8px 12px}
+.cap-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.cap-btns button{flex:1 1 10em;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer}
+.cap-btns .cap-copy{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tr-go{margin-top:12px;width:100%;min-height:48px;border:0;border-radius:14px;background:var(--ink);color:var(--paper);font-size:17px;font-weight:700;cursor:pointer}.tr-go:disabled{opacity:.4;cursor:default}
+/* check */
+.ck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ck-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.ck-card.fake{border-style:dashed}
+.ck-t{font-size:18px;font-weight:700;line-height:1.55;margin:0}
+.ck-meta{display:grid;gap:2px;margin:8px 0 10px;font-size:14px;color:var(--muted)}
+.ck-q{margin-top:8px}.ck-q>b{display:block;font-size:15px;margin-bottom:4px}
+.ck-q div{display:flex;flex-wrap:wrap;gap:6px}
+.ck-q button{flex:1 1 auto;min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2,#f4f8f7);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;padding:4px 10px}
+.ck-q button.right{background:#009E73;color:#fff;border-color:#009E73}.ck-q button.wrong{background:#D55E00;color:#fff;border-color:#D55E00}.ck-q button.right2{border-color:#009E73;box-shadow:inset 0 0 0 2px #009E73}
+.ck-q button:disabled{cursor:default}
+.ck-why{margin-top:10px;background:var(--surface-2,#f4f8f7);border-radius:10px;padding:8px 12px;font-size:15px;line-height:1.7}
+.ck-score{margin-top:14px;font-size:17px}
+.qbox strong{display:inline;font-weight:800}
+@media(max-width:560px){.cr-row{grid-template-columns:minmax(0,8.5em) 1fr 4em;font-size:14px}.cap-m{grid-template-columns:8.5em 1fr 2.6em;font-size:14px}.cr-opts{flex-direction:column}.cr-opts>span{align-self:flex-start}}
 </style>
 <style>
 .top .unit-link{font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:15.5px;white-space:nowrap}
@@ -479,7 +525,10 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <nav class="rail" aria-label="段落">
   <div class="wrap" id="rail">
     <a href="#views"><span class="dot" style="background:var(--typhoon)"></span>步驟 1 發現問題</a>
+    <a href="#crowd"><span class="dot" style="background:#0072B2"></span>人最多就最美？</a>
     <a href="#risks"><span class="dot" style="background:var(--plate)"></span>步驟 2 蒐集資料</a>
+    <a href="#cap"><span class="dot" style="background:#D55E00"></span>總量管制</a>
+    <a href="#check"><span class="dot" style="background:#7a3f8f"></span>查證站</a>
     <a href="#sheet"><span class="dot" style="background:var(--leaf)"></span>步驟 3–4 學習單</a>
   </div>
 </nav>
@@ -505,6 +554,27 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   </div>
 </section>
 
+<section class="unit" id="crowd">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#0072B2">數</div>
+      <h2>最多人去的，就是最美的嗎？</h2>
+      <p class="sub">交通部觀光署每年都會統計各景點有多少人去。先猜猜看，再打開 2025 年（民國 114 年）的真實數字。</p>
+    </div>
+    <div class="duo">
+      <div class="panel pad">
+        <div id="crGuess"></div>
+        <div id="crChart" hidden></div>
+      </div>
+      <div class="panel pad card" id="crSide">
+        <h3>先猜三題</h3>
+        <p>每一題選你覺得<b>一年去的人比較多</b>的地方。三題都猜完，左邊會出現真實的長條圖。</p>
+        <p class="note">資料來源：交通部觀光署〈中華民國 114 年觀光統計年報〉表「114 年國內主要觀光遊憩據點遊客人次月別統計」。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="unit" id="risks">
   <div class="wrap">
     <div class="unit-head">
@@ -521,6 +591,38 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
         <p class="note" style="margin-top:10px">課本例子：2024 年 4 月 3 日花蓮地震後，太魯閣國家公園的砂卡礑步道、燕子口受損嚴重，重建預計需要約 7 年（中央社，2024 年 6 月 22 日）。</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="unit" id="cap">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#D55E00">管</div>
+      <h2>你來當管理員：一天該讓多少人進去？</h2>
+      <p class="sub">有些景點太受歡迎，人一多，步道、生態和安全都會出問題。這叫做「總量管制」：限制一天能進去的人數。選一個景點，拉動人數，看看會發生什麼事，再寫下你的決定和理由。</p>
+    </div>
+    <div class="tabs" id="capTabs" role="tablist"></div>
+    <div class="duo" style="margin-top:14px">
+      <div class="panel pad">
+        <div class="cap-pic" id="capPic"></div>
+        <label class="cap-slider"><span>一天讓 <output id="capVal">0</output> 人進去</span><input type="range" id="capRange" min="0" max="100" value="0"></label>
+        <div class="cap-meters" id="capMeters"></div>
+        <p class="note">這是簡化的示意模型，用來想清楚「人多人少」的取捨，數字不是真的測量結果。</p>
+      </div>
+      <div class="panel pad card" id="capCard"></div>
+    </div>
+  </div>
+</section>
+
+<section class="unit" id="check">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#7a3f8f">查</div>
+      <h2>景點現況查證站：這則消息可以相信嗎？</h2>
+      <p class="sub">想去一個景點之前，網路上會看到很多消息。下面是幾則真實的公告和新聞（還有一則練習用的假消息）。每一則都問三件事：<b>誰發布的？有沒有日期？可以拿來決定這個週末去不去嗎？</b></p>
+    </div>
+    <div class="ck-grid" id="ckGrid"></div>
+    <p class="ck-score" id="ckScore" aria-live="polite"></p>
   </div>
 </section>
 
@@ -541,7 +643,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 
 <footer>
   <div class="wrap">
-    <p>資料來源：康軒版五上社會主題探究與實作；交通部觀光署 2024 年統計資料；臺灣八景資料引自課本；中央社（2024 年 6 月 22 日）。臺灣地形底圖依歐洲太空總署 Copernicus GLO-30 數值地表模型繪製。</p>
+    <p>資料來源：康軒版五上社會主題探究與實作；交通部觀光署 2024 年統計資料、〈中華民國 114 年觀光統計年報〉；林保署阿里山林業鐵路及文化資產管理處、國家公園署公告；ETtoday、聯合報、TVBS、台灣英文新聞報導；臺灣八景資料引自課本；中央社（2024 年 6 月 22 日）。臺灣地形底圖依歐洲太空總署 Copernicus GLO-30 數值地表模型繪製。</p>
     <p>景點位置為大約位置。</p>
     <p class="credit">海佃地圖 ｜ Haidian Hidden Library ｜ 2026</p>
   </div>
@@ -704,4 +806,91 @@ $('#shPrint').onclick=()=>window.print();
 railSpy();
 document.body.dataset.ready='1';
 })();
+</script><script>
+(()=>{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+/* ---------- 最多人去的，就是最美的嗎？ ---------- */
+const SPOT=[
+ ['新北大都會公園',38819400,'h'],['國華友愛商圈（臺南）',31814805,'h'],['公益路商圈（臺中）',30397475,'h'],['西門町商圈',25800230,'h'],['鹿港老街',23249731,'h'],
+ ['臺北 101',13345215,'h'],['正統鹿耳門聖母廟',12585000,'h','離海佃國小很近'],['安平（臺南）',6402531,'h','第四單元的大員'],
+ ['日月潭',2592730,'n'],['野柳地質公園',1555555,'n'],['阿里山國家森林遊樂區',982951,'n'],['太魯閣國家公園遊客中心',405151,'n','只算遊客中心'],['合歡山國家森林遊樂區',20042,'n','只算森林遊樂區']];
+const V=Object.fromEntries(SPOT.map(s=>[s[0],s[1]]));
+const PAIRS=[['臺北 101','日月潭'],['正統鹿耳門聖母廟','太魯閣國家公園遊客中心'],['西門町商圈','阿里山國家森林遊樂區']];
+const gs={};const wan=n=>n>=10000?(n/10000).toFixed(n>=1e6?0:1)+' 萬':n.toLocaleString();
+function guess(){const done=PAIRS.every((p,i)=>gs[i]!=null);
+ $('#crGuess').innerHTML=PAIRS.map((p,i)=>{const g=gs[i];return `<div class="cr-pair"><b>第 ${i+1} 題</b><div class="cr-opts">${p.map(n=>{const win=V[n]===Math.max(V[p[0]],V[p[1]]);return `<button type="button" data-i="${i}" data-n="${n}" class="${g==null?'':(n===g?(win?'right':'wrong'):(win?'right2':''))}" ${g!=null?'disabled':''}>${n}${g!=null?`<small>${wan(V[n])} 人次</small>`:''}</button>`}).join('<span>還是</span>')}</div></div>`;}).join('');
+ if(done){$('#crChart').hidden=false;chart();side();}}
+$('#crGuess').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(!b)return;gs[b.dataset.i]=b.dataset.n;guess();});
+function chart(){const max=SPOT[0][1];
+ $('#crChart').innerHTML=`<h3 class="cr-h">2025 年一年的遊客人次</h3><div class="cr-leg"><span><i class="h"></i>■ 人文景觀（商圈、老街、廟宇、建築）</span><span><i class="n"></i>▲ 自然景觀</span></div>
+ <div class="cr-bars">${SPOT.map(([n,v,t,note])=>`<div class="cr-row ${t}"><span class="cr-n">${t==='h'?'■':'▲'} ${n}${note?`<small>${note}</small>`:''}</span><span class="cr-b"><i style="width:${Math.max(.6,v/max*100)}%"></i></span><b>${wan(v)}</b></div>`).join('')}</div>`;}
+function side(){$('#crSide').innerHTML=`<h3>你發現了什麼？</h3>
+ <p>一年去最多人的，幾乎都是<b>商圈、公園、老街和廟宇</b>，而且都在大城市附近，交通方便、每天都能去。課本裡的「臺灣八景」大多是自然景觀，人數反而少很多。</p>
+ <div class="qbox"><b>想一想</b>合歡山一年只有 2 萬人？這張表裡的「合歡山國家森林遊樂區」只算那一小塊遊樂區，開車上武嶺、合歡山主峰的人沒有算進去；太魯閣也只算遊客中心。<br>所以看統計數字前，要先看清楚<strong>它算的是哪裡、怎麼算的</strong>。觀光署的表格也提醒：不同類型的景點，不要直接拿來比較。</div>
+ <div class="qbox"><b>討論</b>人最多的地方，就是最美的地方嗎？一個很美的地方，如果每天都擠滿人，會發生什麼事？（下一段就來試試看。）</div>
+ <p class="note">資料來源：<a href="https://admin.taiwan.net.tw/fapi/AttFile?type=AttFile&id=40606" target="_blank" rel="noopener">交通部觀光署〈中華民國 114 年觀光統計年報〉</a>，人次是各據點自己的統計。</p>`;}
+guess();
+
+/* ---------- 總量管制模擬器 ---------- */
+const CAP={
+ gs:{n:'龜山島',ic:'🏝️',max:6000,step:100,start:3500,real:1800,unit:'人',
+  pic:'宜蘭外海的火山島，島上有軍事坑道和步道，最高點叫「401 高地」，可以看海豚、鯨魚。',
+  realTxt:'交通部觀光署東北角管理處規定：開放登島期間<b>每天最多 1,800 人</b>，最高的 401 高地<b>每天只開放 100 人</b>，每週三只開放給學術研究，都要先上網申請。（台灣英文新聞，2025 年 3 月 1 日）',
+  ask:'為什麼 401 高地的名額，比全島少那麼多？'},
+ ys:{n:'玉山主峰',ic:'⛰️',max:800,step:10,start:400,real:196,unit:'人',
+  pic:'臺灣最高的山（3,952 公尺）。爬主峰要走很長的步道，多數人會先住一晚排雲山莊，半夜再出發攻頂。',
+  realTxt:'玉山國家公園規定：當天往返主峰的「單攻」<b>每天限 60 人</b>；住在排雲山莊的人，靠<b>床位</b>限制，2026 年整修後從 116 床增加到 <b>136 床</b>，要抽籤。（聯合報，2026 年）',
+  ask:'為什麼山上的人數，要看「山屋有幾張床」來決定？'},
+ zl:{n:'錐麓古道',ic:'🪨',max:600,step:10,start:300,real:156,unit:'人',
+  pic:'太魯閣峽谷裡的古道，開在高高的大理石懸崖上，步道很窄，一邊就是峽谷。',
+  realTxt:'2024 年 0403 地震以前，太魯閣國家公園規定錐麓古道<b>平日每天 96 人、假日 156 人</b>，要先申請（TVBS，2019 年）。地震後步道受損，什麼時候開放要看太魯閣國家公園的公告。',
+  ask:'為什麼假日可以比平日多一點人？懸崖上的窄步道，人太多會有什麼危險？'}};
+let ck='gs';const ans={};
+$('#capTabs').innerHTML=Object.entries(CAP).map(([k,c])=>`<button role="tab" data-k="${k}" aria-selected="${k===ck}">${c.ic} ${c.n}</button>`).join('');
+const clamp=v=>Math.max(0,Math.min(100,v));
+function meters(){const c=CAP[ck],x=+$('#capRange').value,r=x/(c.real*1.15);
+ $('#capVal').textContent=x.toLocaleString();
+ const M=[['🌿 自然環境',clamp(100-(r-0.55)*95)],['🙂 遊客玩得開心、安全',clamp(100-(r-0.45)*85)],['🏪 在地生意',clamp(r*68)]];
+ $('#capMeters').innerHTML=M.map(([n,v])=>`<div class="cap-m"><span>${n}</span><span class="cap-bar"><i style="width:${v}%;background:${v>66?'#009E73':v>33?'#E69F00':'#D55E00'}"></i></span><b>${v>66?'很好':v>33?'普通':'很糟'}</b></div>`).join('');}
+function capCard(){const c=CAP[ck],a=ans[ck];
+ $('#capPic').innerHTML=`<p class="cap-intro"><span>${c.ic}</span>${c.pic}</p>`;
+ const R=$('#capRange');R.max=c.max;R.step=c.step;R.value=a?a.v:c.start;meters();
+ $('#capCard').innerHTML=a&&a.shown?`<h3>你的決定：一天 ${(+a.v).toLocaleString()} 人</h3><p class="cap-mine">你的理由：${a.why.replace(/</g,'&lt;')}</p>
+  <div class="qbox"><b>真實的規定</b>${c.realTxt}</div>
+  <div class="qbox"><b>再想一想</b>${c.ask}</div>
+  <p>你的人數比真實規定${+a.v>c.real*1.3?'<b>多很多</b>':+a.v<c.real*0.7?'<b>少很多</b>':'<b>差不多</b>'}。不一定要一樣，重要的是你能說出理由：管理員要同時顧到自然、安全，也要顧到想來玩的人和靠觀光生活的居民。</p>
+  <div class="cap-btns"><button type="button" class="cap-copy" id="capCopy">複製我的答案</button><button type="button" class="cap-redo" id="capRedo">重新決定</button></div>`
+ :`<h3>${c.ic} ${c.n}：你的決定</h3><p>拉動人數，觀察三條長條怎麼變。找到你覺得最好的人數後，寫下理由。</p>
+  <label class="cap-why"><span>我選這個人數，是因為……</span><textarea id="capWhy" rows="4" placeholder="例如：人太多會踩壞步道，但是……">${a?a.why:''}</textarea></label>
+  <button type="button" class="tr-go" id="capOk" disabled>送出，看看真實的規定</button><p class="note" id="capHint">理由至少寫 10 個字。</p>`;
+ const w=$('#capWhy');if(w){const chk=()=>{$('#capOk').disabled=w.value.trim().length<10;};w.oninput=chk;chk();$('#capOk').onclick=()=>{ans[ck]={v:$('#capRange').value,why:w.value.trim(),shown:true};capCard();};}
+ if($('#capRedo')){$('#capRedo').onclick=()=>{ans[ck].shown=false;capCard();};$('#capCopy').onclick=async()=>{const t=`【總量管制】${c.n}：一天 ${a.v} 人。理由：${a.why}`;try{await navigator.clipboard.writeText(t);$('#capCopy').textContent='已複製，可以貼給老師';}catch(e){$('#capCopy').textContent='請手動選取文字複製';}};}}
+$('#capRange').addEventListener('input',()=>{meters();if(ans[ck]&&!ans[ck].shown)ans[ck].v=$('#capRange').value;});
+$('#capTabs').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;const w=$('#capWhy');if(w)ans[ck]={...(ans[ck]||{}),v:$('#capRange').value,why:w.value,shown:false};ck=b.dataset.k;$$('#capTabs [data-k]').forEach(x=>x.setAttribute('aria-selected',x===b));capCard();});
+capCard();
+
+/* ---------- 景點現況查證站 ---------- */
+const Q=[{k:'who',q:'誰發布的？',o:['官方單位','新聞媒體','網友個人']},{k:'date',q:'有沒有日期？',o:['有','沒有']},{k:'use',q:'可以拿來決定這個週末去不去嗎？',o:['可以直接用','要再查證','不能用']}];
+const CK=[
+ {t:'阿里山林鐵沼平線、神木線 10 月 24 日下午 1 時起恢復營運；本線及祝山線 10 月 25 日恢復營運',from:'農業部林業及自然保育署 阿里山林業鐵路及文化資產管理處 網站公告',date:'2026 年 10 月 24 日',a:{who:0,date:0,use:0},
+  why:'這是管理林鐵的官方單位發布的，有日期，內容也很清楚。不過颱風季常常停駛，出發前最好再看一次最新公告。',url:'https://afrch.forest.gov.tw/AllNews/0079498'},
+ {t:'九份老街擠爆「放眼都人頭」！她逛到以為人在國外',from:'ETtoday 新聞雲（記者整理網友在 Threads 的貼文）',date:'2026 年 11 月 24 日',a:{who:1,date:0,use:1},
+  why:'是新聞媒體，有日期，但內容主要是網友的個人感受，不是官方統計。可以知道「週末人很多」，要不要去、幾點去，還要再查（例如官方的交通管制公告）。',url:'https://www.ettoday.net/news/20261124/3277544.htm'},
+ {t:'合歡山花季交通管制：小客車每車至少 3 人才能上山，每天早上 6 點到 11 點',from:'聯合報',date:'2026 年 4 月 9 日',a:{who:1,date:0,use:1},
+  why:'有日期，而且日期很重要：這是 4 月到 6 月花季的規定，現在 11 月已經不適用了！一定要再查最新的公告。',url:'https://udn.com/news/story/7266/9431141'},
+ {t:'11 月起週休二日，台 14 甲線翠峰到大禹嶺，小客車實施高乘載管制，凌晨 0 時到上午 8 時',from:'內政部國家公園署 網站',date:'2026 年 11 月 3 日更新',a:{who:0,date:0,use:0},
+  why:'官方單位、有更新日期，是現在適用的規定。不過網頁沒有寫「至少幾個人」，出發前可以打電話或看警察局的公告，把細節問清楚。',url:'https://www.taiwan.nps.gov.tw/home/zh-tw/news/34046.html'},
+ {t:'「太魯閣全部開放了！快去！」（一張朋友轉傳的圖片）',from:'通訊軟體群組裡轉傳的圖片，沒有寫是誰做的',date:'看不到日期',fake:true,a:{who:2,date:1,use:2},
+  why:'這是我們自己做的<b>練習用假消息</b>。不知道誰做的、沒有日期，也找不到官方公告支持。0403 地震後，太魯閣還有不少步道封閉重建中，要去之前一定要看太魯閣國家公園的官方網站。'}];
+const cs={};
+function ck2(){$('#ckGrid').innerHTML=CK.map((c,i)=>{const s=cs[i]||{};const done=Q.every(q=>s[q.k]!=null);return `<article class="ck-card ${c.fake?'fake':''}">
+  <p class="ck-t">${c.t}</p><p class="ck-meta"><span>來源：${c.from}</span><span>日期：${c.date}</span></p>
+  ${Q.map(q=>`<div class="ck-q"><b>${q.q}</b><div>${q.o.map((o,j)=>{const pk=s[q.k]===j,ok=c.a[q.k]===j;return `<button type="button" data-i="${i}" data-q="${q.k}" data-j="${j}" class="${s[q.k]==null?'':(pk?(ok?'right':'wrong'):(ok?'right2':''))}" ${s[q.k]!=null?'disabled':''}>${o}</button>`}).join('')}</div></div>`).join('')}
+  ${done?`<p class="ck-why">${c.why}${c.url?` <a href="${c.url}" target="_blank" rel="noopener">看原文</a>`:''}</p>`:''}</article>`;}).join('');
+ const tot=CK.length*Q.length,n=Object.values(cs).reduce((a,s)=>a+Object.keys(s).length,0),r=CK.reduce((a,c,i)=>a+Q.filter(q=>cs[i]&&cs[i][q.k]===c.a[q.k]).length,0);
+ $('#ckScore').innerHTML=n===tot?`全部完成！答對 ${r} / ${tot} 題。記住查證三問：<b>誰發布的？什麼時候？他怎麼知道的？</b>寫學習單時，也要寫下資料來源和日期。`:`已回答 ${n} / ${tot} 題`;}
+$('#ckGrid').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;const i=b.dataset.i;cs[i]=cs[i]||{};cs[i][b.dataset.q]=+b.dataset.j;ck2();});
+ck2();
+})();
 </script>
+
