@@ -1191,7 +1191,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1384,
+    "line": 1408,
     "snippet": "border-top: 4px + border-radius: 16px"
   },
   {
@@ -1201,7 +1201,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2203,
+    "line": 2227,
     "snippet": "border-top: 3px + border-radius: 10px"
   },
   {
@@ -1211,7 +1211,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2211,
+    "line": 2235,
     "snippet": "border-top: 3px + border-radius: 10px"
   },
   {
@@ -1221,7 +1221,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2219,
+    "line": 2243,
     "snippet": "border-top: 3px + border-radius: 10px"
   },
   {
@@ -1231,7 +1231,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1251,
+    "line": 1275,
     "snippet": "2.7:1 (need 4.5:1) — text #ff7155 on #ffffff"
   },
   {
@@ -1241,7 +1241,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1252,
+    "line": 1276,
     "snippet": "2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff (and 21 more)"
   },
   {
@@ -1251,7 +1251,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1344,
+    "line": 1368,
     "snippet": "1.3:1 (need 3:1) — text #000000 on #11252c (and 1 more)"
   },
   {
@@ -1261,8 +1261,8 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1345,
-    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 184 more)"
+    "line": 1369,
+    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 180 more)"
   },
   {
     "antipattern": "low-contrast",
@@ -1271,7 +1271,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1347,
+    "line": 1371,
     "snippet": "1.7:1 (need 4.5:1) — text #000000 on #31382f (and 1 more)"
   },
   {
@@ -1281,7 +1281,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1360,
+    "line": 1384,
     "snippet": "1.2:1 (need 4.5:1) — text #e2eef0 on #ffffff (and 1 more)"
   },
   {
@@ -1291,7 +1291,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1407,
+    "line": 1431,
     "snippet": "1.6:1 (need 4.5:1) — text #000000 on #1f3439 (and 6 more)"
   },
   {
@@ -1301,7 +1301,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1499,
+    "line": 1523,
     "snippet": "1.3:1 (need 4.5:1) — text #000000 on #0e2026 (and 62 more)"
   },
   {
@@ -1311,7 +1311,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2124,
+    "line": 2148,
     "snippet": "1.6:1 (need 4.5:1) — text #000000 on #1b3339 (and 3 more)"
   },
   {
@@ -1321,18 +1321,8 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2298,
+    "line": 2322,
     "snippet": ":hover state 1.5:1 (need 4.5:1) — text #000000 on #1b3138 (and 2 more)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1273,
-    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
     "antipattern": "cramped-padding",
@@ -1351,27 +1341,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1317,
-    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1325,
-    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1333,
+    "line": 1321,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1382,16 +1352,6 @@
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 1341,
-    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1354,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1401,7 +1361,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1369,
+    "line": 1349,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -1411,7 +1371,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1376,
+    "line": 1357,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1421,7 +1381,47 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1416,
+    "line": 1365,
+    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1378,
+    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1393,
+    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1400,
+    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1440,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1431,7 +1431,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1418,
+    "line": 1442,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1441,7 +1441,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1419,
+    "line": 1443,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1451,27 +1451,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1429,
-    "snippet": "<div>: children flush against bg on right/left (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1455,
-    "snippet": "<div>: children flush against bg on right/left (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1457,
+    "line": 1453,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1491,7 +1471,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1507,
+    "line": 1481,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1501,7 +1481,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1508,
+    "line": 1503,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1511,7 +1491,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1512,
+    "line": 1531,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1521,7 +1501,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1537,
+    "line": 1532,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1531,7 +1511,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1565,
+    "line": 1536,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1541,7 +1521,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1590,
+    "line": 1561,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1551,7 +1531,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1618,
+    "line": 1589,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1561,7 +1541,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1631,
+    "line": 1614,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1571,7 +1551,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1652,
+    "line": 1642,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1581,7 +1561,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1653,
+    "line": 1655,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1591,7 +1571,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1657,
+    "line": 1676,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1601,7 +1581,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1680,
+    "line": 1677,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1621,17 +1601,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1683,
-    "snippet": "<div>: children flush against bg on right/left (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1685,
+    "line": 1704,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1651,7 +1621,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1706,
+    "line": 1707,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1661,7 +1631,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1710,
+    "line": 1709,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1671,7 +1641,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1733,
+    "line": 1729,
+    "snippet": "<div>: children flush against bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1730,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1691,17 +1671,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1736,
-    "snippet": "<div>: children flush against bg on right/left (no inset)"
-  },
-  {
-    "antipattern": "cramped-padding",
-    "name": "Cramped padding",
-    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1738,
+    "line": 1757,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1721,7 +1691,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1759,
+    "line": 1760,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1731,7 +1701,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1763,
+    "line": 1762,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1741,7 +1711,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1791,
+    "line": 1782,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1751,7 +1721,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1811,
+    "line": 1783,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1761,7 +1731,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1812,
+    "line": 1787,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1771,7 +1741,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1816,
+    "line": 1815,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1781,7 +1751,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1839,
+    "line": 1835,
+    "snippet": "<div>: children flush against bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1836,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1801,7 +1781,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1844,
+    "line": 1863,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1811,7 +1791,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1869,
+    "line": 1864,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1821,7 +1801,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1892,
+    "line": 1868,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1841,7 +1821,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1897,
+    "line": 1916,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1861,7 +1841,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1918,
+    "line": 1921,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1871,7 +1851,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1922,
+    "line": 1941,
+    "snippet": "<div>: children flush against bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 1942,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1891,7 +1881,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1950,
+    "line": 1970,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1901,7 +1891,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 1975,
+    "line": 1974,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1911,7 +1901,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2005,
+    "line": 1999,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1921,7 +1911,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2028,
+    "line": 2029,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1931,7 +1921,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2055,
+    "line": 2052,
     "snippet": "<div>: children flush against bg on right/left (no inset)"
   },
   {
@@ -1941,7 +1931,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2256,
+    "line": 2079,
+    "snippet": "<div>: children flush against bg on right/left (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 2280,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1951,7 +1951,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2269,
+    "line": 2293,
     "snippet": "<div> \"migration-tabs\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -1961,7 +1961,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2341,
+    "line": 2365,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1971,7 +1971,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2407,
+    "line": 2431,
     "snippet": "<details>: children flush against border-top on top (no inset)"
   },
   {
@@ -1981,7 +1981,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2469,
+    "line": 2501,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -1991,7 +1991,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
-    "line": 2491,
+    "line": 2523,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2003,6 +2003,16 @@
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
     "line": 0,
     "snippet": "<h3> \"阿美族棒球夢幻隊\" followed by <h5> \"郭源治\" (missing h4)"
+  },
+  {
+    "antipattern": "dark-glow",
+    "name": "Glowing shadow accents",
+    "description": "Colored glow shadows — a zero-offset chromatic halo (box- or text-shadow) on any background, or any colored blurred shadow on a dark background — are the default \"cool\" look of AI-generated UIs. Use neutral elevation shadows and subtle, purposeful lighting instead.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit3.html",
+    "line": 0,
+    "snippet": "Colored box-shadow glow (#10313b) on dark page"
   },
   {
     "antipattern": "repeating-stripes-gradient",
