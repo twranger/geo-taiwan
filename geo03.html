@@ -433,8 +433,8 @@ img,svg,table{max-width:100%}
 <header>
   <strong>球場與河流</strong>
   <nav>
-    <button class="active" data-page="ball">01　阿美族棒球夢幻隊</button>
-    <button data-page="map">02　馬太鞍・河流與聚落</button>
+    <button class="active" data-page="ball">阿美族棒球夢幻隊</button>
+    <a class="btn" href="unit3.html#mataian">馬太鞍專題</a>
     <button id="shareLinkBtn" type="button" title="複製目前頁面的分享連結">複製連結</button>
     <a class="btn" href="unit3.html#amis-baseball">回第三單元</a>
     <a class="btn" href="index.html">海佃地圖</a>
@@ -2589,15 +2589,14 @@ $('netTest').onclick=async()=>{
 // ===== PAGE SWITCHING + URL HASH DEEP-LINKING =====
 let currentPage='ball';
 function showPage(page, pushHash=true){
-  currentPage=(page==='map')?'map':'ball';
+  currentPage='ball'; // 馬太鞍地圖已併入 unit3.html#mataian
   $('ballpage').hidden=currentPage!=='ball';
   $('mappage').hidden=currentPage!=='map';
   document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===currentPage));
   if(pushHash){
-    const h=currentPage==='map'?`#map?lat=${center[0].toFixed(4)}&lon=${center[1].toFixed(4)}&z=${zoom}`:'#ball';
+    const h='#ball';
     try{history.replaceState(null,'',h);}catch(e){}
   }
-  if(currentPage==='map'){renderMap();requestAnimationFrame(()=>{setCompareMode(cmpMode);renderAncestralMap();autoDiscoverNlscDisasterLayers();});}
   window.scrollTo(0,0);
 }
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
