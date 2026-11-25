@@ -485,6 +485,11 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .mt-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .mt-lab{font-weight:800;paint-order:stroke;stroke:#fff;stroke-linejoin:round}
 .mt-pin text{font:800 14px system-ui,sans-serif}
+.mt-map.photo [data-k="heavy"] polygon{fill:none;stroke:#ff4d4d;stroke-width:3.5}
+.mt-map.photo [data-k="old"] polygon{fill:rgba(34,197,94,.12);stroke:#4ade80}
+.mt-map.photo .mt-lab{stroke:#0b1f17}
+.mt-map.photo [data-k="old"] .mt-lab{fill:#bbf7d0}
+.mt-map.photo [data-k="heavy"] .mt-lab{fill:#fecaca}
 .mt-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
 .mt-zoom button{width:40px;height:40px;border:1px solid #cbd5d1;border-radius:8px;background:#fff;color:#10313b;font:700 20px/1 system-ui;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .mt-cap{position:absolute;left:10px;bottom:10px;right:60px;width:max-content;max-width:calc(100% - 70px);padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:#10313b;font-size:13px;line-height:1.45}
@@ -2438,7 +2443,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 
       <section class="heritage-streetview mataian" id="mataian" aria-labelledby="mataianTitle">
         <h4 id="mataianTitle">臺灣的例子：馬太鞍（Fata’an）祖先選的高地</h4>
-        <p class="heritage-intro">姉吉的居民用石碑提醒子孫；花蓮光復的馬太鞍阿美族祖先，則是用「家要蓋在哪裡」留下提醒。切換下面的底圖，看看 1904 年的部落和 2025 年的泥流在哪裡。</p>
+        <p class="heritage-intro">姉吉的居民用石碑提醒子孫；花蓮光復的馬太鞍阿美族祖先，則是用「家要蓋在哪裡」留下提醒。地圖一開始是 2025 年災後的空拍，可以拖曳、放大，也可以換成 1904 年的地圖或災前災後對照。</p>
         <div class="mt-tools">
           <div class="mt-seg" role="radiogroup" aria-label="底圖">
             <button type="button" role="radio" data-base="map" aria-checked="true">今日地圖</button>
@@ -2472,7 +2477,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
             <h5>祖先住在哪裡？2025 年發生什麼事？</h5>
             <p>1904 年的地圖上，馬太鞍社在馬太鞍溪兩條支流中間的<b>高地</b>，緊靠今天馬太鞍長老教會所在小山丘的東側。族人以前曾因溪水氾濫搬家，知道溪水會改道，所以選了較高的地方住。南岸的舊河道就是今天的林森路，那一帶的傳統地名 Makereng，是形容洪水帶動石頭撞擊，發出「咯愣咯愣」的聲音。</p>
             <p>2025 年 9 月 23 日下午，上游的堰塞湖溢流，泥水沖斷台 9 線的馬太鞍溪橋，越過堤防衝進光復市區，有些地方的泥堆到一層樓高，約 5,200 人躲到樓上避難。</p>
-            <p>打開「災後空拍」就能看到：泥流從部落的<b>北邊和東邊繞過去</b>，部落中間和西邊的樹林、房子還是綠的，教會所在的小山丘也沒有被淹。被泥流掃到的，是部落東側較低的邊緣，也就是今天佛祖街一帶。</p>
+            <p>看地圖上的災後空拍（灰色的是泥流留下的砂石）：泥流從部落的<b>北邊和東邊繞過去</b>，部落中間和西邊的樹林、房子還是綠的，教會所在的小山丘也沒有被淹。被泥流掃到的，是部落東側較低的邊緣，也就是今天佛祖街一帶。</p>
           </div>
           <div class="mt-why">
             <h5>祖先有智慧，後來的人為什麼住到低處？</h5>
@@ -4321,7 +4326,7 @@ if (window.d3) initMigrationMap();
   const clamp=()=>{const bw=box.clientWidth,bh=box.clientHeight;kMin=Math.max(bw/W,bh/H);k=Math.min(3,Math.max(kMin,k));vx=Math.min(0,Math.max(bw-W*k,vx));vy=Math.min(0,Math.max(bh-H*k,vy));};
   const apply=()=>{clamp();st.style.transform=`translate(${vx}px,${vy}px) scale(${k})`;
     const s=1/k;svg.querySelectorAll('.mt-lab').forEach(t=>{const sz=+t.dataset.sz;t.setAttribute('font-size',(sz*s).toFixed(2));t.setAttribute('stroke-width',(4.5*s).toFixed(2));t.setAttribute('y',(+t.dataset.y+ +t.dataset.dy*s).toFixed(1));});
-    svg.querySelectorAll('.mt-pin').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${s})`));
+    svg.querySelectorAll('.mt-pin').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${s})`));const pt=svg.querySelector('#mtHatch');pt.setAttribute('patternTransform',`rotate(45) scale(${s})`);
     if(!swipeEl.hidden)placeSwipe();};
   const reset=()=>{const bw=box.clientWidth,bh=box.clientHeight;const fw=F[1][0]-F[0][0],fh=F[1][1]-F[0][1];k=Math.min(bw/fw,bh/fh);vx=bw/2-(F[0][0]+F[1][0])/2*k;vy=bh/2-(F[0][1]+F[1][1])/2*k;apply();};
   const zoomAt=(f,cx,cy)=>{const nk=Math.min(3,Math.max(kMin,k*f));vx=cx-(cx-vx)*nk/k;vy=cy-(cy-vy)*nk/k;k=nk;apply();};
@@ -4336,13 +4341,14 @@ if (window.d3) initMigrationMap();
   // base layers + swipe
   const swipeEl=document.getElementById('mtSwipe');let sw=.5,base='map';
   const placeSwipe=()=>{swipeEl.style.left=(sw*100)+'%';if(L.post){const bw=box.clientWidth;const cut=(sw*bw-vx)/k;L.post.style.clipPath=`inset(0 0 0 ${Math.max(0,cut)}px)`;}};
-  const setBase=b=>{base=b;document.querySelectorAll('[data-base]').forEach(x=>x.setAttribute('aria-checked',x.dataset.base===b));
+  const setBase=b=>{base=b;box.classList.toggle('photo',b==='pre'||b==='post'||b==='swipe');document.querySelectorAll('[data-base]').forEach(x=>x.setAttribute('aria-checked',x.dataset.base===b));
     const want=b==='swipe'?['pre','post']:[b];
     for(const key of ['map','y1904','pre','post']){if(want.includes(key))layer(key,1).style.display='';else if(L[key])L[key].style.display='none';}
     if(L.post)L.post.style.clipPath='';if(L.hill)L.hill.style.display=b==='map'?'':'none';
     swipeEl.hidden=b!=='swipe';if(b==='swipe')placeSwipe();
     document.getElementById('mtCap').textContent=CAP[b];};
   document.querySelectorAll('[data-base]').forEach(x=>x.addEventListener('click',()=>setBase(x.dataset.base)));
+  setBase('post');
   document.querySelectorAll('[data-ov]').forEach(x=>x.addEventListener('click',()=>{const on=x.getAttribute('aria-pressed')!=='true';x.setAttribute('aria-pressed',on);const key=x.dataset.ov;if(key==='contour'){LC.style.display=on?'':'none';return;}const g=svg.querySelector(`[data-k="${key}"]`);if(g)g.style.display=on?'':'none';}));
   reset();
   if(window.ResizeObserver)new ResizeObserver(()=>apply()).observe(box);
