@@ -485,11 +485,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .mt-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .mt-lab{font-weight:800;paint-order:stroke;stroke:#fff;stroke-linejoin:round}
 .mt-pin text{font:800 14px system-ui,sans-serif}
-.mt-map.photo [data-k="heavy"] polygon{fill:none;stroke:#ff4d4d;stroke-width:3.5}
-.mt-map.photo [data-k="old"] polygon{fill:rgba(34,197,94,.12);stroke:#4ade80}
-.mt-map.photo .mt-lab{stroke:#0b1f17}
-.mt-map.photo [data-k="old"] .mt-lab{fill:#bbf7d0}
-.mt-map.photo [data-k="heavy"] .mt-lab{fill:#fecaca}
+
 .mt-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
 .mt-zoom button{width:40px;height:40px;border:1px solid #cbd5d1;border-radius:8px;background:#fff;color:#10313b;font:700 20px/1 system-ui;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .mt-cap{position:absolute;left:10px;bottom:10px;right:60px;width:max-content;max-width:calc(100% - 70px);padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:#10313b;font-size:13px;line-height:1.45}
@@ -497,9 +493,29 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 .mt-swipe b{position:absolute;top:50%;left:-22px;width:40px;height:40px;margin-top:-20px;border-radius:50%;background:#fff;color:#10313b;display:grid;place-items:center;font-size:18px;cursor:ew-resize;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .mt-swipe span{position:absolute;top:10px;padding:3px 8px;border-radius:6px;background:rgba(16,49,59,.85);color:#fff;font-size:13px;white-space:nowrap}
 .mt-swipe span:first-child{right:10px}.mt-swipe span:nth-child(3){left:10px}
+.mt-mud{fill:rgba(180,83,9,.30);stroke:#b45309;stroke-width:2.5}
+.mt-island{fill:rgba(22,163,74,.16);stroke:#16a34a;stroke-width:3.5}
+.mt-old{fill:none;stroke:#1d4ed8;stroke-width:2.5;stroke-dasharray:8 6}
+.mt-heavy{stroke:#991b1b;stroke-width:2.5}
+.mt-map.photo .mt-mud{fill:rgba(251,146,60,.20);stroke:#fb923c;stroke-width:3}
+.mt-map.photo .mt-island{fill:rgba(74,222,128,.12);stroke:#4ade80;stroke-width:4}
+.mt-map.photo .mt-old{stroke:#93c5fd}
+.mt-map.photo .mt-heavy{fill:none;stroke:#ff4d4d;stroke-width:3}
+.mt-map.photo .mt-lab{stroke:#0b1f17}
+.mt-map.photo [data-k="island"] .mt-lab{fill:#bbf7d0}.mt-map.photo [data-k="mud"] .mt-lab{fill:#fed7aa}.mt-map.photo [data-k="old"] .mt-lab{fill:#bfdbfe}.mt-map.photo [data-k="heavy"] .mt-lab{fill:#fecaca}
+.mt-l-contour{filter:brightness(0) drop-shadow(0 0 .7px #000)}
+.mt-map.photo .mt-l-contour{filter:brightness(0) invert(1) drop-shadow(0 0 .8px #fde68a) drop-shadow(0 0 .8px #fde68a)}
+.c-mud{background:rgba(180,83,9,.45);border:2px solid #b45309}
+.c-isl{background:rgba(22,163,74,.3);border:2px solid #16a34a}
+.c-old{border:2px dashed #1d4ed8!important;background:transparent!important}
+.mt-safe-note{margin:4px 0 0;font-size:15px;color:var(--ink)}
+.mt-safe-note i{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:6px;border-radius:4px;background:#15803d;color:#fff;font-style:normal;font-weight:800;font-size:14px;vertical-align:-3px}
+.mt-chips button{transition:background .15s,color .15s}
+.mt-chips button[aria-pressed="true"]{background:#10313b!important;color:#fff!important;border-color:#10313b!important}
+.mt-chips button[aria-pressed="false"]{background:#fff;color:#6b7f86;border-style:dashed}
+.mt-chips button[aria-pressed="false"] i{opacity:.3}
 .mt-pts{margin:10px 0 0;padding-left:1.6em;font-size:15px;line-height:1.7;columns:2;column-gap:28px}
 .mt-pts li::marker{color:#dc2626;font-weight:800}
-.mt-pts li.mt-safe::marker{color:#15803d}
 .mt-how{margin-top:8px;font-size:15px}
 .mt-how summary{cursor:pointer;font-weight:700;color:var(--muted);min-height:36px;display:flex;align-items:center}
 .mt-how p{font-size:15px!important;margin:6px 0}
@@ -2443,7 +2459,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 
       <section class="heritage-streetview mataian" id="mataian" aria-labelledby="mataianTitle">
         <h4 id="mataianTitle">臺灣的例子：馬太鞍（Fata’an）祖先選的高地</h4>
-        <p class="heritage-intro">姉吉的居民用石碑提醒子孫；花蓮光復的馬太鞍阿美族祖先，則是用「家要蓋在哪裡」留下提醒。地圖一開始是 2025 年災後的空拍，可以拖曳、放大，也可以換成 1904 年的地圖或災前災後對照。</p>
+        <p class="heritage-intro">姉吉的居民用石碑提醒子孫；花蓮光復的馬太鞍阿美族祖先，則是用「家要蓋在哪裡」留下提醒。地圖一開始是 2025 年災後的空拍，可以拖曳、放大，也可以換成 1904 年的地圖，或用「災前後對照」左右拉動比較。</p>
         <div class="mt-tools">
           <div class="mt-seg" role="radiogroup" aria-label="底圖">
             <button type="button" role="radio" data-base="map" aria-checked="true">今日地圖</button>
@@ -2453,11 +2469,12 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
             <button type="button" role="radio" data-base="swipe" aria-checked="false">⇆ 災前後對照</button>
           </div>
           <div class="mt-chips" role="group" aria-label="疊加圖層">
+            <button type="button" data-ov="mud" aria-pressed="true"><i class="c-mud"></i>泥流範圍</button>
+            <button type="button" data-ov="island" aria-pressed="true"><i class="c-isl"></i>沒被淹的高地</button>
             <button type="button" data-ov="old" aria-pressed="true"><i class="c-old"></i>1904 年部落</button>
-            <button type="button" data-ov="heavy" aria-pressed="true"><i class="c-heavy"></i>重災區</button>
-            <button type="button" data-ov="general" aria-pressed="false"><i class="c-gen"></i>一般受災區</button>
             <button type="button" data-ov="pts" aria-pressed="true"><i class="c-pt"></i>受災點</button>
             <button type="button" data-ov="contour" aria-pressed="true"><i class="c-ct"></i>等高線</button>
+            <button type="button" data-ov="heavy" aria-pressed="false"><i class="c-heavy"></i>林保署重災區</button>
           </div>
         </div>
         <div class="mt-map" id="mtMap" aria-label="馬太鞍老聚落與 2025 年受災範圍互動地圖，可拖曳、縮放">
@@ -2466,18 +2483,19 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
           <div class="mt-zoom"><button type="button" data-z="in" aria-label="放大">＋</button><button type="button" data-z="out" aria-label="縮小">－</button><button type="button" data-z="reset" aria-label="回到原本範圍">⟲</button></div>
           <div class="mt-cap" id="mtCap">今日地圖：國土測繪中心</div>
         </div>
-        <ol class="mt-pts"><li>台 9 線馬太鞍溪橋：9 月 23 日 15:30 被沖斷</li><li>光復國中：校園淤泥將近 1 公尺</li><li>光復商工：門口淤泥約 1 公尺</li><li>佛祖街一帶：3 號堤防潰堤，周邊約 200 公頃農田被淹</li><li class="mt-safe">教會（小山丘最高點約 142 公尺）：當晚的避難所，最多收容約 450 人</li></ol>
+        <ol class="mt-pts"><li>台 9 線馬太鞍溪橋：9 月 23 日 15:30 被沖斷</li><li>光復國中：校園淤泥將近 1 公尺</li><li>光復商工：門口淤泥約 1 公尺</li><li>佛祖街一帶：3 號堤防潰堤，周邊約 200 公頃農田被淹</li></ol>
+        <p class="mt-safe-note"><i aria-hidden="true">＋</i>綠色方塊是馬太鞍長老教會：在沒被淹的高地上（小山丘最高點約 142 公尺），當晚成為避難所，最多收容約 450 人。</p>
         <details class="mt-how"><summary>地圖上的範圍是怎麼來的？</summary>
-          <p><b>1904 年部落</b>：從中研院的 1904 年臺灣堡圖，把標著「馬太鞍社」的聚落描下來。古地圖和今天的地圖疊在一起，可能有 100 公尺左右的誤差。</p>
-          <p><b>重災區、一般受災區</b>：林業保育署 2026 年 1 月公布的範圍，約 240 公頃和合計約 940 公頃。它們是照土地地籍劃的，學校、公墓、道路這類公有地不一定畫在裡面，所以空白不代表沒有淹水，例如光復國中積了約 1 公尺的泥，卻剛好在空白處。</p>
-          <p><b>災前、災後空拍</b>：國土測繪中心的航照。災後是 2025 年 9 月 25 日拍的，灰色、有水流紋路的就是泥流留下的砂石。</p>
+          <p><b>泥流範圍、沒被淹的高地</b>：比對國土測繪中心災前航照和 2025 年 9 月 25 日的災後航照，災後變成灰色砂石的地方畫成泥流範圍（約 370 公頃），災後仍然是綠色樹林和房子的地方畫成高地（約 85 公頃）。這是看照片畫的，邊界可能有幾十公尺的誤差。</p>
+          <p><b>1904 年部落</b>：從中研院 1904 年臺灣堡圖，把標著「馬太鞍社」的聚落描下來。古地圖和今天的地圖疊在一起，可能有 100 公尺左右的誤差。</p>
+          <p><b>林保署重災區</b>：林業保育署 2026 年 1 月公布、照土地地籍劃的範圍（約 240 公頃），用來辦理補助，不是淹水的實際邊界。</p>
         </details>
         <div class="mt-text">
           <div>
             <h5>祖先住在哪裡？2025 年發生什麼事？</h5>
             <p>1904 年的地圖上，馬太鞍社在馬太鞍溪兩條支流中間的<b>高地</b>，緊靠今天馬太鞍長老教會所在小山丘的東側。族人以前曾因溪水氾濫搬家，知道溪水會改道，所以選了較高的地方住。南岸的舊河道就是今天的林森路，那一帶的傳統地名 Makereng，是形容洪水帶動石頭撞擊，發出「咯愣咯愣」的聲音。</p>
             <p>2025 年 9 月 23 日下午，上游的堰塞湖溢流，泥水沖斷台 9 線的馬太鞍溪橋，越過堤防衝進光復市區，有些地方的泥堆到一層樓高，約 5,200 人躲到樓上避難。</p>
-            <p>看地圖上的災後空拍（灰色的是泥流留下的砂石）：泥流從部落的<b>北邊和東邊繞過去</b>，部落中間和西邊的樹林、房子還是綠的，教會所在的小山丘也沒有被淹。被泥流掃到的，是部落東側較低的邊緣，也就是今天佛祖街一帶。</p>
+            <p>比對災前、災後的空拍：泥流從北邊、東邊，還有西邊的舊河道衝下來，連南邊的市區（光復國中、光復商工）也積了泥。只有教會所在的這塊高地，樹林和房子還是綠的，變成被泥流包圍的<b>孤島</b>。1904 年地圖上的馬太鞍社，大約六成就在這座孤島上。</p>
           </div>
           <div class="mt-why">
             <h5>祖先有智慧，後來的人為什麼住到低處？</h5>
@@ -4288,7 +4306,7 @@ if (window.d3) initMigrationMap();
 <script>
 (function(){
   const box=document.getElementById('mtMap');if(!box)return;
-  const D={"heavy":[[23.6809,121.42802],[23.68084,121.42807],[23.68091,121.42809],[23.68081,121.42964],[23.68075,121.42999],[23.68052,121.43078],[23.68061,121.43091],[23.6805,121.43104],[23.68002,121.43238],[23.68014,121.43314],[23.6801,121.43404],[23.68,121.43455],[23.67958,121.43594],[23.67862,121.43867],[23.67702,121.44261],[23.67671,121.44262],[23.67666,121.44339],[23.67452,121.44861],[23.67402,121.45],[23.67347,121.45187],[23.67301,121.45377],[23.67263,121.45575],[23.67249,121.45684],[23.67131,121.45774],[23.67108,121.45743],[23.67065,121.45635],[23.66984,121.45381],[23.6693,121.45175],[23.6678,121.44483],[23.66756,121.44368],[23.66754,121.44326],[23.6676,121.44281],[23.66743,121.44266],[23.66761,121.44202],[23.66772,121.44136],[23.66752,121.44021],[23.66732,121.43969],[23.66714,121.43937],[23.66591,121.4379],[23.66344,121.43448],[23.66435,121.43255],[23.66504,121.43274],[23.66599,121.43319],[23.66693,121.43354],[23.66838,121.43397],[23.67013,121.43457],[23.67149,121.43488],[23.67216,121.43485],[23.67191,121.43532],[23.67211,121.43542],[23.67203,121.43566],[23.6717,121.43549],[23.67145,121.43599],[23.67114,121.4361],[23.67164,121.4364],[23.67208,121.43637],[23.67242,121.43572],[23.67256,121.43516],[23.67268,121.43473],[23.6733,121.43485],[23.67312,121.43541],[23.67349,121.43561],[23.67381,121.43534],[23.67397,121.43543],[23.67408,121.43512],[23.67447,121.43526],[23.67426,121.43562],[23.67447,121.43583],[23.67465,121.43533],[23.6753,121.43554],[23.67546,121.43517],[23.67483,121.4349],[23.67517,121.43458],[23.67552,121.43476],[23.67565,121.43446],[23.67553,121.43439],[23.67572,121.43397],[23.67598,121.4343],[23.67629,121.43434],[23.67637,121.43442],[23.67646,121.43426],[23.67691,121.43426],[23.677,121.43408],[23.67687,121.43396],[23.6775,121.43256],[23.6778,121.43165],[23.67841,121.43092],[23.67854,121.43055],[23.67853,121.43034],[23.67725,121.42783],[23.67685,121.42738],[23.67661,121.42669],[23.67628,121.42617],[23.67575,121.42564],[23.6753,121.42533],[23.6748,121.42523],[23.67424,121.4251],[23.67437,121.42443],[23.67505,121.42483],[23.67546,121.42496],[23.67613,121.42518],[23.67688,121.42519],[23.67787,121.4248],[23.67803,121.42478],[23.67842,121.42522],[23.67859,121.42539],[23.67916,121.42491],[23.67964,121.42516],[23.67953,121.42547],[23.68011,121.42576],[23.68066,121.42585],[23.68112,121.42585]],"general":[[[23.6812,121.4224],[23.6812,121.4232],[23.6804,121.4234],[23.6794,121.4244],[23.6798,121.4258],[23.681,121.4258],[23.6808,121.4298],[23.68,121.4322],[23.68,121.4348],[23.6778,121.441],[23.6772,121.4424],[23.6766,121.4428],[23.6766,121.4438],[23.6744,121.4486],[23.6736,121.452],[23.6732,121.4524],[23.6726,121.4568],[23.6716,121.4576],[23.671,121.4574],[23.6694,121.4524],[23.6676,121.4442],[23.6676,121.44],[23.6636,121.4348],[23.6624,121.4326],[23.6624,121.431],[23.6638,121.4324],[23.6646,121.4314],[23.664,121.431],[23.6638,121.4298],[23.663,121.4294],[23.6638,121.4282],[23.6636,121.4256],[23.663,121.4248],[23.6622,121.425],[23.6626,121.4274],[23.6622,121.4264],[23.661,121.4258],[23.6614,121.4244],[23.6626,121.4242],[23.6626,121.4232],[23.662,121.4228],[23.6628,121.4214],[23.664,121.4212],[23.663,121.4228],[23.664,121.4228],[23.6648,121.424],[23.665,121.4246],[23.6652,121.4258],[23.6666,121.4256],[23.6664,121.4244],[23.6678,121.4244],[23.6678,121.423],[23.6666,121.422],[23.6678,121.4226],[23.6692,121.4222],[23.6714,121.4224],[23.6738,121.4214],[23.6744,121.42],[23.6754,121.4202],[23.6758,121.4194],[23.6774,121.4196],[23.6786,121.4188],[23.6782,121.4206],[23.6794,121.421]],[[23.7102,121.4806],[23.7034,121.4804],[23.7006,121.4788],[23.6976,121.4776],[23.6876,121.4724],[23.6848,121.47],[23.679,121.4632],[23.6782,121.4598],[23.6782,121.457],[23.68,121.4552],[23.6818,121.4572],[23.683,121.4568],[23.6832,121.4546],[23.6836,121.4528],[23.6798,121.4516],[23.6792,121.4506],[23.6804,121.4464],[23.6816,121.4432],[23.6828,121.44],[23.685,121.4346],[23.6862,121.4366],[23.6896,121.4376],[23.6934,121.4396],[23.6918,121.4408],[23.693,121.4422],[23.6946,121.4444],[23.6938,121.4462],[23.6912,121.4476],[23.6878,121.4478],[23.6876,121.4508],[23.6868,121.4522],[23.6904,121.4528],[23.6896,121.4568],[23.691,121.4602],[23.6914,121.4652],[23.6902,121.4672],[23.6916,121.4712],[23.6942,121.4712],[23.6982,121.4724],[23.7008,121.4732],[23.7046,121.4736],[23.7068,121.4744],[23.7088,121.4744],[23.7092,121.4776],[23.7056,121.479],[23.709,121.4794]],[[23.676,121.4686],[23.6742,121.469],[23.6726,121.4676],[23.6726,121.4664],[23.6706,121.4672],[23.6694,121.466],[23.6696,121.464],[23.6678,121.463],[23.668,121.4614],[23.667,121.4608],[23.6662,121.4592],[23.6644,121.4582],[23.6658,121.4562],[23.6622,121.4562],[23.6634,121.4538],[23.664,121.452],[23.6642,121.4498],[23.667,121.4506],[23.6684,121.4554],[23.6676,121.4574],[23.669,121.458],[23.67,121.4608],[23.6722,121.464],[23.6746,121.4672]]],"old":[[23.67215,121.42734],[23.67337,121.4281],[23.6777,121.42887],[23.67792,121.42991],[23.67898,121.43165],[23.67956,121.43395],[23.67956,121.43593],[23.67866,121.43697],[23.6769,121.43708],[23.67529,121.43767],[23.67337,121.43732],[23.67081,121.43576],[23.67001,121.43489],[23.66824,121.43419],[23.66776,121.43315],[23.66808,121.43141],[23.67081,121.43071],[23.67161,121.42915],[23.67193,121.42741]],"gap":[[23.6758,121.4256],[23.6756,121.4268],[23.675,121.427],[23.6752,121.428],[23.6742,121.4282],[23.675,121.429],[23.6748,121.4302],[23.6742,121.4302],[23.673,121.4292],[23.6726,121.4294],[23.6706,121.4292],[23.6704,121.428],[23.6692,121.4282],[23.6686,121.4294],[23.6678,121.4292],[23.667,121.4282],[23.666,121.4278],[23.666,121.4272],[23.6672,121.427],[23.6674,121.4262],[23.6684,121.4252],[23.67,121.4248],[23.6702,121.424],[23.671,121.4238],[23.6716,121.423],[23.673,121.4232],[23.6732,121.4244],[23.6728,121.4248]]};
+  const D={"heavy":[[23.6809,121.42802],[23.68084,121.42807],[23.68091,121.42809],[23.68081,121.42964],[23.68075,121.42999],[23.68052,121.43078],[23.68061,121.43091],[23.6805,121.43104],[23.68002,121.43238],[23.68014,121.43314],[23.6801,121.43404],[23.68,121.43455],[23.67958,121.43594],[23.67862,121.43867],[23.67702,121.44261],[23.67671,121.44262],[23.67666,121.44339],[23.67452,121.44861],[23.67402,121.45],[23.67347,121.45187],[23.67301,121.45377],[23.67263,121.45575],[23.67249,121.45684],[23.67131,121.45774],[23.67108,121.45743],[23.67065,121.45635],[23.66984,121.45381],[23.6693,121.45175],[23.6678,121.44483],[23.66756,121.44368],[23.66754,121.44326],[23.6676,121.44281],[23.66743,121.44266],[23.66761,121.44202],[23.66772,121.44136],[23.66752,121.44021],[23.66732,121.43969],[23.66714,121.43937],[23.66591,121.4379],[23.66344,121.43448],[23.66435,121.43255],[23.66504,121.43274],[23.66599,121.43319],[23.66693,121.43354],[23.66838,121.43397],[23.67013,121.43457],[23.67149,121.43488],[23.67216,121.43485],[23.67191,121.43532],[23.67211,121.43542],[23.67203,121.43566],[23.6717,121.43549],[23.67145,121.43599],[23.67114,121.4361],[23.67164,121.4364],[23.67208,121.43637],[23.67242,121.43572],[23.67256,121.43516],[23.67268,121.43473],[23.6733,121.43485],[23.67312,121.43541],[23.67349,121.43561],[23.67381,121.43534],[23.67397,121.43543],[23.67408,121.43512],[23.67447,121.43526],[23.67426,121.43562],[23.67447,121.43583],[23.67465,121.43533],[23.6753,121.43554],[23.67546,121.43517],[23.67483,121.4349],[23.67517,121.43458],[23.67552,121.43476],[23.67565,121.43446],[23.67553,121.43439],[23.67572,121.43397],[23.67598,121.4343],[23.67629,121.43434],[23.67637,121.43442],[23.67646,121.43426],[23.67691,121.43426],[23.677,121.43408],[23.67687,121.43396],[23.6775,121.43256],[23.6778,121.43165],[23.67841,121.43092],[23.67854,121.43055],[23.67853,121.43034],[23.67725,121.42783],[23.67685,121.42738],[23.67661,121.42669],[23.67628,121.42617],[23.67575,121.42564],[23.6753,121.42533],[23.6748,121.42523],[23.67424,121.4251],[23.67437,121.42443],[23.67505,121.42483],[23.67546,121.42496],[23.67613,121.42518],[23.67688,121.42519],[23.67787,121.4248],[23.67803,121.42478],[23.67842,121.42522],[23.67859,121.42539],[23.67916,121.42491],[23.67964,121.42516],[23.67953,121.42547],[23.68011,121.42576],[23.68066,121.42585],[23.68112,121.42585]],"old":[[23.67215,121.42734],[23.67337,121.4281],[23.6777,121.42887],[23.67792,121.42991],[23.67898,121.43165],[23.67956,121.43395],[23.67956,121.43593],[23.67866,121.43697],[23.6769,121.43708],[23.67529,121.43767],[23.67337,121.43732],[23.67081,121.43576],[23.67001,121.43489],[23.66824,121.43419],[23.66776,121.43315],[23.66808,121.43141],[23.67081,121.43071],[23.67161,121.42915],[23.67193,121.42741]],"mud":[[23.6825,121.4232],[23.6811,121.4258],[23.6809,121.428],[23.6808,121.4296],[23.6801,121.4324],[23.6801,121.434],[23.6796,121.4359],[23.6786,121.4387],[23.677,121.4426],[23.6745,121.4486],[23.6735,121.4519],[23.6726,121.4568],[23.6713,121.4577],[23.6693,121.4517],[23.6678,121.4448],[23.6666,121.4405],[23.6659,121.4379],[23.6634,121.4345],[23.6628,121.431],[23.663,121.428],[23.6635,121.425],[23.6645,121.4232],[23.666,121.422],[23.67,121.4213],[23.674,121.4216],[23.678,121.4228]],"island":[[23.6781,121.4282],[23.6782,121.433],[23.6775,121.435],[23.676,121.4358],[23.673,121.4355],[23.6712,121.4345],[23.6702,121.4325],[23.67,121.429],[23.6712,121.4265],[23.6725,121.4248],[23.6745,121.4245],[23.6762,121.4252],[23.6773,121.4265]]};
   const PTS=[[23.6866,121.4093,'1'],[23.6706,121.4247,'2'],[23.66717,121.42734,'3'],[23.6714,121.4348,'4']];
   const CH=[23.67542,121.42633];
   const Z=16,N=2**Z,T=256;
@@ -4308,16 +4326,18 @@ if (window.d3) initMigrationMap();
   };
   const CAP={map:'今日地圖：國土測繪中心',y1904:'1904 年臺灣堡圖：中研院（古今套疊約有 100 公尺誤差）',pre:'災前空拍：國土測繪中心',post:'災後空拍：2025 年 9 月 25 日，國土測繪中心。灰色、有水流紋路的是泥流留下的砂石',swipe:'左邊災前、右邊災後（2025/9/25），拖曳中間的把手比較'};
   const L={};
-  const layer=(k,op)=>{if(L[k])return L[k];const g=document.createElement('div');g.className='mt-layer';g.style.opacity=op;for(const u of SRC[k])for(let ty=Math.floor(Y0);ty<Y1;ty++)for(let tx=Math.floor(X0);tx<X1;tx++){const im=new Image();im.alt='';im.decoding='async';im.src=u(tx,ty);im.style.left=((tx-X0)*T)+'px';im.style.top=((ty-Y0)*T)+'px';im.onerror=()=>im.remove();g.appendChild(im);}st.insertBefore(g,svg);L[k]=g;return g;};
+  const ZI={map:0,hill:1,y1904:2,pre:3,post:4,contour:5};
+  const layer=(k,op)=>{if(L[k])return L[k];const g=document.createElement('div');g.className='mt-layer mt-l-'+k;g.style.opacity=op;g.style.zIndex=ZI[k];for(const u of SRC[k])for(let ty=Math.floor(Y0);ty<Y1;ty++)for(let tx=Math.floor(X0);tx<X1;tx++){const im=new Image();im.alt='';im.decoding='async';im.src=u(tx,ty);im.style.left=((tx-X0)*T)+'px';im.style.top=((ty-Y0)*T)+'px';im.onerror=()=>im.remove();g.appendChild(im);}st.insertBefore(g,svg);L[k]=g;return g;};
   const pts=r=>r.map(([a,b])=>px(a,b).map(v=>v.toFixed(1)).join(',')).join(' ');
   const dd=r=>'M'+pts(r).replace(/ /g,' L')+' Z';
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('class','mt-svg');
   const lab=(la,lo,t,c,sz,anchor='middle',dy=0)=>{const[a,b]=px(la,lo);return `<text class="mt-lab" data-x="${a}" data-y="${b}" data-dy="${dy}" data-sz="${sz}" x="${a}" y="${b}" fill="${c}" text-anchor="${anchor}">${t}</text>`;};
   let h='<defs><pattern id="mtHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="rgba(185,28,28,.28)"/><line x1="0" y1="0" x2="0" y2="10" stroke="#b91c1c" stroke-width="3"/></pattern></defs>';
-  h+=`<g data-k="general" style="display:none"><path d="${D.general.map(dd).join(' ')} ${dd(D.gap)}" fill-rule="evenodd" fill="rgba(249,115,22,.22)" stroke="#ea580c" stroke-width="2" vector-effect="non-scaling-stroke"/></g>`;
-  h+=`<g data-k="heavy"><polygon points="${pts(D.heavy)}" fill="url(#mtHatch)" stroke="#991b1b" stroke-width="2.5" vector-effect="non-scaling-stroke"/>${lab(23.6668,121.4430,'重災區','#7f1d1d',16)}</g>`;
-  h+=`<g data-k="old"><polygon points="${pts(D.old)}" fill="rgba(34,197,94,.28)" stroke="#15803d" stroke-width="3" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/>${lab(23.6801,121.4330,'1904 年的馬太鞍社','#14532d',16,'middle',-4)}</g>`;
-  h+=`<g data-k="pts">${PTS.map(([la,lo,n])=>{const[a,b]=px(la,lo);return `<g class="mt-pin" data-x="${a}" data-y="${b}"><circle r="11" fill="#dc2626" stroke="#fff" stroke-width="3"/><text y="5" text-anchor="middle" fill="#fff">${n}</text></g>`}).join('')}<g class="mt-pin mt-church" data-x="${px(...CH)[0]}" data-y="${px(...CH)[1]}"><rect x="-10" y="-10" width="20" height="20" rx="4" fill="#15803d" stroke="#fff" stroke-width="3"/><text y="5" text-anchor="middle" fill="#fff">5</text></g></g>`;
+  h+=`<g data-k="mud"><path class="mt-mud" d="${dd(D.mud)} ${dd(D.island)}" fill-rule="evenodd" vector-effect="non-scaling-stroke"/>${lab(23.6705,121.4440,'泥流淤積範圍','#78350f',16)}</g>`;
+  h+=`<g data-k="heavy" style="display:none"><polygon class="mt-heavy" points="${pts(D.heavy)}" fill="url(#mtHatch)" vector-effect="non-scaling-stroke"/>${lab(23.6668,121.4470,'林保署重災區','#7f1d1d',15)}</g>`;
+  h+=`<g data-k="island"><polygon class="mt-island" points="${pts(D.island)}" vector-effect="non-scaling-stroke"/>${lab(23.6788,121.4310,'沒被淹的高地（孤島）','#14532d',16,'middle',-6)}<g class="mt-pin mt-church" data-x="${px(...CH)[0]}" data-y="${px(...CH)[1]}"><rect x="-11" y="-11" width="22" height="22" rx="5" fill="#15803d" stroke="#fff" stroke-width="3"/><path d="M0 -6V6M-5 -1H5" stroke="#fff" stroke-width="2.6"/></g>${lab(CH[0],CH[1]+0.0012,'教會（避難所）','#14532d',14,'start',5)}</g>`;
+  h+=`<g data-k="old"><polygon class="mt-old" points="${pts(D.old)}" vector-effect="non-scaling-stroke"/>${lab(23.6672,121.4345,'1904 年的馬太鞍社','#1e3a8a',14,'middle',12)}</g>`;
+  h+=`<g data-k="pts">${PTS.map(([la,lo,n])=>{const[a,b]=px(la,lo);return `<g class="mt-pin" data-x="${a}" data-y="${b}"><circle r="11" fill="#dc2626" stroke="#fff" stroke-width="3"/><text y="5" text-anchor="middle" fill="#fff">${n}</text></g>`}).join('')}</g>`;
   svg.innerHTML=h;st.appendChild(svg);
   layer('map',1);layer('hill',.3);const LC=layer('contour',1);
   // view
@@ -4326,7 +4346,7 @@ if (window.d3) initMigrationMap();
   const clamp=()=>{const bw=box.clientWidth,bh=box.clientHeight;kMin=Math.max(bw/W,bh/H);k=Math.min(3,Math.max(kMin,k));vx=Math.min(0,Math.max(bw-W*k,vx));vy=Math.min(0,Math.max(bh-H*k,vy));};
   const apply=()=>{clamp();st.style.transform=`translate(${vx}px,${vy}px) scale(${k})`;
     const s=1/k;svg.querySelectorAll('.mt-lab').forEach(t=>{const sz=+t.dataset.sz;t.setAttribute('font-size',(sz*s).toFixed(2));t.setAttribute('stroke-width',(4.5*s).toFixed(2));t.setAttribute('y',(+t.dataset.y+ +t.dataset.dy*s).toFixed(1));});
-    svg.querySelectorAll('.mt-pin').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${s})`));const pt=svg.querySelector('#mtHatch');pt.setAttribute('patternTransform',`rotate(45) scale(${s})`);
+    svg.querySelectorAll('.mt-pin').forEach(g=>g.setAttribute('transform',`translate(${g.dataset.x},${g.dataset.y}) scale(${s})`));svg.querySelector('#mtHatch').setAttribute('patternTransform',`rotate(45) scale(${s})`);
     if(!swipeEl.hidden)placeSwipe();};
   const reset=()=>{const bw=box.clientWidth,bh=box.clientHeight;const fw=F[1][0]-F[0][0],fh=F[1][1]-F[0][1];k=Math.min(bw/fw,bh/fh);vx=bw/2-(F[0][0]+F[1][0])/2*k;vy=bh/2-(F[0][1]+F[1][1])/2*k;apply();};
   const zoomAt=(f,cx,cy)=>{const nk=Math.min(3,Math.max(kMin,k*f));vx=cx-(cx-vx)*nk/k;vy=cy-(cy-vy)*nk/k;k=nk;apply();};
@@ -4342,7 +4362,7 @@ if (window.d3) initMigrationMap();
   const swipeEl=document.getElementById('mtSwipe');let sw=.5,base='map';
   const placeSwipe=()=>{swipeEl.style.left=(sw*100)+'%';if(L.post){const bw=box.clientWidth;const cut=(sw*bw-vx)/k;L.post.style.clipPath=`inset(0 0 0 ${Math.max(0,cut)}px)`;}};
   const setBase=b=>{base=b;box.classList.toggle('photo',b==='pre'||b==='post'||b==='swipe');document.querySelectorAll('[data-base]').forEach(x=>x.setAttribute('aria-checked',x.dataset.base===b));
-    const want=b==='swipe'?['pre','post']:[b];
+    const want=b==='swipe'?['pre','post']:[b];box.dataset.base=b;
     for(const key of ['map','y1904','pre','post']){if(want.includes(key))layer(key,1).style.display='';else if(L[key])L[key].style.display='none';}
     if(L.post)L.post.style.clipPath='';if(L.hill)L.hill.style.display=b==='map'?'':'none';
     swipeEl.hidden=b!=='swipe';if(b==='swipe')placeSwipe();
