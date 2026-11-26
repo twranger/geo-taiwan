@@ -170,6 +170,22 @@ const css=`
 .tw-rotctl button{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 16px;font:700 17px var(--f-body);margin:0 8px 8px 0;cursor:pointer}
 .tw-rotmsg{font-size:18px;line-height:1.7}
 .tw-why{margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}
+.tw-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:0 0 14px}
+.tw-gal figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.tw-gal figure>button{border:0;padding:0;background:#14110c;cursor:zoom-in;display:block}
+.tw-gal img{width:100%;height:150px;object-fit:cover;display:block}
+.tw-gal figcaption{padding:10px 12px;font-size:15px;line-height:1.6}
+.tw-gal figcaption b{display:block;font-size:17px;margin-top:4px}
+.tw-gnote{color:var(--ink)}
+.tw-dir{display:inline-block;background:#c0392b;color:#fff;font:700 14px var(--f-body);padding:2px 10px;border-radius:99px}
+.tw-lb{position:fixed;inset:0;z-index:10000;background:rgba(10,8,5,.94);display:flex;flex-direction:column;padding:12px}
+.tw-lbbar{display:flex;gap:10px;align-items:center;color:#fff;font-size:18px}
+.tw-lbbar button{margin-left:auto;border:0;border-radius:10px;background:#e9b949;color:#14110c;font:700 16px var(--f-body);padding:8px 14px;cursor:pointer}
+.tw-lbimg{flex:1;overflow:auto;display:grid;place-items:center;margin:10px 0}
+.tw-lbimg img{max-width:100%;max-height:100%;cursor:zoom-in}
+.tw-lbimg.zoom{place-items:start}
+.tw-lbimg.zoom img{max-width:none;max-height:none;width:auto;cursor:zoom-out}
+.tw-lbtip{color:#e8dcc0;font-size:16px;margin:0}
 .tw-guess{display:grid;gap:8px;margin:0 0 12px}
 .tw-guess label{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:17px;cursor:pointer;background:var(--surface)}
 .tw-guess input{width:22px;height:22px;flex:none}
@@ -456,13 +472,33 @@ function endChal(win){
   el.querySelectorAll('.stop').forEach(b=>b.onclick=()=>b.dataset.x?fin():startChal());
 }
 /* ---------- 方位挑戰（第一站） ---------- */
+const GAL=[
+ {t:'荷蘭人的大員海圖',who:'荷蘭測量員 Lootsman 畫，1625 年',dir:'上＝東',img:C+'thumb/3/32/AMH-4839-NA_Map_of_the_Taouan_peninsula.jpg/1920px-AMH-4839-NA_Map_of_the_Taouan_peninsula.jpg',
+  note:'荷蘭人剛到大員第二年畫的航海圖。上面是一排山，左下角是澎湖的島，到處是給船看方向的放射線。',page:'https://commons.wikimedia.org/wiki/File:AMH-4839-NA_Map_of_the_Taouan_peninsula.jpg'},
+ {t:'西班牙人的大員港情報圖',who:'西班牙人畫，約 1626 年',dir:'上＝東',img:ACTS[0].lo,
+  note:'就是第一站那張。圖上直接寫著 ORIENTE（東）在上面。',page:ACTS[0].src.page},
+ {t:'熱蘭遮城與大員市鎮',who:'Dapper 書中的版畫，約 1670 年',dir:'從海上往東看',img:ACTS[1].lo,
+  note:'就是第二站那張。畫的人好像站在海上，看著前面的城堡、市鎮和遠方的山。',page:ACTS[1].src.page},
+ {t:'康熙臺灣輿圖（局部）',who:'清帝國時期繪製，約 1699–1704 年，作者不詳',dir:'上＝東、左＝北',img:C+'2/24/%E5%BA%B7%E7%86%99%E8%87%BA%E7%81%A3%E8%BC%BF%E5%9C%96.jpg',
+  note:'全長 5 公尺多的長卷，是國寶，收藏在國立臺灣博物館。從臺灣海峽上空往東看，北方在左、南方在右。這裡只有一小塊。',page:'https://openmuseum.tw/muse/curation/4869c7accc36c12df7ce1f068cf45e9a',link:'到開放博物館看介紹'},
+ {t:'乾隆年間臺灣地圖（北端局部）',who:'清帝國繪製，1700 年代中期，國立故宮博物院收藏',dir:'上＝東、左＝北',img:C+'4/44/%E5%8F%A4%E5%9C%B0%E5%9C%96%E5%B1%95-%E5%8F%B0%E7%81%A3%E5%9C%B0%E5%9C%96a.jpg',
+  note:'這一段是臺灣最北邊：左邊大海裡的小島上，寫著「大雞籠城」（今天的基隆和平島）。北方在左邊，所以北部海岸朝左。',page:'https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%9C%B0%E5%9C%96%E5%B1%95-%E5%8F%B0%E7%81%A3%E5%9C%B0%E5%9C%96a.jpg'}];
+function lightbox(g){
+  const d=document.createElement('div');d.className='tw-lb';d.setAttribute('role','dialog');d.setAttribute('aria-label',g.t);
+  d.innerHTML=`<div class="tw-lbbar"><b>${g.t}</b><span class="tw-dir">${g.dir}</span><button aria-label="關閉">✕ 關閉</button></div><div class="tw-lbimg"><img src="${g.img}" alt="${g.t}"></div><p class="tw-lbtip">${g.note}　（點圖片可以放大／縮小）</p>`;
+  document.body.appendChild(d);const close=()=>{d.remove();document.removeEventListener('keydown',k)};const k=e=>{if(e.key==='Escape')close()};
+  document.addEventListener('keydown',k);d.querySelector('button').onclick=close;d.onclick=e=>{if(e.target===d)close()};
+  const box=d.querySelector('.tw-lbimg'),im=box.querySelector('img');
+  im.onclick=e=>{const z=box.classList.toggle('zoom');if(z){const r=im.getBoundingClientRect();requestAnimationFrame(()=>{box.scrollLeft=(e.clientX-r.left)/r.width*box.scrollWidth-box.clientWidth/2;box.scrollTop=(e.clientY-r.top)/r.height*box.scrollHeight-box.clientHeight/2})}};
+  d.querySelector('button').focus();
+}
 const WHY=[
  {o:'船都是從西邊的海上開過來的',ok:true},
  {o:'地圖是給船長、領航員用的，要方便對照眼前的景色',ok:true},
  {o:'他們熟悉海邊，對東邊的高山知道得很少',ok:true},
  {o:'那時候的人還不知道東西南北',ok:false,why:'第四個不對喔：這張圖上明明寫著東、西、南、北四個方向，畫圖的人很清楚方位，是<strong>故意</strong>這樣擺的。'}];
 const CLUES=[
- {i:'🚢',t:'站在哪裡看？',p:'從福建、澎湖、巴達維亞來的船，都是從西邊的臺灣海峽靠近大員。站在船頭往前看：大海在腳下，沙洲、港口和遠方的山在前面。把眼前看到的畫下來，東邊自然就在上面。'},
+ {i:'🚢',t:'站在哪裡看？',p:'從福建、澎湖、巴達維亞來的船，都是從西邊的臺灣海峽靠近大員；清帝國的官員也是從福建渡海過來。站在船頭往前看：大海在腳下，沙洲、港口和遠方的山在前面。把眼前看到的畫下來，東邊自然就在上面。'},
  {i:'🧭',t:'畫給誰用？',p:'這張是西班牙人的情報圖。上面最仔細的是港口入口、水深、大砲和兵力，這些都是船長、軍官最想知道的。拿著地圖跟眼前的景色一對照，馬上看得懂。'},
  {i:'⛰',t:'他們知道多少？',p:'那時候外來的人只熟悉西邊的海岸和港口，東邊的高山很少人去過。熟悉的海岸畫在下面、畫得仔細；不熟的山放在上面當遠景，畫得很簡單。'}];
 function renderRot(){
@@ -473,12 +509,15 @@ function renderRot(){
    <div class="tw-rotctl"><button data-r="-90">↺ 往左轉</button><button data-r="90">↻ 往右轉</button><p class="tw-rotmsg" aria-live="polite"></p></div></div>
    <div class="tw-why">
     <h3 class="tw-h">想一想：為什麼大員的古地圖，常常把「東」畫在上面？</h3>
-    <p class="tw-p">不只這一張。第二站的熱蘭遮城版畫，是<strong>從海上往陸地看</strong>；清帝國時期的〈康熙臺灣輿圖〉（約 1699–1704 年）也是從臺灣海峽上空往東看，北方在左邊、南方在右邊。畫圖的人到底在想什麼？</p>
+    <p class="tw-p">不只這一張。下面幾張古地圖，有荷蘭人畫的、西班牙人畫的，也有清帝國官員畫的，<strong>找找看每一張的「上面」是哪一邊</strong>。點圖片可以放大看。</p>
+    <div class="tw-gal">${GAL.map((g,i)=>`<figure><button data-g="${i}" aria-label="放大看：${g.t}"><img src="${g.img}" alt="${g.t}" loading="lazy"></button><figcaption><span class="tw-dir">${g.dir}</span><b>${g.t}</b>${g.who}<br><span class="tw-gnote">${g.note}</span><br><a href="${g.page}" target="_blank" rel="noopener">${g.link||'圖片來源'}</a></figcaption></figure>`).join('')}</div>
+    <p class="tw-p">畫圖的人到底在想什麼？</p>
     <p class="tw-p"><strong>先猜猜看</strong>（可以選不只一個）：</p>
     <div class="tw-guess">${WHY.map((w,i)=>`<label><input type="checkbox" value="${i}"> ${w.o}</label>`).join('')}</div>
     <button class="tw-next" id="twWhyGo">看看線索</button>
     <div id="twWhyOut" aria-live="polite"></div>
    </div>`;
+  el.querySelectorAll('.tw-gal [data-g]').forEach(b=>b.onclick=()=>lightbox(GAL[+b.dataset.g]));
   el.querySelector('#twWhyGo').onclick=()=>{
     const pick=[...el.querySelectorAll('.tw-guess input')].map(c=>c.checked);
     el.querySelectorAll('.tw-guess label').forEach((l,i)=>{l.classList.toggle('ok',WHY[i].ok);l.classList.toggle('no',!WHY[i].ok&&pick[i])});
