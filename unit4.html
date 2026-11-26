@@ -415,7 +415,9 @@ footer p+p{margin-top:6px}
 .pw-track{position:relative;height:30px;border-radius:6px;cursor:pointer}
 .pw-track u{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
 .pw-bar{position:absolute;top:5px;height:20px;border-radius:99px;opacity:.35;transition:opacity .3s}
-.pw-bar.peak{opacity:1;top:3px;height:24px;color:#fff;font:700 13px/24px var(--f-body);padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pw-bar.peak{opacity:1;top:3px;height:24px}
+.pw-y{position:absolute;top:5px;font:700 14px/20px var(--f-num);color:var(--ink);white-space:nowrap;background:var(--surface);padding:0 4px;border-radius:6px;pointer-events:none}
+.pw-y.l{transform:translateX(calc(-100% - 4px))}.pw-y.r{margin-left:4px}
 .pw-row:not(.on) .pw-bar.peak{opacity:.55}
 .pw-axis{display:grid;grid-template-columns:118px 1fr;gap:10px;font:600 14px var(--f-num);color:var(--muted)}
 .pw-axis div{position:relative;height:20px}.pw-axis span{position:absolute;transform:translateX(-50%)}
@@ -429,8 +431,9 @@ footer p+p{margin-top:6px}
 .pw-card p,.pw-card li{font-size:17px;line-height:1.75}
 .pw-card ul{margin:0;padding-left:1.2em}
 .pw-card li b{color:var(--pc)}
-.pw-card .pw-next{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:17px}
-.pw-card .pw-next strong{display:inline}
+.pw-card .pw-next{display:flex;align-items:flex-start;gap:10px;line-height:1.7;background:var(--surface-2);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:17px}
+.pw-card .pw-next strong{display:inline;color:var(--pc)}
+.pw-tag{flex:none;background:var(--pc);color:#fff;font:700 15px/1 var(--f-body);padding:6px 10px;border-radius:8px;margin-top:2px}
 .pw-nav{display:flex;gap:8px;margin-top:12px}
 .pw-nav button{flex:1;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px;font:700 16px var(--f-body);cursor:pointer}
 .pw-nav button.go{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -447,9 +450,11 @@ footer p+p{margin-top:6px}
 .pw-sort button{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;font:700 17px var(--f-body);cursor:pointer}
 .pw-sort button[disabled]{opacity:.35;cursor:default}
 .pw-ans{font-size:18px;min-height:1.6em;margin:6px 0}
+.cb{display:inline-grid;place-items:center;width:1.55em;height:1.55em;border-radius:7px;background:var(--cb,#10313b);color:#fff;font:700 .82em/1 var(--f-body);margin-right:.45em;vertical-align:.05em;flex:none}
 .pw-ans .ok{color:var(--leaf)}.pw-ans .no{color:var(--typhoon)}
 #pwSvg .mk.pwdim{opacity:.18}
-@media (max-width:760px){.pw-row,.pw-axis{grid-template-columns:92px 1fr}.pw-row>button{font-size:15px;white-space:nowrap;padding:6px 4px}.pw-legend{margin-left:0}.pw-law{grid-template-columns:1fr 1fr}.pw-bar.peak{font-size:0}}
+.pw-yr{display:none}
+@media (max-width:760px){.pw-row,.pw-axis{grid-template-columns:92px 1fr}.pw-row>button{font-size:15px;white-space:nowrap;padding:6px 4px}.pw-legend{margin-left:0}.pw-law{grid-template-columns:1fr 1fr}.pw-y{display:none}.pw-yr{display:block;font:600 12px var(--f-num);color:var(--muted)}.pw-row{margin:4px 0}}
 .bf-price span{display:block;font-size:15px}.bf-price b{font:700 28px "IBM Plex Mono",ui-monospace,monospace;color:#D55E00}.bf-price small{display:block;font-size:13px;color:var(--muted)}
 .bf-why{display:grid;gap:8px;margin:8px 0}.bf-why p{margin:0;background:var(--surface-2,#f4f8f7);border-radius:12px;padding:8px 12px;line-height:1.65}.bf-why b{display:block;font-size:17px}
 .bf-voy{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:6px}
@@ -766,7 +771,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site.css?v=5">
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
 <script src="assets/site-nav.js?v=5" defer></script>
-<script src="assets/timewalk.js?v=7" defer></script>
+<script src="assets/timewalk.js?v=8" defer></script>
 <header class="top">
   <div class="wrap">
     <div>
@@ -840,7 +845,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <div class="unit-head">
       <div class="badge" style="background:#8c2f39">霸</div>
       <h2>海上強權接力賽：誰拿到什麼？後來被誰取代？</h2>
-      <p class="sub">新航路打開以後，歐洲幾個靠海的國家輪流當「海上老大」。他們各自搶到了哪些地方、賺到了什麼？為什麼後來又被別人追過去？點下面的國家，一棒一棒看下去。</p>
+      <p class="sub">1400 年代初，大明的鄭和船隊稱霸印度洋；後來大明不再出海，換歐洲幾個靠海的國家輪流當「海上老大」。他們各自搶到了哪些地方、賺到了什麼？為什麼後來又被別人追過去？點下面的國家，一棒一棒看下去。</p>
     </div>
     <div class="pw-tl" id="pwTl" aria-label="海上強權時間軸"></div>
     <div class="duo" style="margin-top:14px">
@@ -1749,10 +1754,10 @@ const route=(a,b,c,id,bend)=>{const p=tl.append('path').attr('class','route').at
 route(TP.fuj,TP.an,'#5E5E5E','tr-a1',0.2);
 
 const G=[
- {k:'silk',n:'生絲',ic:'🧵',from:'中國商人',buy:10,jp:20,bt:12},
- {k:'china',n:'瓷器',ic:'🏺',from:'中國商人',buy:5,jp:6,bt:11},
- {k:'sugar',n:'蔗糖',ic:'🍬',from:'赤崁附近的蔗農',buy:3,jp:6,bt:8},
- {k:'hide',n:'鹿皮',ic:'🦌',from:'部落和收購商',buy:2,jp:6,bt:2}];
+ {k:'silk',n:'生絲',ic:'絲',from:'中國商人',buy:10,jp:20,bt:12},
+ {k:'china',n:'瓷器',ic:'瓷',from:'中國商人',buy:5,jp:6,bt:11},
+ {k:'sugar',n:'蔗糖',ic:'糖',from:'赤崁附近的蔗農',buy:3,jp:6,bt:8},
+ {k:'hide',n:'鹿皮',ic:'皮',from:'部落和收購商',buy:2,jp:6,bt:2}];
 const PEP={buy:4,sell:8},CAP=10,START=100;
 let S;const reset=()=>{S={step:0,silver:START,inv:{silk:0,china:0,sugar:0,hide:0},jp:{silk:0,china:0,sugar:0,hide:0},bt:{silk:0,china:0,sugar:0,hide:0},pep:0,bought:{silk:0,china:0,sugar:0,hide:0},earn:{},jpRev:0,btRev:0,pepRev:0};tl.selectAll('path').filter((d,i)=>i>0).remove();};
 const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
@@ -1767,23 +1772,23 @@ function card(){bank();const c=$('#trCard');
   <button class="tr-go" id="trGo" type="button">開始採購 →</button>`;$('#trGo').onclick=()=>{S.step=1;card();};return;}
  if(S.step===1){season('1640 年 春：中國商船來到大員');
   c.innerHTML=`<h3>春天：在大員採購</h3><p>一箱的價錢寫在名字下面。最多買 ${CAP*2} 箱（兩艘船裝得下的量）。</p>
-  ${G.map(g=>stepper(g.k,S.inv[g.k],S.silver>=g.buy&&sum(S.inv)<CAP*2,`${g.ic} ${g.n}`,`${g.buy} 兩／箱・向${g.from}買`)).join('')}
+  ${G.map(g=>stepper(g.k,S.inv[g.k],S.silver>=g.buy&&sum(S.inv)<CAP*2,g.n,`${g.buy} 兩／箱・向${g.from}買`)).join('')}
   <div class="tr-price"><b>各地收購價（一箱）</b><table><tr><th></th>${G.map(g=>`<th>${g.n}</th>`).join('')}</tr><tr><td>日本</td>${G.map(g=>`<td>${g.jp}</td>`).join('')}</tr><tr><td>巴達維亞</td>${G.map(g=>`<td>${g.bt}</td>`).join('')}</tr></table></div>
   <button class="tr-go" id="trGo" type="button" ${sum(S.inv)?'':'disabled'}>採購完成，等夏天的季風 →</button>`;
   c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.k===b.dataset.k),d=+b.dataset.d;if(d>0&&S.silver>=g.buy&&sum(S.inv)<CAP*2){S.inv[g.k]++;S.bought[g.k]++;S.silver-=g.buy;}if(d<0&&S.inv[g.k]>0){S.inv[g.k]--;S.bought[g.k]--;S.silver+=g.buy;}card();});
   $('#trGo').onclick=()=>{S.step=2;card();};return;}
  if(S.step===2){season('1640 年 夏：西南季風吹起');
   c.innerHTML=`<h3>夏天：裝船去日本</h3><p>西南季風把帆船往北推。選出要送去<b>日本長崎</b>的貨，最多 ${CAP} 箱。日本人用<b>白銀</b>付錢。</p>
-  ${G.filter(g=>S.inv[g.k]+S.jp[g.k]>0).map(g=>stepper(g.k,S.jp[g.k],S.inv[g.k]>0&&sum(S.jp)<CAP,`${g.ic} ${g.n}`,`日本收購 ${g.jp} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')}
+  ${G.filter(g=>S.inv[g.k]+S.jp[g.k]>0).map(g=>stepper(g.k,S.jp[g.k],S.inv[g.k]>0&&sum(S.jp)<CAP,g.n,`日本收購 ${g.jp} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')}
   <p class="tr-sum">這艘船：${sum(S.jp)} / ${CAP} 箱，賣完可以拿到 <b>${G.reduce((a,g)=>a+S.jp[g.k]*g.jp,0)} 兩</b></p>
   <button class="tr-go" id="trGo" type="button">開船去日本 →</button>`;
   c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,d=+b.dataset.d;if(d>0&&S.inv[k]>0&&sum(S.jp)<CAP){S.inv[k]--;S.jp[k]++;}if(d<0&&S.jp[k]>0){S.jp[k]--;S.inv[k]++;}card();});
   $('#trGo').onclick=()=>{S.jpRev=G.reduce((a,g)=>a+S.jp[g.k]*g.jp,0);S.silver+=S.jpRev;route(TP.an,TP.nag,'#D55E00','tr-a2',0.12);S.step=3;card();};return;}
  if(S.step===3){season('1640 年 冬：東北季風吹起');
   const pepMax=Math.min(CAP,Math.floor(S.silver/PEP.buy));if(S.pep>pepMax)S.pep=pepMax;
-  c.innerHTML=`<p class="tr-news">🚢 日本的船回來了，帶回 <b>${S.jpRev} 兩白銀</b>。</p><h3>冬天：裝船去巴達維亞</h3><p>東北季風把帆船往南推。選出要送去<b>巴達維亞</b>的貨，最多 ${CAP} 箱；沒賣掉的會一直放在倉庫。</p>
-  ${G.filter(g=>S.inv[g.k]+S.bt[g.k]>0).map(g=>stepper(g.k,S.bt[g.k],S.inv[g.k]>0&&sum(S.bt)<CAP,`${g.ic} ${g.n}`,`巴達維亞收購 ${g.bt} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')||'<p class="note">倉庫已經空了。</p>'}
-  <div class="tr-pep">${stepper('pep',S.pep,S.pep<pepMax,'🌶️ 回程買胡椒',`巴達維亞 ${PEP.buy} 兩／箱，明年春天賣給中國商人 ${PEP.sell} 兩／箱`)}</div>
+  c.innerHTML=`<p class="tr-news"><span class="cb" style="--cb:#0072B2">船</span>日本的船回來了，帶回 <b>${S.jpRev} 兩白銀</b>。</p><h3>冬天：裝船去巴達維亞</h3><p>東北季風把帆船往南推。選出要送去<b>巴達維亞</b>的貨，最多 ${CAP} 箱；沒賣掉的會一直放在倉庫。</p>
+  ${G.filter(g=>S.inv[g.k]+S.bt[g.k]>0).map(g=>stepper(g.k,S.bt[g.k],S.inv[g.k]>0&&sum(S.bt)<CAP,g.n,`巴達維亞收購 ${g.bt} 兩／箱・倉庫還有 ${S.inv[g.k]} 箱`)).join('')||'<p class="note">倉庫已經空了。</p>'}
+  <div class="tr-pep">${stepper('pep',S.pep,S.pep<pepMax,'回程買胡椒',`巴達維亞 ${PEP.buy} 兩／箱，明年春天賣給中國商人 ${PEP.sell} 兩／箱`)}</div>
   <button class="tr-go" id="trGo" type="button">開船去巴達維亞 →</button>`;
   c.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,d=+b.dataset.d;if(k==='pep'){S.pep=Math.max(0,Math.min(pepMax,S.pep+d));card();return;}if(d>0&&S.inv[k]>0&&sum(S.bt)<CAP){S.inv[k]--;S.bt[k]++;}if(d<0&&S.bt[k]>0){S.bt[k]--;S.inv[k]++;}card();});
   $('#trGo').onclick=()=>{S.btRev=G.reduce((a,g)=>a+S.bt[g.k]*g.bt,0);S.silver+=S.btRev-S.pep*PEP.buy;S.pepRev=S.pep*PEP.sell;S.silver+=S.pepRev;route(TP.an,TP.bat,'#009E73','tr-a3',0.1);setTimeout(()=>route(TP.bat,TP.an,'#009E73','tr-a3',0.1),700);S.step=4;card();};return;}
@@ -1791,11 +1796,11 @@ function card(){bank();const c=$('#trCard');
   const per=G.map(g=>({g,n:S.jp[g.k]+S.bt[g.k],p:S.jp[g.k]*(g.jp-g.buy)+S.bt[g.k]*(g.bt-g.buy)})).filter(x=>x.n);
   const best=per.slice().sort((a,b)=>b.p-a.p)[0];const hides=S.bought.hide;
   c.innerHTML=`<h3>一年過去了</h3><p class="tr-big">${gain>=0?'公司賺了':'公司虧了'} <b>${Math.abs(gain)} 兩</b>白銀${left?`，倉庫還剩 ${left} 箱沒賣掉`:''}</p>
-  <div class="tr-bars">${per.map(x=>`<div><span>${x.g.ic} ${x.g.n}（${x.n} 箱）</span><i style="width:${Math.max(4,Math.min(100,Math.abs(x.p)*3))}%;background:${x.p>=0?'#0072B2':'#D55E00'}"></i><b>${x.p>=0?'+':''}${x.p}</b></div>`).join('')}${S.pep?`<div><span>🌶️ 胡椒（${S.pep} 箱）</span><i style="width:${Math.min(100,S.pep*(PEP.sell-PEP.buy)*3)}%;background:#009E73"></i><b>+${S.pep*(PEP.sell-PEP.buy)}</b></div>`:''}</div>
+  <div class="tr-bars">${per.map(x=>`<div><span>${x.g.n}（${x.n} 箱）</span><i style="width:${Math.max(4,Math.min(100,Math.abs(x.p)*3))}%;background:${x.p>=0?'#0072B2':'#D55E00'}"></i><b>${x.p>=0?'+':''}${x.p}</b></div>`).join('')}${S.pep?`<div><span>胡椒（${S.pep} 箱）</span><i style="width:${Math.min(100,S.pep*(PEP.sell-PEP.buy)*3)}%;background:#009E73"></i><b>+${S.pep*(PEP.sell-PEP.buy)}</b></div>`:''}</div>
   ${best?`<p>最賺錢的是 <b>${best.g.n}</b>。</p>`:''}
   <div class="qbox"><b>想一想，選一個並說出理由</b>大員商館賺的錢，大部分來自哪裡？
    <div class="tr-q" id="trQ"><button type="button" data-a="0">臺灣自己生產的東西</button><button type="button" data-a="1">把別的地方的東西買進來、再轉賣出去</button></div><div id="trQfb"></div></div>
-  ${hides>=5?`<p class="tr-warn">🦌 你這一年收購了約 ${hides*1000} 張鹿皮。1638 年，臺灣真的輸出了大約 14 萬張鹿皮。這麼多鹿皮從哪裡來？去<a href="#deer">「部落的獵人」</a>看看梅花鹿後來怎麼了。</p>`:''}
+  ${hides>=5?`<p class="tr-warn"><span class="cb" style="--cb:#4f8a4a">鹿</span>你這一年收購了約 ${hides*1000} 張鹿皮。1638 年，臺灣真的輸出了大約 14 萬張鹿皮。這麼多鹿皮從哪裡來？去<a href="#deer">「部落的獵人」</a>看看梅花鹿後來怎麼了。</p>`:''}
   <button class="tr-go alt" id="trAgain" type="button">再玩一次，換個買法</button>`;
   $('#trAgain').onclick=()=>{reset();S.step=1;card();};
   $('#trQ').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;$$('#trQ button').forEach(x=>x.classList.toggle('sel',x===b));
@@ -1883,10 +1888,10 @@ const T={
    $('#bfNext').onclick=()=>{ci=ci<CHAIN.length-1?ci+1:0;$('#bfCard').innerHTML=T.old.card();T.old.after();};}},
  why:{draw(){pin(P.con[0],P.con[1],'君士坦丁堡（1453）','#5E5E5E','t');pin(P.lis[0],P.lis[1],'里斯本（葡萄牙）','#5E5E5E','l');pin(P.sev[0],P.sev[1],'塞維亞（西班牙）','#5E5E5E','b');$('#bfSub').innerHTML='';},
   card(){return `<h3>為什麼要冒險出海？</h3>
-   <div class="bf-why"><p><b>💰 香料太貴了</b>經過一層又一層的商人，香料到了歐洲貴得不得了。</p>
-   <p><b>🏰 東邊的路被擋住</b>1453 年，鄂圖曼帝國攻下君士坦丁堡，控制了東地中海的要道，歐洲人很難自己往東走。</p>
-   <p><b>⛵ 有了新的船和工具</b>更適合遠洋的帆船、指南針（羅盤）和測量星星位置的儀器，讓船可以離開海岸，開到大海中間。</p>
-   <p><b>🌍 想找黃金、香料，也想傳教</b>國王和商人想賺錢，教會想把天主教傳到世界各地。</p></div>
+   <div class="bf-why"><p><b><span class="cb" style="--cb:#C79100">錢</span>香料太貴了</b>經過一層又一層的商人，香料到了歐洲貴得不得了。</p>
+   <p><b><span class="cb" style="--cb:#B2182B">擋</span>東邊的路被擋住</b>1453 年，鄂圖曼帝國攻下君士坦丁堡，控制了東地中海的要道，歐洲人很難自己往東走。</p>
+   <p><b><span class="cb" style="--cb:#0072B2">船</span>有了新的船和工具</b>更適合遠洋的帆船、指南針（羅盤）和測量星星位置的儀器，讓船可以離開海岸，開到大海中間。</p>
+   <p><b><span class="cb" style="--cb:#7a3f8f">金</span>想找黃金、香料，也想傳教</b>國王和商人想賺錢，教會想把天主教傳到世界各地。</p></div>
    <p>最先出發的是<b>葡萄牙</b>和<b>西班牙</b>。按下面的航線看看他們怎麼走：</p>
    <div class="bf-voy" id="bfVoy">${[['dias','1488','迪亞士'],['col','1492','哥倫布'],['gama','1498','達伽馬'],['mag','1519–1522','麥哲倫船隊']].map(([k,y,n])=>`<button type="button" data-v="${k}"><i style="background:${COL[k]}"></i><b>${y}</b>${n}</button>`).join('')}</div>
    <div id="bfVoyTxt" class="bf-voytxt"></div>`;},
@@ -1902,10 +1907,10 @@ const T={
    $('#bfSub').innerHTML=`<span class="bf-k"><i style="background:${COL.ag}"></i>美洲白銀經馬尼拉到中國</span><span class="bf-k"><i style="background:${COL.am}"></i>美洲的作物到舊大陸</span><span class="bf-k"><i style="background:${COL.eu}"></i>歐洲的牲畜、作物和疾病到美洲</span><span class="bf-k"><i style="background:${COL.af}"></i>非洲人被賣到美洲當奴隸</span>`;},
   card(){return `<h3>世界連在一起了</h3>
    <p>大航海以後，各大洲的人、物產和疾病開始大量交流，這叫做<b>哥倫布大交換</b>：</p>
-   <ul class="bf-list"><li>🌽 美洲的<b>番薯、玉米、辣椒、番茄、花生</b>傳到歐洲和亞洲。1593 年，福建商人陳振龍從菲律賓帶回番薯藤，後來番薯也成了臺灣人的重要糧食。</li>
-   <li>🪙 1565 年起，西班牙的<b>大帆船</b>把美洲挖到的<b>白銀</b>運到馬尼拉，換中國的絲綢和瓷器，白銀大量流進中國。</li>
-   <li>🐎 歐洲人把馬、牛、小麥帶到美洲，也帶去了<b>天花</b>等傳染病，美洲原住民因此大量死亡。</li>
-   <li>⛓️ 歐洲人在美洲開墾大農場，從非洲抓了很多人，<b>賣到美洲當奴隸</b>。</li></ul>
+   <ul class="bf-list"><li><span class="cb" style="--cb:#4f8a4a">食</span>美洲的<b>番薯、玉米、辣椒、番茄、花生</b>傳到歐洲和亞洲。1593 年，福建商人陳振龍從菲律賓帶回番薯藤，後來番薯也成了臺灣人的重要糧食。</li>
+   <li><span class="cb" style="--cb:#5E5E5E">銀</span>1565 年起，西班牙的<b>大帆船</b>把美洲挖到的<b>白銀</b>運到馬尼拉，換中國的絲綢和瓷器，白銀大量流進中國。</li>
+   <li><span class="cb" style="--cb:#B2182B">病</span>歐洲人把馬、牛、小麥帶到美洲，也帶去了<b>天花</b>等傳染病，美洲原住民因此大量死亡。</li>
+   <li><span class="cb" style="--cb:#8c2f39">奴</span>歐洲人在美洲開墾大農場，從非洲抓了很多人，<b>賣到美洲當奴隸</b>。</li></ul>
    <div class="qbox"><b>小活動：餐桌上的大航海</b>下面這些食物，哪些原本是<strong>美洲</strong>才有的？點一下分類。
     <div class="bf-food" id="bfFood"></div><div id="bfFoodFb"></div></div>`;},
   after(){const F=[['番薯',1],['稻米',0],['玉米',1],['茶',0],['辣椒',1],['甘蔗',0],['番茄',1],['香蕉',0],['花生',1],['胡椒',0]];const st={};
@@ -1924,9 +1929,17 @@ show();
    ========================================================= */
 (()=>{
 if(!$('#pwSvg'))return;
-const Y0=1450,Y1=2000,X=y=>((y-Y0)/(Y1-Y0)*100).toFixed(2)+'%';
+const Y0=1400,Y1=2000,X=y=>((y-Y0)/(Y1-Y0)*100).toFixed(2)+'%';
 const PW=[
- {k:'pt',n:'葡萄牙',c:'#009E73',span:[1415,1640],peak:[1498,1580],era:'第一棒：大約 1500–1580 年最風光',
+ {k:'mg',n:'大明',c:'#9c6b00',span:[1405,1433],peak:[1405,1433],era:'起跑之前：1405–1433 年',
+  rise:'明成祖派鄭和帶著大船隊，前後七次出海「下西洋」。第一次出海就有兩百多艘船，最遠到過阿拉伯半島和非洲東岸。在 1400 年代初期，大明是世界上最強的海上力量。',
+  gains:[['1405','第一次出海，船隊有兩百多艘船'],['1400 年代初','在<b>麻六甲</b>等地設立倉庫，當作船隊的補給站'],['1413–1415','第四次航行，到達波斯灣口的<b>荷姆茲</b>'],['1417–1433','第五到第七次航行，到達<b>阿拉伯半島</b>和<b>非洲東岸</b>']],
+  got:'<b>沒有占領土地，也沒有建立殖民地。</b>目的是讓沿途各國承認大明、派人來「朝貢」，也帶回胡椒、香料、藥材等貨物。這一點和後來的歐洲強權很不一樣。',
+  tw:'臺灣有一些和鄭和有關的傳說，但是沒有可靠的紀錄說他到過臺灣。',
+  fall:['1433 年最後一次航行結束後，大明就不再派船隊出海。','為什麼停下來？到今天還有爭論：朝廷官員和帶船隊的宦官互相競爭、北方要防備蒙古、船隊花費很大。','明朝本來就有「海禁」，不准百姓私自出海做生意。'],
+  next:'大明不是把棒子交出去，而是<strong>自己退出了比賽</strong>。船隊消失後，印度洋出現一大片「空檔」；65 年後（1498 年），<strong>葡萄牙</strong>人開船進來了。',
+  pins:[['南京',118.78,32.06,'鄭和船隊的大船在南京的造船廠建造。','r'],['麻六甲',102.25,2.2,'船隊在這裡設立倉庫，存放貨物、等待季風。','l'],['古里',75.8,11.25,'印度西南岸的大港，船隊多次到這裡。','l'],['荷姆茲',56.27,27.1,'波斯灣口的大港，第四次航行到達。','t'],['非洲東岸',40.1,-3.2,'第五到第七次航行，到達非洲東岸這一帶。','l']]},
+ {k:'pt',n:'葡萄牙',c:'#009E73',span:[1415,1640],peak:[1498,1580],era:'第一棒：大約 1500–1580 年最風光（1415 年就開始往非洲探險）',
   rise:'葡萄牙國家小、靠著大西洋，王室很支持航海，一步一步沿著非洲海岸往南探險。1488 年迪亞士繞過非洲南端，1498 年達伽馬終於開船到達印度。',
   gains:[['1500','到達<b>巴西</b>，後來在那裡種甘蔗、挖金礦'],['1510','占領印度的<b>果阿</b>，當作亞洲總部'],['1511','占領<b>麻六甲</b>，控制香料一定要經過的海峽'],['1543','成為第一批到日本的歐洲人，後來在<b>長崎</b>做生意'],['1557','開始在<b>澳門</b>居住、做生意']],
   got:'胡椒、丁香等香料運回歐洲；把中國的絲綢運到日本換白銀，賺了很多錢。',
@@ -1961,9 +1974,9 @@ const PW=[
 ];
 /* ---- timeline ---- */
 const tl=$('#pwTl');const TICKS=[1500,1600,1700,1800,1900].map(y=>`<u style="left:${X(y)}"></u>`).join('')+`<u style="left:${X(1624)};width:calc(${X(1662)} - ${X(1624)});background:rgba(216,144,26,.22)"></u>`;
-tl.innerHTML=PW.map((p,i)=>`<div class="pw-row" data-i="${i}"><button aria-label="看${p.n}"><i style="background:${p.c}"></i>${p.n}</button>
- <div class="pw-track">${TICKS}<div class="pw-bar" style="left:${X(p.span[0]<Y0?Y0:p.span[0])};width:calc(${X(p.span[1])} - ${X(p.span[0]<Y0?Y0:p.span[0])});background:${p.c}"></div><div class="pw-bar peak" style="left:${X(p.peak[0])};width:calc(${X(p.peak[1])} - ${X(p.peak[0])});background:${p.c}">${p.peak[0]}–${p.peak[1]}</div></div></div>`).join('')+
- `<div class="pw-row"><button disabled style="cursor:default"><i style="background:#5E5E5E"></i>美國</button><div class="pw-track">${TICKS}<div class="pw-bar peak" style="left:${X(1945)};width:calc(${X(2000)} - ${X(1945)});background:#5E5E5E">1945–</div></div></div>
+tl.innerHTML=PW.map((p,i)=>`<div class="pw-row" data-i="${i}"><button aria-label="看${p.n}"><i style="background:${p.c}"></i><span>${p.n}<small class="pw-yr">${p.peak[0]}–${p.peak[1]}</small></span></button>
+ <div class="pw-track">${TICKS}<div class="pw-bar" style="left:${X(p.span[0]<Y0?Y0:p.span[0])};width:calc(${X(p.span[1])} - ${X(p.span[0]<Y0?Y0:p.span[0])});background:${p.c}"></div><div class="pw-bar peak" style="left:${X(p.peak[0])};width:calc(${X(p.peak[1])} - ${X(p.peak[0])});background:${p.c}"></div><span class="pw-y l" style="left:${X(p.peak[0])}">${p.peak[0]}</span><span class="pw-y r" style="left:${X(p.peak[1])}">${p.peak[1]}</span></div></div>`).join('')+
+ `<div class="pw-row"><button disabled style="cursor:default"><i style="background:#5E5E5E"></i><span>美國<small class="pw-yr">1945–</small></span></button><div class="pw-track">${TICKS}<div class="pw-bar peak" style="left:${X(1945)};width:calc(${X(2000)} - ${X(1945)});background:#5E5E5E"></div><span class="pw-y l" style="left:${X(1945)}">1945</span></div></div>
  <div class="pw-axis"><b></b><div>${[1500,1600,1700,1800,1900].map(y=>`<span style="left:${X(y)}">${y}</span>`).join('')}<i class="pw-tw" style="left:${X(1624)};width:calc(${X(1662)} - ${X(1624)})"></i></div></div>
  <p class="pw-legend">深色＝最風光的時期，淺色＝從起家到退場（大約的年代）。<b>橘色框</b>是荷蘭在臺灣的 1624–1662 年。</p>`;
 /* ---- map ---- */
@@ -1984,16 +1997,16 @@ function show(i){
    <h4>賺到了什麼？</h4><p>${p.got}</p>
    <h4>跟臺灣有什麼關係？</h4><p>${p.tw}</p>
    <h4>為什麼被追過去？</h4><ul>${p.fall.map(t=>`<li>${t}</li>`).join('')}</ul>
-   <div class="pw-next">🏃 交棒：${p.next}</div>
+   <div class="pw-next"><span class="pw-tag">交棒</span><span>${p.next}</span></div>
    <div class="pw-nav"><button data-d="-1" ${i?'':'disabled'}>← 上一棒</button><button class="go" data-d="1">${i<PW.length-1?'下一棒 →':'看看整場比賽 ↓'}</button></div>`;
   c.querySelectorAll('.pw-nav button').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(i+d>=PW.length){$('#pwEnd').scrollIntoView({behavior:'smooth',block:'start'});return}show(i+d)});
 }
 $$('#pwTl .pw-row[data-i]').forEach(r=>{const go=()=>show(+r.dataset.i);r.querySelector('button').onclick=go;r.querySelector('.pw-track').onclick=go});
 show(0);
 /* ---- ending: pattern + sort ---- */
-const ORDER=['葡萄牙、西班牙','荷蘭','英國','美國'];
+const ORDER=['大明（鄭和）','葡萄牙、西班牙','荷蘭','英國','美國'];
 $('#pwEnd').innerHTML=`<h3>整場接力賽：前因後果</h3>
- <p>新航路打開後，<b>葡萄牙、西班牙</b>先出發（1500 年代），<b>荷蘭</b>在 1600 年代追上，<b>英國</b>在 1700–1800 年代成為最強，第二次世界大戰以後換<b>美國</b>。每一棒都有相同的規律：</p>
+ <p>1400 年代初，<b>大明</b>的鄭和船隊是最強的海上力量，但 1433 年以後就不再出海。新航路打開後，<b>葡萄牙、西班牙</b>先出發（1500 年代），<b>荷蘭</b>在 1600 年代追上，<b>英國</b>在 1700–1800 年代成為最強，第二次世界大戰以後換<b>美國</b>。每一棒都有相同的規律：</p>
  <div class="pw-law"><div><b>① 找到新路</b><span>先開出新航路、占到重要的港口和海峽，就能控制貿易。</span></div><div><b>② 賺大錢</b><span>香料、白銀、絲綢、茶葉帶來大筆財富，再拿去造船、養軍隊。</span></div><div><b>③ 戰爭和負擔</b><span>據點太遠太多、一直打仗，錢越花越多，國家吃不消。</span></div><div><b>④ 被追過去</b><span>更會做生意、船更多、海軍更強的國家，接手搶走據點和航線。</span></div></div>
  <p><b>排排看：</b>依照當「海上老大」的先後順序，點一點下面的按鈕。</p>
  <div class="pw-sort" id="pwSort"></div><p class="pw-ans" id="pwAns" aria-live="polite"></p>
@@ -2005,7 +2018,7 @@ function drawSort(){
   $$('#pwSort button').forEach(b=>b.onclick=()=>{if(b.dataset.r){pick=[];$('#pwAns').textContent='';return drawSort()}
     const o=b.textContent.replace(/^\d\.\s/,'');pick.push(o);drawSort();
     if(pick.length===ORDER.length){const ok=pick.every((v,i)=>v===ORDER[i]);
-      $('#pwAns').innerHTML=ok?'<span class="ok">✔ 完全正確！</span> 葡萄牙、西班牙 → 荷蘭 → 英國 → 美國。':'<span class="no">✗ 順序不太對</span>，回到上面的時間軸看看深色的時期，再按「重來」。'}});
+      $('#pwAns').innerHTML=ok?'<span class="ok">完全正確！</span> 大明（鄭和）→ 葡萄牙、西班牙 → 荷蘭 → 英國 → 美國。':'<span class="no">順序不太對</span>，回到上面的時間軸看看深色的時期，再按「重來」。'}});
 }
 drawSort();
 })();

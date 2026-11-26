@@ -249,7 +249,16 @@ const css=`
  .tw-task{bottom:8px;left:8px;padding:8px 12px}
  .tw-task ol{font-size:15px}
 }`;
-const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+const svg=d=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='#000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'>${d}</svg>`)}")`;
+const ICONS={tag:"<path d='M2.5 8.2V3a.5.5 0 0 1 .5-.5h5.2l5.3 5.3-5.7 5.7z'/><circle cx='5.4' cy='5.4' r='1'/>",
+ wave:"<path d='M1.5 6c1.6-1.6 3.2-1.6 4.8 0s3.2 1.6 4.8 0 2.6-1.4 3.4-.4M1.5 10.5c1.6-1.6 3.2-1.6 4.8 0s3.2 1.6 4.8 0 2.6-1.4 3.4-.4'/>",
+ sound:"<path d='M2.5 6h2.5l3.5-3v10l-3.5-3H2.5zM11 5.6a3.4 3.4 0 0 1 0 4.8M12.9 3.6a6.2 6.2 0 0 1 0 8.8'/>",
+ timer:"<circle cx='8' cy='9.2' r='5.2'/><path d='M8 6.6v2.6l1.8 1.3M6.3 1.8h3.4'/>",
+ full:"<path d='M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10'/>",
+ stop:"<rect x='4' y='4' width='8' height='8' rx='1.2' fill='#000'/>",
+ pin:"<path d='M8 14.5s4.5-4.3 4.5-8a4.5 4.5 0 0 0-9 0c0 3.7 4.5 8 4.5 8z'/><circle cx='8' cy='6.5' r='1.6'/>"};
+const icss=Object.entries(ICONS).map(([k,d])=>`.ic-${k}{--ic:${svg(d)}}`).join('\n')+'\n.tw-tools .ic{width:1.15em;height:1.15em}.tw-card .x .ic{width:18px;height:18px}';
+const st=document.createElement('style');st.textContent=css+'\n'+icss;document.head.appendChild(st);
 
 /* ---------- state ---------- */
 let SAVE={};try{SAVE=JSON.parse(localStorage.getItem('tw-prog')||'{}')}catch(e){}
@@ -312,12 +321,12 @@ function go(i){
     </div>
     <div class="tw-top"><div class="tw-ttl">${a.title}<small>找找發光的點，點下去看看</small></div>
       <div class="tw-tools">
-        <button data-act="tour" aria-pressed="false" title="自動帶你看每一個點">▶<b class="lb"> 自動導覽</b></button>
-        <button data-act="lab" aria-pressed="false" title="顯示所有名稱">🏷<b class="lb"> 名稱</b></button>
-        <button data-act="snd" aria-pressed="${!!amb}" title="海浪聲">🌊<b class="lb"> 海浪</b></button>
-        <button data-act="read" aria-pressed="${speakOn}" title="打開後，卡片內容會唸給你聽">🔊<b class="lb"> 朗讀</b></button>
-        <button data-act="chal" aria-pressed="false" title="限時找找看">⏱<b class="lb"> 挑戰</b></button>
-        <button data-act="full" title="全螢幕">⛶<b class="lb"> 全螢幕</b></button>
+        <button data-act="tour" aria-pressed="false" title="自動帶你看每一個點"><i class="ic ic-play" aria-hidden="true"></i><b class="lb"> 自動導覽</b></button>
+        <button data-act="lab" aria-pressed="false" title="顯示所有名稱"><i class="ic ic-tag" aria-hidden="true"></i><b class="lb"> 名稱</b></button>
+        <button data-act="snd" aria-pressed="${!!amb}" title="海浪聲"><i class="ic ic-wave" aria-hidden="true"></i><b class="lb"> 海浪</b></button>
+        <button data-act="read" aria-pressed="${speakOn}" title="打開後，卡片內容會唸給你聽"><i class="ic ic-sound" aria-hidden="true"></i><b class="lb"> 朗讀</b></button>
+        <button data-act="chal" aria-pressed="false" title="限時找找看"><i class="ic ic-timer" aria-hidden="true"></i><b class="lb"> 挑戰</b></button>
+        <button data-act="full" title="全螢幕"><i class="ic ic-full" aria-hidden="true"></i><b class="lb"> 全螢幕</b></button>
       </div></div>
     <div class="tw-task"><h4><button class="tw-tg" aria-expanded="true">任務 <span class="tw-cnt"></span> <span aria-hidden="true">▾</span></button></h4><ol>${a.tasks.map(t=>`<li data-a="${t.a}">${t.q}</li>`).join('')}</ol></div>
     <aside class="tw-card" aria-live="polite"></aside>
@@ -414,9 +423,9 @@ function openSpot(id,fly){
   openId=id;
   layer.querySelectorAll('.tw-hs').forEach(b=>b.classList.toggle('cur',b.dataset.id===id));
   const i=a.spots.indexOf(h);
-  card.innerHTML=`<button class="x" aria-label="關閉">✕</button><h3>${h.t}</h3>
-   ${h.orig?`<div class="orig">圖上寫著：<i>${h.orig}</i>意思是：「${h.zh}」</div>`:''}<p>${h.p}</p>${h.now?`<p class="now">📍 今天：${h.now}</p>`:''}
-   <div class="nav"><button data-say="1" aria-label="唸給我聽">🔊 唸給我聽</button></div><div class="nav"><button data-d="-1">← 上一個</button><button data-d="1">下一個 →</button></div>`;
+  card.innerHTML=`<button class="x" aria-label="關閉"><i class="ic ic-x" aria-hidden="true"></i></button><h3>${h.t}</h3>
+   ${h.orig?`<div class="orig">圖上寫著：<i>${h.orig}</i>意思是：「${h.zh}」</div>`:''}<p>${h.p}</p>${h.now?`<p class="now"><i class="ic ic-pin" aria-hidden="true"></i> 今天：${h.now}</p>`:''}
+   <div class="nav"><button data-say="1" aria-label="唸給我聽"><i class="ic ic-sound" aria-hidden="true"></i> 唸給我聽</button></div><div class="nav"><button data-d="-1">← 上一個</button><button data-d="1">下一個 →</button></div>`;
   card.classList.add('on');
   card.querySelector('.x').onclick=closeCard;
   card.querySelector('[data-say]').onclick=()=>speakSpot(id,true);
@@ -450,7 +459,7 @@ function startChal(){
 }
 function drawChal(){
   if(!chal)return;const el=stage.querySelector('.tw-chal'),sec=((performance.now()-chal.t0)/1000).toFixed(1);
-  el.innerHTML=`<div class="q">第 ${chal.k+1} / ${chal.list.length} 題：找出<strong>「${chal.list[chal.k].t}」</strong></div><div class="tm">⏱ ${sec} 秒　✗ ${chal.miss}</div><button class="stop">放棄</button>`;
+  el.innerHTML=`<div class="q">第 ${chal.k+1} / ${chal.list.length} 題：找出<strong>「${chal.list[chal.k].t}」</strong></div><div class="tm"><i class="ic ic-timer" aria-hidden="true"></i> ${sec} 秒　點錯 ${chal.miss} 次</div><button class="stop">放棄</button>`;
   el.querySelector('.stop').onclick=()=>endChal(false);
 }
 function chalCheck(id){
@@ -468,7 +477,7 @@ function endChal(win){
   const sec=(performance.now()-c.t0)/1000+c.miss*3,key='tw-best-'+ACTS[cur].key;
   let best=null;try{best=+localStorage.getItem(key)||null}catch(e){}
   const rec=!best||sec<best;if(rec)try{localStorage.setItem(key,sec.toFixed(1))}catch(e){}
-  el.innerHTML=`<div class="q">🎉 全部找到了！成績 <strong>${sec.toFixed(1)} 秒</strong>${c.miss?`（含點錯 ${c.miss} 次，每次加 3 秒）`:''}</div><div class="tm">${rec?'🏆 新紀錄！':'你的最佳紀錄：'+best.toFixed(1)+' 秒'}</div><button class="stop">再玩一次</button><button class="stop" data-x="1">關閉</button>`;
+  el.innerHTML=`<div class="q">全部找到了！成績 <strong>${sec.toFixed(1)} 秒</strong>${c.miss?`（含點錯 ${c.miss} 次，每次加 3 秒）`:''}</div><div class="tm">${rec?'新紀錄！':'你的最佳紀錄：'+best.toFixed(1)+' 秒'}</div><button class="stop">再玩一次</button><button class="stop" data-x="1">關閉</button>`;
   el.querySelectorAll('.stop').forEach(b=>b.onclick=()=>b.dataset.x?fin():startChal());
 }
 /* ---------- 方位挑戰（第一站） ---------- */
@@ -485,7 +494,7 @@ const GAL=[
   note:'這一段是臺灣最北邊：左邊大海裡的小島上，寫著「大雞籠城」（今天的基隆和平島）。北方在左邊，所以北部海岸朝左。',page:'https://commons.wikimedia.org/wiki/File:%E5%8F%A4%E5%9C%B0%E5%9C%96%E5%B1%95-%E5%8F%B0%E7%81%A3%E5%9C%B0%E5%9C%96a.jpg'}];
 function lightbox(g){
   const d=document.createElement('div');d.className='tw-lb';d.setAttribute('role','dialog');d.setAttribute('aria-label',g.t);
-  d.innerHTML=`<div class="tw-lbbar"><b>${g.t}</b><span class="tw-dir">${g.dir}</span><button aria-label="關閉">✕ 關閉</button></div><div class="tw-lbimg"><img src="${g.img}" alt="${g.t}"></div><p class="tw-lbtip">${g.note}　（點圖片可以放大／縮小）</p>`;
+  d.innerHTML=`<div class="tw-lbbar"><b>${g.t}</b><span class="tw-dir">${g.dir}</span><button aria-label="關閉"><i class="ic ic-x" aria-hidden="true"></i> 關閉</button></div><div class="tw-lbimg"><img src="${g.img}" alt="${g.t}"></div><p class="tw-lbtip">${g.note}　（點圖片可以放大／縮小）</p>`;
   document.body.appendChild(d);const close=()=>{d.remove();document.removeEventListener('keydown',k)};const k=e=>{if(e.key==='Escape')close()};
   document.addEventListener('keydown',k);d.querySelector('button').onclick=close;d.onclick=e=>{if(e.target===d)close()};
   const box=d.querySelector('.tw-lbimg'),im=box.querySelector('img');
@@ -498,9 +507,9 @@ const WHY=[
  {o:'他們熟悉海邊，對東邊的高山知道得很少',ok:true},
  {o:'那時候的人還不知道東西南北',ok:false,why:'第四個不對喔：這張圖上明明寫著東、西、南、北四個方向，畫圖的人很清楚方位，是<strong>故意</strong>這樣擺的。'}];
 const CLUES=[
- {i:'🚢',t:'站在哪裡看？',p:'從福建、澎湖、巴達維亞來的船，都是從西邊的臺灣海峽靠近大員；清帝國的官員也是從福建渡海過來。站在船頭往前看：大海在腳下，沙洲、港口和遠方的山在前面。把眼前看到的畫下來，東邊自然就在上面。'},
- {i:'🧭',t:'畫給誰用？',p:'這張是西班牙人的情報圖。上面最仔細的是港口入口、水深、大砲和兵力，這些都是船長、軍官最想知道的。拿著地圖跟眼前的景色一對照，馬上看得懂。'},
- {i:'⛰',t:'他們知道多少？',p:'那時候外來的人只熟悉西邊的海岸和港口，東邊的高山很少人去過。熟悉的海岸畫在下面、畫得仔細；不熟的山放在上面當遠景，畫得很簡單。'}];
+ {i:'看',t:'站在哪裡看？',p:'從福建、澎湖、巴達維亞來的船，都是從西邊的臺灣海峽靠近大員；清帝國的官員也是從福建渡海過來。站在船頭往前看：大海在腳下，沙洲、港口和遠方的山在前面。把眼前看到的畫下來，東邊自然就在上面。'},
+ {i:'用',t:'畫給誰用？',p:'這張是西班牙人的情報圖。上面最仔細的是港口入口、水深、大砲和兵力，這些都是船長、軍官最想知道的。拿著地圖跟眼前的景色一對照，馬上看得懂。'},
+ {i:'知',t:'他們知道多少？',p:'那時候外來的人只熟悉西邊的海岸和港口，東邊的高山很少人去過。熟悉的海岸畫在下面、畫得仔細；不熟的山放在上面當遠景，畫得很簡單。'}];
 function renderRot(){
   const el=main.querySelector('#twRot');if(!el)return;let deg=0;const done=SAVE.rot;
   el.innerHTML=`<h3 class="tw-h">方位挑戰：把地圖轉成「北方朝上」</h3>
@@ -523,7 +532,7 @@ function renderRot(){
     el.querySelectorAll('.tw-guess label').forEach((l,i)=>{l.classList.toggle('ok',WHY[i].ok);l.classList.toggle('no',!WHY[i].ok&&pick[i])});
     const right=WHY.filter((w,i)=>w.ok&&pick[i]).length,wrong=WHY.filter((w,i)=>!w.ok&&pick[i]).length;
     el.querySelector('#twWhyOut').innerHTML=`<p class="tw-p">${right===3&&!wrong?'<strong>全部想到了，很厲害！</strong>':`你想到了 ${right} 個原因${wrong?'，有一個選項不太對（綠色的才是線索）':''}。`}${WHY[3].why}</p>
-     <div class="tw-clues">${CLUES.map(c=>`<div class="tw-clue"><b>${c.i} ${c.t}</b><p>${c.p}</p></div>`).join('')}</div>
+     <div class="tw-clues">${CLUES.map(c=>`<div class="tw-clue"><b><span class="cb" style="--cb:#8a5a12">${c.i}</span>${c.t}</b><p>${c.p}</p></div>`).join('')}</div>
      <p class="tw-p">所以，地圖的方向跟「<strong>畫圖的人從哪裡來、要拿地圖做什麼</strong>」有關。今天全世界大多用北方朝上，是因為大家約定好同一個方向，地圖才方便互相比對。</p>
      <div class="qbox"><b>換你當領航員</b>1661 年你跟著鄭成功的船隊，從金門出發要開進鹿耳門。你會把地圖的哪一邊畫在上面？為什麼？跟同學說說看。</div>`;
   };
@@ -555,12 +564,12 @@ function full(on){
 }
 document.addEventListener('fullscreenchange',()=>{if(stage&&!document.fullscreenElement){const a=ACTS[cur];setTimeout(()=>{fit=Math.min(stage.clientWidth/a.w,stage.clientHeight/a.h);home(false)},120)}});
 function startTour(){
-  touring=true;const b=main.querySelector('[data-act="tour"]');b.setAttribute('aria-pressed','true');b.innerHTML='■<b class="lb"> 停止導覽</b>';
+  touring=true;const b=main.querySelector('[data-act="tour"]');b.setAttribute('aria-pressed','true');b.innerHTML='<i class="ic ic-stop" aria-hidden="true"></i><b class="lb"> 停止導覽</b>';
   const a=ACTS[cur];let k=openId?Math.max(0,a.spots.findIndex(s=>s.id===openId)+1)%a.spots.length:0;
   const step=()=>{if(!touring)return;openSpot(a.spots[k].id,true);k++;if(k>=a.spots.length){tourT=setTimeout(()=>{stopTour();closeCard();home(true)},7000);return}tourT=setTimeout(step,speakOn?13000:7000)};
   step();
 }
-function stopTour(){if(!touring)return;touring=false;clearTimeout(tourT);const b=main.querySelector('[data-act="tour"]');if(b){b.setAttribute('aria-pressed','false');b.innerHTML='▶<b class="lb"> 自動導覽</b>'}}
+function stopTour(){if(!touring)return;touring=false;clearTimeout(tourT);const b=main.querySelector('[data-act="tour"]');if(b){b.setAttribute('aria-pressed','false');b.innerHTML='<i class="ic ic-play" aria-hidden="true"></i><b class="lb"> 自動導覽</b>'}}
 function renderQuiz(){
   const el=main.querySelector('#twQuiz');if(!el)return;
   const a=ACTS[cur],s=SAVE[a.key],q=a.quiz;
@@ -610,7 +619,7 @@ function renderCert(){
   const el=main.querySelector('#twCert');if(!el)return;
   const done=ACTS.map((a,i)=>actDone(i)),all=done.every(Boolean)&&detDone();
   if(!all){el.innerHTML=`<p class="tw-src" style="font-size:17px">收集 4 個印章就能領取「大員港史料探險家」證書。目前：${ACTS.map((a,i)=>`${a.stamp}${done[i]?'✔':'—'}`).join('　')}　證${detDone()?'✔':'—'}</p>`;return}
-  el.innerHTML=`<h4 style="font:700 20px var(--f-display);margin:8px 0 0">🎉 你收集到 4 個印章了！</h4><div class="tw-cert"><label>你的名字 <input id="twName" maxlength="12" placeholder="寫上你的名字"></label><button class="tw-next" id="twMake" style="margin:0">做我的證書</button></div><div id="twOut"></div>`;
+  el.innerHTML=`<h4 style="font:700 20px var(--f-display);margin:8px 0 0">你收集到 4 個印章了！</h4><div class="tw-cert"><label>你的名字 <input id="twName" maxlength="12" placeholder="寫上你的名字"></label><button class="tw-next" id="twMake" style="margin:0">做我的證書</button></div><div id="twOut"></div>`;
   el.querySelector('#twMake').onclick=()=>{
     const name=(el.querySelector('#twName').value||'').trim()||'小小探險家';
     const cv=drawCert(name);const out=el.querySelector('#twOut');out.innerHTML='';out.appendChild(cv);
