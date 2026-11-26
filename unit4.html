@@ -420,6 +420,39 @@ footer p+p{margin-top:6px}
 .bf-f.ok{border-color:var(--leaf)}.bf-f.ok button.sel{background:var(--leaf);color:#fff}.bf-f.bad{border-color:var(--typhoon)}.bf-f.bad button.sel{background:var(--typhoon);color:#fff}
 .bf-f button:disabled{cursor:default}
 .qbox strong{display:inline;font-weight:800}
+
+.hs-top{display:flex;justify-content:space-between;align-items:center}
+.hs-year{display:inline-block;background:#10313b;color:#fff;border-radius:999px;padding:2px 12px;font:700 15px "IBM Plex Mono",ui-monospace,monospace}
+.hs-n{font:600 14px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
+#hubCard h3{margin:10px 0 6px;font-size:22px}
+.hs-why{background:#fbf1e3;border-radius:12px;padding:8px 12px;margin-top:8px;line-height:1.7}.hs-why b{display:block;color:#8a5a00}
+.hs-dots{display:flex;gap:6px;margin:14px 0 8px}.hs-dots i{flex:1;height:5px;border-radius:3px;background:var(--line)}.hs-dots i.done{background:#7fb8d9}.hs-dots i.on{background:#0072B2}
+.hs-nav{display:flex;gap:8px}.hs-nav button{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer}
+.hs-nav .hs-next{background:var(--ink);color:var(--paper);border-color:var(--ink)}.hs-nav button:disabled{opacity:.35;cursor:default}
+
+/* 3D Tayouan */
+.t3-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.t3-seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.t3-seg button{min-height:44px;padding:6px 14px;border:0;background:var(--surface);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer}
+.t3-seg button+button{border-left:1px solid var(--line)}.t3-seg button[aria-pressed="true"]{background:#10313b;color:#fff}
+.t3-tour{min-height:44px;padding:6px 16px;border-radius:12px;border:1px solid #8a5a33;background:#8a5a33;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.t3-box{position:relative;height:clamp(380px,68vh,680px);border-radius:16px;overflow:hidden;background:linear-gradient(#cfe4ee,#9cc7d9);border:1px solid var(--line);touch-action:none}
+.t3-cv{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}.t3-cv:active{cursor:grabbing}
+.t3-msg{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:#10313b;font-weight:700}
+.t3-tags{position:absolute;inset:0;pointer-events:none}
+.t3-tag{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:6px;white-space:nowrap;border:0;border-radius:999px;padding:5px 12px 5px 8px;background:rgba(255,255,255,.94);color:#10313b;font:700 14px/1.2 "Noto Sans TC",system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
+.t3-tag i{width:10px;height:10px;border-radius:50%;background:#D55E00;box-shadow:0 0 0 3px rgba(213,94,0,.25)}
+.t3-tag.on{background:#10313b;color:#fff}.t3-tag.on i{background:#f4d398}
+.t3-tag::after{content:"";position:absolute;left:50%;bottom:-6px;width:2px;height:6px;background:rgba(255,255,255,.94)}
+.t3-cap{position:absolute;left:10px;top:10px;max-width:calc(100% - 70px);background:rgba(16,49,59,.88);color:#fff;border-radius:10px;padding:5px 12px;font-size:14px;font-weight:700;pointer-events:none}
+.t3-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.t3-zoom button{width:42px;height:42px;border-radius:10px;border:1px solid #cbd5d1;background:#fff;color:#10313b;font:700 20px/1 system-ui;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.t3-info{position:absolute;left:10px;bottom:10px;width:min(380px,calc(100% - 20px));max-height:55%;overflow:auto;background:rgba(255,255,255,.97);color:#10313b;border-radius:14px;padding:12px 16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.t3-info h3{font-size:20px;margin:0 28px 6px 0}.t3-info p{font-size:16px;line-height:1.75;margin:0}
+.t3-x{position:absolute;right:8px;top:6px;width:36px;height:36px;border:0;background:transparent;font-size:24px;cursor:pointer;color:#10313b}
+.t3-fail .t3-msg{background:#f4efe6}
+.t3-msg[hidden]{display:none}
+@media(max-width:560px){.t3-tag{font-size:12.5px;padding:4px 10px 4px 6px}.t3-info{max-height:48%}.t3-seg button{padding:6px 10px;font-size:14px}}
 </style>
 <style>
 .top .unit-link{font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:15.5px;white-space:nowrap}
@@ -725,6 +758,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <a href="#before"><span class="dot" style="background:#5E5E5E"></span>前情提要</a>
     <a href="#voyage"><span class="dot" style="background:var(--wind)"></span>歐亞新航路</a>
     <a href="#hub"><span class="dot" style="background:var(--plate)"></span>東亞十字路口</a>
+    <a href="#tayouan3d"><span class="dot" style="background:#8a5a33"></span>3D 大員港</a>
     <a href="#rulers"><span class="dot" style="background:var(--typhoon)"></span>誰在經營臺灣</a>
     <a href="#taijiang"><span class="dot" style="background:var(--rain)"></span>台江內海</a>
     <a href="#luermen"><span class="dot" style="background:#2a6fb0"></span>領航員挑戰</a>
@@ -794,6 +828,28 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       <div><div class="mapbox" id="hubBox"><svg id="hubSvg" data-w="640" data-h="600" role="img" aria-label="東亞海上航線圖"></svg><div class="mhint">滾輪或兩指縮放 · 拖曳移動</div></div></div>
       <div class="panel pad card" id="hubCard" aria-live="polite"></div>
     </div>
+  </div>
+</section>
+
+<section class="unit" id="tayouan3d">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#8a5a33">3D</div>
+      <h2>走進 1650 年代的大員（3D）</h2>
+      <p class="sub">拖曳轉動視角、滾輪或兩指縮放，點畫面上的標籤飛過去看看。也可以按「自動導覽」，或切換到 1661 年，看鄭成功的船隊怎麼開進台江內海。</p>
+    </div>
+    <div class="t3-bar">
+      <div class="t3-seg" id="t3Year" role="group" aria-label="年代"><button type="button" data-y="1655" aria-pressed="true">1650 年代</button><button type="button" data-y="1661" aria-pressed="false">1661 年 鄭成功來了</button></div>
+      <button type="button" class="t3-tour" id="t3Tour">▶ 自動導覽</button>
+    </div>
+    <div class="t3-box" id="t3Box" aria-label="1650 年代大員港的 3D 場景">
+      <div class="t3-msg" id="t3Msg">3D 場景載入中……</div>
+      <div class="t3-tags" id="t3Tags"></div>
+      <div class="t3-cap" id="t3Cap">1650 年代的大員：荷蘭東印度公司的貿易港</div>
+      <div class="t3-zoom"><button type="button" id="t3In" aria-label="拉近">＋</button><button type="button" id="t3Out" aria-label="拉遠">－</button><button type="button" id="t3Home" aria-label="回到全景">⟲</button></div>
+      <aside class="t3-info" id="t3Info" hidden aria-live="polite"></aside>
+    </div>
+    <p class="note" style="margin-top:8px">這是依照 17 世紀古地圖和歷史研究做的示意復原，城堡、房子和船的大小比例都經過簡化，不是真實的測量。電腦上按住 Shift 再拖曳可以平移畫面。</p>
   </div>
 </section>
 
@@ -1118,14 +1174,51 @@ function seg(pts,c,id,lab){for(let i=0;i<pts.length-1;i++){const d=curve(pts[i],
   p.attr('stroke-dasharray',`${L} ${L}`).attr('stroke-dashoffset',L).transition().delay(i*500).duration(600).attr('stroke-dashoffset',0);}}
 const PT={bat:[106.8,-6.2],mac:[113.55,22.2],peng:[119.58,23.57],an:[120.16,23.0],kee:[121.77,25.15],tam:[121.43,25.17],mni:[120.98,14.6],fuj:[118.1,24.47],nag:[129.87,32.75],kh:[120.28,22.6]};
 const HUB={
- nl:{draw(){seg([PT.bat,PT.mac,PT.peng,PT.an],NL,'a-nl');seg([PT.mni,[121.6,20],PT.kee],ES,'a-es');
-   [['巴達維亞',PT.bat,'r',NL],['澳門',PT.mac,'l',NL],['澎湖',PT.peng,'l',NL],['大員（安平）',PT.an,'b',NL],['馬尼拉',PT.mni,'l',ES],['雞籠（基隆）',PT.kee,'r',ES]].forEach(([n,p,s,c])=>marker(hm,p[0],p[1],{label:n,color:c,r:7,side:s}).classed('hubmk',true));},
-  card:`<span class="pill" style="background:${NL};color:#1b1b1b">荷蘭人</span> <span class="pill" style="background:${ES}">西班牙人</span><h3 style="margin-top:8px">先到南部，再到北部</h3>
-   <p><b style="color:#8A5A00">荷蘭人</b>從亞洲的據點巴達維亞出發，先到澳門、再到澎湖登陸。後來被明帝國的軍隊趕走，便轉往臺灣，1624 年在大員（今臺南安平）建立據點。</p>
-   <p><b style="color:#A33F00">西班牙人</b>從亞洲的據點馬尼拉北上，1626 年來到臺灣北部的雞籠（基隆），把中國的商品轉運到日本和菲律賓。</p>
-   <div class="qbox"><b>想一想</b>觀察地圖，荷蘭人來到臺灣以前，為什麼會先去澳門和澎湖？</div>`},
- zheng:{draw(){seg([PT.fuj,PT.peng,PT.an],ZH,'a-zh');[['福建（廈門、金門）',PT.fuj,'l',ZH],['澎湖',PT.peng,'t',ZH],['安平',PT.an,'b',ZH]].forEach(([n,p,s,c])=>marker(hm,p[0],p[1],{label:n,color:c,r:7,side:s}).classed('hubmk',true));},
-  card:`<span class="pill" style="background:${ZH}">鄭成功</span><h3 style="margin-top:8px">從福建渡海來臺</h3><p>明帝國被清帝國打敗以後，鄭成功和清帝國作戰也失敗了。為了找一個反清復明的基地、維持海上貿易的據點，也為了解決軍隊糧食不夠的問題，他選擇離福建不遠的臺灣。</p><p>1661 年鄭成功先攻取澎湖，再進攻普羅民遮城、圍攻熱蘭遮城；1662 年荷蘭人投降撤離，開始了鄭氏政權在臺灣的經營。</p><div class="qbox"><b>想一想</b>荷蘭人、西班牙人和鄭氏政權選擇來臺灣，和臺灣的地理位置有什麼關係？</div>`},
+ nl:{base(){[['巴達維亞',PT.bat,'r',NL],['澳門（葡萄牙人）',PT.mac,'l','#5E5E5E'],['澎湖',PT.peng,'l',NL],['大員（安平）',PT.an,'b',NL],['馬尼拉（西班牙人）',PT.mni,'l',ES],['雞籠（基隆）',PT.kee,'r',ES]].forEach(([n,p,s,c])=>marker(hm,p[0],p[1],{label:n,color:c,r:7,side:s}).classed('hubmk',true));},
+  steps:[
+   {y:'1600 年代初',t:'荷蘭人想和中國做生意',segs:[],
+    p:'1602 年，荷蘭人成立了<b>東印度公司</b>，後來把亞洲總部設在巴達維亞（今印尼雅加達）。他們最想買的是中國的<b>生絲和瓷器</b>。',
+    why:'可是明帝國只准少數地方和外國人做生意。葡萄牙人早就住在<b>澳門</b>，西班牙人在<b>馬尼拉</b>，荷蘭人卻還沒有靠近中國的據點。'},
+   {y:'1604 年',t:'第一次到澎湖，被勸走',segs:[[[PT.bat,PT.peng],NL,'a-nl']],
+    p:'荷蘭人的船隊開到<b>澎湖</b>，想請明帝國准許他們通商。明帝國的將領<b>沈有容</b>帶著船隊到澎湖，把荷蘭人勸走。澎湖天后宮裡到今天還留著記錄這件事的石碑。',
+    why:'澎湖離福建很近，是中國商船往來的地方，荷蘭人覺得在這裡最容易和中國做生意。'},
+   {y:'1622 年',t:'攻打澳門，失敗',segs:[[[PT.bat,PT.mac],NL,'a-nl']],
+    p:'荷蘭人想搶下葡萄牙人在<b>澳門</b>的據點，派船隊攻打，結果打輸了。',
+    why:'澳門是葡萄牙人和中國做生意的大港口。搶下澳門，就能直接和中國貿易，還能打擊對手葡萄牙人。'},
+   {y:'1622 年',t:'改去澎湖築城',segs:[[[PT.bat,PT.mac,PT.peng],NL,'a-nl']],
+    p:'打不下澳門，船隊轉往<b>澎湖</b>，在那裡蓋了一座城堡，要求明帝國開放福建的港口和他們做生意，還攔截開往馬尼拉的中國商船。',
+    why:'有了澎湖的城堡，荷蘭人就能守在中國商船必經的海上，逼明帝國答應通商。'},
+   {y:'1624 年',t:'被趕出澎湖，轉到大員',segs:[[[PT.bat,PT.mac,PT.peng,PT.an],NL,'a-nl']],
+    p:'明帝國派出大軍和幾十艘戰船包圍澎湖。8 月，荷蘭人求和，答應<b>離開澎湖、搬到臺灣</b>；明帝國則允許中國商人到臺灣和他們交易。荷蘭人來到<b>大員</b>（今臺南安平），開始蓋熱蘭遮城。',
+    why:'明帝國不准荷蘭人留在澎湖，但臺灣當時不在明帝國的管轄之下。大員外面有沙洲擋浪，裡面是平靜的台江內海，離福建也近，中國商人可以划船過來做生意。'},
+   {y:'1626 年',t:'西班牙人到北部的雞籠',segs:[[[PT.bat,PT.mac,PT.peng,PT.an],NL,'a-nl'],[[PT.mni,[121.6,20],PT.kee],ES,'a-es']],
+    p:'西班牙人從<b>馬尼拉</b>北上，在臺灣北部的<b>雞籠</b>（今基隆和平島）蓋城，後來也到了淡水。',
+    why:'荷蘭人在大員，就在馬尼拉往中國、日本的航線旁邊。西班牙人為了保護自己的生意、和荷蘭人競爭，也在臺灣搶一個據點。'},
+   {y:'1642 年',t:'荷蘭人趕走西班牙人',segs:[[[PT.bat,PT.mac,PT.peng,PT.an,PT.kee],NL,'a-nl'],[[PT.mni,[121.6,20],PT.kee],ES,'a-es']],
+    p:'荷蘭人派兵北上，打敗雞籠的西班牙人。從此臺灣南部和北部的據點，都由荷蘭人掌握。',
+    why:'把西班牙人趕走，荷蘭人就能獨占臺灣的貿易。往下看「誰在經營臺灣」的時間軸，可以看到每一年誰管哪裡。'}],
+  q:'看完了，換你說說看：荷蘭人為什麼最後選了大員，而不是澳門或澎湖？'},
+ zheng:{base(){[['金門、廈門',PT.fuj,'l',ZH],['澎湖',PT.peng,'t',ZH],['鹿耳門、大員',PT.an,'b',ZH]].forEach(([n,p,s,c])=>marker(hm,p[0],p[1],{label:n,color:c,r:7,side:s}).classed('hubmk',true));},
+  steps:[
+   {y:'1640–1650 年代',t:'在金門、廈門抗清',segs:[],
+    p:'明帝國被清帝國打敗以後，<b>鄭成功</b>以福建的<b>金門、廈門</b>為基地繼續抵抗清帝國。他的家族有很大的船隊，靠海上貿易賺錢來養軍隊。',
+    why:'鄭家本來就是做海上貿易起家的，船隊和航海的本領是他最大的力量。'},
+   {y:'1659 年',t:'進攻南京失敗',segs:[],
+    p:'鄭成功帶兵北上攻打南京，結果大敗，只好退回金門、廈門。',
+    why:'打了敗仗以後，金門、廈門太小，很難長期養活大軍，鄭成功需要一個新的、更大的基地。'},
+   {y:'1661 年 3 月',t:'從金門出發，先到澎湖',segs:[[[PT.fuj,PT.peng],ZH,'a-zh']],
+    p:'鄭成功的船隊從金門出發，先在<b>澎湖</b>停留，等待風浪和適合的時間。',
+    why:'臺灣離福建近，土地又比金門、廈門大得多，可以種田養兵，也能繼續做海上貿易。'},
+   {y:'1661 年 4 月',t:'趁漲潮通過鹿耳門',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
+    p:'船隊趁著漲潮，從水很淺的<b>鹿耳門</b>水道開進台江內海，沒幾天就讓赤崁的<b>普羅民遮城</b>投降。',
+    why:'荷蘭人以為大船過不了鹿耳門，所以那裡防守比較少。往下玩「1661 年，你是鄭成功的領航員」，試試看選哪一天、幾點出發。'},
+   {y:'1661–1662 年',t:'圍攻熱蘭遮城',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
+    p:'熱蘭遮城很堅固，鄭成功的軍隊圍了大約 9 個月。1662 年初，荷蘭人投降，2 月離開臺灣。',
+    why:'城裡的荷蘭人等不到足夠的援軍，糧食和士兵越來越少，只好談判投降。'},
+   {y:'1662 年以後',t:'鄭氏政權經營臺灣',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
+    p:'鄭成功在 1662 年過世，兒子<b>鄭經</b>繼續經營臺灣：開墾土地、設立學校和孔廟，也繼續和日本、東南亞做生意。',
+    why:'點上面的「鄭氏政權的貿易」，看看他們把什麼賣到哪裡。'}],
+  q:'荷蘭人、西班牙人和鄭成功，選擇來臺灣的原因有什麼一樣、什麼不一樣？'},
  trade:{draw(){const TW=[120.4,23.2];
    const F=[[TW,[130.5,33.2],'a-out','#d9462b','鹿皮、蔗糖',0.2],[[130,32.2],[121.2,24],'a-in','#2a86b8','銀、軍需品',0.2],
             [TW,[113.5,27.5],'a-out','#d9462b','香料、銀',-0.18],[[114,26.6],[119.8,23.8],'a-in','#2a86b8','絲綢、瓷器、藥材',-0.18],
@@ -1143,7 +1236,16 @@ const HUB={
    marker(hm,K[0],K[1],{label:'高雄港',color:'#10313b',r:8,side:'b'}).classed('hubmk',true);},
   card:`<span class="pill" style="background:#10313b">今天</span><h3 style="margin-top:8px">高雄港通往全世界</h3><p>今天臺灣西邊的臺灣海峽有大量貨櫃船通過，是全球繁忙的航道之一。高雄港有通往世界各國的航線，是全球重要的貨櫃港之一。</p><p>四百年前，臺灣因為位置重要登上世界舞臺；四百年後，這個位置一樣重要。</p><div class="qbox"><b>比一比</b>大航海時代和今天，經過臺灣的船載的貨物有什麼不同？</div>`}};
 let hub='nl';
-function drawHub(){seaL.forEach(p=>p.style('display',hub==='trade'||hub==='today'?'none':null));hl.selectAll('*').remove();hm.svg.selectAll('.hubmk').remove();HUB[hub].draw();$('#hubCard').innerHTML=HUB[hub].card;$$('#hubTabs [data-h]').forEach(b=>b.setAttribute('aria-selected',b.dataset.h===hub));}
+let hubStep=0;
+function hubStepView(){const H=HUB[hub],st=H.steps[hubStep],n=H.steps.length;hl.selectAll('*').remove();st.segs.forEach(([pts,c,id])=>seg(pts,c,id));
+  $('#hubCard').innerHTML=`<div class="hs-top"><span class="hs-year">${st.y}</span><span class="hs-n">${hubStep+1} / ${n}</span></div><h3>${st.t}</h3><p>${st.p}</p><div class="hs-why"><b>為什麼？</b>${st.why}</div>
+   <div class="hs-dots" aria-hidden="true">${H.steps.map((x,i)=>`<i class="${i===hubStep?'on':i<hubStep?'done':''}"></i>`).join('')}</div>
+   <div class="hs-nav"><button type="button" class="hs-prev" ${hubStep?'':'disabled'}>← 上一步</button><button type="button" class="hs-next">${hubStep<n-1?'下一步 →':'從頭再看'}</button></div>
+   ${hubStep===n-1?`<div class="qbox"><b>想一想</b>${H.q}</div>`:''}`;
+  $('#hubCard .hs-prev').onclick=()=>{if(hubStep>0){hubStep--;hubStepView();}};$('#hubCard .hs-next').onclick=()=>{hubStep=hubStep<n-1?hubStep+1:0;hubStepView();};}
+function drawHub(){seaL.forEach(p=>p.style('display',hub==='trade'||hub==='today'?'none':null));hl.selectAll('*').remove();hm.svg.selectAll('.hubmk').remove();
+  const H=HUB[hub];if(H.steps){H.base();hubStep=0;hubStepView();}else{H.draw();$('#hubCard').innerHTML=H.card;}
+  $$('#hubTabs [data-h]').forEach(b=>b.setAttribute('aria-selected',b.dataset.h===hub));}
 $('#hubTabs').addEventListener('click',e=>{const b=e.target.closest('[data-h]');if(b){hub=b.dataset.h;drawHub();}});drawHub();
 
 /* =========================================================
@@ -1786,4 +1888,5 @@ show();
 railSpy();
 document.body.dataset.ready='1';
 })();
-</script>
+</script><script src="assets/tayouan3d.js?v=4" defer></script>
+
