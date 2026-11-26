@@ -2033,7 +2033,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 987,
+    "line": 1052,
     "snippet": "border-left: 5px"
   },
   {
@@ -2043,7 +2043,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 728,
+    "line": 773,
     "snippet": "2.7:1 (need 4.5:1) — text #ff7155 on #ffffff"
   },
   {
@@ -2053,8 +2053,8 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 729,
-    "snippet": "2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff (and 27 more)"
+    "line": 774,
+    "snippet": "2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff (and 28 more)"
   },
   {
     "antipattern": "low-contrast",
@@ -2063,8 +2063,8 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 1004,
-    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 1 more)"
+    "line": 849,
+    "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 2 more)"
   },
   {
     "antipattern": "cramped-padding",
@@ -2073,7 +2073,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 753,
+    "line": 799,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2083,7 +2083,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 767,
+    "line": 813,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2093,7 +2093,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 775,
+    "line": 821,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2103,7 +2103,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 784,
+    "line": 830,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2113,7 +2113,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 792,
+    "line": 838,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2123,7 +2123,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 806,
+    "line": 848,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2133,7 +2133,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 812,
+    "line": 857,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2143,7 +2143,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 836,
+    "line": 871,
+    "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
+    "line": 877,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2153,7 +2163,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 858,
+    "line": 901,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2163,7 +2173,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 870,
+    "line": 923,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2173,7 +2183,17 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 879,
+    "line": 935,
+    "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
+  },
+  {
+    "antipattern": "cramped-padding",
+    "name": "Cramped padding",
+    "description": "Text is too close to the edge of its container. Two shapes: (1) an element with its own text where the space between the rendered text and the border box is too small for the font size, and (2) a wrapper whose children's text lands flush against a visible boundary (border, outline, or non-transparent background) with nothing to inset it. Add at least 8px (ideally 12–16px) of space inside bordered, outlined, or colored containers.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
+    "line": 944,
     "snippet": "<div> \"lmbox\": children flush against border on all sides (no inset)"
   },
   {
@@ -2183,7 +2203,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 894,
+    "line": 959,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2193,7 +2213,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 902,
+    "line": 967,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2203,7 +2223,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 911,
+    "line": 976,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2213,7 +2233,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 920,
+    "line": 985,
     "snippet": "<div> \"deerbox\": children flush against border on all sides (no inset)"
   },
   {
@@ -2223,7 +2243,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 933,
+    "line": 998,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2233,7 +2253,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 947,
+    "line": 1012,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2243,7 +2263,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 957,
+    "line": 1022,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2253,7 +2273,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 995,
+    "line": 1060,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
