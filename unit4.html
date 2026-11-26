@@ -437,6 +437,9 @@ footer p+p{margin-top:6px}
 .pw-nav{display:flex;gap:8px;margin-top:12px}
 .pw-nav button{flex:1;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px;font:700 16px var(--f-body);cursor:pointer}
 .pw-nav button.go{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pw-colkey{font-size:16px;line-height:1.7;margin:10px 0 0;color:var(--ink)}
+.pw-colkey .pw-colnote{display:block;font-size:14px;color:var(--muted)}
+#pwSvg .pw-col path{pointer-events:none}
 .pw-pin{font-size:17px;line-height:1.7;margin:10px 0 0;min-height:3.4em;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .pw-pin b{color:var(--ink)}
 .pw-end{margin-top:16px}
@@ -851,6 +854,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <div class="duo" style="margin-top:14px">
       <div>
         <div class="mapbox" id="pwBox"><svg id="pwSvg" data-w="760" data-h="420" role="img" aria-label="各海上強權的重要據點地圖"></svg><div class="mhint">滾輪或兩指縮放 · 拖曳移動 · 點地圖上的點看說明</div></div>
+        <p class="pw-colkey" id="pwCol"></p>
         <p class="pw-pin" id="pwPin" aria-live="polite">點地圖上的點，看看那個地方發生什麼事。</p>
       </div>
       <div class="panel pad card pw-card" id="pwCard" aria-live="polite"></div>
@@ -1938,6 +1942,7 @@ const PW=[
   tw:'臺灣有一些和鄭和有關的傳說，但是沒有可靠的紀錄說他到過臺灣。',
   fall:['1433 年最後一次航行結束後，大明就不再派船隊出海。','為什麼停下來？到今天還有爭論：朝廷官員和帶船隊的宦官互相競爭、北方要防備蒙古、船隊花費很大。','明朝本來就有「海禁」，不准百姓私自出海做生意。'],
   next:'大明不是把棒子交出去，而是<strong>自己退出了比賽</strong>。船隊消失後，印度洋出現一大片「空檔」；65 年後（1498 年），<strong>葡萄牙</strong>人開船進來了。',
+  col:'大明<b>沒有殖民地</b>，所以地圖上沒有塗色，只標出船隊到過的港口。',
   pins:[['南京',118.78,32.06,'鄭和船隊的大船在南京的造船廠建造。','r'],['麻六甲',102.25,2.2,'船隊在這裡設立倉庫，存放貨物、等待季風。','l'],['古里',75.8,11.25,'印度西南岸的大港，船隊多次到這裡。','l'],['荷姆茲',56.27,27.1,'波斯灣口的大港，第四次航行到達。','t'],['非洲東岸',40.1,-3.2,'第五到第七次航行，到達非洲東岸這一帶。','l']]},
  {k:'pt',n:'葡萄牙',c:'#009E73',span:[1415,1640],peak:[1498,1580],era:'第一棒：大約 1500–1580 年最風光（1415 年就開始往非洲探險）',
   rise:'葡萄牙國家小、靠著大西洋，王室很支持航海，一步一步沿著非洲海岸往南探險。1488 年迪亞士繞過非洲南端，1498 年達伽馬終於開船到達印度。',
@@ -1946,6 +1951,7 @@ const PW=[
   tw:'葡萄牙船常常經過臺灣海峽，往來澳門和日本。很多書說「福爾摩沙」是葡萄牙水手取的，但找不到可靠的紀錄（往下看「史料偵探」）。',
   fall:['人口少、據點分散在半個地球，很難守住。','1580–1640 年，葡萄牙和西班牙由同一個國王統治，西班牙的敵人荷蘭就趁機攻打葡萄牙的據點。','1639 年日本不准葡萄牙船再來；1641 年荷蘭搶走麻六甲，1656 年又搶走錫蘭（今天的斯里蘭卡）的可倫坡。'],
   next:'在亞洲，被<strong>荷蘭</strong>取代。',
+  col:'塗色：葡萄牙統治過的地方，深色是葡萄牙本土。印度的果阿、馬來半島的麻六甲只占一小塊，用點標出來。',
   pins:[['里斯本',-9.14,38.7,'葡萄牙的首都，船隊從這裡出發。','l'],['巴西',-38.5,-12.97,'1500 年到達。後來種甘蔗、挖金礦，是葡萄牙最大的殖民地，1822 年獨立。','r'],['果阿',73.8,15.5,'1510 年占領，是葡萄牙在亞洲的總部。','l'],['麻六甲',102.25,2.2,'1511 年占領，1641 年被荷蘭搶走。','l'],['澳門',113.54,22.2,'1557 年開始在這裡居住、做生意，一直到 1999 年才交還中國。','l'],['長崎',129.87,32.75,'葡萄牙人在這裡和日本做生意，1639 年被日本趕走。','r']]},
  {k:'es',n:'西班牙',c:'#D55E00',span:[1492,1700],peak:[1520,1648],era:'第一棒的另一位選手：大約 1520–1648 年最風光',
   rise:'1492 年，西班牙支持哥倫布往西航行，到達了美洲。1494 年，西班牙和葡萄牙簽約「分地球」：大致上西邊歸西班牙、東邊歸葡萄牙。',
@@ -1954,6 +1960,7 @@ const PW=[
   tw:'1626 年占領臺灣北部的雞籠（基隆）、1628 年到淡水，想保護馬尼拉到日本、中國的航線。1642 年被荷蘭人趕走。',
   fall:['太依賴白銀：銀子一多，物價暴漲；國王又一直打仗，多次宣布國家破產。','1588 年「無敵艦隊」被英國打敗；1643 年在陸上被法國打敗；1648 年簽下《西發利亞和約》以後，不再是歐洲老大。','1808–1826 年，美洲殖民地紛紛獨立；1898 年打輸美國，把古巴、菲律賓等地交出去。'],
   next:'海上生意被<strong>荷蘭、英國</strong>追過去；在歐洲陸上，被<strong>法國</strong>取代。',
+  col:'塗色：1500 年代到 1900 年代西班牙統治過的地方，深色是西班牙本土。臺灣只有北部雞籠、淡水一帶（1626–1642），今天美國西南部的一大片也曾經屬於西班牙，這裡沒有塗。',
   pins:[['塞維亞',-6,37.4,'西班牙和美洲做生意的大港，白銀先運到這裡。','r'],['墨西哥城',-99.13,19.43,'1521 年打下阿茲特克帝國後，在這裡統治墨西哥。','r'],['波托西銀礦',-65.75,-19.58,'今天玻利維亞的大銀礦，挖出大量白銀。','r'],['阿卡普爾科',-99.9,16.85,'墨西哥西岸的港口，大帆船從這裡開往馬尼拉。','b'],['馬尼拉',120.98,14.6,'1571 年建城。美洲白銀在這裡換成中國的絲綢、瓷器。','r'],['雞籠',121.77,25.15,'1626 年占領臺灣北部，1642 年被荷蘭人趕走。','r']]},
  {k:'nl',n:'荷蘭',c:'#0072B2',span:[1595,1799],peak:[1602,1674],era:'第二棒：大約 1602–1674 年最風光',
   rise:'荷蘭原本被西班牙統治，一邊打獨立戰爭、一邊做生意。荷蘭人造船又多又便宜，到處幫人運貨，被叫做「海上馬車夫」。1602 年成立<b>荷蘭東印度公司</b>，很多人一起出錢做生意、一起分紅。',
@@ -1962,6 +1969,7 @@ const PW=[
   tw:'1624–1662 年經營臺灣南部，1642 年把西班牙人趕出北部。1662 年和鄭成功簽約，交出熱蘭遮城、離開臺灣。',
   fall:['國家小、人口少，和英國搶生意，1652–1674 年打了三次英荷戰爭。','1664 年北美的新阿姆斯特丹被英國拿走，改名紐約；1662 年在臺灣的據點也沒了。','1780–1784 年第四次英荷戰爭大敗，失去很多貿易；東印度公司貪污又欠債，1799 年解散。'],
   next:'被<strong>英國</strong>取代。',
+  col:'塗色：荷蘭統治過的地方，深色是荷蘭本土。臺灣只有西南部（1624–1662），斯里蘭卡只有沿海，北美的新阿姆斯特丹、非洲南端的好望角用點標出來。',
   pins:[['阿姆斯特丹',4.9,52.37,'荷蘭東印度公司的大本營。','r'],['新阿姆斯特丹',-74.0,40.7,'1620 年代建立，1664 年被英國拿走，改名紐約。','l'],['好望角',18.42,-33.92,'1652 年建立補給站，讓去亞洲的船補充食物和水。','r'],['麻六甲',102.25,2.2,'1641 年從葡萄牙手中搶下。','l'],['巴達維亞',106.8,-6.2,'1619 年起是荷蘭在亞洲的總部，就是今天的雅加達。','b'],['大員',120.16,23.0,'1624–1662 年在這裡蓋熱蘭遮城，經營臺灣。','r'],['長崎出島',129.87,32.75,'1641 年起，荷蘭是唯一能在這裡和日本做生意的歐洲國家。','r']]},
  {k:'gb',n:'英國',c:'#7a3f8f',span:[1588,1997],peak:[1763,1945],era:'第三棒：大約 1763–1945 年最風光',
   rise:'1588 年英國打敗西班牙無敵艦隊，1600 年成立英國東印度公司。英國一面和荷蘭打仗搶生意，一面在北美洲、印度建立據點。1763 年打贏「七年戰爭」以後，成為世界上最強的海上強國。',
@@ -1970,18 +1978,38 @@ const PW=[
   tw:'1860 年代臺灣開港以後，英國商人來臺灣買茶葉、樟腦，英國也在淡水、打狗（高雄）設立領事館。',
   fall:['1776 年北美殖民地宣布獨立，1783 年英國承認美國獨立。','兩次世界大戰花光了錢，第二次世界大戰後幾乎破產，要向美國借錢。','戰後殖民地一個一個獨立；1997 年把香港交還中國，很多人認為這代表大英帝國結束。'],
   next:'第二次世界大戰以後，被<strong>美國</strong>（和蘇聯）取代。',
-  pins:[['倫敦',-0.13,51.5,'英國的首都，也是英國東印度公司的大本營。','l'],['詹姆斯敦',-76.8,37.2,'1607 年建立，是英國在北美洲第一個長久的殖民地。','l'],['紐約',-74.0,40.7,'1664 年從荷蘭手中拿到，改了這個名字。','r'],['孟加拉',88.36,22.57,'1757 年普拉西戰役後，被英國東印度公司控制。','l'],['香港',114.17,22.3,'鴉片戰爭後取得，1997 年交還中國。','r']]}
+  col:'塗色：1920 年前後大英帝國的範圍（含自治領、保護國和託管地），深色是英國本土。另外北美洲東岸的 13 個殖民地在 1783 年就獨立了，這裡沒有塗。',
+  pins:[['倫敦',-0.13,51.5,'英國的首都，也是英國東印度公司的大本營。','l'],['詹姆斯敦',-76.8,37.2,'1607 年建立，是英國在北美洲第一個長久的殖民地。','l'],['紐約',-74.0,40.7,'1664 年從荷蘭手中拿到，改了這個名字。','r'],['孟加拉',88.36,22.57,'1757 年普拉西戰役後，被英國東印度公司控制。','l'],['香港',114.17,22.3,'鴉片戰爭後取得，1997 年交還中國。','r']]},
+ {k:'us',n:'美國',c:'#5E5E5E',span:[1776,2000],peak:[1945,2000],now:1,era:'第四棒：1945 年以後到今天',
+  rise:'美國原本是英國在北美洲的殖民地，1776 年宣布獨立。1800 年代一路往西擴張到太平洋岸，1898 年打贏美西戰爭。第二次世界大戰以後，美國成為世界最強的國家之一，海軍也最強。',
+  gains:[['1867','向俄國買下<b>阿拉斯加</b>'],['1898','把<b>夏威夷</b>併入美國'],['1898','美西戰爭後，從西班牙手中取得<b>菲律賓、關島、波多黎各</b>'],['1946','讓<b>菲律賓</b>獨立']],
+  got:'和前面幾棒不一樣，二戰以後美國主要不是靠占殖民地，而是靠最強的海軍、和很多國家結盟，還有在世界各地的軍事基地。',
+  tw:'1950 年韓戰爆發後，美國第七艦隊開始巡防臺灣海峽；1951–1965 年，美國提供臺灣「美援」，幫助建設和經濟發展。',
+  fall:['這一棒還在跑，比賽還沒結束。','今天美國仍然有世界上最強的海軍，但其他國家的海軍也在快速成長。'],
+  next:'下一棒會是誰？<strong>還不知道</strong>。你可以和同學討論看看。',
+  col:'塗色：深色是美國（包括阿拉斯加、夏威夷），淺色是 1898 年以後取得的屬地。菲律賓在 1946 年獨立。',
+  pins:[['華盛頓',-77.04,38.9,'美國的首都。','r'],['夏威夷',-157.86,21.3,'1898 年併入美國，珍珠港是美國海軍的重要基地。','r'],['菲律賓',120.98,14.6,'1898 年從西班牙手中取得，1946 年獨立。','l'],['關島',144.79,13.44,'1898 年從西班牙手中取得，到今天還是美國的屬地。','r']]}
 ];
 /* ---- timeline ---- */
 const tl=$('#pwTl');const TICKS=[1500,1600,1700,1800,1900].map(y=>`<u style="left:${X(y)}"></u>`).join('')+`<u style="left:${X(1624)};width:calc(${X(1662)} - ${X(1624)});background:rgba(216,144,26,.22)"></u>`;
-tl.innerHTML=PW.map((p,i)=>`<div class="pw-row" data-i="${i}"><button aria-label="看${p.n}"><i style="background:${p.c}"></i><span>${p.n}<small class="pw-yr">${p.peak[0]}–${p.peak[1]}</small></span></button>
- <div class="pw-track">${TICKS}<div class="pw-bar" style="left:${X(p.span[0]<Y0?Y0:p.span[0])};width:calc(${X(p.span[1])} - ${X(p.span[0]<Y0?Y0:p.span[0])});background:${p.c}"></div><div class="pw-bar peak" style="left:${X(p.peak[0])};width:calc(${X(p.peak[1])} - ${X(p.peak[0])});background:${p.c}"></div><span class="pw-y l" style="left:${X(p.peak[0])}">${p.peak[0]}</span><span class="pw-y r" style="left:${X(p.peak[1])}">${p.peak[1]}</span></div></div>`).join('')+
- `<div class="pw-row"><button disabled style="cursor:default"><i style="background:#5E5E5E"></i><span>美國<small class="pw-yr">1945–</small></span></button><div class="pw-track">${TICKS}<div class="pw-bar peak" style="left:${X(1945)};width:calc(${X(2000)} - ${X(1945)});background:#5E5E5E"></div><span class="pw-y l" style="left:${X(1945)}">1945</span></div></div>
+tl.innerHTML=PW.map((p,i)=>`<div class="pw-row" data-i="${i}"><button aria-label="看${p.n}"><i style="background:${p.c}"></i><span>${p.n}<small class="pw-yr">${p.peak[0]}–${p.now?'今天':p.peak[1]}</small></span></button>
+ <div class="pw-track">${TICKS}<div class="pw-bar" style="left:${X(p.span[0]<Y0?Y0:p.span[0])};width:calc(${X(p.span[1])} - ${X(p.span[0]<Y0?Y0:p.span[0])});background:${p.c}"></div><div class="pw-bar peak" style="left:${X(p.peak[0])};width:calc(${X(p.peak[1])} - ${X(p.peak[0])});background:${p.c}"></div><span class="pw-y l" style="left:${X(p.peak[0])}">${p.peak[0]}</span>${p.now?'':`<span class="pw-y r" style="left:${X(p.peak[1])}">${p.peak[1]}</span>`}</div></div>`).join('')+
+ `
  <div class="pw-axis"><b></b><div>${[1500,1600,1700,1800,1900].map(y=>`<span style="left:${X(y)}">${y}</span>`).join('')}<i class="pw-tw" style="left:${X(1624)};width:calc(${X(1662)} - ${X(1624)})"></i></div></div>
  <p class="pw-legend">深色＝最風光的時期，淺色＝從起家到退場（大約的年代）。<b>橘色框</b>是荷蘭在臺灣的 1624–1662 年。</p>`;
 /* ---- map ---- */
 const proj=d3.geoNaturalEarth1().rotate([-30,0]).fitExtent([[6,6],[754,414]],{type:'MultiPoint',coordinates:[[-150,62],[205,62],[-150,-52],[205,-52]]});
 const pm=flatMap('#pwSvg',LANDS.world,proj);zoomButtons($('#pwBox'),pm);
+const colG=pm.g.append('g').attr('class','pw-col');let COL=null;
+fetch('assets/pw-colonies.json?v=1').then(r=>r.json()).then(d=>{COL=d;drawCol()}).catch(()=>{});
+function drawCol(){
+  colG.selectAll('*').remove();const p=PW[cur],L=COL&&COL.lists[p.k];
+  $('#pwCol').innerHTML=p.col+(L?`<br><b>塗色的地方：大約 ${L.col.length} 個今天的國家和地區。</b>`:'')+'<span class="pw-colnote">用今天的國界畫的大約範圍；不同年代的地方畫在同一張圖上，只占一部分的也整片塗色。</span>';
+  if(!L)return;
+  const add=(names,op)=>names.forEach(n=>{const g=COL.shapes[n];if(!g)return;colG.append('path').attr('d',pm.path(g)).attr('fill',p.c).attr('fill-opacity',op).attr('stroke','#fff').attr('stroke-width',.5).attr('vector-effect','non-scaling-stroke');
+    if(pm.path.area(g)<10){const c=pm.path.centroid(g);colG.append('circle').attr('cx',c[0]).attr('cy',c[1]).attr('r',2.6).attr('fill',p.c).attr('stroke','#fff').attr('stroke-width',.8).attr('vector-effect','non-scaling-stroke')}});
+  add(L.col,.78);add(L.home,1);
+}
 let mk=[];
 let cur=0;
 function show(i){
@@ -1989,7 +2017,7 @@ function show(i){
   $$('#pwTl .pw-row').forEach(r=>r.classList.toggle('on',+r.dataset.i===i));
   mk.forEach(m=>m.remove());mk=[];
   p.pins.forEach(([n,lo,la,t,side])=>{mk.push(marker(pm,lo,la,{label:n,color:p.c,r:6,side,onClick:()=>{$('#pwPin').innerHTML=`<b style="color:${p.c}">${p.n}・${n}</b>：${t}`}}))});
-  $('#pwPin').textContent='點地圖上的點，看看那個地方發生什麼事。';
+  $('#pwPin').textContent='點地圖上的點，看看那個地方發生什麼事。';drawCol();
   const c=$('#pwCard');c.style.setProperty('--pc',p.c);
   c.innerHTML=`<h3><i style="background:${p.c}"></i>${p.n}</h3><p class="pw-era">${p.era}</p>
    <h4>怎麼起家？</h4><p>${p.rise}</p>
