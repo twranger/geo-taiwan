@@ -49,7 +49,7 @@ const ACTS=[
    p:'圖片說明寫著：右邊是東印度公司的大帆船。它們從巴達維亞開來，再把貨物運往日本或歐洲。'},
   {id:'junk2',x:9.5,y:85,t:'中國帆船',
    p:'左下角這艘大帆船有好幾面四方形的帆，是中國式的帆船。港裡還停了很多艘。'},
-  {id:'bar',x:85,y:58,t:'彎彎的沙洲',
+  {id:'bar',x:86,y:63,t:'彎彎的沙洲',
    p:'大員本來是台江內海外面的一個<strong>沙洲島</strong>。後來泥沙越積越多，今天已經和陸地連在一起，就是臺南的安平。'},
   {id:'mt',x:11,y:47,t:'對面的山',
    p:'隔著台江內海，遠方就是臺灣本島。畫家把山畫得很高很近，跟真實的樣子不太一樣。'},
@@ -133,6 +133,8 @@ const css=`
 .tw-tools button[aria-pressed="true"]{background:#e9b949;color:#14110c;border-color:#e9b949}
 .tw-task{position:absolute;left:12px;bottom:12px;z-index:4;background:rgba(20,17,12,.84);color:#fff;border-radius:14px;padding:12px 16px;max-width:min(360px,calc(100% - 24px));backdrop-filter:blur(4px)}
 .tw-task h4{margin:0 0 6px;font:700 16px var(--f-body);color:var(--tw-gold)}
+.tw-tg{all:unset;cursor:pointer;color:var(--tw-gold);font:700 16px var(--f-body);display:block;min-height:28px}
+.tw-task.min ol{display:none}.tw-task.min h4{margin:0}
 .tw-task ol{margin:0;padding-left:1.4em;font-size:17px;line-height:1.6}
 .tw-task li.ok{color:#9fe0a0;text-decoration:line-through;text-decoration-thickness:2px}
 .tw-task li.ok::marker{content:"✔ "}
@@ -254,7 +256,7 @@ function go(i){
         <button data-act="snd" aria-pressed="${!!amb}" title="海浪聲">🌊<b class="lb"> 海浪</b></button>
         <button data-act="full" title="全螢幕">⛶<b class="lb"> 全螢幕</b></button>
       </div></div>
-    <div class="tw-task"><h4>任務</h4><ol>${a.tasks.map(t=>`<li data-a="${t.a}">${t.q}</li>`).join('')}</ol></div>
+    <div class="tw-task"><h4><button class="tw-tg" aria-expanded="true">任務 <span class="tw-cnt"></span> <span aria-hidden="true">▾</span></button></h4><ol>${a.tasks.map(t=>`<li data-a="${t.a}">${t.q}</li>`).join('')}</ol></div>
     <aside class="tw-card" aria-live="polite"></aside>
     <div class="tw-zoom"><button data-z="1.5" aria-label="放大">＋</button><button data-z="0.667" aria-label="縮小">－</button><button data-z="0" aria-label="看全圖">⤢</button></div>
     <div class="tw-toast" role="status"></div>
@@ -268,6 +270,7 @@ function go(i){
   layer.style.width=a.w+'px';layer.style.height=a.h+'px';
   s.seen.forEach(id=>{const b=layer.querySelector(`[data-id="${id}"]`);b&&b.classList.add('seen')});
   markTasks();
+  taskEl.querySelector('.tw-tg').onclick=()=>{const m=taskEl.classList.toggle('min');taskEl.querySelector('.tw-tg').setAttribute('aria-expanded',!m)};
   layer.querySelectorAll('.tw-hs').forEach(b=>{b.onclick=e=>{e.stopPropagation();if(moved)return;stopTour();openSpot(b.dataset.id,true)}});
   main.querySelectorAll('.tw-tools button').forEach(b=>b.onclick=()=>tool(b));
   main.querySelectorAll('.tw-zoom button').forEach(b=>b.onclick=()=>{const z=+b.dataset.z;z?zoomAt(view.z*z,stage.clientWidth/2,stage.clientHeight/2,true):home(true)});
@@ -353,7 +356,7 @@ function openSpot(id,fly){
     markTasks();renderQuiz();progress()}
 }
 function closeCard(){card.classList.remove('on');openId=null;layer.querySelectorAll('.tw-hs.cur').forEach(b=>b.classList.remove('cur'))}
-function markTasks(){const a=ACTS[cur],s=SAVE[a.key];taskEl.querySelectorAll('li').forEach(li=>li.classList.toggle('ok',s.seen.includes(li.dataset.a)))}
+function markTasks(){const a=ACTS[cur],s=SAVE[a.key];taskEl.querySelector('.tw-cnt').textContent=a.tasks.filter(t=>s.seen.includes(t.a)).length+' / '+a.tasks.length;taskEl.querySelectorAll('li').forEach(li=>li.classList.toggle('ok',s.seen.includes(li.dataset.a)))}
 function say(t){toast.textContent=t;toast.classList.add('on');clearTimeout(say.t);say.t=setTimeout(()=>toast.classList.remove('on'),2200)}
 function chime(){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(660,AC.currentTime);o.frequency.setValueAtTime(990,AC.currentTime+.12);g.gain.setValueAtTime(.12,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.5);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.5)}
 function tool(b){
