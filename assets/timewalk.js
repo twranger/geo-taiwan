@@ -178,11 +178,11 @@ const css=`
 .tw-gal figcaption b{display:block;font-size:17px;margin-top:4px}
 .tw-gnote{color:var(--ink)}
 .tw-dir{display:inline-block;background:#c0392b;color:#fff;font:700 14px var(--f-body);padding:2px 10px;border-radius:99px}
-.tw-lb{position:fixed;inset:0;z-index:10000;background:rgba(10,8,5,.94);display:flex;flex-direction:column;padding:12px}
+.tw-lb{position:fixed;inset:0;z-index:10000;background:rgba(10,8,5,.97);display:flex;flex-direction:column;padding:12px}
 .tw-lbbar{display:flex;gap:10px;align-items:center;color:#fff;font-size:18px}
 .tw-lbbar button{margin-left:auto;border:0;border-radius:10px;background:#e9b949;color:#14110c;font:700 16px var(--f-body);padding:8px 14px;cursor:pointer}
-.tw-lbimg{flex:1;overflow:auto;display:grid;place-items:center;margin:10px 0}
-.tw-lbimg img{max-width:100%;max-height:100%;cursor:zoom-in}
+.tw-lbimg{flex:1;min-height:0;overflow:auto;display:grid;place-items:center;margin:10px 0}
+.tw-lbimg img{max-width:100%;max-height:calc(100vh - 130px);cursor:zoom-in}
 .tw-lbimg.zoom{place-items:start}
 .tw-lbimg.zoom img{max-width:none;max-height:none;width:auto;cursor:zoom-out}
 .tw-lbtip{color:#e8dcc0;font-size:16px;margin:0}
