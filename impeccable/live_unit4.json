@@ -22,6 +22,17 @@
     "selector": "#sdClaim"
   },
   {
+    "antipattern": "nested-cards",
+    "name": "Nested cards",
+    "description": "Cards inside cards create visual noise and excessive depth. Flatten the hierarchy — use spacing, typography, and dividers instead of nesting containers.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "https://geo.twranger.com/unit4.html",
+    "line": 0,
+    "snippet": "Card inside card (and 4 more)",
+    "selector": "figure:nth-of-type(1)"
+  },
+  {
     "antipattern": "skipped-heading",
     "name": "Skipped heading level",
     "description": "Heading levels should not skip (e.g. h1 then h3 with no h2). Screen readers use heading hierarchy for navigation. Skipping levels breaks the document outline.",
