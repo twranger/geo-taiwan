@@ -169,6 +169,16 @@ const css=`
 .tw-n{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;font:700 16px var(--f-body);padding:2px 10px;border-radius:99px}
 .tw-rotctl button{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 16px;font:700 17px var(--f-body);margin:0 8px 8px 0;cursor:pointer}
 .tw-rotmsg{font-size:18px;line-height:1.7}
+.tw-why{margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}
+.tw-guess{display:grid;gap:8px;margin:0 0 12px}
+.tw-guess label{display:flex;gap:10px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:17px;cursor:pointer;background:var(--surface)}
+.tw-guess input{width:22px;height:22px;flex:none}
+.tw-guess label.ok{border-color:#2e7d32;background:#e7f4e7;color:#1b4d1d}
+.tw-guess label.no{border-color:#c0392b;background:#fbe9e7;color:#7a1f14}
+.tw-clues{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.tw-clue{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.tw-clue b{font:700 18px var(--f-display)}.tw-clue p{font-size:17px;line-height:1.7;margin:6px 0 0}
+#twApp .qbox strong{display:inline}
 .tw-puz{display:grid;gap:2px;max-width:720px;background:#14110c;padding:2px;border-radius:12px}
 .tw-puz button{border:0;padding:0;cursor:pointer;background-repeat:no-repeat;outline-offset:-3px}
 .tw-puz button.sel{outline:4px solid #e9b949}
@@ -211,6 +221,7 @@ const css=`
  .tw-card{top:auto;height:58%;left:8px;right:8px;width:auto;bottom:8px;transform:translateY(110%)}
  .tw-below{grid-template-columns:1fr}
  .tw-rotwrap{grid-template-columns:1fr}
+ .tw-clues{grid-template-columns:1fr}
  .tw-ttl{display:none!important}
  .tw-top{justify-content:flex-end;left:8px;right:8px;top:8px}
  .tw-tools{width:auto!important;flex-wrap:nowrap!important}
@@ -445,12 +456,38 @@ function endChal(win){
   el.querySelectorAll('.stop').forEach(b=>b.onclick=()=>b.dataset.x?fin():startChal());
 }
 /* ---------- 方位挑戰（第一站） ---------- */
+const WHY=[
+ {o:'船都是從西邊的海上開過來的',ok:true},
+ {o:'地圖是給船長、領航員用的，要方便對照眼前的景色',ok:true},
+ {o:'他們熟悉海邊，對東邊的高山知道得很少',ok:true},
+ {o:'那時候的人還不知道東西南北',ok:false,why:'第四個不對喔：這張圖上明明寫著東、西、南、北四個方向，畫圖的人很清楚方位，是<strong>故意</strong>這樣擺的。'}];
+const CLUES=[
+ {i:'🚢',t:'站在哪裡看？',p:'從福建、澎湖、巴達維亞來的船，都是從西邊的臺灣海峽靠近大員。站在船頭往前看：大海在腳下，沙洲、港口和遠方的山在前面。把眼前看到的畫下來，東邊自然就在上面。'},
+ {i:'🧭',t:'畫給誰用？',p:'這張是西班牙人的情報圖。上面最仔細的是港口入口、水深、大砲和兵力，這些都是船長、軍官最想知道的。拿著地圖跟眼前的景色一對照，馬上看得懂。'},
+ {i:'⛰',t:'他們知道多少？',p:'那時候外來的人只熟悉西邊的海岸和港口，東邊的高山很少人去過。熟悉的海岸畫在下面、畫得仔細；不熟的山放在上面當遠景，畫得很簡單。'}];
 function renderRot(){
   const el=main.querySelector('#twRot');if(!el)return;let deg=0;const done=SAVE.rot;
   el.innerHTML=`<h3 class="tw-h">方位挑戰：把地圖轉成「北方朝上」</h3>
    <p class="tw-p">我們今天的地圖大多是<strong>北方朝上</strong>。可是這張西班牙地圖的上方寫著 <i>ORIENTE</i>（東）、左邊寫著 <i>SEPTENTRIÓN</i>（北）。按按鈕把地圖轉一轉，讓北方跑到上面。</p>
    <div class="tw-rotwrap"><div class="tw-rotbox"><img src="${ACTS[0].lo}" alt="可以旋轉的 1626 年大員港地圖"><span class="tw-n">北 ↑</span></div>
-   <div class="tw-rotctl"><button data-r="-90">↺ 往左轉</button><button data-r="90">↻ 往右轉</button><p class="tw-rotmsg" aria-live="polite"></p></div></div>`;
+   <div class="tw-rotctl"><button data-r="-90">↺ 往左轉</button><button data-r="90">↻ 往右轉</button><p class="tw-rotmsg" aria-live="polite"></p></div></div>
+   <div class="tw-why">
+    <h3 class="tw-h">想一想：為什麼大員的古地圖，常常把「東」畫在上面？</h3>
+    <p class="tw-p">不只這一張。第二站的熱蘭遮城版畫，是<strong>從海上往陸地看</strong>；清帝國時期的〈康熙臺灣輿圖〉（約 1699–1704 年）也是從臺灣海峽上空往東看，北方在左邊、南方在右邊。畫圖的人到底在想什麼？</p>
+    <p class="tw-p"><strong>先猜猜看</strong>（可以選不只一個）：</p>
+    <div class="tw-guess">${WHY.map((w,i)=>`<label><input type="checkbox" value="${i}"> ${w.o}</label>`).join('')}</div>
+    <button class="tw-next" id="twWhyGo">看看線索</button>
+    <div id="twWhyOut" aria-live="polite"></div>
+   </div>`;
+  el.querySelector('#twWhyGo').onclick=()=>{
+    const pick=[...el.querySelectorAll('.tw-guess input')].map(c=>c.checked);
+    el.querySelectorAll('.tw-guess label').forEach((l,i)=>{l.classList.toggle('ok',WHY[i].ok);l.classList.toggle('no',!WHY[i].ok&&pick[i])});
+    const right=WHY.filter((w,i)=>w.ok&&pick[i]).length,wrong=WHY.filter((w,i)=>!w.ok&&pick[i]).length;
+    el.querySelector('#twWhyOut').innerHTML=`<p class="tw-p">${right===3&&!wrong?'<strong>全部想到了，很厲害！</strong>':`你想到了 ${right} 個原因${wrong?'，有一個選項不太對（綠色的才是線索）':''}。`}${WHY[3].why}</p>
+     <div class="tw-clues">${CLUES.map(c=>`<div class="tw-clue"><b>${c.i} ${c.t}</b><p>${c.p}</p></div>`).join('')}</div>
+     <p class="tw-p">所以，地圖的方向跟「<strong>畫圖的人從哪裡來、要拿地圖做什麼</strong>」有關。今天全世界大多用北方朝上，是因為大家約定好同一個方向，地圖才方便互相比對。</p>
+     <div class="qbox"><b>換你當領航員</b>1661 年你跟著鄭成功的船隊，從金門出發要開進鹿耳門。你會把地圖的哪一邊畫在上面？為什麼？跟同學說說看。</div>`;
+  };
   const img=el.querySelector('img'),msg=el.querySelector('.tw-rotmsg');
   const upd=()=>{img.style.transform=`rotate(${deg}deg) scale(${deg%180?0.72:1})`;const d=((deg%360)+360)%360;
     msg.innerHTML=d===90?'<strong>轉對了！</strong>現在北方朝上：大海（臺灣海峽）在左邊＝西邊，沙洲上的荷蘭城堡在左下方，對岸的赤崁在右邊＝東邊。跟今天臺南的地圖方向一樣了。古人畫地圖不一定北方朝上，看地圖前要先找方位！':
