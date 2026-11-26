@@ -7,28 +7,6 @@
     "category": "quality",
     "file": "https://geo.twranger.com/unit4.html",
     "line": 0,
-    "snippet": "3.4:1 (need 4.5:1) — text #ffffff on #009e73",
-    "selector": "div.pw-row.on > div.pw-track > div.pw-bar.peak"
-  },
-  {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/unit4.html",
-    "line": 0,
-    "snippet": "3.9:1 (need 4.5:1) — text #ffffff on #d55e00",
-    "selector": "div.pw-row:nth-of-type(2) > div.pw-track > div.pw-bar.peak"
-  },
-  {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/unit4.html",
-    "line": 0,
     "snippet": "2.7:1 (need 4.5:1) — text #d8901a on #ffffff",
     "selector": "p.pw-legend > b"
   },
@@ -36,12 +14,13 @@
     "antipattern": "low-contrast",
     "name": "Low contrast text",
     "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
+    "severity": "advisory",
     "category": "quality",
     "file": "https://geo.twranger.com/unit4.html",
     "line": 0,
-    "snippet": "3.4:1 (need 4.5:1) — text #009e73 on #ffffff (and 9 more)",
-    "selector": "li:nth-of-type(3) > b:nth-of-type(2)"
+    "snippet": "4.3:1 (need 4.5:1) — text #9c6b00 on #f4f8f7 (and 1 more)",
+    "advisory": true,
+    "selector": "span:nth-of-type(2) > strong:nth-of-type(1)"
   },
   {
     "antipattern": "side-tab",
@@ -119,38 +98,5 @@
     "line": 0,
     "snippet": "radial-gradient halo (#fff6d5 → transparent) on dark background",
     "selector": "body"
-  },
-  {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/unit4.html",
-    "line": 0,
-    "snippet": "pixel contrast 2.5:1 median 2.5:1 (need 4.5:1) on opacity stack \"1602–1674\"",
-    "selector": "div.pw-row:nth-of-type(3) > div.pw-track > div.pw-bar.peak"
-  },
-  {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/unit4.html",
-    "line": 0,
-    "snippet": "pixel contrast 2.8:1 median 2.8:1 (need 4.5:1) on opacity stack \"1763–1945\"",
-    "selector": "div.pw-row:nth-of-type(4) > div.pw-track > div.pw-bar.peak"
-  },
-  {
-    "antipattern": "low-contrast",
-    "name": "Low contrast text",
-    "description": "Text does not meet WCAG AA contrast requirements (4.5:1 for body, 3:1 for large text). Increase the contrast between text and background.",
-    "severity": "warning",
-    "category": "quality",
-    "file": "https://geo.twranger.com/unit4.html",
-    "line": 0,
-    "snippet": "pixel contrast 2.4:1 median 2.4:1 (need 4.5:1) on opacity stack \"1945–\"",
-    "selector": "div.pw-row:nth-of-type(5) > div.pw-track > div.pw-bar.peak"
   }
 ]

@@ -2033,7 +2033,7 @@
     "severity": "warning",
     "category": "slop",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 1052,
+    "line": 1057,
     "snippet": "border-left: 5px"
   },
   {
@@ -2043,7 +2043,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 773,
+    "line": 778,
     "snippet": "2.7:1 (need 4.5:1) — text #ff7155 on #ffffff"
   },
   {
@@ -2053,7 +2053,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 774,
+    "line": 779,
     "snippet": "2.6:1 (need 4.5:1) — text #8ca6ad on #ffffff (and 28 more)"
   },
   {
@@ -2063,7 +2063,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 849,
+    "line": 854,
     "snippet": "1.3:1 (need 4.5:1) — text #000000 on #11252c (and 2 more)"
   },
   {
@@ -2073,7 +2073,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 799,
+    "line": 804,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2083,7 +2083,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 813,
+    "line": 818,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2093,7 +2093,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 821,
+    "line": 826,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2103,7 +2103,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 830,
+    "line": 835,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2113,7 +2113,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 838,
+    "line": 843,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2123,7 +2123,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 848,
+    "line": 853,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2133,7 +2133,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 857,
+    "line": 862,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2143,7 +2143,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 871,
+    "line": 876,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2153,7 +2153,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 877,
+    "line": 882,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2163,7 +2163,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 901,
+    "line": 906,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2173,7 +2173,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 923,
+    "line": 928,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2183,7 +2183,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 935,
+    "line": 940,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2193,7 +2193,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 944,
+    "line": 949,
     "snippet": "<div> \"lmbox\": children flush against border on all sides (no inset)"
   },
   {
@@ -2203,7 +2203,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 959,
+    "line": 964,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2213,7 +2213,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 967,
+    "line": 972,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2223,7 +2223,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 976,
+    "line": 981,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2233,7 +2233,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 985,
+    "line": 990,
     "snippet": "<div> \"deerbox\": children flush against border on all sides (no inset)"
   },
   {
@@ -2243,7 +2243,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 998,
+    "line": 1003,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2253,7 +2253,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 1012,
+    "line": 1017,
     "snippet": "<div> \"mapbox\": children flush against border+bg on top/bottom (no inset)"
   },
   {
@@ -2263,7 +2263,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 1022,
+    "line": 1027,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
@@ -2273,7 +2273,7 @@
     "severity": "warning",
     "category": "quality",
     "file": "/home/runner/work/geo-taiwan/geo-taiwan/unit4.html",
-    "line": 1060,
+    "line": 1065,
     "snippet": "<section> \"unit\": children flush against border-bottom on bottom (no inset)"
   },
   {
