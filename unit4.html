@@ -430,29 +430,6 @@ footer p+p{margin-top:6px}
 .hs-nav{display:flex;gap:8px}.hs-nav button{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer}
 .hs-nav .hs-next{background:var(--ink);color:var(--paper);border-color:var(--ink)}.hs-nav button:disabled{opacity:.35;cursor:default}
 
-/* 3D Tayouan */
-.t3-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
-.t3-seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.t3-seg button{min-height:44px;padding:6px 14px;border:0;background:var(--surface);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer}
-.t3-seg button+button{border-left:1px solid var(--line)}.t3-seg button[aria-pressed="true"]{background:#10313b;color:#fff}
-.t3-tour{min-height:44px;padding:6px 16px;border-radius:12px;border:1px solid #8a5a33;background:#8a5a33;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
-.t3-box{position:relative;height:clamp(380px,68vh,680px);border-radius:16px;overflow:hidden;background:linear-gradient(#cfe4ee,#9cc7d9);border:1px solid var(--line);touch-action:none}
-.t3-cv{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}.t3-cv:active{cursor:grabbing}
-.t3-msg{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:#10313b;font-weight:700}
-.t3-tags{position:absolute;inset:0;pointer-events:none}
-.t3-tag{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:6px;white-space:nowrap;border:0;border-radius:999px;padding:5px 12px 5px 8px;background:rgba(255,255,255,.94);color:#10313b;font:700 14px/1.2 "Noto Sans TC",system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
-.t3-tag i{width:10px;height:10px;border-radius:50%;background:#D55E00;box-shadow:0 0 0 3px rgba(213,94,0,.25)}
-.t3-tag.on{background:#10313b;color:#fff}.t3-tag.on i{background:#f4d398}
-.t3-tag::after{content:"";position:absolute;left:50%;bottom:-6px;width:2px;height:6px;background:rgba(255,255,255,.94)}
-.t3-cap{position:absolute;left:10px;top:10px;max-width:calc(100% - 70px);background:rgba(16,49,59,.88);color:#fff;border-radius:10px;padding:5px 12px;font-size:14px;font-weight:700;pointer-events:none}
-.t3-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
-.t3-zoom button{width:42px;height:42px;border-radius:10px;border:1px solid #cbd5d1;background:#fff;color:#10313b;font:700 20px/1 system-ui;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.t3-info{position:absolute;left:10px;bottom:10px;width:min(380px,calc(100% - 20px));max-height:55%;overflow:auto;background:rgba(255,255,255,.97);color:#10313b;border-radius:14px;padding:12px 16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
-.t3-info h3{font-size:20px;margin:0 28px 6px 0}.t3-info p{font-size:16px;line-height:1.75;margin:0}
-.t3-x{position:absolute;right:8px;top:6px;width:36px;height:36px;border:0;background:transparent;font-size:24px;cursor:pointer;color:#10313b}
-.t3-fail .t3-msg{background:#f4efe6}
-.t3-msg[hidden]{display:none}
-@media(max-width:560px){.t3-tag{font-size:12.5px;padding:4px 10px 4px 6px}.t3-info{max-height:48%}.t3-seg button{padding:6px 10px;font-size:14px}}
 </style>
 <style>
 .top .unit-link{font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:15.5px;white-space:nowrap}
@@ -744,6 +721,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site.css?v=5">
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
 <script src="assets/site-nav.js?v=5" defer></script>
+<script src="assets/timewalk.js?v=1" defer></script>
 <header class="top">
   <div class="wrap">
     <div>
@@ -758,9 +736,9 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <a href="#before"><span class="dot" style="background:#5E5E5E"></span>前情提要</a>
     <a href="#voyage"><span class="dot" style="background:var(--wind)"></span>歐亞新航路</a>
     <a href="#hub"><span class="dot" style="background:var(--plate)"></span>東亞十字路口</a>
-    <a href="#tayouan3d"><span class="dot" style="background:#8a5a33"></span>3D 大員港</a>
     <a href="#rulers"><span class="dot" style="background:var(--typhoon)"></span>誰在經營臺灣</a>
     <a href="#taijiang"><span class="dot" style="background:var(--rain)"></span>台江內海</a>
+    <a href="#timewalk"><span class="dot" style="background:#8a5a12"></span>史料實境</a>
     <a href="#luermen"><span class="dot" style="background:#2a6fb0"></span>領航員挑戰</a>
     <a href="#legend"><span class="dot" style="background:#b5446e"></span>鄭成功傳說</a>
     <a href="#deer"><span class="dot" style="background:var(--leaf)"></span>部落獵人</a>
@@ -831,28 +809,6 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
   </div>
 </section>
 
-<section class="unit" id="tayouan3d">
-  <div class="wrap">
-    <div class="unit-head">
-      <div class="badge" style="background:#8a5a33">3D</div>
-      <h2>走進 1650 年代的大員（3D）</h2>
-      <p class="sub">拖曳轉動視角、滾輪或兩指縮放，點畫面上的標籤飛過去看看。也可以按「自動導覽」，或切換到 1661 年，看鄭成功的船隊怎麼開進台江內海。</p>
-    </div>
-    <div class="t3-bar">
-      <div class="t3-seg" id="t3Year" role="group" aria-label="年代"><button type="button" data-y="1655" aria-pressed="true">1650 年代</button><button type="button" data-y="1661" aria-pressed="false">1661 年 鄭成功來了</button></div>
-      <button type="button" class="t3-tour" id="t3Tour">▶ 自動導覽</button>
-    </div>
-    <div class="t3-box" id="t3Box" aria-label="1650 年代大員港的 3D 場景">
-      <div class="t3-msg" id="t3Msg">3D 場景載入中……</div>
-      <div class="t3-tags" id="t3Tags"></div>
-      <div class="t3-cap" id="t3Cap">1650 年代的大員：荷蘭東印度公司的貿易港</div>
-      <div class="t3-zoom"><button type="button" id="t3In" aria-label="拉近">＋</button><button type="button" id="t3Out" aria-label="拉遠">－</button><button type="button" id="t3Home" aria-label="回到全景">⟲</button></div>
-      <aside class="t3-info" id="t3Info" hidden aria-live="polite"></aside>
-    </div>
-    <p class="note" style="margin-top:8px">這是依照 17 世紀古地圖和歷史研究做的示意復原，城堡、房子和船的大小比例都經過簡化，不是真實的測量。電腦上按住 Shift 再拖曳可以平移畫面。</p>
-  </div>
-</section>
-
 <section class="unit" id="rulers">
   <div class="wrap">
     <div class="unit-head">
@@ -896,6 +852,18 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
       </div>
       <div class="panel pad card" id="tjCard" aria-live="polite"></div>
     </div>
+  </div>
+</section>
+
+<section class="unit" id="timewalk">
+  <div class="wrap">
+    <div class="unit-head">
+      <div class="badge" style="background:#8a5a12">境</div>
+      <h2>史料實境：走進 400 年前的大員港</h2>
+      <p class="sub">下面不是電腦畫的想像圖，而是 400 年前的人<strong>真正畫下來</strong>的地圖和版畫。拖曳、放大，找到發光的點，完成每一站的任務，收集 4 個印章，領取你的探險家證書！</p>
+    </div>
+    <div id="twApp"></div>
+    <noscript><p class="note">這個探險需要開啟 JavaScript。</p></noscript>
   </div>
 </section>
 
@@ -1206,10 +1174,10 @@ const HUB={
    {y:'1659 年',t:'進攻南京失敗',segs:[],
     p:'鄭成功帶兵北上攻打南京，結果大敗，只好退回金門、廈門。',
     why:'打了敗仗以後，金門、廈門太小，很難長期養活大軍，鄭成功需要一個新的、更大的基地。'},
-   {y:'1661 年 3 月',t:'從金門出發，先到澎湖',segs:[[[PT.fuj,PT.peng],ZH,'a-zh']],
+   {y:'1661 年 4 月 21 日',t:'從金門出發，先到澎湖',segs:[[[PT.fuj,PT.peng],ZH,'a-zh']],
     p:'鄭成功的船隊從金門出發，先在<b>澎湖</b>停留，等待風浪和適合的時間。',
     why:'臺灣離福建近，土地又比金門、廈門大得多，可以種田養兵，也能繼續做海上貿易。'},
-   {y:'1661 年 4 月',t:'趁漲潮通過鹿耳門',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
+   {y:'1661 年 4 月 30 日',t:'趁漲潮通過鹿耳門',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
     p:'船隊趁著漲潮，從水很淺的<b>鹿耳門</b>水道開進台江內海，沒幾天就讓赤崁的<b>普羅民遮城</b>投降。',
     why:'荷蘭人以為大船過不了鹿耳門，所以那裡防守比較少。往下玩「1661 年，你是鄭成功的領航員」，試試看選哪一天、幾點出發。'},
    {y:'1661–1662 年',t:'圍攻熱蘭遮城',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
@@ -1888,5 +1856,4 @@ show();
 railSpy();
 document.body.dataset.ready='1';
 })();
-</script><script src="assets/tayouan3d.js?v=4" defer></script>
-
+</script>
