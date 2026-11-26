@@ -721,7 +721,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
 <link rel="stylesheet" href="assets/site.css?v=5">
 <nav class="gnav" id="gnav" aria-label="網站導覽"></nav>
 <script src="assets/site-nav.js?v=5" defer></script>
-<script src="assets/timewalk.js?v=2" defer></script>
+<script src="assets/timewalk.js?v=4" defer></script>
 <header class="top">
   <div class="wrap">
     <div>
@@ -872,7 +872,7 @@ nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:
     <div class="unit-head">
       <div class="badge" style="background:#2a6fb0">舵</div>
       <h2>1661 年，你是鄭成功的領航員 <span class="page-ref">課本 p.90、93</span></h2>
-      <p class="sub">鄭成功的船隊要開進台江內海，打敗荷蘭人。走哪一條航道？什麼時候進去？先攻哪一座城？每一步都由你決定，選錯了會怎樣，試試看就知道。</p>
+      <p class="sub">鄭成功的船隊要開進台江內海，包圍荷蘭人的城堡。走哪一條航道？什麼時候進去？先攻哪一座城？每一步都由你決定，選錯了會怎樣，試試看就知道。</p>
     </div>
     <div class="duo">
       <div>
@@ -1169,7 +1169,7 @@ const HUB={
  zheng:{base(){[['金門、廈門',PT.fuj,'l',ZH],['澎湖',PT.peng,'t',ZH],['鹿耳門、大員',PT.an,'b',ZH]].forEach(([n,p,s,c])=>marker(hm,p[0],p[1],{label:n,color:c,r:7,side:s}).classed('hubmk',true));},
   steps:[
    {y:'1640–1650 年代',t:'在金門、廈門抗清',segs:[],
-    p:'明帝國被清帝國打敗以後，<b>鄭成功</b>以福建的<b>金門、廈門</b>為基地繼續抵抗清帝國。他的家族有很大的船隊，靠海上貿易賺錢來養軍隊。',
+    p:'明帝國滅亡、清帝國進入中國以後，<b>鄭成功</b>以福建的<b>金門、廈門</b>為基地繼續抵抗清帝國。他的家族有很大的船隊，靠海上貿易賺錢來養軍隊。',
     why:'鄭家本來就是做海上貿易起家的，船隊和航海的本領是他最大的力量。'},
    {y:'1659 年',t:'進攻南京失敗',segs:[],
     p:'鄭成功帶兵北上攻打南京，結果大敗，只好退回金門、廈門。',
@@ -1181,8 +1181,8 @@ const HUB={
     p:'船隊趁著漲潮，從水很淺的<b>鹿耳門</b>水道開進台江內海，沒幾天就讓赤崁的<b>普羅民遮城</b>投降。',
     why:'荷蘭人以為大船過不了鹿耳門，所以那裡防守比較少。往下玩「1661 年，你是鄭成功的領航員」，試試看選哪一天、幾點出發。'},
    {y:'1661–1662 年',t:'圍攻熱蘭遮城',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
-    p:'熱蘭遮城很堅固，鄭成功的軍隊圍了大約 9 個月。1662 年初，荷蘭人投降，2 月離開臺灣。',
-    why:'城裡的荷蘭人等不到足夠的援軍，糧食和士兵越來越少，只好談判投降。'},
+    p:'熱蘭遮城很堅固，鄭成功的軍隊圍了大約 9 個月。1662 年 2 月 1 日，雙方談好條件、簽下條約：荷蘭人交出城堡，2 月 9 日搭船離開臺灣。',
+    why:'城裡的荷蘭人等不到足夠的援軍，糧食和士兵越來越少，只好和鄭成功談判。'},
    {y:'1662 年以後',t:'鄭氏政權經營臺灣',segs:[[[PT.fuj,PT.peng,PT.an],ZH,'a-zh']],
     p:'鄭成功在 1662 年過世，兒子<b>鄭經</b>繼續經營臺灣：開墾土地、設立學校和孔廟，也繼續和日本、東南亞做生意。',
     why:'點上面的「鄭氏政權的貿易」，看看他們把什麼賣到哪裡。'}],
@@ -1227,8 +1227,8 @@ const EV=[[1624,'荷蘭人從今天的臺南安平一帶登陸，建立奧倫尼
  [1644,'中國的明帝國滅亡，進入清帝國時期。',null],
  [1652,'漢人郭懷一帶領數千農民反抗荷蘭人，因為只有竹杖和農具，敵不過火槍而失敗，稱為「郭懷一事件」。','an'],
  [1653,'郭懷一事件後，荷蘭人在赤崁興建普羅民遮城（今赤崁樓），擴大防衛的範圍。','chk'],
- [1661,'鄭成功從福建渡海，先攻取澎湖，再進攻普羅民遮城、圍攻熱蘭遮城。','chk'],
- [1662,'荷蘭人投降，撤離臺灣，鄭氏政權開始經營臺灣。同年 6 月鄭成功病逝，由兒子鄭經繼續經營。','an'],
+ [1661,'鄭成功從福建渡海，先在澎湖停留，再進攻普羅民遮城、圍攻熱蘭遮城。','chk'],
+ [1662,'鄭荷雙方簽約，荷蘭人交出熱蘭遮城、離開臺灣，鄭氏政權開始經營臺灣。同年 6 月鄭成功病逝，由兒子鄭經繼續經營。','an'],
  [1683,'清帝國派兵攻打臺灣，鄭氏政權投降。','an'],
  [1684,'臺灣成為清帝國統治的領土，進入清帝國時期。','an']];
 const who=(y,part)=>part==='s'?(y<1624?null:y<1662?'nl':y<1684?'zh':'qg'):(y<1626?null:y<1642?'es':y<1662?'nl':y<1684?'zh':'qg');
@@ -1376,7 +1376,7 @@ const setDate=t=>{$('#lmDate').textContent=t;};
 const setTry=()=>{$('#lmTry').textContent=miss?`選錯 ${miss} 次`:'';};
 function cardRoute(){step='route';card.innerHTML=`<span class="pill" style="background:#2a6fb0">第 1 關　選航道</span>
   <h3 style="margin-top:8px">要從哪裡開進台江內海？</h3>
-  <p>1661 年 4 月，鄭成功帶著兩萬多名士兵、幾百艘船從金門出發，先攻取澎湖，現在來到台江內海外面。荷蘭人的熱蘭遮城就守在內海的入口。</p>
+  <p>1661 年 4 月，鄭成功帶著兩萬多名士兵、幾百艘船從金門出發，先在澎湖停留等待風向，現在來到台江內海外面。荷蘭人的熱蘭遮城就守在內海的入口。</p>
   <div class="choice"><button data-c="A"><b>走大員港道</b><span>水比較深，大船好走。可是熱蘭遮城就在旁邊，城上有大砲，荷蘭戰船也守在這裡。</span></button>
   <button data-c="B"><b>走鹿耳門水道</b><span>離熱蘭遮城比較遠，荷蘭人幾乎沒有防守。可是水很淺、沙洲很多，大船很容易卡住。</span></button></div>
   <details class="hintd"><summary>問問何斌</summary><p>何斌以前替荷蘭人工作，後來跑到廈門投靠鄭成功，還帶去一張臺灣的地圖。他說：「鹿耳門雖然淺，可是漲潮的時候，船開得過去。」</p></details>`;}
@@ -1391,9 +1391,9 @@ function cardAttack(){step='attack';card.innerHTML=`<span class="pill" style="ba
   <div class="choice"><button data-c="Z"><b>攻打熱蘭遮城</b><span>荷蘭人在臺灣最堅固的城，城牆又高又厚，有很多大砲。打下來，荷蘭人就輸了。</span></button>
   <button data-c="P"><b>攻打普羅民遮城</b><span>就在赤崁，城比較小、守軍比較少，周圍是漢人的農田，有糧食。</span></button></div>`;}
 function cardSiege(){step='siege';card.innerHTML=`<span class="pill" style="background:#2a6fb0">第 4 關　最後一戰</span>
-  <h3 style="margin-top:8px">熱蘭遮城要怎麼拿下？</h3><p>荷蘭長官揆一帶著士兵躲在熱蘭遮城裡，不肯投降。</p>
+  <h3 style="margin-top:8px">熱蘭遮城要怎麼拿下？</h3><p>荷蘭長官揆一帶著士兵守在熱蘭遮城裡，不肯交出城堡。</p>
   <div class="choice"><button data-c="hit"><b>再強攻一次</b><span>集合所有士兵和大砲，一口氣衝進去。</span></button>
-  <button data-c="wait"><b>包圍起來，等他們投降</b><span>守住四周，不讓糧食和援兵進城，慢慢等。</span></button></div>`;}
+  <button data-c="wait"><b>包圍起來，等他們出來談判</b><span>守住四周，不讓糧食和援兵進城，慢慢等。</span></button></div>`;}
 function bad(title,txt,again){miss++;setTry();card.innerHTML=`<span class="pill" style="background:var(--typhoon)">糟糕！</span><h3 style="margin-top:8px">${title}</h3>${txt}<button class="bigbtn" data-act="${again}">再選一次</button>`;}
 function title(){return miss===0?'神機妙算的領航員':miss<=2?'經驗豐富的領航員':'越挫越勇的領航員';}
 card.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||busy)return;const c=b.dataset.c,a=b.dataset.act;
@@ -1416,11 +1416,11 @@ function siege(){busy=true;const ring=fx.append('circle').attr('cx',322).attr('c
   card.innerHTML=`<span class="pill" style="background:#2a6fb0">包圍中……</span><h3 style="margin-top:8px" id="lmSiegeT">${M[0]}</h3><p>城裡的糧食一天天變少，荷蘭人派來的援兵也打不進來。</p>`;
   const t=setInterval(()=>{i++;setDate(M[i]);$('#lmSiegeT')&&($('#lmSiegeT').textContent=M[i]);if(i%3===0)boom(322,262,2);
     if(i>=M.length-1){clearInterval(t);busy=false;fZ.select('path:last-of-type').transition().duration(600).attr('fill','#2a6fb0');ring.transition().duration(800).attr('opacity',0).remove();
-      card.innerHTML=`<span class="pill" style="background:var(--leaf)">勝利！</span><h3 style="margin-top:8px">1662 年 2 月 1 日，荷蘭人投降了</h3>
-       <p>熱蘭遮城被圍了大約九個月，荷蘭長官揆一終於投降。荷蘭人離開臺灣，結束了 38 年的經營。</p>
+      card.innerHTML=`<span class="pill" style="background:var(--leaf)">完成！</span><h3 style="margin-top:8px">1662 年 2 月 1 日，雙方簽下條約</h3>
+       <p>熱蘭遮城被圍了大約九個月，城裡的糧食和人手越來越少。荷蘭長官揆一和鄭成功談判，雙方在條約上簽字：荷蘭人把城堡、大砲和公司的貨物、錢交出來；士兵可以<b>舉著旗子、打著鼓、帶著上了子彈的槍</b>走出城，帶著私人財物，2 月 9 日搭船離開。荷蘭人在臺灣 38 年的經營就此結束。</p>
        <p>鄭成功把熱蘭遮城改名為「<b>安平鎮</b>」（用他福建家鄉安平的名字），在赤崁設立<b>承天府</b>。</p>
        <div class="lm-score"><b>${title()}</b><span>${miss?`一路上選錯 ${miss} 次。`:'一次都沒有選錯！'}</span></div>
-       <div class="qbox"><b>想一想</b>這場仗的輸贏，和台江內海的沙洲、潮汐有什麼關係？如果你是荷蘭人，會怎麼守？</div>
+       <div class="qbox"><b>想一想</b>這場仗的結果，和台江內海的沙洲、潮汐有什麼關係？如果你是荷蘭人，會怎麼守？</div>
        <button class="bigbtn alt" data-act="replay" style="margin-top:12px">再玩一次</button>`;}},420);}
 function reset(){fx.selectAll('*').remove();routes.selectAll('*').remove();miss=0;setTry();setDate('1661 年 4 月');tideBox.hidden=true;
   [fZ,fP].forEach(f=>f.select('path:last-of-type').attr('fill','#e07a2f'));placeAt('start');cardRoute();}
@@ -1477,8 +1477,8 @@ reset();
    ========================================================= */
 (function(){const lm=reliefMap('#lgSvg',{crop:[119.3,122.1,21.85,25.4],maxZoom:6});zoomButtons($('#lgBox'),lm);
   const LG=[
-   {n:'臺南（鹿耳門、赤崁）',lo:120.19,la:23.02,s:'r',ans:'f',story:'1661 年，鄭成功的船隊從鹿耳門開進台江內海，打敗荷蘭人，在赤崁設立承天府。',why:'這是歷史事實。荷蘭人和鄭氏雙方都留下了紀錄。'},
-   {n:'澎湖',lo:119.6,la:23.57,s:'t',ans:'f',story:'鄭成功從金門出發，先攻取澎湖，再渡海進攻臺灣。',why:'這是歷史事實，課本 p.93 的地圖畫的就是這條路線。'},
+   {n:'臺南（鹿耳門、赤崁）',lo:120.19,la:23.02,s:'r',ans:'f',story:'1661 年，鄭成功的船隊從鹿耳門開進台江內海，在赤崁設立承天府。1662 年雙方簽約，荷蘭人交出熱蘭遮城、離開臺灣。',why:'這是歷史事實。荷蘭人和鄭氏雙方都留下了紀錄。'},
+   {n:'澎湖',lo:119.6,la:23.57,s:'t',ans:'f',story:'鄭成功從金門出發，先到澎湖，再渡海進攻臺灣。',why:'這是歷史事實，課本 p.93 的地圖畫的就是這條路線。'},
    {n:'龜山島（宜蘭）',lo:121.95,la:24.84,s:'l',ans:'l',story:'鄭成功的軍隊走到宜蘭海邊，一隻烏龜精對著岸邊吐霧氣，好像要吞掉士兵。鄭成功命人開大砲，烏龜精沉進海裡，再浮出來就變成了龜山島。',why:'這是傳說。根據記載，鄭成功從來沒有去過宜蘭。龜山島其實是一座火山島。'},
    {n:'鶯歌石、鳶山（新北）',lo:121.36,la:24.95,s:'l',ans:'l',story:'大漢溪兩岸住著鶯哥鳥精和老鷹精，會吐出毒霧擋住軍隊。鄭成功開砲打斷了牠們的頭，就變成了今天的鶯歌石和鳶山。',why:'這是傳說。鄭成功沒有到過臺灣北部。鶯歌石和鳶山的樣子像鳥，人們就用故事來解釋它們的形狀。'},
    {n:'劍潭（臺北）',lo:121.523,la:25.083,s:'t',ans:'l',story:'潭裡有妖怪興風作浪，鄭成功把寶劍投進潭裡鎮住牠，所以這裡叫做「劍潭」。',why:'這是傳說。另外還有一個說法，說是荷蘭人把劍插在潭邊的樹上。兩個故事都找不到可靠的紀錄。'},
@@ -1660,7 +1660,7 @@ const QZ=[
  {q:'荷蘭人在 1624 年從哪裡登陸臺灣？',o:['基隆和平島','臺南安平一帶','高雄左營'],a:1,e:'荷蘭人從今臺南安平一帶登陸，建立熱蘭遮城（今安平古堡區域內）。'},
  {q:'西班牙人在臺灣北部建立的城堡，後來成為今天的哪裡？',o:['赤崁樓','淡水紅毛城','安平古堡'],a:1,e:'西班牙人在淡水建立聖多明哥城，經過多次重建，成為今天的淡水紅毛城。'},
  {q:'鄭成功的船隊為什麼能通過很淺的鹿耳門水道？',o:['趁著大潮漲潮的時候進去','荷蘭人幫他們把水道挖深','船隊全都是小船'],a:0,e:'1661 年 4 月 30 日是農曆四月初一，是大潮的日子，鄭成功趁漲潮從鹿耳門開進台江內海。'},
- {q:'下列哪一個是「傳說」，不是歷史事實？',o:['鄭成功在赤崁設立承天府','鄭成功用大砲打烏龜精，變成了龜山島','鄭成功先攻取澎湖，再進攻臺灣'],a:1,e:'根據記載，鄭成功沒有去過宜蘭，龜山島的故事是傳說。'},
+ {q:'下列哪一個是「傳說」，不是歷史事實？',o:['鄭成功在赤崁設立承天府','鄭成功用大砲打烏龜精，變成了龜山島','鄭成功先到澎湖，再進攻臺灣'],a:1,e:'根據記載，鄭成功沒有去過宜蘭，龜山島的故事是傳說。'},
  {q:'水泥的閩南語叫「紅毛塗」，這是因為？',o:['荷蘭人把水泥帶來臺灣','以前的人把歐洲來的外國人叫做「紅毛番」','水泥是紅色的'],a:1,e:'水泥是十九世紀英國人發明的，和十七世紀的荷蘭人沒有關係。'},
  {q:'鄭氏政權為什麼要實行屯墾政策？',o:['解決軍隊糧食不足的問題','為了蓋城堡','為了捕鹿'],a:0,e:'鄭氏軍隊大量來臺，臺灣糧食不夠，軍隊平時開墾種田，獲取所需糧食。'},
  {q:'「左營」「前鎮」這些地名和什麼有關？',o:['荷蘭人的城堡','鄭氏軍隊屯墾','西班牙人的教堂'],a:1,e:'「營」「鎮」都是鄭氏軍隊的單位名稱。'},

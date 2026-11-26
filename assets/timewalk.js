@@ -10,7 +10,7 @@ const ACTS=[
  intro:'荷蘭人來到大員才兩年，對手西班牙人就畫了這張「情報地圖」。注意：這張圖的<strong>上方是東邊</strong>，下方是西邊的大海（臺灣海峽）。',
  src:{who:'西班牙人（傳為 Pedro de Vera 繪）',when:'約 1626 年',where:'西班牙馬德里海軍博物館（現在看到的是後來的抄本）',page:'https://commons.wikimedia.org/wiki/File:Description_of_the_Dutch_port_on_Formosa_Island_(Taiwan),_drawing_1626.jpg'},
  spots:[
-  {id:'fort',x:66,y:74.5,t:'荷蘭人的城堡',orig:'Fuerça del Olandes puesta en un alto',zh:'荷蘭人的城堡，蓋在高處',
+  {id:'fort',now:'臺南市安平區的「安平古堡」',x:66,y:74.5,t:'荷蘭人的城堡',orig:'Fuerça del Olandes puesta en un alto',zh:'荷蘭人的城堡，蓋在高處',
    p:'1624 年荷蘭人來到大員，在這個沙洲的高處蓋城堡。這座城堡後來叫做<strong>熱蘭遮城</strong>，就是今天臺南的<strong>安平古堡</strong>。'},
   {id:'guns',x:55,y:71,t:'入口的 6 門小砲',orig:'En esta punta están puestas 6 piezas pequeñas de la entrada',zh:'這個岬角上放了 6 門守入口的小砲',
    p:'船要進港，一定要經過這個狹窄的入口。在這裡放大砲，就能管住誰可以進來。'},
@@ -28,7 +28,7 @@ const ACTS=[
    p:'畫裡的人拿著長矛在追鹿。原住民打到的鹿，鹿皮會賣給漢人和荷蘭人，再運到日本做成武士的衣物和用品。'},
   {id:'vil',x:9,y:36,t:'原住民的村子',orig:'… de los naturales',zh:'……原住民的（村子）',
    p:'圖的左上方畫了好幾個村子，旁邊都寫著「原住民的」。這一帶住的是<strong>西拉雅族</strong>。'},
-  {id:'sak',x:66,y:24,t:'對岸的赤崁',orig:'Chacam, lugar de chinos pescadores y ladrones',zh:'赤崁，中國漁民和盜賊住的地方',
+  {id:'sak',now:'臺南市中西區，赤崁樓一帶',x:66,y:24,t:'對岸的赤崁',orig:'Chacam, lugar de chinos pescadores y ladrones',zh:'赤崁，中國漁民和盜賊住的地方',
    p:'對岸是赤崁（今天臺南市區）。旁邊還畫了荷蘭人的小堡和養牛的地方。<br><strong>小心！</strong>「盜賊」是西班牙人的說法，他們和荷蘭人、漢人海商是競爭對手。'}
  ],
  tasks:[{q:'找到荷蘭人的城堡',a:'fort'},{q:'找到地圖上寫的人數',a:'note'},{q:'找到原住民在做什麼',a:'hunt'}],
@@ -41,15 +41,15 @@ const ACTS=[
  intro:'這是從海上看大員的版畫。圖的最上面有一排說明，A 到 L 分別是：長官的房子、教堂、秤重所、打鐵鋪、法院、肉市場、市場、監獄、住宿區、小堡和城堡。',
  src:{who:'荷蘭出版商 Jacob van Meurs，收在 Olfert Dapper 寫的中國見聞書裡',when:'約 1670 年出版',where:'荷蘭',page:'https://commons.wikimedia.org/wiki/File:AMH-6844-KB_View_of_city_and_Fort_Zeelandia_on_Taiwan.jpg'},
  spots:[
-  {id:'castle',x:60.5,y:60,t:'熱蘭遮城',orig:"L. 't Casteel",zh:'L. 城堡',
+  {id:'castle',now:'臺南市安平區的「安平古堡」',x:60.5,y:60,t:'熱蘭遮城',orig:"L. 't Casteel",zh:'L. 城堡',
    p:'掛著旗子的就是熱蘭遮城。城牆一層一層，越裡面越高，是荷蘭人在臺灣最重要的據點，長官就在這裡辦公。'},
-  {id:'town',x:22,y:66,t:'大員市鎮',orig:'Stadt … Zelandia',zh:'熱蘭遮市鎮',
+  {id:'town',now:'安平的延平街（安平老街）一帶',x:22,y:66,t:'大員市鎮',orig:'Stadt … Zelandia',zh:'熱蘭遮市鎮',
    p:'城堡旁邊有一整條街的房子，住了很多漢人商人。說明裡列出的教堂、市場、法院、監獄，就在這一帶。這裡像一個熱鬧的小城市。'},
   {id:'ind',x:92.5,y:51.5,t:'荷蘭東印度公司的大船',
    p:'圖片說明寫著：右邊是東印度公司的大帆船。它們從巴達維亞開來，再把貨物運往日本或歐洲。'},
   {id:'junk2',x:9.5,y:85,t:'中國帆船',
    p:'左下角這艘大帆船有好幾面四方形的帆，是中國式的帆船。港裡還停了很多艘。'},
-  {id:'bar',x:86,y:63,t:'彎彎的沙洲',
+  {id:'bar',now:'臺南市安平區',x:86,y:63,t:'彎彎的沙洲',
    p:'大員本來是台江內海外面的一個<strong>沙洲島</strong>。後來泥沙越積越多，今天已經和陸地連在一起，就是臺南的安平。'},
   {id:'mt',x:11,y:47,t:'對面的山',
    p:'隔著台江內海，遠方就是臺灣本島。畫家把山畫得很高很近，跟真實的樣子不太一樣。'},
@@ -68,13 +68,13 @@ const ACTS=[
  spots:[
   {id:'inset',x:33,y:25,t:'城堡放大圖',
    p:'畫家怕城堡太小看不清楚，另外在上面的布條裡把熱蘭遮城放大畫一次。'},
-  {id:'z1',x:60,y:47.5,t:'熱蘭遮城（記號 1）',
+  {id:'z1',now:'臺南市安平區的「安平古堡」',x:60,y:47.5,t:'熱蘭遮城（記號 1）',
    p:'荷蘭人躲在城裡守了大約 <strong>9 個月</strong>。城裡大約有 1700 多人，其中軍人約 900 人。'},
   {id:'z2',x:60.5,y:39.5,t:'烏特勒支堡（記號 2）',
-   p:'城堡後面山丘上的小堡。1662 年 1 月，鄭軍用大砲攻下它。從這裡可以直接打進城堡，不久荷蘭人就投降了。'},
+   p:'城堡後面山丘上的小堡。1662 年 1 月，鄭軍用大砲攻下它。從這裡可以直接打進城堡，不久雙方就開始談判。'},
   {id:'z3',x:39.7,y:45.5,t:'大員市鎮（記號 3）',
    p:'鄭軍一來就占領了城外的市鎮，把城堡團團圍住。'},
-  {id:'z6',x:5,y:21.5,t:'對岸的赤崁（記號 6）',
+  {id:'z6',now:'赤崁樓（臺南市中西區）',x:5,y:21.5,t:'對岸的赤崁（記號 6）',
    p:'對岸赤崁的普羅民遮城（今天的赤崁樓），在鄭軍登陸後沒幾天就投降了。'},
   {id:'z8',x:93.8,y:58,t:'爆炸的大船（記號 8）',
    p:'這是荷蘭人在臺灣最大的戰船赫克托號，被很多艘中國帆船包圍後爆炸沉沒。<br><strong>偵探提醒：</strong>研究者指出，這場海戰其實發生在另一邊的海面，畫家可能是為了讓畫面更精彩才把它畫進來。'},
@@ -82,8 +82,8 @@ const ACTS=[
    p:'前面一排排的是鄭軍，拿著長刀、長矛和弓箭。鄭成功帶了兩萬多名士兵、幾百艘船來到臺灣。'}
  ],
  tasks:[{q:'找到熱蘭遮城（有記號 1）',a:'z1'},{q:'找到正在爆炸的大船',a:'z8'},{q:'找到鄭成功的軍隊',a:'army'}],
- quiz:{q:'1661 年 4 月 30 日鄭軍來到，熱蘭遮城大約守了多久才投降？',o:['大約 9 個月','大約 9 天','大約 9 年'],a:0,
-  e:'1661 年 4 月底被包圍，1662 年 2 月初荷蘭人投降，大約 9 個月。之後荷蘭人離開臺灣。'}}
+ quiz:{q:'1661 年 4 月 30 日鄭軍來到，熱蘭遮城大約守了多久，雙方才簽約、荷蘭人交出城堡？',o:['大約 9 個月','大約 9 天','大約 9 年'],a:0,
+  e:'1661 年 4 月底被包圍，到 1662 年 2 月 1 日雙方簽下條約，大約 9 個月。荷蘭士兵舉著旗子、打著鼓走出城堡，2 月 9 日搭船離開臺灣。'}}
 ];
 const DET=[
  {q:'三張圖裡，哪一張的作者<strong>從來沒有來過臺灣</strong>，是根據別人的說法編出來的？',o:['第二站：Dapper 書裡的熱蘭遮城版畫','第一站：西班牙人的情報地圖','第三站：赫波特的圍城圖'],a:0,
@@ -149,6 +149,30 @@ const css=`
 .tw-card .nav button{flex:1;border:0;border-radius:10px;padding:10px;font:700 16px var(--f-body);background:#e8dcc0;color:#2b2418;cursor:pointer}
 .tw-toast{position:absolute;left:50%;top:76px;transform:translate(-50%,-20px);opacity:0;z-index:6;background:#2e7d32;color:#fff;font:700 18px var(--f-body);padding:10px 18px;border-radius:999px;transition:.3s;pointer-events:none}
 .tw-toast.on{opacity:1;transform:translate(-50%,0)}
+.tw-card .now{background:#e3efe0;border-radius:8px;padding:8px 12px;font-size:17px}
+.tw-card .nav button[data-say]{background:#8a5a12;color:#fff}
+.tw-stage.chal .tw-ttl{visibility:hidden}
+.tw-chal{position:absolute;left:12px;top:12px;z-index:6;background:rgba(20,17,12,.9);color:#fff;border:2px solid #e9b949;border-radius:16px;padding:10px 16px;text-align:center;width:min(440px,calc(100% - 24px))}
+.tw-chal .q{font-size:19px;line-height:1.5}.tw-chal strong{color:#ffd666}
+.tw-chal .tm{font:600 16px var(--f-num);color:#d9cdb4;margin:4px 0}
+.tw-chal .stop{border:0;border-radius:10px;background:#e9b949;color:#14110c;font:700 15px var(--f-body);padding:6px 14px;margin:2px 4px;cursor:pointer}
+.tw-hs.hitok::before{background:radial-gradient(circle,#fff 0 30%,#2e7d32 31% 60%,transparent 61%);box-shadow:0 0 22px 8px rgba(46,125,50,.9)}
+.tw-stage.chal .tw-task{display:none}
+.tw-hs.hitno{animation:twShake .4s}
+@keyframes twShake{0%,100%{translate:0}25%{translate:-6px}75%{translate:6px}}
+.tw-h{margin:0 0 6px;font:700 21px var(--f-display)}
+.tw-p{font-size:18px;line-height:1.75;margin:0 0 12px}
+.tw-rot{margin-top:14px}
+.tw-rotwrap{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:18px;align-items:center}
+.tw-rotbox{position:relative;aspect-ratio:1;background:#14110c;border-radius:14px;overflow:hidden;display:grid;place-items:center}
+.tw-rotbox img{width:100%;transition:transform .6s cubic-bezier(.4,.1,.2,1)}
+.tw-n{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;font:700 16px var(--f-body);padding:2px 10px;border-radius:99px}
+.tw-rotctl button{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 16px;font:700 17px var(--f-body);margin:0 8px 8px 0;cursor:pointer}
+.tw-rotmsg{font-size:18px;line-height:1.7}
+.tw-puz{display:grid;gap:2px;max-width:720px;background:#14110c;padding:2px;border-radius:12px}
+.tw-puz button{border:0;padding:0;cursor:pointer;background-repeat:no-repeat;outline-offset:-3px}
+.tw-puz button.sel{outline:4px solid #e9b949}
+.tw-puz.won{gap:0}
 .tw-zoom{position:absolute;right:12px;bottom:12px;z-index:3;display:flex;flex-direction:column;gap:6px}
 .tw-card.on~.tw-zoom{display:none}
 .tw-zoom button{width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(20,17,12,.78);color:#fff;font:700 22px var(--f-body);cursor:pointer}
@@ -186,6 +210,14 @@ const css=`
  .tw-toast{top:auto;bottom:110px;max-width:90%;white-space:normal;text-align:center;font-size:16px}
  .tw-card{top:auto;height:58%;left:8px;right:8px;width:auto;bottom:8px;transform:translateY(110%)}
  .tw-below{grid-template-columns:1fr}
+ .tw-rotwrap{grid-template-columns:1fr}
+ .tw-ttl{display:none!important}
+ .tw-top{justify-content:flex-end;left:8px;right:8px;top:8px}
+ .tw-tools{width:auto!important;flex-wrap:nowrap!important}
+ .tw-tools button{min-width:40px!important;height:40px}
+ .tw-chal{top:56px;left:8px;width:auto;right:8px;padding:6px 10px}
+ .tw-chal .q{font-size:16px}
+ .tw-chal .tm{font-size:14px;margin:2px 0}
  .tw-det{grid-template-columns:1fr}
  .tw-task{bottom:8px;left:8px;padding:8px 12px}
  .tw-task ol{font-size:15px}
@@ -197,6 +229,7 @@ let SAVE={};try{SAVE=JSON.parse(localStorage.getItem('tw-prog')||'{}')}catch(e){
 const save=()=>{try{localStorage.setItem('tw-prog',JSON.stringify(SAVE))}catch(e){}};
 ACTS.forEach(a=>{SAVE[a.key]=SAVE[a.key]||{seen:[],quiz:null}});
 SAVE.det=SAVE.det||[null,null,null];
+let speakOn=false;try{speakOn=localStorage.getItem('tw-read')==='1'}catch(e){}
 let cur=0,view={z:1,x:0,y:0},fit=1,openId=null,touring=false,tourT=null;
 
 root.innerHTML=`
@@ -240,6 +273,7 @@ function sound(on){
 /* ---------- viewer ---------- */
 let stage,layer,card,taskEl,toast;
 function go(i){
+  if(chal)endChal(false);if('speechSynthesis' in window)speechSynthesis.cancel();
   stopTour();cur=i;openId=null;
   tabs.forEach((b,k)=>b.setAttribute('aria-selected',k===i));
   if(i===3){renderDet();progress();return}
@@ -254,13 +288,17 @@ function go(i){
         <button data-act="tour" aria-pressed="false" title="自動帶你看每一個點">▶<b class="lb"> 自動導覽</b></button>
         <button data-act="lab" aria-pressed="false" title="顯示所有名稱">🏷<b class="lb"> 名稱</b></button>
         <button data-act="snd" aria-pressed="${!!amb}" title="海浪聲">🌊<b class="lb"> 海浪</b></button>
+        <button data-act="read" aria-pressed="${speakOn}" title="打開後，卡片內容會唸給你聽">🔊<b class="lb"> 朗讀</b></button>
+        <button data-act="chal" aria-pressed="false" title="限時找找看">⏱<b class="lb"> 挑戰</b></button>
         <button data-act="full" title="全螢幕">⛶<b class="lb"> 全螢幕</b></button>
       </div></div>
     <div class="tw-task"><h4><button class="tw-tg" aria-expanded="true">任務 <span class="tw-cnt"></span> <span aria-hidden="true">▾</span></button></h4><ol>${a.tasks.map(t=>`<li data-a="${t.a}">${t.q}</li>`).join('')}</ol></div>
     <aside class="tw-card" aria-live="polite"></aside>
     <div class="tw-zoom"><button data-z="1.5" aria-label="放大">＋</button><button data-z="0.667" aria-label="縮小">－</button><button data-z="0" aria-label="看全圖">⤢</button></div>
     <div class="tw-toast" role="status"></div>
+    <div class="tw-chal" hidden></div>
   </div>
+  ${i===0?'<div class="panel pad tw-rot" id="twRot"></div>':''}
   <div class="tw-below">
     <div class="panel pad tw-intro"><p>${a.intro}</p>
       <p class="tw-src"><b>這張圖是誰畫的？</b>${a.src.who}<br><b>什麼時候：</b>${a.src.when}　<b>現在在哪裡：</b>${a.src.where}<br>圖片來源：<a href="${a.src.page}" target="_blank" rel="noopener">維基共享資源（公有領域）</a></p></div>
@@ -271,10 +309,10 @@ function go(i){
   s.seen.forEach(id=>{const b=layer.querySelector(`[data-id="${id}"]`);b&&b.classList.add('seen')});
   markTasks();
   taskEl.querySelector('.tw-tg').onclick=()=>{const m=taskEl.classList.toggle('min');taskEl.querySelector('.tw-tg').setAttribute('aria-expanded',!m)};
-  layer.querySelectorAll('.tw-hs').forEach(b=>{b.onclick=e=>{e.stopPropagation();if(moved)return;stopTour();openSpot(b.dataset.id,true)}});
+  layer.querySelectorAll('.tw-hs').forEach(b=>{b.onclick=e=>{e.stopPropagation();if(e.detail===0)hit(b.dataset.id)}});
   main.querySelectorAll('.tw-tools button').forEach(b=>b.onclick=()=>tool(b));
   main.querySelectorAll('.tw-zoom button').forEach(b=>b.onclick=()=>{const z=+b.dataset.z;z?zoomAt(view.z*z,stage.clientWidth/2,stage.clientHeight/2,true):home(true)});
-  bindPan();renderQuiz();
+  bindPan();renderQuiz();if(i===0)renderRot();
   requestAnimationFrame(()=>home(false));
   progress();
 }
@@ -310,20 +348,25 @@ function flyTo(h,anim=true){
 let moved=false;
 function bindPan(){
   const pts=new Map();let last=null,pinch=null;
+  let start=null,downHs=null,cap=false;
   stage.addEventListener('pointerdown',e=>{
-    if(e.target.closest('.tw-card,.tw-tools,.tw-zoom,.tw-task'))return;
-    stopTour();stage.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;
-    last={x:e.clientX,y:e.clientY};layer.classList.add('drag');layer.style.transition='none';
+    if(e.target.closest('.tw-card,.tw-tools,.tw-zoom,.tw-task,.tw-chal'))return;
+    stopTour();pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;cap=false;
+    if(pts.size===1){start={x:e.clientX,y:e.clientY};downHs=e.target.closest('.tw-hs')}else downHs=null;
+    last={x:e.clientX,y:e.clientY};layer.style.transition='none';
     if(pts.size===2){const [p,q]=[...pts.values()];pinch={d:Math.hypot(p.x-q.x,p.y-q.y),z:view.z}}
   });
   stage.addEventListener('pointermove',e=>{
     if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(pts.size===2&&pinch){const [p,q]=[...pts.values()],r=stage.getBoundingClientRect();
       zoomAt(pinch.z*Math.hypot(p.x-q.x,p.y-q.y)/pinch.d,(p.x+q.x)/2-r.left,(p.y+q.y)/2-r.top,false);moved=true;return}
-    const dx=e.clientX-last.x,dy=e.clientY-last.y;if(Math.abs(dx)+Math.abs(dy)>3)moved=true;
+    const dx=e.clientX-last.x,dy=e.clientY-last.y;
+    if(!moved){if(Math.hypot(e.clientX-start.x,e.clientY-start.y)<8)return;moved=true;downHs=null}
+    if(!cap){try{stage.setPointerCapture(e.pointerId)}catch(_){}cap=true;layer.classList.add('drag')}
     view.x+=dx;view.y+=dy;last={x:e.clientX,y:e.clientY};apply(false);
   });
-  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size){layer.classList.remove('drag');setTimeout(()=>moved=false,0)}
+  const up=e=>{if(e.type==='pointerup'&&pts.size===1&&!moved&&downHs){const id=downHs.dataset.id;downHs=null;pts.delete(e.pointerId);e.preventDefault();hit(id);return}
+    pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size){layer.classList.remove('drag');setTimeout(()=>moved=false,0)}
     else{const p=[...pts.values()][0];last={x:p.x,y:p.y}}};
   stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
   stage.addEventListener('wheel',e=>{e.preventDefault();stopTour();const r=stage.getBoundingClientRect();zoomAt(view.z*Math.exp(-e.deltaY*.0015),e.clientX-r.left,e.clientY-r.top,false)},{passive:false});
@@ -345,15 +388,76 @@ function openSpot(id,fly){
   layer.querySelectorAll('.tw-hs').forEach(b=>b.classList.toggle('cur',b.dataset.id===id));
   const i=a.spots.indexOf(h);
   card.innerHTML=`<button class="x" aria-label="關閉">✕</button><h3>${h.t}</h3>
-   ${h.orig?`<div class="orig">圖上寫著：<i>${h.orig}</i>意思是：「${h.zh}」</div>`:''}<p>${h.p}</p>
-   <div class="nav"><button data-d="-1">← 上一個</button><button data-d="1">下一個 →</button></div>`;
+   ${h.orig?`<div class="orig">圖上寫著：<i>${h.orig}</i>意思是：「${h.zh}」</div>`:''}<p>${h.p}</p>${h.now?`<p class="now">📍 今天：${h.now}</p>`:''}
+   <div class="nav"><button data-say="1" aria-label="唸給我聽">🔊 唸給我聽</button></div><div class="nav"><button data-d="-1">← 上一個</button><button data-d="1">下一個 →</button></div>`;
   card.classList.add('on');
   card.querySelector('.x').onclick=closeCard;
+  card.querySelector('[data-say]').onclick=()=>speakSpot(id,true);
+  if(speakOn)speakSpot(id);
   card.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{stopTour();const n=a.spots[(i+ +b.dataset.d+a.spots.length)%a.spots.length];openSpot(n.id,true)});
   if(fly)flyTo(h);
   if(!s.seen.includes(id)){s.seen.push(id);save();layer.querySelector(`[data-id="${id}"]`).classList.add('seen');
     const t=a.tasks.find(t=>t.a===id);if(t){say('任務完成：'+t.q);chime()}
     markTasks();renderQuiz();progress()}
+}
+function hit(id){if(chal)return chalCheck(id);stopTour();openSpot(id,true)}
+function speakSpot(id,force){
+  if(!('speechSynthesis' in window))return say('這台裝置不支援朗讀');
+  const h=ACTS[cur].spots.find(s=>s.id===id);if(!h)return;
+  const strip=t=>t.replace(/<br>/g,'。').replace(/<[^>]+>/g,'').replace(/（[^）]*[A-Za-z][^）]*）/g,'');
+  const txt=h.t+'。'+(h.zh?'圖上寫著：'+h.zh+'。':'')+strip(h.p)+(h.now?'。今天：'+h.now:'');
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang='zh-TW';u.rate=.95;
+  const v=speechSynthesis.getVoices().find(v=>/zh[-_]TW/i.test(v.lang))||speechSynthesis.getVoices().find(v=>/^zh/i.test(v.lang));if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+/* ---------- 限時挑戰 ---------- */
+let chal=null;
+function startChal(){
+  stopTour();closeCard();home(true);
+  const a=ACTS[cur],pool=[...a.spots].sort(()=>Math.random()-.5).slice(0,5);
+  chal={list:pool,k:0,t0:performance.now(),miss:0,timer:null};
+  stage.classList.remove('labels');const lb=main.querySelector('[data-act="lab"]');lb&&lb.setAttribute('aria-pressed','false');
+  main.querySelector('[data-act="chal"]').setAttribute('aria-pressed','true');
+  const el=stage.querySelector('.tw-chal');el.hidden=false;stage.classList.add('chal');
+  chal.timer=setInterval(drawChal,100);drawChal();
+}
+function drawChal(){
+  if(!chal)return;const el=stage.querySelector('.tw-chal'),sec=((performance.now()-chal.t0)/1000).toFixed(1);
+  el.innerHTML=`<div class="q">第 ${chal.k+1} / ${chal.list.length} 題：找出<strong>「${chal.list[chal.k].t}」</strong></div><div class="tm">⏱ ${sec} 秒　✗ ${chal.miss}</div><button class="stop">放棄</button>`;
+  el.querySelector('.stop').onclick=()=>endChal(false);
+}
+function chalCheck(id){
+  const b=layer.querySelector(`[data-id="${id}"]`);
+  if(id===chal.list[chal.k].id){b.classList.add('hitok');setTimeout(()=>b.classList.remove('hitok'),600);chime();chal.k++;
+    if(chal.k>=chal.list.length)return endChal(true);drawChal()}
+  else{chal.miss++;b.classList.add('hitno');setTimeout(()=>b.classList.remove('hitno'),500);
+    say('這是「'+ACTS[cur].spots.find(s=>s.id===id).t+'」，再找找');drawChal()}
+}
+function endChal(win){
+  const c=chal;if(!c)return;clearInterval(c.timer);chal=null;
+  const el=stage.querySelector('.tw-chal');const btn=main.querySelector('[data-act="chal"]');btn&&btn.setAttribute('aria-pressed','false');
+  const fin=()=>{el.hidden=true;stage.classList.remove('chal')};
+  if(!win){fin();return}
+  const sec=(performance.now()-c.t0)/1000+c.miss*3,key='tw-best-'+ACTS[cur].key;
+  let best=null;try{best=+localStorage.getItem(key)||null}catch(e){}
+  const rec=!best||sec<best;if(rec)try{localStorage.setItem(key,sec.toFixed(1))}catch(e){}
+  el.innerHTML=`<div class="q">🎉 全部找到了！成績 <strong>${sec.toFixed(1)} 秒</strong>${c.miss?`（含點錯 ${c.miss} 次，每次加 3 秒）`:''}</div><div class="tm">${rec?'🏆 新紀錄！':'你的最佳紀錄：'+best.toFixed(1)+' 秒'}</div><button class="stop">再玩一次</button><button class="stop" data-x="1">關閉</button>`;
+  el.querySelectorAll('.stop').forEach(b=>b.onclick=()=>b.dataset.x?fin():startChal());
+}
+/* ---------- 方位挑戰（第一站） ---------- */
+function renderRot(){
+  const el=main.querySelector('#twRot');if(!el)return;let deg=0;const done=SAVE.rot;
+  el.innerHTML=`<h3 class="tw-h">方位挑戰：把地圖轉成「北方朝上」</h3>
+   <p class="tw-p">我們今天的地圖大多是<strong>北方朝上</strong>。可是這張西班牙地圖的上方寫著 <i>ORIENTE</i>（東）、左邊寫著 <i>SEPTENTRIÓN</i>（北）。按按鈕把地圖轉一轉，讓北方跑到上面。</p>
+   <div class="tw-rotwrap"><div class="tw-rotbox"><img src="${ACTS[0].lo}" alt="可以旋轉的 1626 年大員港地圖"><span class="tw-n">北 ↑</span></div>
+   <div class="tw-rotctl"><button data-r="-90">↺ 往左轉</button><button data-r="90">↻ 往右轉</button><p class="tw-rotmsg" aria-live="polite"></p></div></div>`;
+  const img=el.querySelector('img'),msg=el.querySelector('.tw-rotmsg');
+  const upd=()=>{img.style.transform=`rotate(${deg}deg) scale(${deg%180?0.72:1})`;const d=((deg%360)+360)%360;
+    msg.innerHTML=d===90?'<strong>轉對了！</strong>現在北方朝上：大海（臺灣海峽）在左邊＝西邊，沙洲上的荷蘭城堡在左下方，對岸的赤崁在右邊＝東邊。跟今天臺南的地圖方向一樣了。古人畫地圖不一定北方朝上，看地圖前要先找方位！':
+    d===0?'現在上方是東邊。':d===180?'現在上方是西邊（大海）。再轉轉看。':'現在上方是南邊。再轉轉看。';
+    if(d===90&&!SAVE.rot){SAVE.rot=1;save();chime();say('方位挑戰完成！')}};
+  el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{deg+=+b.dataset.r;upd()});
+  if(done){deg=90}upd();
 }
 function closeCard(){card.classList.remove('on');openId=null;layer.querySelectorAll('.tw-hs.cur').forEach(b=>b.classList.remove('cur'))}
 function markTasks(){const a=ACTS[cur],s=SAVE[a.key];taskEl.querySelector('.tw-cnt').textContent=a.tasks.filter(t=>s.seen.includes(t.a)).length+' / '+a.tasks.length;taskEl.querySelectorAll('li').forEach(li=>li.classList.toggle('ok',s.seen.includes(li.dataset.a)))}
@@ -364,6 +468,8 @@ function tool(b){
   if(act==='tour'){touring?stopTour():startTour()}
   else if(act==='lab'){const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);stage.classList.toggle('labels',on)}
   else if(act==='snd'){const on=!amb;sound(on);b.setAttribute('aria-pressed',on)}
+  else if(act==='read'){speakOn=!speakOn;b.setAttribute('aria-pressed',speakOn);try{localStorage.setItem('tw-read',speakOn?'1':'')}catch(e){};if(!speakOn)speechSynthesis&&speechSynthesis.cancel();else if(openId)speakSpot(openId)}
+  else if(act==='chal'){chal?endChal(false):startChal()}
   else if(act==='full'){full(!(document.fullscreenElement||stage.classList.contains('tw-full')))}
 }
 function full(on){
@@ -375,7 +481,7 @@ document.addEventListener('fullscreenchange',()=>{if(stage&&!document.fullscreen
 function startTour(){
   touring=true;const b=main.querySelector('[data-act="tour"]');b.setAttribute('aria-pressed','true');b.innerHTML='■<b class="lb"> 停止導覽</b>';
   const a=ACTS[cur];let k=openId?Math.max(0,a.spots.findIndex(s=>s.id===openId)+1)%a.spots.length:0;
-  const step=()=>{if(!touring)return;openSpot(a.spots[k].id,true);k++;if(k>=a.spots.length){tourT=setTimeout(()=>{stopTour();closeCard();home(true)},7000);return}tourT=setTimeout(step,7000)};
+  const step=()=>{if(!touring)return;openSpot(a.spots[k].id,true);k++;if(k>=a.spots.length){tourT=setTimeout(()=>{stopTour();closeCard();home(true)},7000);return}tourT=setTimeout(step,speakOn?13000:7000)};
   step();
 }
 function stopTour(){if(!touring)return;touring=false;clearTimeout(tourT);const b=main.querySelector('[data-act="tour"]');if(b){b.setAttribute('aria-pressed','false');b.innerHTML='▶<b class="lb"> 自動導覽</b>'}}
@@ -400,6 +506,7 @@ function renderDet(){
    <p style="font-size:18px;line-height:1.75;margin:0 0 14px">古圖不是照片。每一張都是某個人、為了某個目的畫的。先看看三位畫家的資料，再回答問題。</p>
    <div class="tw-det">${ACTS.map((a,i)=>`<figure><img src="${th[i]}" alt="${a.title}" loading="lazy"><figcaption><b>${a.name}</b>${a.src.who}<br>${a.src.when}</figcaption></figure>`).join('')}</div>
    <div id="twDetQ"></div>
+   <div id="twPuz"></div>
    <div id="twCert"></div></div>`;
   const box=main.querySelector('#twDetQ');
   box.innerHTML=DET.map((d,k)=>`<div class="tw-quiz" style="margin:0 0 16px" data-k="${k}"><h4>${k+1}. ${d.q}</h4><div class="opts">${d.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join('')}</div><div class="exp"></div></div>`).join('');
@@ -410,7 +517,18 @@ function renderDet(){
     el.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{const p=+b.dataset.i;SAVE.det[k]=p;save();show(p);progress();renderCert()});
     if(SAVE.det[k]!=null)show(SAVE.det[k]);
   });
-  renderCert();
+  renderCert();renderPuz();
+}
+function renderPuz(){
+  const el=main.querySelector('#twPuz');if(!el)return;const C=4,R=3,N=C*R;
+  let order=[...Array(N).keys()];do{order.sort(()=>Math.random()-.5)}while(order.every((v,i)=>v===i));
+  let sel=null,moves=0;
+  el.innerHTML=`<h3 class="tw-h" style="margin-top:6px">加分遊戲：把 1626 年的古地圖拼回來</h3><p class="tw-p">點一塊，再點另一塊，兩塊就會交換位置。看看你要幾步拼好！</p><div class="tw-puz" style="grid-template-columns:repeat(${C},1fr);aspect-ratio:1920/1380"></div><p class="tw-rotmsg" aria-live="polite"></p>`;
+  const box=el.querySelector('.tw-puz'),msg=el.querySelectorAll('.tw-rotmsg')[0];
+  const draw=()=>{box.innerHTML=order.map((v,i)=>`<button data-i="${i}" aria-label="第 ${i+1} 塊" class="${sel===i?'sel':''}" style="background-image:url('${ACTS[0].lo}');background-size:${C*100}% ${R*100}%;background-position:${(v%C)/(C-1)*100}% ${Math.floor(v/C)/(R-1)*100}%"></button>`).join('');
+    box.querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(sel===null){sel=i}else{if(sel!==i){[order[sel],order[i]]=[order[i],order[sel]];moves++}sel=null}
+      draw();if(order.every((v,i)=>v===i)){box.classList.add('won');msg.innerHTML=`<strong>拼好了！</strong>用了 ${moves} 步。<button class="tw-next" style="margin-left:8px">再玩一次</button>`;msg.querySelector('button').onclick=renderPuz;chime()}else msg.textContent=`已經換了 ${moves} 步`})};
+  draw();
 }
 function renderCert(){
   const el=main.querySelector('#twCert');if(!el)return;
